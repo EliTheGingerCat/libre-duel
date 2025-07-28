@@ -2,6 +2,9 @@
   "name": "libre-duel",
   "tree": {
     "$className": "DataModel",
+    "ServerStorage": {
+      "$path": "./src/ServerStorage"
+    },
     "Workspace": {
       "$className": "Workspace",
       "$properties": {

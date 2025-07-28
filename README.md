@@ -1,4 +1,4 @@
-# Libre Duel
+# <img src="./images/icon_small.svg" alt="Libre Duel icon" width="30"/> Libre Duel
 
 Libre Duel was originally conceived because there were several features that Breter and I thought could really benefit Bridge Duel, but the owner refused to add. The earliest record I have of this is on 2025 June 27, though I think the actual conception date was probably around a month earlier.
 
