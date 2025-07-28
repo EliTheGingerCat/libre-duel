@@ -21,6 +21,10 @@
       "$path": "./src/ReplicatedStorage"
     },
 
+    "ServerStorage": {
+      "$path": "./src/ServerStorage"
+    },
+
     "SoundService": {
       "$properties": {
         "RespectFilteringEnabled": true
