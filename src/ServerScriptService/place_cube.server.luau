@@ -1,10 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
 local cube = ServerStorage.Cube
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
 local get_player_position = require(ReplicatedStorage.modules.get_player_position)
-local player_range = require(ReplicatedStorage.modules.player_range)
+local player_range_server = require(ServerScriptService.player_range_server)
 local snap_coordinate = require(ReplicatedStorage.modules.snap_coordinate)
 
 local function verify_coordinate(coordinate: number): boolean
@@ -30,7 +31,7 @@ local function on_invoke(player: Player, cube_position: unknown): string?
 	end
 
 	local distance = (cube_position - player_position).Magnitude
-	if distance > player_range then
+	if distance > player_range_server then
 		return "Too far."
 	end
 
