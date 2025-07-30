@@ -3,9 +3,10 @@ local React = require(ReplicatedStorage.vendor.ReactLua.React)
 local create_element = React.createElement
 
 local function main()
-    return create_element("ScreenGui", {
-            ClipToDeviceSafeArea = false
-        },
+	return create_element("ScreenGui", {
+		ClipToDeviceSafeArea = false,
+		ScreenInsets = "None",
+	},
         create_element("Frame", {
                 AnchorPoint = Vector2.new(0.5, 0),
                 Position = UDim2.new(0.5, 0, 0, 10),
