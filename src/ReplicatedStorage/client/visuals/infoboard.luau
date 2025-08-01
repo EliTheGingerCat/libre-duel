@@ -11,7 +11,7 @@ local function main()
                 AnchorPoint = Vector2.new(0.5, 0),
                 Position = UDim2.new(0.5, 0, 0, 10),
                 Size = UDim2.fromOffset(401, 127),
-                BackgroundColor3 = Color3.new(0, 0, 0),
+                BackgroundColor3 = Color3.fromRGB(0, 0, 0),
                 BackgroundTransparency = 0.5,
         },
         	create_element("UIGridLayout", {
@@ -32,7 +32,7 @@ local function main()
             }),
             create_element("UIStroke", {
                 Thickness = 2,
-				Color = Color3.new(1, 1, 1)
+				Color = Color3.fromRGB(255, 255, 255),
             },
             	create_element("UIGradient", {
                 	Color = ColorSequence.new({
@@ -49,8 +49,8 @@ local function main()
                 TextSize = 50,
                 AutomaticSize = "XY",
                 TextXAlignment = "Left",
-                TextColor3 = Color3.new(1, 1, 1),
-                Text = '<font color="#b14c4e">●●●</font>○○'
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Text = '<font color="#b14c4e">●●●</font>○○',
             }),
             create_element("TextLabel",{ -- blue goals
                 BackgroundTransparency = 1,
@@ -60,8 +60,8 @@ local function main()
                 TextSize = 50,
                 AutomaticSize = "XY",
                 TextXAlignment = "Right",
-                TextColor3 = Color3.new(1, 1, 1),
-                Text = '○○○○<font color="#0da2dd">●</font>'
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Text = '○○○○<font color="#0da2dd">●</font>',
             }),
             create_element("TextLabel",{ -- map
                 BackgroundTransparency = 1,
@@ -71,8 +71,8 @@ local function main()
                 TextSize = 30,
                 AutomaticSize = "XY",
                 TextXAlignment = "Left",
-                TextColor3 = Color3.new(1, 1, 1),
-                Text = '<font color="#5bd34c">Map: </font>Astro'
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Text = '<font color="#5bd34c">Map: </font>Astro',
             }),
             create_element("TextLabel",{ -- timer
                 BackgroundTransparency = 1,
@@ -82,8 +82,8 @@ local function main()
                 TextSize = 30,
                 AutomaticSize = "XY",
                 TextXAlignment = "Right",
-                TextColor3 = Color3.new(1, 1, 1),
-                Text = '<font color="#5bd34c">Time: </font>24:41'
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Text = '<font color="#5bd34c">Time: </font>24:41',
             }),
             create_element("TextLabel",{ -- kill counter
                 BackgroundTransparency = 1,
@@ -93,8 +93,8 @@ local function main()
                 TextSize = 30,
                 AutomaticSize = "XY",
                 TextXAlignment = "Left",
-                TextColor3 = Color3.new(1, 1, 1),
-                Text = '<font color="#5bd34c">Kills: </font>41'
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Text = '<font color="#5bd34c">Kills: </font>41',
             }),
             create_element("TextLabel",{ -- goal counter
                 BackgroundTransparency = 1,
@@ -104,8 +104,8 @@ local function main()
                 TextSize = 30,
                 AutomaticSize = "XY",
                 TextXAlignment = "Right",
-                TextColor3 = Color3.new(1, 1, 1),
-                Text = '<font color="#5bd34c">Goals: </font>3'
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Text = '<font color="#5bd34c">Goals: </font>3',
             })
         )
     )
