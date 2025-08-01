@@ -75,7 +75,7 @@ local function main()
 					Size = UDim2.fromScale(1, 1),
 				},
 					create_element("UICorner",{
-						CornerRadius = UDim.new(0, 55)
+						CornerRadius = UDim.new(0, 55),
 					}),
 					create_element("ScrollingFrame",{
 						AnchorPoint = Vector2.new(0.5, 1),
@@ -281,7 +281,7 @@ slider
 								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 								TextSize = 25,
 								Text = "100", --any range
-								TextColor3 = Color3.fromRGB(255, 255, 255)
+								TextColor3 = Color3.fromRGB(255, 255, 255),
 							})
 						),
 --[[
@@ -632,7 +632,7 @@ big button
 								BackgroundTransparency = 1,
 								Position = UDim2.new(0, 14, 0.5, 0),
 								Size = UDim2.fromOffset(100, 100),
-								Image = "rbxassetid://104330757164550"
+								Image = "rbxassetid://104330757164550",
 							},
 								create_element("UIGradient",{
 									Color = ColorSequence.new({
@@ -648,7 +648,7 @@ multi select [square] checkbox
 ]]
 						create_element("Frame",{
 							BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-							Size = UDim2.fromOffset(40, 40)
+							Size = UDim2.fromOffset(40, 40),
 						},
 							create_element("UICorner",{
 								CornerRadius = UDim.new(0, 5),
@@ -673,7 +673,7 @@ multi select [square] checkbox
 								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 								TextColor3 = Color3.fromRGB(255, 255, 255),
 								TextSize = 30,
-								Text = "Blud didnt select ts.. 💔"
+								Text = "Blud didnt select ts.. 💔",
 							})
 						),
 --[[
@@ -681,7 +681,7 @@ actve/selected multi select [square] checkbox
 ]]
 						create_element("Frame",{
 							BackgroundColor3 = Color3.fromRGB(71, 71, 71),
-							Size = UDim2.fromOffset(40, 40)
+							Size = UDim2.fromOffset(40, 40),
 						},
 							create_element("UICorner",{
 								CornerRadius = UDim.new(0, 5),
@@ -706,7 +706,7 @@ actve/selected multi select [square] checkbox
 								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 								TextColor3 = Color3.fromRGB(255, 255, 255),
 								TextSize = 30,
-								Text = "Blud selected ts.. 💔"
+								Text = "Blud selected ts.. 💔",
 							})
 						),
 --[[
@@ -714,7 +714,7 @@ single select (circle) checkbox
 ]]
 						create_element("Frame",{
 							BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-							Size = UDim2.fromOffset(40, 40)
+							Size = UDim2.fromOffset(40, 40),
 						},
 							create_element("UICorner",{
 								CornerRadius = UDim.new(1, 0),
@@ -739,7 +739,7 @@ single select (circle) checkbox
 								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 								TextColor3 = Color3.fromRGB(255, 255, 255),
 								TextSize = 30,
-								Text = "Blud didnt select ts.. 💔"
+								Text = "Blud didnt select ts.. 💔",
 							})
 						),
 --[[
@@ -747,7 +747,7 @@ active/selected single select (circle) checkbox
 ]]
 						create_element("Frame",{
 							BackgroundColor3 = Color3.fromRGB(71, 71, 71),
-							Size = UDim2.fromOffset(40, 40)
+							Size = UDim2.fromOffset(40, 40),
 						},
 							create_element("UICorner",{
 								CornerRadius = UDim.new(1, 0),
@@ -772,7 +772,7 @@ active/selected single select (circle) checkbox
 								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 								TextColor3 = Color3.fromRGB(255, 255, 255),
 								TextSize = 30,
-								Text = "Blud selected ts.. 💔"
+								Text = "Blud selected ts.. 💔",
 							})
 						),
 --[[
@@ -807,7 +807,7 @@ switch toggled on
 								}),
 								create_element("UIStroke",{
 									Color = Color3.fromRGB(255, 255, 255),
-									Thickness = 2
+									Thickness = 2,
 								},
 									create_element("UIGradient",{
 										Color = ColorSequence.new({
@@ -850,7 +850,7 @@ switch toggled off
 								}),
 								create_element("UIStroke",{
 									Color = Color3.fromRGB(255, 255, 255),
-									Thickness = 2
+									Thickness = 2,
 								},
 									create_element("UIGradient",{
 										Color = ColorSequence.new({
@@ -875,7 +875,7 @@ dropdown menu
 							FontFace = Font.fromId(11702779409, Enum.FontWeight.Bold),
 							TextColor3 = Color3.fromRGB(177, 76, 78),
 							TextSize = 32,
-							Text = "Red"
+							Text = "Red",
 						}),
 						create_element("ImageButton",{ --collapse/expand button
 							AnchorPoint = Vector2.new(1, 0),
@@ -890,7 +890,7 @@ dropdown menu
 						}),
 						create_element("UIStroke",{ -- "Can i just have the usual" ahh uistroke 😭🙏
 									Color = Color3.fromRGB(255, 255, 255),
-									Thickness = 2
+									Thickness = 2,
 								},
 							create_element("UIGradient",{
 								Color = ColorSequence.new({
