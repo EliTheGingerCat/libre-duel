@@ -3,38 +3,38 @@ local React = require(ReplicatedStorage.vendor.ReactLua.React)
 local create_element = React.createElement
 
 local function main()
-	return create_element("ScreenGui", {
+	return create_element("ScreenGui",{
 		ClipToDeviceSafeArea = false,
 		ScreenInsets = "None",
 	},
-        create_element("Frame", {
+        create_element("Frame",{
                 AnchorPoint = Vector2.new(0.5, 0),
                 Position = UDim2.new(0.5, 0, 0, 10),
                 Size = UDim2.fromOffset(401, 127),
                 BackgroundColor3 = Color3.fromRGB(0, 0, 0),
                 BackgroundTransparency = 0.5,
         },
-        	create_element("UIGridLayout", {
+        	create_element("UIGridLayout",{
 				CellSize = UDim2.fromOffset(175, 32),
                 FillDirection = "Horizontal",
                 SortOrder = "LayoutOrder",
                 HorizontalAlignment = "Center",
                 CellPadding = UDim2.fromScale(0, 0),
 			}),
-        	create_element("UIPadding", {
+        	create_element("UIPadding",{
 				PaddingBottom = UDim.new(0, 13),
                 PaddingLeft = UDim.new(0, 15),
                 PaddingRight = UDim.new(0, 15),
                 PaddingTop = UDim.new(0, 15),
 			}),
-            create_element("UICorner", {
+            create_element("UICorner",{
                 CornerRadius = UDim.new(0.3, 0),
             }),
-            create_element("UIStroke", {
+            create_element("UIStroke",{
                 Thickness = 2,
 				Color = Color3.fromRGB(255, 255, 255),
             },
-            	create_element("UIGradient", {
+            	create_element("UIGradient",{
                 	Color = ColorSequence.new({
                     ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
                     ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
