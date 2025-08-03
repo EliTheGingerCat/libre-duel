@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local play_sound_excluding = require(script.Parent.modules.play_sound_excluding)
-local player_range_server = require(script.Parent.modules.player_range_server)
+local player_attack_range_server = require(script.Parent.modules.player_attack_range_server)
 
 local DAMAGE = 10
 
@@ -34,7 +34,7 @@ local function on_event(player: Player, target_character: unknown): ()
 	local attacker_position = attacker_root.CFrame.Position
 	
 	local distance = (target_position - attacker_position).Magnitude
-	if distance > player_range_server then
+	if distance > player_attack_range_server then
 		return
 	end
 

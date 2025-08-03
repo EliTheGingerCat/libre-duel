@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local debug_print = require(script.Parent.debug_print)
 local get_player_position = require(ReplicatedStorage.modules.get_player_position)
 local play_sound_local = require(script.Parent.play_sound_local)
-local player_range = require(ReplicatedStorage.modules.player_range)
+local player_attack_range = require(ReplicatedStorage.modules.player_attack_range)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
@@ -42,7 +42,7 @@ local function attack_melee(): ()
 	local target_position = target_root.CFrame.Position
 	
 	local distance = (target_position - local_position).Magnitude
-	if distance > player_range then
+	if distance > player_attack_range then
 		debug_print("Too far.")
 		return
 	end

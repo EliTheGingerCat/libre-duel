@@ -2,15 +2,15 @@ local UserInputService = game:GetService("UserInputService")
 
 local attack_melee = require(script.Parent.modules.attack_melee)
 local keybinds = require(script.Parent.modules.keybinds)
-local place_cube = require(script.Parent.modules.place_cube)
+local place_voxel = require(script.Parent.modules.place_voxel)
 
-type tool = "sword" | "cube"
+type tool = "sword" | "voxel"
 
-local tool: tool = "cube"
+local tool: tool = "voxel"
 
 local function switch_tool(): ()
 	if tool == "sword" then
-		tool = "cube"
+		tool = "voxel"
 	else
 		tool = "sword"
 	end
@@ -23,7 +23,7 @@ local function on_input_began(input: InputObject): ()
 		if tool == "sword" then
 			attack_melee()
 		else
-			place_cube()
+			place_voxel()
 		end
 	end
 end

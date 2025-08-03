@@ -2,10 +2,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
-local cube = ServerStorage.Cube
-local cube_cache = require(ReplicatedStorage.modules.cube_cache)
+local voxel = ServerStorage.Voxel
+local voxel_cache = require(ReplicatedStorage.modules.voxel_cache)
 local get_player_position = require(ReplicatedStorage.modules.get_player_position)
-local player_range_server = require(ServerScriptService.modules.player_range_server)
+local player_voxel_range_server = require(ServerScriptService.modules.player_voxel_range_server)
 local snap_coordinate = require(ReplicatedStorage.modules.snap_coordinate)
 local play_sound_excluding = require(ServerScriptService.modules.play_sound_excluding)
 
@@ -21,8 +21,8 @@ local function verify_position(position: Vector3): boolean
 	)
 end
 
-local function on_invoke(player: Player, cube_position: unknown): string?
-	if typeof(cube_position) ~= "Vector3" then
+local function on_invoke(player: Player, voxel_position: unknown): string?
+	if typeof(voxel_position) ~= "Vector3" then
 		return "Invalid arguments."
 	end
 
@@ -31,28 +31,28 @@ local function on_invoke(player: Player, cube_position: unknown): string?
 		return "Player has no position."
 	end
 
-	local distance = (cube_position - player_position).Magnitude
-	if distance > player_range_server then
+	local distance = (voxel_position - player_position).Magnitude
+	if distance > player_voxel_range_server then
 		return "Too far."
 	end
 
-	if not verify_position(cube_position) then
+	if not verify_position(voxel_position) then
 		return "Invalid position."
 	end
 
-	local occupied = cube_cache[cube_position]
+	local occupied = voxel_cache[voxel_position]
 	if occupied then
 		return "Occupied."
 	end
 
-	cube_cache[cube_position] = true
+	voxel_cache[voxel_position] = true
 
-	local clone = cube:Clone()
-	clone.Position = cube_position
+	local clone = voxel:Clone()
+	clone.Position = voxel_position
 	clone.Parent = workspace
-	play_sound_excluding(player, "block_place", cube_position)
+	play_sound_excluding(player, "voxel_placed", voxel_position)
 
 	return
 end
 
-ReplicatedStorage.remotes.place_cube.OnServerInvoke = on_invoke
+ReplicatedStorage.remotes.place_voxel.OnServerInvoke = on_invoke
