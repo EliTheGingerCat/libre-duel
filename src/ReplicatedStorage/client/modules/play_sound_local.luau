@@ -13,12 +13,11 @@ local function play_sound(name: string, position: Vector3): ()
     local list = sounds[name]
     assert(list, `Sound list "{name}" was not found.`)
 
-    local id = list[math.random(#list)]
+    local id = list[math.random(1, #list)]
     assert(id, `No ids were found in sound list "{name}".`)
 
     local part = Instance.new("Part")
     part.Position = position
-    part.Anchored = true
 
     local sound = Instance.new("Sound")
     sound.PlayOnRemove = true
