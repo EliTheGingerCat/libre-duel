@@ -10,8 +10,5 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Added
 
-- Melee attacking.
-- Cube placing.
-- Version text in the bottom left.
-- Local and server debug printing.
-- Development guides.
+- Tablist (WIP)
+- Lobby (made by @coolpeter98)
