@@ -3,7 +3,6 @@ local UserInputService = game:GetService("UserInputService")
 local attack_melee = require(script.Parent.modules.attack_melee)
 local keybinds = require(script.Parent.modules.keybinds)
 local place_cube = require(script.Parent.modules.place_cube)
-
 type tool = "sword" | "cube"
 
 local tool: tool = "cube"

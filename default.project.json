@@ -4,21 +4,25 @@
   "tree": {
     "$className": "DataModel",
     "Lighting": {
-      "$properties": {
-        "Ambient": [
-          0,
-          0,
-          0
-        ],
-        "Brightness": 2,
-        "GlobalShadows": true,
-        "Outlines": false,
-        "Technology": "Voxel"
-      }
-    },
+    "$properties": {
+      "Ambient": [1, 1, 1],
+      "ColorShift_Top": [1, 1, 1],
+      "ColorShift_Bottom": [1, 1, 1],
+      "Brightness": 2,
+      "Outlines": false,
+      "Technology": "Voxel"
+    }
+  },
 
     "ReplicatedStorage": {
       "$path": "./src/ReplicatedStorage"
+    },
+    "StarterPlayer": {
+      "$path": "./src/StarterPlayer",
+      "$properties": {
+        "CharacterJumpHeight": 3.5,
+        "CharacterUseJumpPower": false
+      }
     },
 
     "ServerScriptService": {
@@ -37,7 +41,8 @@
 
     "Workspace": {
       "$properties": {
-        "FilteringEnabled": true
+        "FilteringEnabled": true,
+        "Gravity": 100
       },
       "$path": "./src/Workspace"
     }

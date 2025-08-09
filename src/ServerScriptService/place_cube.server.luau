@@ -1,6 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
+local Folder = Instance.new("Folder", workspace)
+Folder.Name = "Blocks"
 local cube = ReplicatedStorage.Cube
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.modules.cube_in_hitbox)
@@ -61,7 +63,7 @@ local function on_invoke(player: Player, cube_position: unknown): boolean
 
 	local clone = cube:Clone()
 	clone.Position = cube_position
-	clone.Parent = workspace
+	clone.Parent = workspace.Blocks
 	play_sound_excluding(player, "cube_place", cube_position)
 
 	return true
