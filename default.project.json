@@ -3,18 +3,9 @@
   "emitLegacyScripts": false,
   "tree": {
     "$className": "DataModel",
-    "Lighting": {
-      "$properties": {
-        "Ambient": [
-          0,
-          0,
-          0
-        ],
-        "Brightness": 2,
-        "GlobalShadows": true,
-        "Outlines": false,
-        "Technology": "Voxel"
-      }
+
+    "ReplicatedFirst": {
+      "$path": "./src/ReplicatedFirst"
     },
 
     "ReplicatedStorage": {
@@ -29,10 +20,56 @@
       "$path": "./src/ServerStorage"
     },
 
+    "StarterGui": {
+      "$path": "./src/StarterGui"
+    },
+
+    "StarterPack": {
+      "$path": "./src/StarterPack"
+    },
+
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$path": "./src/StarterPlayer/StarterPlayerScripts"
+      },
+      "StarterCharacterScripts": {
+        "$path": "./src/StarterPlayer/StarterCharacterScripts"
+      }
+    },
+
+    "Lighting": {
+      "$properties": {
+        "Ambient": [
+          0,
+          0,
+          0
+        ],
+        "Brightness": 2,
+        "GlobalShadows": true,
+        "Outlines": false,
+        "Technology": "Voxel"
+      },
+      "$path": "./src/Lighting"
+    },
+
+    "MaterialService": {
+      "$path": "./src/MaterialService"
+    },
+
     "SoundService": {
       "$properties": {
         "RespectFilteringEnabled": true
-      }
+      },
+      "$path": "./src/SoundService"
+    },
+
+    "Teams": {
+      "$path": "./src/Teams"
+    },
+
+    "TextChatService": {
+      "$path": "./src/TextChatService"
     },
 
     "Workspace": {

@@ -2,8 +2,60 @@
   "name": "libre-duel",
   "tree": {
     "$className": "DataModel",
+    "Lighting": {
+      "$properties": {
+        "Ambient": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Brightness": 2.0,
+        "GlobalShadows": true,
+        "Outlines": false
+      },
+      "$path": "./src/Lighting"
+    },
+    "MaterialService": {
+      "$path": "./src/MaterialService"
+    },
+    "ReplicatedFirst": {
+      "$path": "./src/ReplicatedFirst"
+    },
+    "ReplicatedStorage": {
+      "$path": "./src/ReplicatedStorage"
+    },
+    "ServerScriptService": {
+      "$path": "./src/ServerScriptService"
+    },
     "ServerStorage": {
       "$path": "./src/ServerStorage"
+    },
+    "SoundService": {
+      "$properties": {
+        "RespectFilteringEnabled": true
+      },
+      "$path": "./src/SoundService"
+    },
+    "StarterGui": {
+      "$path": "./src/StarterGui"
+    },
+    "StarterPack": {
+      "$path": "./src/StarterPack"
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$path": "./src/StarterPlayer/StarterPlayerScripts"
+      },
+      "StarterCharacterScripts": {
+        "$path": "./src/StarterPlayer/StarterCharacterScripts"
+      }
+    },
+    "Teams": {
+      "$path": "./src/Teams"
+    },
+    "TextChatService": {
+      "$path": "./src/TextChatService"
     },
     "Workspace": {
       "$className": "Workspace",
