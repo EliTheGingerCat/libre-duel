@@ -10,8 +10,13 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Added
 
-- Melee attacking.
-- Cube placing.
-- Version text in the bottom left.
-- Local and server debug printing.
-- Development guides.
+**Playground GUI**
+- create and join playground
+- Create playground button with loading states and teleportation
+- playground code same format as bridge
+- live validation
+- activated from proximity prompt atm
+
+**IMPORTANT: Triggered by proximity prompt on workspace/NPCs/PlaygroundNPC, needs to be updated to whatever *see line 24. ***
+-- relies on gui_manager to handle visibility
+-- Irelies on notification_system
