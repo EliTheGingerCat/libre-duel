@@ -10,8 +10,11 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Added
 
-- Melee attacking.
-- Cube placing.
-- Version text in the bottom left.
-- Local and server debug printing.
-- Development guides.
+**Queue Status GUI**
+- queue status display at bottom of screen
+- current queue .e.g. 2/4
+- displays gamemode (eg bridge 1v1)
+- Cancel queue functionality with loading states
+- updates every 0.3 seconds
+- global force update function. other guis will call it
+- need to move it above the hotbar like in bridge, its currently at the very bottom middle of the screen
