@@ -10,8 +10,9 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Added
 
-- Melee attacking.
-- Cube placing.
-- Version text in the bottom left.
-- Local and server debug printing.
-- Development guides.
+**Bridge GUI**
+- bridge duels choose queue option
+- supports 1v1, 2v2, 3v3, and 4v4 variants
+- IMPORTANT (change later): opened through a "bridge npc" proximity prompt see line 22
+- auto queue leave if you attempt to join a different queue
+- depends on gamemode client api, gui manager, and notification system
