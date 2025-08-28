@@ -10,8 +10,9 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Added
 
-- Melee attacking.
-- Cube placing.
-- Version text in the bottom left.
-- Local and server debug printing.
-- Development guides.
+**Playground code Display**
+- If in a playgorund, display the playground code
+- Requres server metadata type key
+- no integration with game (should dissapear when playing a game within playground)
+- FINALLY the playground code can be copied and pasted.
+- depends on gamemode client api feature
