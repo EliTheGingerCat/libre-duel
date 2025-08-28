@@ -10,8 +10,8 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Added
 
-- Melee attacking.
-- Cube placing.
-- Version text in the bottom left.
-- Local and server debug printing.
-- Development guides.
+***Basic Fight GUI***
+- Support for 1v1 variants
+- IMPORTANT (change later): opened through the basic fight npcs proximity prompt see line 23
+- auto queue leave if you attempt to join a different queue
+- depends on gamemode client api, gui manager, and notification system
