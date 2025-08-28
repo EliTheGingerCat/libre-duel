@@ -10,6 +10,31 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Added
 
+**GUI Manager System**
+- centralized visibility management
+- lets only one gui be open at a time
+- api for showing/hiding game interface panels
+- state setters to register gui
+- for big gui in the centre of the screen (like bridge npc gui or party list)
+
+**example of how to use it**
+```
+local gui_manager = require(ReplicatedStorage.client.modules.gui_manager)
+
+-- register a ui with its visibility setter
+gui_manager.register_gui("bridge", set_is_visible)
+
+-- show a specific gui, will hide others automatically
+gui_manager.show_gui("bridge")
+
+-- hide a specific ui
+gui_manager.hide_gui("bridge")
+
+--hide all guis
+gui_manager.hide_all_guis()
+```
+
+
 **Notification System**
 COLOR THEME:
 - Success, Green: #85dd32
@@ -29,3 +54,10 @@ local notification_system = require(ReplicatedStorage.client.modules.notificatio
 notification_system.show("success message", "#85dd32")
 
 notification_system.show("player", "#0da2dd", " was killed by ", "#ffffff", "oTillyy", "#b14c4e")
+
+**Added**
+- Melee attacking.
+- Cube placing.
+- Version text in the bottom left.
+- Local and server debug printing.
+- Development guides.
