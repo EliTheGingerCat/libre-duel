@@ -29,7 +29,6 @@ local player_gui = player:WaitForChild("PlayerGui")
 
 local notification_system = {}
 
--- Global notification store
 local notifications = {}
 local set_notifications = nil
 local next_id = 0
@@ -67,8 +66,7 @@ local function notification_component(props)
 			task.cancel(fade_task)
 		end
 	end, {notification.id})
-	
-	-- Build rich text from the parts
+
 	local rich_text_parts = {}
 	for i = 1, #notification.parts, 2 do
 		local text = notification.parts[i]
