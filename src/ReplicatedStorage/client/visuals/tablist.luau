@@ -14,19 +14,6 @@ local local_player = Players.LocalPlayer
 local use_effect = React.useEffect
 local use_state = React.useState
 
-local function title()
-	return create_element("TextLabel", {
-		AnchorPoint = Vector2.new(0.5, 1),
-		Size = UDim2.new(1, 0, 0, 40),
-		Position = UDim2.fromScale(0.5, 0),
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		BackgroundTransparency = 1,
-		TextSize = 40,
-		RichText = true,
-		TextYAlignment = "Top",
-		Text = '<font color="#b14c4e">Libre</font> <font color="#0da2dd">Duel</font>',
-	})
-end
 
 local function player_card(props: {
 	colour: Color3,
@@ -268,7 +255,6 @@ local function tablist()
 				})
 			),
 			create_element(scale),
-			create_element(title),
 			create_element(player_list),
 			create_element(location_display),
 			create_element(ping_display)
