@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local cube = ReplicatedStorage.Cube
+local create_cube = require(ReplicatedStorage.modules.create_cube)
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.modules.cube_in_hitbox)
 local debug_print = require(script.Parent.modules.debug_print)
@@ -59,7 +59,7 @@ local function on_invoke(player: Player, cube_position: unknown): boolean
 
 	cube_cache[cube_position] = true
 
-	local clone = cube:Clone()
+	local clone = create_cube()
 	clone.Position = cube_position
 	clone.Parent = workspace
 	play_sound_excluding(player, "cube_place", cube_position)

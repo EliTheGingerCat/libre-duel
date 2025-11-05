@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local cube = ReplicatedStorage.Cube
+local create_cube = require(ReplicatedStorage.modules.create_cube)
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.modules.cube_in_hitbox)
 local cube_size = require(ReplicatedStorage.modules.cube_size)
@@ -71,7 +71,7 @@ local function place_cube(): ()
 		return
 	end
 
-	local cube_temporary = cube:Clone()
+	local cube_temporary = create_cube()
 	cube_temporary.Position = snapped
 	cube_temporary.Parent = workspace
 
