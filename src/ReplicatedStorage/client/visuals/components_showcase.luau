@@ -1,12 +1,21 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local closing_button = require(script.Parent.closing_button)
+local danger_text = require(script.Parent.danger_text)
+local hue_slider = require(script.Parent.hue_slider)
+local information_text = require(script.Parent.information_text)
+local saturation_slider = require(script.Parent.saturation_slider)
+local slider = require(script.Parent.slider)
+local text_input = require(script.Parent.text_input)
 local React = require(ReplicatedStorage.vendor.ReactLua.React)
+local title_bar = require(script.Parent.title_bar)
+local warning_text = require(script.Parent.warning_text)
 
 local create_element = React.createElement
 
-local function main()
+local function components_showcase()
 	return create_element("ScreenGui",{
-		Enabled = false, -- disabled because only HUD elements should be visible all the time, these belong in menus and such
+		Name = "Components Showcase",
 	},
 		create_element("Frame",{
 			AnchorPoint = Vector2.new(0.5, 0.5),
@@ -29,24 +38,8 @@ local function main()
 					Rotation = -90,
 				})
 			),
-			create_element("ImageButton",{ --closing button
-				BackgroundTransparency = 1,
-				Position = UDim2.new(1, -80, 0, 5),
-				Size = UDim2.fromOffset(42, 42),
-				Image = "rbxassetid://72160170469319",
-				ZIndex = 2,
-			}),
-			create_element("TextLabel",{ --titlebar
-				AnchorPoint = Vector2.new(0.5, 0),
-				BackgroundTransparency = 1,
-				Position = UDim2.fromScale(0.5, 0),
-				Size = UDim2.new(1, 0, 0, 48),
-				TextColor3 = Color3.fromRGB(255, 255, 255),
-				Text = "Menu",
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Bold),
-				TextSize = 30,
-				ZIndex = 2,
-			}),
+			create_element(closing_button),
+			create_element(title_bar),
 			create_element("Frame",{ --container
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundColor3 = Color3.fromRGB(47, 47, 47),
@@ -101,312 +94,13 @@ local function main()
 here come the Juicy stuff..
 
 ]]
-
---[[
-information text
-]]
-						create_element("Frame",{
-							BackgroundTransparency = 1,
-							Size = UDim2.new(1, 0, 0, 32),
-						},
-							create_element("UIPadding",{
-								PaddingLeft = UDim.new(0, 30),
-							}),
-							create_element("TextLabel",{
-								AutomaticSize = "Y",
-								BackgroundTransparency = 1,
-								Size = UDim2.new(1, 0, 0, 32),
-								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-								TextSize = 30,
-								TextXAlignment = "Left",
-								Text = "Please do not the cat.",
-								TextColor3 = Color3.fromRGB(255, 255, 255),
-							},
-								create_element("ImageLabel",{
-									Position = UDim2.fromOffset(-30, 0),
-									Size = UDim2.fromOffset(30, 30),
-									BackgroundTransparency = 1,
-									Image = "rbxassetid://123784732468200",
-									ImageColor3 = Color3.fromRGB(255, 255, 255), -- this isn't needed, i just want to keep it consistent
-								})
-							)
-						),
---[[
-warning text
-]]
-						create_element("Frame",{ --Warning component
-							BackgroundTransparency = 1,
-							Size = UDim2.new(1, 0, 0, 32),
-						},
-							create_element("UIPadding",{
-								PaddingLeft = UDim.new(0, 30),
-							}),
-							create_element("TextLabel",{
-								AutomaticSize = "Y",
-								BackgroundTransparency = 1,
-								Size = UDim2.new(1, 0, 0, 32),
-								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-								TextSize = 30,
-								TextXAlignment = "Left",
-								Text = "Please do not the cat. Final warning.",
-								TextColor3 = Color3.fromRGB(255, 213, 0),
-							},
-								create_element("ImageLabel",{
-									Position = UDim2.fromOffset(-30, 0),
-									Size = UDim2.fromOffset(30, 30),
-									BackgroundTransparency = 1,
-									Image = "rbxassetid://97154438768583",
-									ImageColor3 = Color3.fromRGB(255, 213, 0),
-								})
-							)
-						),
---[[
-danger text
-]]
-						create_element("Frame",{
-							BackgroundTransparency = 1,
-							Size = UDim2.new(1, 0, 0, 32),
-						},
-							create_element("UIPadding",{
-								PaddingLeft = UDim.new(0, 30),
-							}),
-							create_element("TextLabel",{
-								AutomaticSize = "Y",
-								BackgroundTransparency = 1,
-								Size = UDim2.new(1, 0, 0, 32),
-								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-								TextSize = 30,
-								TextXAlignment = "Left",
-								Text = "You did the cat. This will have big consequences.",
-								TextColor3 = Color3.fromRGB(177, 76, 78),
-							},
-								create_element("ImageLabel",{
-									Position = UDim2.fromOffset(-30, 0),
-									Size = UDim2.fromOffset(30, 30),
-									BackgroundTransparency = 1,
-									Image = "rbxassetid://115254390253293",
-									ImageColor3 = Color3.fromRGB(177, 76, 78),
-								})
-							)
-						),
---[[
-text input
-]]
-						create_element("TextBox",{
-							ClearTextOnFocus = false,
-							BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-							Size = UDim2.new(1, 0, 0, 50),
-							FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-							PlaceholderColor3 = Color3.fromRGB(129, 129, 129),
-							PlaceholderText = "Enter text...",
-							TextColor3 = Color3.fromRGB(255, 255, 255),
-							TextSize = 50,
-							Text = "",
-							TextXAlignment = "Left",
-						},
-							create_element("UICorner",{
-								CornerRadius = UDim.new(1, 0),
-							}),
-							create_element("UIPadding",{
-								PaddingLeft = UDim.new(0, 10),
-								PaddingRight = UDim.new(0, 10),
-							}),
-							create_element("UIStroke",{
-								ApplyStrokeMode = "Border",
-								Color = Color3.fromRGB(255, 255, 255),
-								Thickness = 2,
-							},
-								create_element("UIGradient",{
-									Color = ColorSequence.new({
-										ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-										ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-									}),
-									Rotation = -90,
-								})
-							)
-						),
---[[
-slider
-]]
-						create_element("Frame",{
-							BackgroundTransparency = 1,
-							Size = UDim2.new(1, -60, 0, 32),
-						},
-							create_element("Frame",{ --track
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(0, 10, 0.5, 0),
-								BackgroundColor3 = Color3.fromRGB(54, 54 ,54),
-								Size = UDim2.new(1, 0, 0, 10),
-							},
-								create_element("UICorner",{
-									CornerRadius = UDim.new(1, 0),
-								}),
-								create_element("UIStroke",{
-									Color = Color3.fromRGB(255, 255, 255),
-									Thickness = 2,
-								},
-									create_element("UIGradient",{
-									 	Color = ColorSequence.new({
-											ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-											ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-										}),
-									})
-								),
-								create_element("Frame",{ --thumb
-									AnchorPoint = Vector2.new(0.5, 0.5),
-									Position = UDim2.fromScale(0, 0.5),
-									BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-									Size = UDim2.fromOffset(25, 25),
-								},
-									create_element("UICorner",{
-										CornerRadius = UDim.new(1, 0),
-									}),
-									create_element("UIStroke",{
-										Color = Color3.fromRGB(255, 255, 255),
-										Thickness = 2,
-									},
-										create_element("UIGradient",{
-											Color = ColorSequence.new({
-												ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-												ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-											}),
-										})
-									)
-								)
-							),
-							create_element("TextLabel",{
-								BackgroundTransparency = 1,
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(1, 50, 0.5, 0),
-								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-								TextSize = 25,
-								Text = "100", --any range
-								TextColor3 = Color3.fromRGB(255, 255, 255),
-							})
-						),
---[[
-hue slider
-]]
-						create_element("Frame",{
-							BackgroundTransparency = 1,
-							Size = UDim2.new(1, -60, 0, 32),
-						},
-							create_element("Frame",{ --track
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(0, 10, 0.5, 0),
-								BackgroundColor3 = Color3.fromRGB(54, 54 ,54),
-								Size = UDim2.new(1, 0, 0, 10),
-							},
-								create_element("UICorner",{
-									CornerRadius = UDim.new(1, 0),
-								}),
-								create_element("UIStroke",{
-									Color = Color3.fromRGB(255, 255, 255),
-									Thickness = 2,
-								},
-									create_element("UIGradient",{
-									 	Color = ColorSequence.new({
-											ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
-											ColorSequenceKeypoint.new(0.167, Color3.fromRGB(255, 255, 0)),
-											ColorSequenceKeypoint.new(0.333, Color3.fromRGB(0, 255, 0)),
-											ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
-											ColorSequenceKeypoint.new(0.666666, Color3.fromRGB(0, 0, 255)),
-											ColorSequenceKeypoint.new(0.833333, Color3.fromRGB(255, 0, 255)),
-											ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
-										}),
-									})
-								),
-								create_element("Frame",{ --thumb
-									AnchorPoint = Vector2.new(0.5, 0.5),
-									Position = UDim2.fromScale(0, 0.5),
-									BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-									Size = UDim2.fromOffset(25, 25),
-								},
-									create_element("UICorner",{
-										CornerRadius = UDim.new(1, 0),
-									}),
-									create_element("UIStroke",{
-										Color = Color3.fromRGB(255, 255, 255),
-										Thickness = 2,
-									},
-										create_element("UIGradient",{
-											Color = ColorSequence.new({
-												ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-												ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-											}),
-										})
-									)
-								)
-							),
-							create_element("TextLabel",{
-								BackgroundTransparency = 1,
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(1, 50, 0.5, 0),
-								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-								TextSize = 25,
-								Text = "0", --range 0-360
-								TextColor3 = Color3.fromRGB(255, 255, 255),
-							})
-						),
---[[
-saturation slider
-]]
-						create_element("Frame",{
-							BackgroundTransparency = 1,
-							Size = UDim2.new(1, -60, 0, 32),
-						},
-							create_element("Frame",{ --track
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(0, 10, 0.5, 0),
-								BackgroundColor3 = Color3.fromRGB(54, 54 ,54),
-								Size = UDim2.new(1, 0, 0, 10),
-							},
-								create_element("UICorner",{
-									CornerRadius = UDim.new(1, 0),
-								}),
-								create_element("UIStroke",{
-									Color = Color3.fromRGB(255, 255, 255),
-									Thickness = 2,
-								},
-									create_element("UIGradient",{
-									 	Color = ColorSequence.new({
-											ColorSequenceKeypoint.new(0, Color3.fromRGB(76, 76, 76)),
-											ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
-										}),
-									})
-								),
-								create_element("Frame",{ --thumb
-									AnchorPoint = Vector2.new(0.5, 0.5),
-									Position = UDim2.fromScale(1, 0.5),
-									BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-									Size = UDim2.fromOffset(25, 25),
-								},
-									create_element("UICorner",{
-										CornerRadius = UDim.new(1, 0),
-									}),
-									create_element("UIStroke",{
-										Color = Color3.fromRGB(255, 255, 255),
-										Thickness = 2,
-									},
-										create_element("UIGradient",{
-											Color = ColorSequence.new({
-												ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-												ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-											}),
-										})
-									)
-								)
-							),
-							create_element("TextLabel",{
-								BackgroundTransparency = 1,
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(1, 50, 0.5, 0),
-								FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-								TextSize = 25,
-								Text = "100", --range 0-100
-								TextColor3 = Color3.fromRGB(255, 255, 255),
-							})
-						),
+						create_element(information_text),
+						create_element(warning_text),
+						create_element(danger_text),
+						create_element(text_input),
+						create_element(slider),
+						create_element(hue_slider),
+						create_element(saturation_slider),
 --[[
 value slider
 ]]
@@ -942,4 +636,4 @@ dropdown menu
 	)
 end
 
-return main
+return components_showcase
