@@ -41,14 +41,14 @@ local function player_card(props: {
 			CornerRadius = UDim.new(0.5, 0),
 		}),
 		create_element("UIStroke", {
-			Color = Color3.fromRGB(255, 255, 255),
+			Color = colours["white"],
 			ApplyStrokeMode = "Border",
 			Thickness = 2,
 		},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, props.colour),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+					ColorSequenceKeypoint.new(1, colours["dark_grey"]),
 				}),
 				Rotation = -90,
 			})
@@ -254,13 +254,13 @@ local function tablist()
 			}),
 			create_element("UIStroke", {
 				Thickness = 2,
-				Color = Color3.fromRGB(255, 255, 255),
+				Color = colours["white"],
 				ApplyStrokeMode = "Border",
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-						ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+						ColorSequenceKeypoint.new(1, colours["dark_grey"]),
 					}),
 					Rotation = -90,
 				})

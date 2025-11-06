@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local notification_management = require(script.Parent.Parent.modules.notification_management)
 local React = require(ReplicatedStorage.vendor.ReactLua.React)
 
+local colours = require(ReplicatedStorage.modules.colours)
 local create_element = React.createElement
 type notification = notification_management.notification
 local use_effect = React.useEffect
@@ -66,7 +67,7 @@ local function notification_component(props: {
 		Size = UDim2.new(1, 0, 0, 26), -- Slightly bigger from 22 to 26
 		Position = UDim2.new(0, 0, 1, -(index * 30)),
 		AnchorPoint = Vector2.new(0, 1),
-		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+		BackgroundColor3 = colours["black"],
 		BackgroundTransparency = 0.5 + (transparency * 0.5),
 	},
 		create_element("UICorner", {
@@ -74,14 +75,14 @@ local function notification_component(props: {
 		}),
 		create_element("UIStroke", {
 			Thickness = 1,
-			Color = Color3.fromRGB(255, 255, 255),
+			Color = colours["white"],
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Transparency = transparency,
 		}, 
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+					ColorSequenceKeypoint.new(0, colours["grey"]),
+					ColorSequenceKeypoint.new(1, colours["dark_grey"]),
 				}),
 				Rotation = -90,
 			})
@@ -98,7 +99,7 @@ local function notification_component(props: {
 			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 			TextSize = 15, -- Slightly bigger from 14 to 15
 			Text = notification.message,
-			TextColor3 = Color3.fromRGB(255, 255, 255),
+			TextColor3 = colours["white"],
 			TextXAlignment = Enum.TextXAlignment.Center,
 			TextYAlignment = Enum.TextYAlignment.Center,
 			TextScaled = false,
