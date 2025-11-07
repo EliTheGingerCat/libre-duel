@@ -23,7 +23,7 @@ local function player_card(props: {
 	order: number,
 })
 	return create_element("TextLabel", {
-		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+		BackgroundColor3 = colours["black"],
 		BackgroundTransparency = 0.7,
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 		LayoutOrder = props.order,
@@ -139,14 +139,14 @@ local function ping_display()
 
 	local progress = math.clamp((ping - ideal_ping) / (bad_ping - ideal_ping), 0, 1)
 	local hue = (1/3) * (1 - progress)
-	local colour = Color3.fromHSV(hue, 0.61, 0.9) --I know styling guide tells me to use Color3.new but this makes it so much simpler..
+	local colour = Color3.fromHSV(hue, 0.61, 0.9) -- This does not use the colours modulescript but I am not sure how to make it.
 	local hex = "#" .. colour:ToHex()
 
 	local rich_text = ('<font color="%s">%d</font> ms'):format(hex, math.round(ping))
 
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
-		Position = UDim2.fromScale(0.5, 1),
+		Position = UDim2.new(0.5, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 		TextColor3 = colours["light_grey"],
 		TextSize = 36,
@@ -186,7 +186,7 @@ local function location_display()
 
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
-		Position = UDim2.fromScale(0, 1),
+		Position = UDim2.new(0, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 		TextColor3 = colours["light_grey"],
 		TextSize = 36,
@@ -240,7 +240,7 @@ local function tablist()
 			Position = UDim2.new(0.5, 0, 0, 147),
 			Size = UDim2.fromOffset(720, 0),
 			AutomaticSize = "Y",
-			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+			BackgroundColor3 = colours["black"],
 			BackgroundTransparency = 0.5,
 		},
 			create_element("UICorner", {
@@ -259,7 +259,7 @@ local function tablist()
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
+						ColorSequenceKeypoint.new(0, colours["light_grey"]),
 						ColorSequenceKeypoint.new(1, colours["dark_grey"]),
 					}),
 					Rotation = -90,

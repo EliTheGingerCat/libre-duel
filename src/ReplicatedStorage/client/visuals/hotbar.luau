@@ -168,12 +168,12 @@ local function health_main()
 	local health_main = use_health_main()
 
 	local props_slider = {
-		colour_background = Color3.fromRGB(91, 43, 44),
+		colour_background = colours["red_900"],
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, colours["desaturated_red"]),
-			ColorSequenceKeypoint.new(1, colours["dark_desaturated_red"]),
+			ColorSequenceKeypoint.new(0, colours["red_700"]),
+			ColorSequenceKeypoint.new(1, colours["red_800"]),
 		}),
-		colour_stroke = Color3.fromRGB(146, 60, 62),
+		colour_stroke = colours["red_900"],
 		fill_total = 100,
 		fill_value = health_main,
 		name = "health_main",
@@ -184,19 +184,19 @@ local function health_main()
 	return create_element(slider_display, props_slider)
 end
 
-local function health_extra(props: {
-	health_extra: number
+local function shield_health(props: {
+	shield_health: number
 })
 	local props_slider = {
-		colour_background = Color3.fromRGB(121, 85, 1),
+		colour_background = colours["sky_800"],
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(239, 173, 82)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(211, 170, 34)),
+			ColorSequenceKeypoint.new(0, colours["sky_600"]),
+			ColorSequenceKeypoint.new(1, colours["sky_700"]),
 		}),
-		colour_stroke = Color3.fromRGB(170, 140, 39),
+		colour_stroke = colours["sky_800"],
 		fill_total = 20,
-		fill_value = props.health_extra,
-		name = "health_extra",
+		fill_value = props.shield_health,
+		name = "shield_health",
 		position_y_offset = -46,
 		size_x_scale = 0.4,
 	}
@@ -205,7 +205,7 @@ local function health_extra(props: {
 end
 
 local function health_bar(props: {
-	health_extra: number,
+	shield_health: number,
 })
 	return create_element("Frame", {
 		Name = "health_bar",
@@ -213,8 +213,8 @@ local function health_bar(props: {
 		Size = UDim2.fromScale(1, 1),
 	},
 		create_element(health_main),
-		props.health_extra > 0 and create_element(health_extra, {
-			health_extra = props.health_extra
+		props.shield_health > 0 and create_element(shield_health, {
+			shield_health = props.shield_health
 		})
 	)
 end
@@ -240,8 +240,8 @@ local function slot(props: {
 	text: string,
 })
 	return create_element("Frame", {
-		BackgroundColor3 = colours["white"],
-		BackgroundTransparency = 0.75,
+		BackgroundColor3 = colours["black"],
+		BackgroundTransparency = 0.8,
 		Name = props.id,
 		Size = UDim2.fromScale(1, 1),
 		LayoutOrder = props.id,
@@ -252,7 +252,7 @@ local function slot(props: {
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(0.8, 0.8),
 			Text = props.text,
-			TextColor3 = Color3.new(1, 1, 1),
+			TextColor3 = colours["white"],
 			TextScaled = true,
 			TextSize = 20,
 		}),
@@ -322,7 +322,7 @@ local function hotbar()
 	},
 		create_element("Frame", {
 				AnchorPoint = Vector2.new(0.5, 1),
-				BackgroundColor3 = colours["white"],
+				BackgroundColor3 = colours["black"],
 				BackgroundTransparency = 0.5,
 				Position = UDim2.new(0.5, 0, 1, -10),
 				Size = UDim2.fromOffset(680, 80),
@@ -344,7 +344,7 @@ local function hotbar()
 			),
 			create_element(scale),
 			create_element(health_bar, {
-				health_extra = 0,
+				shield_health = 10,
 			}),
 			create_element(slots_container)
 		)
