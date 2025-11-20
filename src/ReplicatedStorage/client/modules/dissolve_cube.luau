@@ -13,15 +13,11 @@ local player_range = require(ReplicatedStorage.modules.player_range)
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
 
+local connection_destroying: RBXScriptConnection?
 local connection_input: RBXScriptConnection?
 local connection_target: RBXScriptConnection?
 local cube_target: Part?
 local time_start: number?
-
-local function cleanup_cube(): ()
-	assert(cube_target ~= nil, "There is no target.")
-	cube_target = nil
-end
 
 local function cleanup_most(): ()
 	if connection_input ~= nil then
@@ -37,7 +33,16 @@ end
 
 local function cleanup_all(): ()
 	cleanup_most()
-	cleanup_cube()
+
+	assert(cube_target ~= nil, "There is no target.")
+	cube_target = nil
+	
+	if connection_destroying == nil then
+		debug_print("Error: There is no destroying connection.")
+	else
+		connection_destroying:Disconnect()
+		connection_destroying = nil
+	end
 end
 
 local function set_dissolution_display(fraction: number): ()
@@ -45,10 +50,17 @@ local function set_dissolution_display(fraction: number): ()
 	cube_target.Transparency = fraction
 end
 
+local dissolve_start
+
 local function dissolve_stop(): ()
 	set_dissolution_display(0)
 	cleanup_all()
 	ReplicatedStorage.remotes.dissolve_stop:FireServer()
+end
+
+local function dissolve_new_cube(cube: Part): ()
+	dissolve_stop()
+	dissolve_start(cube)
 end
 
 local function dissolution_finished(): ()
@@ -65,47 +77,62 @@ local function on_input_ended(input: InputObject): ()
 	end
 end
 
-local function should_stop(): boolean
-	local cube = local_mouse.Target
-	if cube ~= cube_target then
-		debug_print("Target changed.")
-		return true
+-- If the return value is false, the client will stop dissolving.
+local function can_dissolve(cube: Part?): boolean
+	if cube == nil then
+		debug_print("Mouse is not pointing at anything.")
+		return false
+	end
+
+	if not cube:IsA("Part") then
+		debug_print("Mouse target is not a Part.")
+		return false
+	end
+	
+	if cube:HasTag("cube") == false then
+		debug_print("Mouse target is not a cube.")
+		return false
 	end
 
 	local local_position = get_player_position(local_player)
 	if local_position == nil then
 		debug_print("Local position is missing.")
-		return true
+		return false
 	end
 
 	local distance = (cube.Position - local_position).Magnitude
 	if distance > player_range then
 		debug_print("Too far.")
-		return true
+		return false
 	end
 
-	return false
+	return true
 end
 
 local function on_heartbeat(): ()
-	if should_stop() == true then
+	local cube_now = local_mouse.Target
+	if can_dissolve(cube_now) == false then
 		dissolve_stop()
 		return
 	end
 
+	if cube_now ~= cube_target then
+		dissolve_new_cube(cube_now)
+		return
+	end
+
 	assert(time_start ~= nil, "Time is missing.")
-	assert(cube_target ~= nil, "Cube target is missing")
 	
 	local time_elapsed = tick() - time_start
 	local time_fraction = math.min(1, time_elapsed / cube_dissolve_time)
-	cube_target.Transparency = time_fraction
+	cube_now.Transparency = time_fraction
 
 	if time_fraction >= 1 then
 		dissolution_finished()
 	end
 end
 
-local function dissolve_start(cube: Part): ()
+dissolve_start = function(cube: Part): ()
 	cube_target = cube
 	connection_input = UserInputService.InputEnded:Connect(on_input_ended)
 	connection_target = RunService.Heartbeat:Connect(on_heartbeat)
@@ -115,7 +142,7 @@ local function dissolve_start(cube: Part): ()
 	local function on_destroying(): ()
 		debug_print("Destroying cube:", cube)
 	end
-	cube.Destroying:Connect(on_destroying)
+	connection_destroying = cube.Destroying:Connect(on_destroying)
 
 	ReplicatedStorage.remotes.dissolve_cube:FireServer(cube)
 end
@@ -142,30 +169,7 @@ ReplicatedStorage.remotes.dissolve_failed.OnClientEvent:Connect(on_dissolve_fail
 local function dissolve_cube(): ()
 	local cube = local_mouse.Target
 
-	if cube == nil then
-		debug_print("Mouse is not pointing at anything.")
-		return
-	end
-
-	if not cube:IsA("Part") then
-		debug_print("Mouse target is not a Part.")
-		return
-	end
-	
-	if cube:HasTag("cube") == false then
-		debug_print("Mouse target is not a cube.")
-		return
-	end
-
-	local local_position = get_player_position(local_player)
-	if local_position == nil then
-		debug_print("Local position is missing.")
-		return
-	end
-
-	local distance = (cube.Position - local_position).Magnitude
-	if distance > player_range then
-		debug_print("Too far.")
+	if can_dissolve(cube) == false then
 		return
 	end
 

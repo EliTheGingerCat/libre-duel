@@ -190,7 +190,14 @@ local function on_fire_start(player: Player, cube: unknown?): ()
 end
 
 local function on_fire_stop(player: Player): ()
-	dissolvings[player] = nil
+	local dissolving = dissolvings[player]
+	
+	-- This function can be fired willy-nilly by players, so there is no guarantee that the player is actually dissolving anything. It can also be nil for honest players if they are experiencing great lag: they place a block, then start dissolving, but the server denies the dissolving because the block does not exist on the server yet.
+	if dissolving == nil then
+		return
+	end
+
+	dissolve_ceased(dissolving)
 end
 
 
