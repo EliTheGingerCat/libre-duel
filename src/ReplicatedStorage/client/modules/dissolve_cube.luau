@@ -9,6 +9,7 @@ local debug_print = require(script.Parent.debug_print)
 local keybinds = require(script.Parent.keybinds)
 local get_player_position = require(ReplicatedStorage.modules.get_player_position)
 local player_range = require(ReplicatedStorage.modules.player_range)
+local transparency_maximum = require(script.Parent.transparency_maximum)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
@@ -146,7 +147,9 @@ local function on_heartbeat(): ()
 	
 	local time_elapsed = tick() - time_start
 	local time_fraction = math.min(1, time_elapsed / cube_dissolve_time)
-	set_dissolution_display(time_fraction)
+	-- See `transparency_maximum.luau` for an explanation of this operation.
+	local transparency_fraction = time_fraction * transparency_maximum
+	set_dissolution_display(transparency_fraction)
 
 	if time_fraction >= 1 then
 		dissolution_finished()
