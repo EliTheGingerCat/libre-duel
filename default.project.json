@@ -44,9 +44,16 @@
 
     "Workspace": {
       "$properties": {
-        "FilteringEnabled": true
+        "FilteringEnabled": true,
+        "Gravity": 100.0
       },
       "$path": "./src/Workspace"
+    },
+    "StarterPlayer": {
+      "$properties": {
+        "CharacterJumpHeight": 3.5,
+        "CharacterUseJumpPower": false
+      }
     }
   }
 }
