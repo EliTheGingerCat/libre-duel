@@ -145,9 +145,9 @@ local function start_dissolving(player: Player, cube: Part): ()
 end
 
 local function try_start(player: Player, cube: unknown?): boolean
-	-- When dealing with high lag, this can happen if the player, places a cube and then immediately begins to dissolve it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
+	-- When dealing with high lag, this can happen if the player places a cube and then immediately begins to dissolve it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
 	if cube == nil then
-		debug_print("Not enough arguments.")
+		debug_print("Not enough arguments. This is likely because the cube does does not exist on the server yet.")
 		return false
 	end
 	

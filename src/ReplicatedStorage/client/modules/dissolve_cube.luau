@@ -15,8 +15,9 @@ local local_mouse = local_player:GetMouse()
 
 local connection_destroying: RBXScriptConnection?
 local connection_input: RBXScriptConnection?
-local connection_target: RBXScriptConnection?
+local connection_heartbeat: RBXScriptConnection?
 local cube_target: Part?
+local last_fail: string?
 local time_start: number?
 
 local function cleanup_most(): ()
@@ -25,12 +26,13 @@ local function cleanup_most(): ()
 		connection_input = nil
 	end
 
-	if connection_target ~= nil then
-		connection_target:Disconnect()
-		connection_target = nil
+	if connection_heartbeat ~= nil then
+		connection_heartbeat:Disconnect()
+		connection_heartbeat = nil
 	end
 end
 
+-- Destroys all dissolving state.
 local function cleanup_all(): ()
 	cleanup_most()
 
@@ -52,11 +54,16 @@ end
 
 local dissolve_start
 
-local function dissolve_stop(): ()
+local function dissolve_pause(): ()
 	set_dissolution_display(0)
-	cleanup_all()
 	ReplicatedStorage.remotes.dissolve_stop:FireServer()
 end
+
+local function dissolve_stop(): ()
+	dissolve_pause() -- Must pause before cleaning up the cube pointer.
+	cleanup_all()
+end
+
 
 local function dissolve_new_cube(cube: Part): ()
 	dissolve_stop()
@@ -78,43 +85,57 @@ local function on_input_ended(input: InputObject): ()
 end
 
 -- If the return value is false, the client will stop dissolving.
-local function can_dissolve(cube: Part?): boolean
+local function can_dissolve(cube: Part?, do_print: true?): string?
 	if cube == nil then
-		debug_print("Mouse is not pointing at anything.")
-		return false
+		return "Mouse is not pointing at anything."
 	end
 
 	if not cube:IsA("Part") then
-		debug_print("Mouse target is not a Part.")
-		return false
+		return "Mouse target is not a Part."
 	end
 	
 	if cube:HasTag("cube") == false then
-		debug_print("Mouse target is not a cube.")
-		return false
+		return "Mouse target is not a cube."
 	end
 
 	local local_position = get_player_position(local_player)
 	if local_position == nil then
-		debug_print("Local position is missing.")
-		return false
+		return "Local position is missing."
 	end
 
 	local distance = (cube.Position - local_position).Magnitude
 	if distance > player_range then
-		debug_print("Too far.")
-		return false
+		return "Too far."
 	end
 
-	return true
+	return nil
 end
 
 local function on_heartbeat(): ()
 	local cube_now = local_mouse.Target
-	if can_dissolve(cube_now) == false then
-		dissolve_stop()
+	local fail_message = can_dissolve(cube_now)
+	local fail = fail_message ~= nil
+	if fail == true then
+		-- As this runs every Heartbeat, do not spam the fail message nor the pausing.
+		if fail_message ~= last_fail then
+			last_fail = fail_message
+			debug_print(fail_message)
+
+			dissolve_pause()
+		end
+
+		-- Maybe whatever is preventing dissolution will cease. Do not stop dissolving --- keep checking. Only releasing of the keybind should stop all operations.
+		-- Technically, some more connections could be added to reduce the amount of work every frame. For example, if `local_mouse.Target` has not changed since last frame, and it was problematic in the last frame, then it is certainly problematic in this frame, though that seems overly complicated for not much benefit and in an already complicated system.
 		return
 	end
+
+	-- An example of when this would be `true` is if the player starts dissolving a cube, moves their mouse away from it, and then moves it back on. During the time that the mouse was away, `can_dissolve` reported a specific fail message and the dissolving was paused.
+	local unpaused = last_fail ~= nil
+	if unpaused then
+		-- Could use `dissolve_new_cube` here, but this is the only state that needs to be updated.
+		time_start = tick()
+	end
+	last_fail = nil
 
 	if cube_now ~= cube_target then
 		dissolve_new_cube(cube_now)
@@ -125,7 +146,7 @@ local function on_heartbeat(): ()
 	
 	local time_elapsed = tick() - time_start
 	local time_fraction = math.min(1, time_elapsed / cube_dissolve_time)
-	cube_now.Transparency = time_fraction
+	set_dissolution_display(time_fraction)
 
 	if time_fraction >= 1 then
 		dissolution_finished()
@@ -135,7 +156,7 @@ end
 dissolve_start = function(cube: Part): ()
 	cube_target = cube
 	connection_input = UserInputService.InputEnded:Connect(on_input_ended)
-	connection_target = RunService.Heartbeat:Connect(on_heartbeat)
+	connection_heartbeat = RunService.Heartbeat:Connect(on_heartbeat)
 	time_start = tick()
 
 	-- This connection is always made, even when debug mode is disabled.
@@ -169,7 +190,8 @@ ReplicatedStorage.remotes.dissolve_failed.OnClientEvent:Connect(on_dissolve_fail
 local function dissolve_cube(): ()
 	local cube = local_mouse.Target
 
-	if can_dissolve(cube) == false then
+	local fail = can_dissolve(cube) ~= nil
+	if fail == true then
 		return
 	end
 
