@@ -12,20 +12,46 @@ local player_range_server = require(ServerScriptService.modules.player_range_ser
 type dissolving = {
 	cube: Part,
 	cube_destroying: RBXScriptConnection,
+	id: number, -- Unique only to this specific player. Ids may overlap among players.
 	player: Player,
 	time_start: number,
 	time_end: number,
 }
 
 type dissolvings = {
-	[Player]: dissolving,
+	[Player]: {dissolving},
 }
 
 local connection_heartbeat: RBXScriptConnection?
 local dissolvings: dissolvings = {}
+local total_dissolvings = 0
+
+local function find_dissolving(player: Player, id: number): dissolving?
+	for _, dissolving in dissolvings[player] do
+		if dissolving.id == id then
+			return dissolving
+		end
+	end
+	
+	debug_print(`There is no dissolving with id "{id}".`)
+	return nil
+end
+
+local function remove_dissolving(dissolving: dissolving): ()
+	local dissolvings_player = dissolvings[dissolving.player]
+	for index, dissolving_maybe in dissolvings_player do
+		if dissolving_maybe.id == dissolving.id then
+			dissolvings_player[index] = nil
+			total_dissolvings -= 1
+			return
+		end
+	end
+
+	debug_print(`Dissolving of player "{dissolving.player.Name}" with id "{dissolving.id}" seems to have already been removed.`)
+end
 
 local function dissolve_ceased(dissolving: dissolving): ()
-	dissolvings[dissolving.player] = nil
+	remove_dissolving(dissolving)
 	dissolving.cube_destroying:Disconnect()
 end
 
@@ -34,7 +60,7 @@ local function dissolve_finished(dissolving: dissolving): ()
 	local cube = dissolving.cube
 	cube:Destroy()
 	cube_cache[cube.Position] = nil
-	ReplicatedStorage.remotes.dissolve_finished:FireClient(dissolving.player)
+	ReplicatedStorage.remotes.dissolve_finished:FireClient(dissolving.player, dissolving.id)
 end
 
 local function fire_excluding(remote: RemoteEvent, player: Player, ...: any): ()
@@ -52,7 +78,7 @@ end
 local function dissolve_fail(dissolving: dissolving): ()
 	debug_print("Failed to dissolve. Cube:", dissolving.cube)
 	dissolve_ceased(dissolving)
-	ReplicatedStorage.remotes.dissolve_failed:FireClient(dissolving.player)
+	ReplicatedStorage.remotes.dissolve_failed:FireClient(dissolving.player, dissolving.id)
 	dissolve_progress(dissolving, 0)
 end
 
@@ -72,16 +98,11 @@ local function should_fail(dissolving: dissolving): boolean
 	return false
 end
 
-local function is_empty(tab: {[any]: any}): boolean
-	local next_index = next(tab)
-	local empty = next_index == nil
-	return empty
-end
-
 local function deactivate_heartbeat(): ()
 	assert(connection_heartbeat ~= nil, "There is no connection for heartbeat.")
 	connection_heartbeat:Disconnect()
 	connection_heartbeat = nil
+	debug_print("Deactivated the heartbeat connection.")
 end
 
 local function on_heartbeat(): ()
@@ -89,20 +110,22 @@ local function on_heartbeat(): ()
 	local finished: {dissolving} = {}
 	local failed: {dissolving} = {}
 
-	for _, dissolving in dissolvings do
-		if dissolving.time_end <= now then
-			table.insert(finished, dissolving)
-			continue
-		end
+	for _, player_dissolvings in dissolvings do
+		for _, dissolving in player_dissolvings do
+			if dissolving.time_end <= now then
+				table.insert(finished, dissolving)
+				continue
+			end
 
-		if should_fail(dissolving) == true then
-			table.insert(failed, dissolving)
-			continue
-		end
+			if should_fail(dissolving) == true then
+				table.insert(failed, dissolving)
+				continue
+			end
 
-		local time_elapsed = now - dissolving.time_start
-		local time_fraction = time_elapsed / cube_dissolve_time
-		dissolve_progress(dissolving, time_fraction)
+			local time_elapsed = now - dissolving.time_start
+			local time_fraction = time_elapsed / cube_dissolve_time
+			dissolve_progress(dissolving, time_fraction)
+		end
 	end
 
 	-- I read somewhere that it is bad to alter a table while iterating through it.
@@ -114,7 +137,7 @@ local function on_heartbeat(): ()
 		dissolve_fail(dissolving)
 	end
 
-	if is_empty(dissolvings) == true then
+	if total_dissolvings == 0 then
 		deactivate_heartbeat()
 	end
 end
@@ -125,7 +148,7 @@ local function activate_heartbeat(): ()
 	end
 end
 
-local function start_dissolving(player: Player, cube: Part): ()
+local function start_dissolving(player: Player, id: number, cube: Part): ()
 	local dissolving: dissolving
 
 	local function on_destroying(): ()
@@ -136,28 +159,36 @@ local function start_dissolving(player: Player, cube: Part): ()
 	dissolving = {
 		cube = cube,
 		cube_destroying = connection_destroying,
+		id = id,
 		player = player,
 		time_start = tick(), -- Can be bad for laggy players.
 		time_end = tick() + cube_dissolve_time,
 	}
-	dissolvings[player] = dissolving
+	table.insert(dissolvings[player], dissolving)
+	total_dissolvings += 1
+
 	activate_heartbeat()
 end
 
-local function try_start(player: Player, cube: unknown?): boolean
+local function try_start(player: Player, id: unknown?, cube: unknown?): boolean
 	-- When dealing with high lag, this can happen if the player places a cube and then immediately begins to dissolve it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
 	if cube == nil then
 		debug_print("Not enough arguments. This is likely because the cube does does not exist on the server yet.")
 		return false
 	end
+
+	if type(id) ~= "number" then
+		debug_print("Invalid arguments. Id is not a number.")
+		return false
+	end
 	
 	if typeof(cube) ~= "Instance" then
-		debug_print("Invalid arguments. Not an instance.")
+		debug_print("Invalid arguments. Cube is not an instance.")
 		return false
 	end
 
 	if not cube:IsA("Part") then
-		debug_print("Invalid arguments. Not a Part.")
+		debug_print("Invalid arguments. Cube is not a Part.")
 		return false
 	end
 
@@ -178,19 +209,19 @@ local function try_start(player: Player, cube: unknown?): boolean
 		return false
 	end
 
-	start_dissolving(player, cube)
+	start_dissolving(player, id, cube)
 	return true
 end
 
-local function on_fire_start(player: Player, cube: unknown?): ()
-	local success = try_start(player, cube)
+local function on_fire_start(player: Player, id: unknown?, cube: unknown?): ()
+	local success = try_start(player, id, cube)
 	if success == false then
-		ReplicatedStorage.remotes.dissolve_failed:FireClient(player)
+		ReplicatedStorage.remotes.dissolve_failed:FireClient(player, id)
 	end
 end
 
-local function on_fire_stop(player: Player): ()
-	local dissolving = dissolvings[player]
+local function on_fire_stop(player: Player, id: number): ()
+	local dissolving = find_dissolving(player, id)
 	
 	-- This function can be fired willy-nilly by players, so there is no guarantee that the player is actually dissolving anything. It can also be nil for honest players if they are experiencing great lag: they place a block, then start dissolving, but the server denies the dissolving because the block does not exist on the server yet.
 	if dissolving == nil then
@@ -203,3 +234,14 @@ end
 
 ReplicatedStorage.remotes.dissolve_cube.OnServerEvent:Connect(on_fire_start)
 ReplicatedStorage.remotes.dissolve_stop.OnServerEvent:Connect(on_fire_stop)
+
+local function on_player_added(player: Player): ()
+	dissolvings[player] = {}
+end
+Players.PlayerAdded:Connect(on_player_added)
+
+local function on_player_removing(player: Player): ()
+	total_dissolvings -= #dissolvings[player]
+	dissolvings[player] = nil
+end
+Players.PlayerRemoving:Connect(on_player_removing)
