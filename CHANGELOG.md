@@ -11,7 +11,7 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 ### Added
 
 - Melee attacking.
-- Cube placing.
+- Cube placing and dissolving.
 - Version text in the bottom left.
 - Local and server debug printing.
 - Development guides.

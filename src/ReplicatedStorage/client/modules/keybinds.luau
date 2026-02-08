@@ -14,6 +14,7 @@ local keybinds = {
 	},
 	tablist = Enum.KeyCode.Tab,
 	tool_switch = Enum.KeyCode.E,
+	tool_use = Enum.UserInputType.MouseButton1,
 }
 
 return keybinds
