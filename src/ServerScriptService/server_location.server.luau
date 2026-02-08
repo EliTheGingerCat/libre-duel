@@ -53,9 +53,19 @@ local function get_server_location(): string?
 		print("[IPinfo] Non-fatal warning: No token. Only legacy API can be used.")
 	end
 
-	return
-		get_server_location_legacy()
-		or get_server_location_Lite()
+	local location = get_server_location_legacy()
+	if location ~= nil then
+		return location
+	end
+	
+	if token ~= nil then
+		location = get_server_location_Lite()
+		if location ~= nil then
+			return location
+		end
+	end
+
+	return nil
 end
 
 local location_maybe = get_server_location()
