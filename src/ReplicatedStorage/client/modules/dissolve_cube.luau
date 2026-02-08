@@ -148,7 +148,7 @@ local function on_input_ended(input: InputObject): ()
 end
 
 -- If the return value is false, the client will stop dissolving.
-local function can_dissolve(cube: Part?, do_print: true?): string?
+local function can_dissolve(cube: Part?): string?
 	if cube == nil then
 		return "Mouse is not pointing at anything."
 	end
