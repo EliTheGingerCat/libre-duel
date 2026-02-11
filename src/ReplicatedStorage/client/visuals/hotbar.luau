@@ -184,8 +184,8 @@ local function health_main()
 	return create_element(slider_display, props_slider)
 end
 
-local function shield_health(props: {
-	shield_health: number
+local function health_shield(props: {
+	health_shield: number
 })
 	local props_slider = {
 		colour_background = colours.sky_800,
@@ -195,8 +195,8 @@ local function shield_health(props: {
 		}),
 		colour_stroke = colours.sky_800,
 		fill_total = 20,
-		fill_value = props.shield_health,
-		name = "shield_health",
+		fill_value = props.health_shield,
+		name = "health_shield",
 		position_y_offset = -46,
 		size_x_scale = 0.4,
 	}
@@ -205,7 +205,7 @@ local function shield_health(props: {
 end
 
 local function health_bar(props: {
-	shield_health: number,
+	health_shield: number,
 })
 	return create_element("Frame", {
 		Name = "health_bar",
@@ -213,8 +213,8 @@ local function health_bar(props: {
 		Size = UDim2.fromScale(1, 1),
 	},
 		create_element(health_main),
-		props.shield_health > 0 and create_element(shield_health, {
-			shield_health = props.shield_health
+		props.health_shield > 0 and create_element(health_shield, {
+			health_shield = props.health_shield
 		})
 	)
 end
@@ -344,7 +344,7 @@ local function hotbar()
 			),
 			create_element(scale),
 			create_element(health_bar, {
-				shield_health = 10,
+				health_shield = 10,
 			}),
 			create_element(slots_container)
 		)
