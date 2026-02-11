@@ -67,7 +67,7 @@ local function notification_component(props: {
 		Size = UDim2.new(1, 0, 0, 26), -- Slightly bigger from 22 to 26
 		Position = UDim2.new(0, 0, 1, -(index * 30)),
 		AnchorPoint = Vector2.new(0, 1),
-		BackgroundColor3 = colours["black"],
+		BackgroundColor3 = colours.black,
 		BackgroundTransparency = 0.5 + (transparency * 0.5),
 	},
 		create_element("UICorner", {
@@ -75,14 +75,14 @@ local function notification_component(props: {
 		}),
 		create_element("UIStroke", {
 			Thickness = 1,
-			Color = colours["white"],
+			Color = colours.white,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Transparency = transparency,
 		}, 
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, colours["grey"]),
-					ColorSequenceKeypoint.new(1, colours["grey"]),
+					ColorSequenceKeypoint.new(0, colours.grey),
+					ColorSequenceKeypoint.new(1, colours.grey),
 				}),
 				Rotation = -90,
 			})
@@ -99,7 +99,7 @@ local function notification_component(props: {
 			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 			TextSize = 15, -- Slightly bigger from 14 to 15
 			Text = notification.message,
-			TextColor3 = colours["white"],
+			TextColor3 = colours.white,
 			TextXAlignment = Enum.TextXAlignment.Center,
 			TextYAlignment = Enum.TextYAlignment.Center,
 			TextScaled = false,

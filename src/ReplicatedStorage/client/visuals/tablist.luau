@@ -23,7 +23,7 @@ local function player_card(props: {
 	order: number,
 })
 	return create_element("TextLabel", {
-		BackgroundColor3 = colours["black"],
+		BackgroundColor3 = colours.black,
 		BackgroundTransparency = 0.7,
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 		LayoutOrder = props.order,
@@ -41,14 +41,14 @@ local function player_card(props: {
 			CornerRadius = UDim.new(0.5, 0),
 		}),
 		create_element("UIStroke", {
-			Color = colours["white"],
+			Color = colours.white,
 			ApplyStrokeMode = "Border",
 			Thickness = 2,
 		},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, props.colour),
-					ColorSequenceKeypoint.new(1, colours["dark_grey"]),
+					ColorSequenceKeypoint.new(1, colours.dark_grey),
 				}),
 				Rotation = -90,
 			})
@@ -148,7 +148,7 @@ local function ping_display()
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0.5, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		TextColor3 = colours["light_grey"],
+		TextColor3 = colours.light_grey,
 		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),
 		Text = "Ping: " .. rich_text,
@@ -188,7 +188,7 @@ local function location_display()
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		TextColor3 = colours["light_grey"],
+		TextColor3 = colours.light_grey,
 		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),
 		Text = location_text,
@@ -240,7 +240,7 @@ local function tablist()
 			Position = UDim2.new(0.5, 0, 0, 147),
 			Size = UDim2.fromOffset(720, 0),
 			AutomaticSize = "Y",
-			BackgroundColor3 = colours["black"],
+			BackgroundColor3 = colours.black,
 			BackgroundTransparency = 0.5,
 		},
 			create_element("UICorner", {
@@ -254,13 +254,13 @@ local function tablist()
 			}),
 			create_element("UIStroke", {
 				Thickness = 2,
-				Color = colours["white"],
+				Color = colours.white,
 				ApplyStrokeMode = "Border",
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, colours["light_grey"]),
-						ColorSequenceKeypoint.new(1, colours["dark_grey"]),
+						ColorSequenceKeypoint.new(0, colours.light_grey),
+						ColorSequenceKeypoint.new(1, colours.dark_grey),
 					}),
 					Rotation = -90,
 				})
