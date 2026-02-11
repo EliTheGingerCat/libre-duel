@@ -1,11 +1,14 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
 
+local create_cube = require(ReplicatedStorage.modules.create_cube)
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
+local cube_in_hitbox = require(ReplicatedStorage.modules.cube_in_hitbox)
 local cube_size = require(ReplicatedStorage.modules.cube_size)
+local debug_print = require(script.Parent.debug_print)
 local get_player_position = require(ReplicatedStorage.modules.get_player_position)
 local player_range = require(ReplicatedStorage.modules.player_range)
+local play_sound_local = require(script.Parent.play_sound_local)
 local snap_coordinate = require(ReplicatedStorage.modules.snap_coordinate)
 
 local local_player = Players.LocalPlayer
@@ -33,17 +36,15 @@ local function snap_position(position: Vector3): Vector3
 	)
 end
 
-local function on_input_began(input: InputObject): ()
-	if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-		return
-	end
-
+local function place_cube(): ()
 	if local_mouse.Target == nil then
+		debug_print("Mouse target is missing.")
 		return
 	end
 
 	local local_position = get_player_position(local_player)
 	if local_position == nil then
+		debug_print("Local position is missing.")
 		return
 	end
 
@@ -51,24 +52,39 @@ local function on_input_began(input: InputObject): ()
 
 	local distance = (hit_position - local_position).Magnitude
 	if distance > player_range then
+		debug_print("Too far.")
 		return
 	end
 
 	local offset = surface_offset[local_mouse.TargetSurface]
 	local snapped = snap_position(hit_position + offset)
 
-	local occupied = cube_cache[snapped]
-	if occupied then
+	local occupied_cube = cube_cache[snapped]
+	if occupied_cube then
+		debug_print("Occupied by cube.")
 		return
 	end
 
-	local error_message: string? = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
+	local occupied_player = cube_in_hitbox(snapped)
+	if occupied_player then
+		debug_print("Occupied by player.")
+		return
+	end
 
-	if error_message == nil then
+	local cube_temporary = create_cube()
+	cube_temporary.Position = snapped
+	cube_temporary.Parent = workspace
+
+	play_sound_local("cube_place", snapped)
+
+	local success: boolean = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
+
+	-- Whether the server accepts or rejects the cube, this local one is no longer necessary.
+	cube_temporary:Destroy()
+
+	if success then
 		cube_cache[snapped] = true
-	else
-		print(`Failed to place block. Reason: {error_message}`)
 	end
 end
 
-UserInputService.InputBegan:Connect(on_input_began)
+return place_cube

@@ -1,3 +1,7 @@
 /sourcemap.json
 /libre-duel.rbxl
 /libre-duel.rbxl.lock
+
+/no_map.project.json
+
+/src/ServerScriptService/modules/IPinfo_token.luau
