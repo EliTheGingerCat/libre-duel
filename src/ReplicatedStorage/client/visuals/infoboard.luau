@@ -2,7 +2,76 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.vendor.ReactLua.React)
 local create_element = React.createElement
 
+type TextXAlignment = "Center" | "Left" | "Right"
+
+type props_text_label = {
+    layout_order: number,
+    name: string,
+    text: string,
+    text_alignment_c1: TextXAlignment,
+    text_size: number,
+}
+local function text_label(props: props_text_label)
+    return create_element("TextLabel", {
+        BackgroundTransparency = 1,
+        FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+        LayoutOrder = props.layout_order,
+        Name = props.name,
+        RichText = true,
+        TextSize = props.text_size,
+        AutomaticSize = "XY",
+        TextXAlignment = props.text_alignment_c1,
+        TextColor3 = Color3.fromRGB(255, 255, 255),
+        Text = props.text,
+    })
+end
+
+type props_points_display = {
+    colour: string,
+    layout_order: number,
+    name: string,
+    points: number,
+    text_alignment_c1: TextXAlignment,
+}
+local function point_display(props: props_points_display)
+    local points_full = string.rep("●", props.points)
+    local points_empty = string.rep("○", 5 - props.points)
+
+    local text: string
+    if props.text_alignment_c1 == "Left" then
+        text = `<font color="{props.colour}">{points_full}</font>{points_empty}`
+    elseif props.text_alignment_c1 == "Right" then
+        text = `{points_empty}<font color="{props.colour}">{points_full}</font>`
+    else
+        print("Invalid text alignment.")
+        return create_element("Frame")
+    end
+
+    return create_element(text_label, {
+        layout_order = props.layout_order,
+        name = props.name,
+        text = text,
+        text_alignment_c1 = props.text_alignment_c1,
+        text_size = 50,
+    })
+end
+
+local colour_blue = "#0da2dd"
+local colour_green = "#5bd34c"
+local colour_red = "#b14c4e"
+
 local function main()
+    local kills = 41
+    local map = "Astro"
+    local points_blue = 1
+    local points_self = 3
+    local points_red = 3
+    local time_elapsed = 1481
+
+    local minutes = time_elapsed // 60
+    local seconds = time_elapsed - minutes*60
+    local time_string = string.format("%02d:%02d", minutes, seconds)
+
 	return create_element("ScreenGui",{
 		ClipToDeviceSafeArea = false,
 		ScreenInsets = "None",
@@ -41,71 +110,47 @@ local function main()
                 }),
 					Rotation = -90,
             })),
-            create_element("TextLabel",{ -- red goals
-                BackgroundTransparency = 1,
-                FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-                LayoutOrder = 1,
-                RichText = true,
-                TextSize = 50,
-                AutomaticSize = "XY",
-                TextXAlignment = "Left",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                Text = '<font color="#b14c4e">●●●</font>○○',
+            create_element(point_display, {
+                colour = colour_red,
+                layout_order = 1,
+                name = "points_red",
+                points = points_red,
+                text_alignment_c1 = "Left",
             }),
-            create_element("TextLabel",{ -- blue goals
-                BackgroundTransparency = 1,
-                FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-                LayoutOrder = 2,
-                RichText = true,
-                TextSize = 50,
-                AutomaticSize = "XY",
-                TextXAlignment = "Right",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                Text = '○○○○<font color="#0da2dd">●</font>',
+            create_element(point_display, {
+                colour = colour_blue,
+                layout_order = 2,
+                name = "points_blue",
+                points = points_blue,
+                text_alignment_c1 = "Right",
             }),
-            create_element("TextLabel",{ -- map
-                BackgroundTransparency = 1,
-                FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-                LayoutOrder = 3,
-                RichText = true,
-                TextSize = 30,
-                AutomaticSize = "XY",
-                TextXAlignment = "Left",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                Text = '<font color="#5bd34c">Map: </font>Astro',
+            create_element(text_label, {
+                layout_order = 3,
+                name = "map",
+                text = `<font color="{colour_green}">Map: </font>{map}`,
+                text_alignment_c1 = "Left",
+                text_size = 30,
             }),
-            create_element("TextLabel",{ -- timer
-                BackgroundTransparency = 1,
-                FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-                LayoutOrder = 4,
-                RichText = true,
-                TextSize = 30,
-                AutomaticSize = "XY",
-                TextXAlignment = "Right",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                Text = '<font color="#5bd34c">Time: </font>24:41',
+            create_element(text_label, {
+                layout_order = 4,
+                name = "timer",
+                text = `<font color="{colour_green}">Time: </font>{time_string}`,
+                text_alignment_c1 = "Right",
+                text_size = 30,
             }),
-            create_element("TextLabel",{ -- kill counter
-                BackgroundTransparency = 1,
-                FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-                LayoutOrder = 5,
-                RichText = true,
-                TextSize = 30,
-                AutomaticSize = "XY",
-                TextXAlignment = "Left",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                Text = '<font color="#5bd34c">Kills: </font>41',
+            create_element(text_label, {
+                layout_order = 5,
+                name = "kills",
+                text = `<font color="{colour_green}">Kills: </font>{kills}`,
+                text_alignment_c1 = "Left",
+                text_size = 30,
             }),
-            create_element("TextLabel",{ -- goal counter
-                BackgroundTransparency = 1,
-                FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-                LayoutOrder = 6,
-                RichText = true,
-                TextSize = 30,
-                AutomaticSize = "XY",
-                TextXAlignment = "Right",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                Text = '<font color="#5bd34c">Goals: </font>3',
+            create_element(text_label, {
+                layout_order = 6,
+                name = "points_self",
+                text = `<font color="{colour_green}">Goals: </font>{points_self}`,
+                text_alignment_c1 = "Right",
+                text_size = 30,
             })
         )
     )
