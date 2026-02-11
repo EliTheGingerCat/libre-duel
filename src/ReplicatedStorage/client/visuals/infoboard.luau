@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 local React = require(ReplicatedStorage.vendor.ReactLua.React)
+
 local create_element = React.createElement
 
 type TextXAlignment = "Center" | "Left" | "Right"
@@ -60,7 +62,7 @@ local colour_blue = "#0da2dd"
 local colour_green = "#5bd34c"
 local colour_red = "#b14c4e"
 
-local function main()
+local function infoboard()
     local kills = 41
     local map = "Astro"
     local points_blue = 1
@@ -156,4 +158,4 @@ local function main()
     )
 end
 
-return main
+return infoboard
