@@ -142,7 +142,8 @@ local function ping_display()
 	local colour = Color3.fromHSV(hue, 0.61, 0.9) -- This does not use the colours modulescript but I am not sure how to make it.
 	local hex = "#" .. colour:ToHex()
 
-	local rich_text = ('<font color="%s">%d</font> ms'):format(hex, math.round(ping))
+	local rich_text = string.format('<font color="%s">%d</font> ms', hex, math.round(ping))
+
 
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
