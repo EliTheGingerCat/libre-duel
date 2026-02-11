@@ -50,7 +50,7 @@ local function move_player(player: Player, position: Vector3): ()
 	if not root_part:IsA("BasePart") then
 		return
 	end
-	
+
 	root_part.Position = position
 end
 
@@ -99,6 +99,14 @@ local function game_stop(state: state): ()
 	end
 
 	for _, team in state.teams do
+
+		-- i don't really know why roblox doesn't set the team color back when the team is destroyed.
+		for _, player in team.players do
+			if player.Parent then
+				player.TeamColor = BrickColor.new("White")
+			end
+		end
+
 		team.cage:Destroy()
 		team.goal:Destroy()
 		team.spawn_part:Destroy()
@@ -109,7 +117,7 @@ end
 local function process_goal(state: state, team: team): ()
 	debounce_score(state)
 	team.points += 1
-	
+
 	if team.points >= win_points then
 		debug_print(`Team "{team.Roblox_team.Name}" wins.`)
 		game_stop(state)
@@ -117,7 +125,7 @@ local function process_goal(state: state, team: team): ()
 	else
 		debug_print(`Team "{team.Roblox_team.Name}" scored. They have {team.points} points.`)
 	end
-	
+
 	close_then_open_cages(state)
 end
 
