@@ -23,7 +23,13 @@
         "Outlines": false,
         "Technology": "Future"
       },
-      "$path": "./src/Lighting"
+      "SunRays": {
+        "$className": "SunRaysEffect",
+        "$properties": {
+            "Intensity": 0.05,
+            "Spread": 1
+        }
+      }
     },
 
     "ReplicatedStorage": {
