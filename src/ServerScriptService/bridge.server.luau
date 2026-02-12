@@ -275,6 +275,10 @@ local function setup_map(state: state): ()
 				return
 			end
 
+			if not character:IsA("Model") then
+				return
+			end
+
 			local humanoid = character:FindFirstChildOfClass("Humanoid")
 			if humanoid == nil then
 				return
