@@ -64,6 +64,10 @@ local function on_event(player: Player, target_character: unknown): ()
 	end
 
 	target_humanoid.Health -= sword_damage
+	
+	if target_humanoid.Health <= 0 then
+		ReplicatedStorage.remotes.kills:FireClient(player, 1)
+	end
 
 	apply_knockback(attacker_root, target_root, 1.2, true)
 

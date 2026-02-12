@@ -98,8 +98,12 @@ local function use_kills(): number
 			set_kills(0)
 		end
 
-		local function on_event(incoming_kills: number): ()
-			set_kills(incoming_kills)
+		-- It is good to have the parameter of how many kills to add since some actions, such as explosions, may damage many people, resulting in multiple kills in one moment.
+		local function on_event(added_kills: number): ()
+			local function updater(kills: number): number
+				return kills + added_kills
+			end
+			set_kills(updater)
 		end
 
 		local connection = ReplicatedStorage.remotes.kills.OnClientEvent:Connect(on_event)
