@@ -44,10 +44,10 @@ local function slider_display(props: {
 			ZIndex = 3,
 			Text = tostring(math.ceil(props.fill_value)),
 			TextScaled = true,
-			TextColor3 = colours["white"],
+			TextColor3 = colours.white,
 		}),
 		create_element("Frame", {
-			BackgroundColor3 = colours["white"],
+			BackgroundColor3 = colours.white,
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.fromScale(0, 0.5),
 			Size = UDim2.fromScale(props.fill_value / props.fill_total, 1),
@@ -168,12 +168,12 @@ local function health_main()
 	local health_main = use_health_main()
 
 	local props_slider = {
-		colour_background = colours["red_900"],
+		colour_background = colours.red_900,
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, colours["red_700"]),
-			ColorSequenceKeypoint.new(1, colours["red_800"]),
+			ColorSequenceKeypoint.new(0, colours.red_700),
+			ColorSequenceKeypoint.new(1, colours.red_800),
 		}),
-		colour_stroke = colours["red_900"],
+		colour_stroke = colours.red_900,
 		fill_total = 100,
 		fill_value = health_main,
 		name = "health_main",
@@ -184,19 +184,19 @@ local function health_main()
 	return create_element(slider_display, props_slider)
 end
 
-local function shield_health(props: {
-	shield_health: number
+local function health_shield(props: {
+	health_shield: number
 })
 	local props_slider = {
-		colour_background = colours["sky_800"],
+		colour_background = colours.sky_800,
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, colours["sky_600"]),
-			ColorSequenceKeypoint.new(1, colours["sky_700"]),
+			ColorSequenceKeypoint.new(0, colours.sky_600),
+			ColorSequenceKeypoint.new(1, colours.sky_700),
 		}),
-		colour_stroke = colours["sky_800"],
+		colour_stroke = colours.sky_800,
 		fill_total = 20,
-		fill_value = props.shield_health,
-		name = "shield_health",
+		fill_value = props.health_shield,
+		name = "health_shield",
 		position_y_offset = -46,
 		size_x_scale = 0.4,
 	}
@@ -205,7 +205,7 @@ local function shield_health(props: {
 end
 
 local function health_bar(props: {
-	shield_health: number,
+	health_shield: number,
 })
 	return create_element("Frame", {
 		Name = "health_bar",
@@ -213,21 +213,21 @@ local function health_bar(props: {
 		Size = UDim2.fromScale(1, 1),
 	},
 		create_element(health_main),
-		props.shield_health > 0 and create_element(shield_health, {
-			shield_health = props.shield_health
+		props.health_shield > 0 and create_element(health_shield, {
+			health_shield = props.health_shield
 		})
 	)
 end
 
 local function active_slot_addendum()
 	return create_element("UIStroke", {
-		Color = colours["white"],
+		Color = colours.white,
 		Thickness = 2,
 	},
 		create_element("UIGradient", {
 			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, colours["light_grey"]),
-				ColorSequenceKeypoint.new(1, colours["dark_grey"]),
+				ColorSequenceKeypoint.new(0, colours.light_grey),
+				ColorSequenceKeypoint.new(1, colours.dark_grey),
 			}),
 			Rotation = -90,
 		})
@@ -240,7 +240,7 @@ local function slot(props: {
 	text: string,
 })
 	return create_element("Frame", {
-		BackgroundColor3 = colours["black"],
+		BackgroundColor3 = colours.black,
 		BackgroundTransparency = 0.8,
 		Name = props.id,
 		Size = UDim2.fromScale(1, 1),
@@ -252,7 +252,7 @@ local function slot(props: {
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(0.8, 0.8),
 			Text = props.text,
-			TextColor3 = colours["white"],
+			TextColor3 = colours.white,
 			TextScaled = true,
 			TextSize = 20,
 		}),
@@ -322,7 +322,7 @@ local function hotbar()
 	},
 		create_element("Frame", {
 				AnchorPoint = Vector2.new(0.5, 1),
-				BackgroundColor3 = colours["black"],
+				BackgroundColor3 = colours.black,
 				BackgroundTransparency = 0.5,
 				Position = UDim2.new(0.5, 0, 1, -10),
 				Size = UDim2.fromOffset(680, 80),
@@ -331,20 +331,20 @@ local function hotbar()
 				CornerRadius = UDim.new(0.45, 0),
 			}),
 			create_element("UIStroke", {
-				Color = colours["white"],
+				Color = colours.white,
 				Thickness = 2,
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, colours["light_grey"]),
-						ColorSequenceKeypoint.new(1, colours["dark_grey"]),
+						ColorSequenceKeypoint.new(0, colours.light_grey),
+						ColorSequenceKeypoint.new(1, colours.dark_grey),
 					}),
 					Rotation = -90,
 				})
 			),
 			create_element(scale),
 			create_element(health_bar, {
-				shield_health = 10,
+				health_shield = 0,
 			}),
 			create_element(slots_container)
 		)
