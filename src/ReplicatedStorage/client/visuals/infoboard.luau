@@ -1,8 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.vendor.ReactLua.React)
 
 local create_element = React.createElement
+local use_effect = React.useEffect
+local use_state = React.useState
 
 type TextXAlignment = "Center" | "Left" | "Right"
 
@@ -62,13 +65,196 @@ local colour_blue = "#0da2dd"
 local colour_green = "#5bd34c"
 local colour_red = "#b14c4e"
 
+local function use_game_is_active(): boolean
+    local game_is_active, set_game_is_active = use_state(false)
+
+    local function effect_game_is_active()
+        local function on_event(incoming_game_is_active: boolean): ()
+            set_game_is_active(incoming_game_is_active)
+        end
+
+        local connection = ReplicatedStorage.remotes.game_is_active.OnClientEvent:Connect(on_event)
+
+        local function disconnect(): ()
+            connection:Disconnect()
+        end
+
+        return disconnect
+    end
+
+    use_effect(effect_game_is_active, {})
+
+    return game_is_active
+end
+
+local function use_kills(): number
+    local kills, set_kills = use_state(0)
+
+    local game_is_active = use_game_is_active()
+
+    local function effect_kills()
+        if game_is_active == true then
+            -- Game just started.
+            set_kills(0)
+        end
+
+        local function on_event(incoming_kills: number): ()
+            set_kills(incoming_kills)
+        end
+
+        local connection = ReplicatedStorage.remotes.kills.OnClientEvent:Connect(on_event)
+
+        local function disconnect(): ()
+            connection:Disconnect()
+        end
+
+        return disconnect
+    end
+
+    use_effect(effect_kills, {game_is_active})
+
+    return kills
+end
+
+local function use_map(): string
+    local map, set_map = use_state("unknown")
+
+    local function effect_map()
+        local function on_event(incoming_map: string): ()
+            set_map(incoming_map)
+        end
+
+        local connection = ReplicatedStorage.remotes.map_name.OnClientEvent:Connect(on_event)
+
+        local function disconnect(): ()
+            connection:Disconnect()
+        end
+
+        return disconnect
+    end
+
+    use_effect(effect_map, {})
+
+    return map
+end
+
+local function use_points_self(): number
+    local points_self, set_points_self = use_state(0)
+
+    local game_is_active = use_game_is_active()
+
+    local function effect_points_self()
+        if game_is_active == true then
+            -- Game just started.
+            set_points_self(0)
+        end
+
+        local function on_event(): ()
+            local function updater(points_self: number): number
+                return points_self + 1
+            end
+            set_points_self(updater)
+        end
+
+        local connection = ReplicatedStorage.remotes.score_self.OnClientEvent:Connect(on_event)
+
+        local function disconnect(): ()
+            connection:Disconnect()
+        end
+
+        return disconnect
+    end
+
+    use_effect(effect_points_self, {game_is_active})
+
+    return points_self
+end
+
+local function use_points_teams(): {number}
+    local points_teams, set_points_teams = use_state({0, 0})
+
+    local game_is_active = use_game_is_active()
+
+    local function effect_points_teams()
+        if game_is_active == true then
+            -- Game just started.
+            set_points_teams({0, 0})
+        end
+
+        local function on_event(team_number: number): ()
+            local function updater(points_teams: {number}): {number}
+                local clone = table.clone(points_teams)
+                clone[team_number] += 1
+                return clone
+            end
+            set_points_teams(updater)
+        end
+
+        local connection = ReplicatedStorage.remotes.score_team.OnClientEvent:Connect(on_event)
+
+        local function disconnect(): ()
+            connection:Disconnect()
+        end
+
+        return disconnect
+    end
+
+    use_effect(effect_points_teams, {game_is_active})
+
+    return points_teams
+end
+
+local function use_time_elapsed(): number
+    local time_elapsed, set_time_elapsed = use_state(0)
+
+    local game_is_active = use_game_is_active()
+
+    local function effect_time_elapsed()
+        if game_is_active == true then
+            -- Game just started.
+            local time_start = os.time()
+            set_time_elapsed(0)
+
+            local function on_heartbeat(time_change: number): ()
+                local function updater(): number
+                    local time_now = os.time()
+                    return time_now - time_start
+                end
+                set_time_elapsed(updater)
+            end
+
+            local connection = RunService.Heartbeat:Connect(on_heartbeat)
+
+            local function disconnect(): ()
+                connection:Disconnect()
+            end
+
+            return disconnect
+        else
+            local function disconnect(): ()
+            end
+
+            return disconnect
+        end
+    end
+
+    use_effect(effect_time_elapsed, {game_is_active})
+
+    return time_elapsed
+end
+
 local function infoboard()
-    local kills = 41
-    local map = "Astro"
-    local points_blue = 1
-    local points_self = 3
-    local points_red = 3
-    local time_elapsed = 1481
+    local game_is_active = use_game_is_active()
+    local kills = use_kills()
+    local map = use_map()
+    local points_self = use_points_self()
+    local points_teams = use_points_teams()
+    local time_elapsed = use_time_elapsed()
+
+    -- TODO: Get team colours from the server.
+    -- TODO: Support an arbitrary amount of teams. This is already done on the server.
+    local points_blue = points_teams[1]
+    local points_red = points_teams[2]
 
     local minutes = time_elapsed // 60
     local seconds = time_elapsed - minutes*60
@@ -76,6 +262,7 @@ local function infoboard()
 
 	return create_element("ScreenGui", {
 		ClipToDeviceSafeArea = false,
+        Enabled = game_is_active,
 		ScreenInsets = "None",
 	},
         create_element("Frame", {

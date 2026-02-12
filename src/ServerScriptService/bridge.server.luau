@@ -7,6 +7,7 @@ local debug_print = require(script.Parent.modules.debug_print)
 
 type team = {
 	cage: Model,
+	index: number,
 	goal: Part,
 	players: {Player},
 	points: number,
@@ -98,6 +99,8 @@ local function game_stop(state: state): ()
 		return
 	end
 
+	ReplicatedStorage.remotes.game_is_active:FireAllClients(false)
+
 	for _, team in state.teams do
 
 		-- i don't really know why roblox doesn't set the team color back when the team is destroyed.
@@ -114,9 +117,11 @@ local function game_stop(state: state): ()
 	end
 end
 
-local function process_goal(state: state, team: team): ()
+local function process_goal(state: state, player: Player, team: team): ()
 	debounce_score(state)
 	team.points += 1
+
+	ReplicatedStorage.remotes.score_self:FireClient(player)
 
 	if team.points >= win_points then
 		debug_print(`Team "{team.Roblox_team.Name}" wins.`)
@@ -124,6 +129,7 @@ local function process_goal(state: state, team: team): ()
 		return
 	else
 		debug_print(`Team "{team.Roblox_team.Name}" scored. They have {team.points} points.`)
+		ReplicatedStorage.remotes.score_team:FireAllClients(team.index)
 	end
 
 	close_then_open_cages(state)
@@ -232,8 +238,11 @@ local function create_map(number_teams: number): state
 		})
 		Roblox_team.Parent = Teams
 
+		local index = #teams + 1
+
 		local team: team = {
 			cage = cage,
+			index = index,
 			goal = goal,
 			players = {},
 			points = 0,
@@ -241,7 +250,7 @@ local function create_map(number_teams: number): state
 			Roblox_team = Roblox_team,
 		}
 
-		table.insert(teams, team)
+		teams[index] = team
 	end
 
 	local state: state = {
@@ -281,7 +290,7 @@ local function setup_map(state: state): ()
 				return
 			end
 
-			process_goal(state, team)
+			process_goal(state, player, team)
 		end
 
 		team.goal.Touched:Connect(on_touched)
@@ -327,6 +336,9 @@ local function game_start(players: {Player}): ()
 		debug_print("Can not start since the game is already running.")
 		return
 	end
+
+	ReplicatedStorage.remotes.game_is_active:FireAllClients(true)
+	ReplicatedStorage.remotes.map_name:FireAllClients("test")
 
 	local state = create_map(2)
 	setup_map(state)
