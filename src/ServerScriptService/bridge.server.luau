@@ -37,6 +37,17 @@ local Color3_to_BrickColor = {
 	[colours.red] = BrickColor.Red(),
 }
 
+local function find_team_by_Roblox(state: state, Roblox_team: Team): team?
+	for _, team in state.teams do
+		if team.Roblox_team == Roblox_team then
+			return team
+		end
+	end
+
+	debug_print(`Failed to find Roblox-team "{Roblox_team.Name}" in state.`)
+	return nil
+end
+
 local function move_player(player: Player, position: Vector3): ()
 	local character = player.Character
 	if character == nil then
@@ -294,7 +305,12 @@ local function setup_map(state: state): ()
 				return
 			end
 
-			process_goal(state, player, team)
+			local scoring_team = find_team_by_Roblox(state, player_team)
+			if scoring_team == nil then
+				return
+			end
+
+			process_goal(state, player, scoring_team)
 		end
 
 		team.goal.Touched:Connect(on_touched)
