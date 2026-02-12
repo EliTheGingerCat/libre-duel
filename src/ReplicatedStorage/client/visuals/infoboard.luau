@@ -257,8 +257,8 @@ local function infoboard()
 
 	-- TODO: Get team colours from the server.
 	-- TODO: Support an arbitrary amount of teams. This is already done on the server.
-	local points_blue = points_teams[1]
-	local points_red = points_teams[2]
+	local points_red = points_teams[1]
+	local points_blue = points_teams[2]
 
 	local minutes = time_elapsed // 60
 	local seconds = time_elapsed - minutes*60
