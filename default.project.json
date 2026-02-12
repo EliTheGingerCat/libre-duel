@@ -13,14 +13,22 @@
     "Lighting": {
       "$properties": {
         "Ambient": [
-          0,
-          0,
-          0
+          0.62,
+          0.62,
+          0.62
         ],
-        "Brightness": 2,
+        "Brightness": 2.5,
         "GlobalShadows": true,
+        "LightingStyle": "Realistic",
         "Outlines": false,
-        "Technology": "Voxel"
+        "Technology": "Future"
+      },
+      "SunRays": {
+        "$className": "SunRaysEffect",
+        "$properties": {
+            "Intensity": 0.05,
+            "Spread": 1
+        }
       }
     },
 
