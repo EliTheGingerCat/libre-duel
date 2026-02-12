@@ -1,5 +1,13 @@
--- Palette from https://tailwindcolor.com/ (I cranked down the saturation by 35% bc it was waaay too strong for me)
--- It's a pretty large palette, so i suggest using aliases (found below this dictionary) to prevent any UI inconsistencies with color!
+-- Palette from <https://tailwindcolor.com/>.
+-- (Breter98: I cranked down the saturation by 35% bc it was waaay too strong for me).
+--[[
+Intended usage:
+- If applicable, use a contextual colour, such as "error".
+- Otherwise, use basic colours, such as "red", "orange", and so on.
+- If one wants an even more specific colour, then use a numerical colour, such as "red_50", "red_100", and so on.
+
+The contextual colours and basic colours are just aliases of the numerical colours. These aliases are defined below all the numerical colours.
+]]
 
 local colours = {
 	["red_50"] = Color3.fromHSV(1.00, 0.033, 1.00),
@@ -219,9 +227,7 @@ local colours = {
 	["grey_950"] = Color3.fromHSV(0, 0.000, 0.07),
 }
 
-
-
---basic colour aliases
+-- Basic colours.
 
 colours.red = colours.red_500
 colours.orange = colours.orange_500
@@ -246,11 +252,10 @@ colours.dark_grey = colours.grey_700
 colours.black = colours.grey_950
 colours.white = colours.grey_50
 
---ui specific colour aliases
+-- Contextual colours.
 
 colours.error = colours.red_400
 colours.info = colours.blue_400
 colours.success = colours.green_400
-
 
 return colours
