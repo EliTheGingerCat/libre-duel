@@ -267,6 +267,8 @@ local function infoboard()
 	return create_element("ScreenGui", {
 		ClipToDeviceSafeArea = false,
 		Enabled = game_is_active,
+		Name = "infoboard",
+		ResetOnSpawn = false,
 		ScreenInsets = "None",
 	},
 		create_element("Frame", {
