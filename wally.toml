@@ -1,7 +1,8 @@
 [package]
-name = "peter/libre-duel"
+name = "elithegingercat/libre-duel"
 version = "0.1.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
 [dependencies]
+chrono = "parihsz/chrono@2.0.0-experimental"
