@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rokit
+        uses: CompeyDev/setup-rokit@v0.1.2
+
+      - name: Install packages
+        run: wally install
+
+      - name: Build
+        run: rojo build -o game.rbxl
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: game
+          path: game.rbxl
