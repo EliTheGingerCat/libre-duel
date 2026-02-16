@@ -33,11 +33,17 @@
     },
 
     "ReplicatedStorage": {
-      "$path": "./src/ReplicatedStorage"
+      "$path": "./src/ReplicatedStorage",
+      "Packages": {
+        "$path": "Packages"
+      }
     },
 
     "ServerScriptService": {
-      "$path": "./src/ServerScriptService"
+      "$path": "./src/ServerScriptService",
+      "ServerPackages": {
+        "$path": "ServerPackages"
+      }
     },
 
     "ServerStorage": {
