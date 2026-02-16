@@ -70,6 +70,7 @@ Consider this diagram:
 9. Enter the `libre-duel` repository with `cd libre-duel`.
 10. Install [Rokit](https://github.com/rojo-rbx/rokit).
 11. Run `rokit install`.
+12. Run `wally install`.
 
 You now have [Lune](https://lune-org.github.io/docs/) and [Rojo](https://rojo.space/).
 
