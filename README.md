@@ -202,6 +202,11 @@ return IPinfo_token
 - Do not use anonymous functions.
 - It is preferred to use British English spelling (such as "colour" instead of "color").
 
+## Frameworks in use
+Right now, Libre Duel uses two frameworks:
+- [React Lua](<https://github.com/jsdotlua/react-lua>)
+- [Chrono](<https://github.com/parihsz/chrono>)
+
 ## Credits
 
 Libre Duel is developed by [@EliTheGingerCat](https://github.com/EliTheGingerCat) and [@coolpeter98](https://github.com/coolpeter98).
