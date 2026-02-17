@@ -62,7 +62,7 @@
     },
     "StarterPlayer": {
       "$properties": {
-        "CharacterJumpHeight": 3.5,
+        "CharacterJumpHeight": 3,
         "CharacterUseJumpPower": false
       }
     }
