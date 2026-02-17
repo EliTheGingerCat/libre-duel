@@ -19,7 +19,7 @@ local function attack_melee(): ()
 		return
 	end
 
-	local local_position = get_player_position(local_player)
+	local local_position = get_player_position(local_player) + Vector3.new(0, 2.5, 0)
 	if local_position == nil then
 		debug_print("Local position is missing.")
 		return

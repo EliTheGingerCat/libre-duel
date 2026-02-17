@@ -1,3 +1,3 @@
-local sword_cooldown = 0.5
+local sword_cooldown = 0.35
 
 return sword_cooldown
