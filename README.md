@@ -207,6 +207,7 @@ return IPinfo_token
 Right now, Libre Duel uses two frameworks:
 - [React Lua](<https://github.com/jsdotlua/react-lua>)
 - [Chrono](<https://github.com/parihsz/chrono>)
+- [RbxUtil/Signal](<https://sleitnick.github.io/RbxUtil/api/Signal/>)
 
 ## Credits
 
