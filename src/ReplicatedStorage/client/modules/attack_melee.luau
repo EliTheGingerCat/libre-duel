@@ -18,7 +18,7 @@ local function attack_melee(): ()
 		return
 	end
 
-	local local_position = get_player_position(local_player) + Vector3.new(0, 2.5, 0)
+	local local_position = get_player_position(local_player) + Vector3.new(0, 2.5, 0) --adding a y offset because calculating reach from the head tends to feel better.
 	if local_position == nil then
 		debug_print("Local position is missing.")
 		return
