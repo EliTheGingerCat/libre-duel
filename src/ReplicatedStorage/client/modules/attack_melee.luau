@@ -8,13 +8,13 @@ local is_on_cooldown = require(ReplicatedStorage.modules.is_on_cooldown)
 local play_sound_local = require(script.Parent.play_sound_local)
 local player_range = require(ReplicatedStorage.modules.player_range)
 local sword_cooldown  = require(ReplicatedStorage.modules.sword_cooldown)
+local get_mouse_target = require(script.Parent.get_mouse_target)
 
 local local_player = Players.LocalPlayer
-local local_mouse = local_player:GetMouse()
 
 local function attack_melee(): ()
-	local target_limb: BasePart? = local_mouse.Target
-	if target_limb == nil then
+	local target_hitbox: BasePart? = get_mouse_target()
+	if target_hitbox == nil then
 		debug_print("Mouse target is missing.")
 		return
 	end
@@ -25,7 +25,7 @@ local function attack_melee(): ()
 		return
 	end
 
-	local target_character = target_limb.Parent
+	local target_character = target_hitbox.Parent.Parent -- hitbox >> HumanoidRootPart >> Character
 	if target_character == nil then
 		debug_print("Mouse target's character is missing.")
 		return
