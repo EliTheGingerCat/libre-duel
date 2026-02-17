@@ -5,6 +5,7 @@ local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 
 local create_element = React.createElement
 
+local crosshair = require(script.Parent.crosshair)
 local hotbar = require(script.Parent.hotbar)
 local infoboard = require(script.Parent.infoboard)
 local notification_container = require(script.Parent.notification_container)
@@ -13,6 +14,7 @@ local version = require(script.Parent.version)
 
 local function main()
 	return create_element(React.Fragment, {},
+		create_element(crosshair),
 		create_element(hotbar),
 		create_element(infoboard),
 		create_element(notification_container),
