@@ -39,6 +39,7 @@ local function crosshair()
 				Position = UDim2.new(0.5, 0, 0.5, 0),
 				Size = UDim2.fromOffset(24, 24),
 				Image = "rbxassetid://126059733701198",
+				ZIndex = -math.huge,
 			}
 		)
 	)
