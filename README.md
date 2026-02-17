@@ -70,6 +70,7 @@ Consider this diagram:
 9. Enter the `libre-duel` repository with `cd libre-duel`.
 10. Install [Rokit](https://github.com/rojo-rbx/rokit).
 11. Run `rokit install`.
+12. Run `wally install`.
 
 You now have [Lune](https://lune-org.github.io/docs/) and [Rojo](https://rojo.space/).
 
@@ -201,6 +202,11 @@ return IPinfo_token
 	- Do not annotate the return type if it is a function. (For example: React Effects.)
 - Do not use anonymous functions.
 - It is preferred to use British English spelling (such as "colour" instead of "color").
+
+## Frameworks in use
+Right now, Libre Duel uses two frameworks:
+- [React Lua](<https://github.com/jsdotlua/react-lua>)
+- [Chrono](<https://github.com/parihsz/chrono>)
 
 ## Credits
 
