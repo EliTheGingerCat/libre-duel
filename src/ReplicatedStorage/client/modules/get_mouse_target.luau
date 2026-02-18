@@ -2,7 +2,12 @@ local Players = game:GetService("Players")
 
 local local_player = Players.LocalPlayer
 
-local function get_mouse_target(): Instance?
+export type mouse_target = {
+	instance: Instance,
+	position: Vector3,
+}
+
+local function get_mouse_target(): mouse_target?
 	local local_camera = workspace.CurrentCamera
 	local screen_center = local_camera.ViewportSize / 2
 
@@ -20,7 +25,10 @@ local function get_mouse_target(): Instance?
 	local ray_result = workspace:Raycast(unit_ray.Origin, unit_ray.Direction * 255, ray_params)
 
 	if ray_result then
-		return ray_result.Instance
+		return {
+			instance = ray_result.Instance,
+			position = ray_result.Position,
+		}
 	end
 	return nil
 end

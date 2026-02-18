@@ -1,3 +1,3 @@
-local player_range = 12
+local player_range = 13
 
 return player_range
