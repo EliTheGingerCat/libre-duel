@@ -81,8 +81,8 @@ local function notification_component(props: {
 		}, 
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, colours.grey),
-					ColorSequenceKeypoint.new(1, colours.grey),
+					ColorSequenceKeypoint.new(0, colours.light_grey),
+					ColorSequenceKeypoint.new(1, colours.dark_grey),
 				}),
 				Rotation = -90,
 			})
