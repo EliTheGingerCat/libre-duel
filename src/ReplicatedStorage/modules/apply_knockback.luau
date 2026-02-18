@@ -19,7 +19,7 @@ local function apply_knockback(attacker: Part, target: Part, strength: number?, 
 	local constant_velocity = Instance.new("LinearVelocity")
 	constant_velocity.MaxForce = 150000
 	constant_velocity.Attachment0 = attachment
-	constant_velocity.VectorVelocity = Vector3.new(direction.X, 9.6, direction.Z) * strength_result
+	constant_velocity.VectorVelocity = Vector3.new(direction.X, 9.5, direction.Z) * strength_result
 	constant_velocity.Parent = attachment
 
 	-- Breter98: m~memowwy lyeaks awe bawwd~~~ OwO
