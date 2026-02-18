@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
+local colours = require(ReplicatedStorage.modules.colours)
 local get_perceived_lightness = require(ReplicatedStorage.modules.get_perceived_lightness)
 local keybinds = require(ReplicatedStorage.client.modules.keybinds)
 local location_default = require(ReplicatedStorage.modules.location_default)
@@ -15,19 +16,6 @@ local local_player = Players.LocalPlayer
 local use_effect = React.useEffect
 local use_state = React.useState
 
-local function title()
-	return create_element("TextLabel", {
-		AnchorPoint = Vector2.new(0.5, 1),
-		Size = UDim2.new(1, 0, 0, 40),
-		Position = UDim2.fromScale(0.5, 0),
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		BackgroundTransparency = 1,
-		TextSize = 40,
-		RichText = true,
-		TextYAlignment = "Top",
-		Text = '<font color="#b14c4e">Libre</font> <font color="#0da2dd">Duel</font>',
-	})
-end
 
 local function player_card(props: {
 	colour: Color3,
@@ -36,7 +24,7 @@ local function player_card(props: {
 	order: number,
 })
 	return create_element("TextLabel", {
-		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+		BackgroundColor3 = colours.black,
 		BackgroundTransparency = 0.7,
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 		LayoutOrder = props.order,
@@ -51,17 +39,17 @@ local function player_card(props: {
 			PaddingRight = UDim.new(0, 5),
 		}),
 		create_element("UICorner", {
-			CornerRadius = UDim.new(0, 50),
+			CornerRadius = UDim.new(0.5, 0),
 		}),
 		create_element("UIStroke", {
-			Color = Color3.fromRGB(255, 255, 255),
+			Color = colours.white,
 			ApplyStrokeMode = "Border",
 			Thickness = 2,
 		},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, props.colour),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+					ColorSequenceKeypoint.new(1, colours.dark_grey),
 				}),
 				Rotation = -90,
 			})
@@ -73,7 +61,7 @@ local function player_card(props: {
 			Image = props.image,
 		},
 			create_element("UICorner", {
-				CornerRadius = UDim.new(1, 0),
+				CornerRadius = UDim.new(0.5, 0),
 			})
 		)
 	)
@@ -148,17 +136,28 @@ end
 
 local function ping_display()
 	local ping = use_ping()
+	local ideal_ping, bad_ping = 40, 350
+
+	local progress = math.clamp((ping - ideal_ping) / (bad_ping - ideal_ping), 0, 1)
+	local hue = (1/3) * (1 - progress)
+	local colour = Color3.fromHSV(hue, 0.61, 0.9) -- This does not use the colours modulescript but I am not sure how to make it.
+	local hex = "#" .. colour:ToHex()
+
+	local rich_text = string.format('<font color="%s">%d</font> ms', hex, math.round(ping))
+
 
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
-		Position = UDim2.fromScale(0.5, 1),
+		Position = UDim2.new(0.5, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		TextColor3 = Color3.fromRGB(133, 221, 50),
-		TextSize = 40,
+		TextColor3 = colours.light_grey,
+		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),
-		Text = `Ping: {math.round(ping * 1000)} ms`,
+		Text = "Ping: " .. rich_text,
+		RichText = true,
 	})
 end
+
 
 local location_saved = location_default
 local function use_location(): location_default.location
@@ -189,10 +188,10 @@ local function location_display()
 
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
-		Position = UDim2.fromScale(0, 1),
+		Position = UDim2.new(0, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		TextColor3 = Color3.fromRGB(255, 255, 255),
-		TextSize = 40,
+		TextColor3 = colours.light_grey,
+		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),
 		Text = location_text,
 	})
@@ -243,33 +242,32 @@ local function tablist()
 			Position = UDim2.new(0.5, 0, 0, 147),
 			Size = UDim2.fromOffset(720, 0),
 			AutomaticSize = "Y",
-			BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+			BackgroundColor3 = colours.black,
 			BackgroundTransparency = 0.5,
 		},
 			create_element("UICorner", {
-				CornerRadius = UDim.new(0, 30),
+				CornerRadius = UDim.new(0, 39),
 			}),
 			create_element("UIPadding", {
-				PaddingBottom = UDim.new(0, 40),
-				PaddingLeft = UDim.new(0, 10),
-				PaddingRight = UDim.new(0, 10),
-				PaddingTop = UDim.new(0, 40),
+				PaddingBottom = UDim.new(0, 45),
+				PaddingLeft = UDim.new(0, 20),
+				PaddingRight = UDim.new(0, 20),
+				PaddingTop = UDim.new(0, 20),
 			}),
 			create_element("UIStroke", {
 				Thickness = 2,
-				Color = Color3.fromRGB(255, 255, 255),
+				Color = colours.white,
 				ApplyStrokeMode = "Border",
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-						ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+						ColorSequenceKeypoint.new(0, colours.light_grey),
+						ColorSequenceKeypoint.new(1, colours.dark_grey),
 					}),
 					Rotation = -90,
 				})
 			),
 			create_element(scale),
-			create_element(title),
 			create_element(player_list),
 			create_element(location_display),
 			create_element(ping_display)
