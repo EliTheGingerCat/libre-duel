@@ -3,26 +3,44 @@
   "emitLegacyScripts": false,
   "tree": {
     "$className": "DataModel",
+
+    "HttpService": {
+      "$properties": {
+        "HttpEnabled": true
+      }
+    },
+
     "Lighting": {
       "$properties": {
         "Ambient": [
-          0,
-          0,
-          0
+          0.62,
+          0.62,
+          0.62
         ],
-        "Brightness": 2,
+        "Brightness": 2.5,
         "GlobalShadows": true,
+        "LightingStyle": "Realistic",
         "Outlines": false,
-        "Technology": "Voxel"
+        "Technology": "Future"
+      },
+      "SunRays": {
+        "$className": "SunRaysEffect",
+        "$properties": {
+            "Intensity": 0.05,
+            "Spread": 1
+        }
       }
     },
 
     "ReplicatedStorage": {
-      "$path": "./src/ReplicatedStorage"
+      "$path": "./src/ReplicatedStorage",
+      "Packages": {
+        "$path": "Packages"
+      }
     },
 
     "ServerScriptService": {
-      "$path": "./src/ServerScriptService"
+      "$path": "./src/ServerScriptService",
     },
 
     "ServerStorage": {
@@ -37,9 +55,16 @@
 
     "Workspace": {
       "$properties": {
-        "FilteringEnabled": true
+        "FilteringEnabled": true,
+        "Gravity": 100.0
       },
       "$path": "./src/Workspace"
+    },
+    "StarterPlayer": {
+      "$properties": {
+        "CharacterJumpHeight": 3,
+        "CharacterUseJumpPower": false
+      }
     }
   }
 }

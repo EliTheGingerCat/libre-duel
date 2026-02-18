@@ -1,12 +1,14 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local ServerStorage = game:GetService("ServerStorage")
 
-local cube = ServerStorage.Cube
+local create_cube = require(ReplicatedStorage.modules.create_cube)
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
+local cube_in_hitbox = require(ReplicatedStorage.modules.cube_in_hitbox)
+local debug_print = require(script.Parent.modules.debug_print)
 local get_player_position = require(ReplicatedStorage.modules.get_player_position)
-local player_range_server = require(ServerScriptService.player_range_server)
+local player_range_server = require(ServerScriptService.modules.player_range_server)
 local snap_coordinate = require(ReplicatedStorage.modules.snap_coordinate)
+local play_sound = require(ServerScriptService.modules.play_sound)
 
 local function verify_coordinate(coordinate: number): boolean
 	return coordinate == snap_coordinate(coordinate)
@@ -20,37 +22,49 @@ local function verify_position(position: Vector3): boolean
 	)
 end
 
-local function on_invoke(player: Player, cube_position: unknown): string?
+local function on_invoke(player: Player, cube_position: unknown): boolean
 	if typeof(cube_position) ~= "Vector3" then
-		return "Invalid arguments."
+		debug_print("Invalid arguments.")
+		return false
 	end
 
 	local player_position = get_player_position(player)
 	if player_position == nil then
-		return "Player has no position."
+		debug_print("Player has no position.")
+		return false
 	end
 
 	local distance = (cube_position - player_position).Magnitude
 	if distance > player_range_server then
-		return "Too far."
+		debug_print("Too far.")
+		return false
 	end
 
 	if not verify_position(cube_position) then
-		return "Invalid position."
+		debug_print("Invalid position.")
+		return false
 	end
 
-	local occupied = cube_cache[cube_position]
-	if occupied then
-		return "Occupied."
+	local occupied_cube = cube_cache[cube_position]
+	if occupied_cube then
+		debug_print("Occupied by cube.")
+		return false
+	end
+
+	local occupied_player = cube_in_hitbox(cube_position, player)
+	if occupied_player then
+		debug_print("Occupied by player.")
+		return false
 	end
 
 	cube_cache[cube_position] = true
 
-	local clone = cube:Clone()
+	local clone = create_cube()
 	clone.Position = cube_position
 	clone.Parent = workspace
+	play_sound("cube_place", cube_position)
 
-	return
+	return true
 end
 
 ReplicatedStorage.remotes.place_cube.OnServerInvoke = on_invoke
