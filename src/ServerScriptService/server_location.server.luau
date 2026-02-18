@@ -1,12 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local ipinfo = require(script.Parent.modules.IPinfo)
+local IPinfo = require(script.Parent.modules.IPinfo)
 local location_default = require(ReplicatedStorage.modules.location_default)
 
 local location = location_default
 
 local function get_server_location_legacy(): string?
-	local data = ipinfo.get_legacy()
+	local data = IPinfo.get_legacy()
 
 	local country = data.country
 	if country == nil then
@@ -24,7 +24,7 @@ local function get_server_location_legacy(): string?
 end
 
 local function get_server_location_Lite(): string?
-	local data = ipinfo.get_Lite()
+	local data = IPinfo.get_Lite()
 
 	local country = data.country
 	if country == nil then
@@ -47,15 +47,25 @@ end
 local function get_server_location(): string?
 	local token = get_token()
 	if token ~= nil then
-		ipinfo.set_token(token)
+		IPinfo.set_token(token)
 	else
 		-- Legacy is better anyway since it provides city.
-		print("[IPinfo] Non-fatal warning: No token. Only legacy API can be used.")
+		print("Warning: No token was provided for IPinfo, so only the legacy API can be used. The legacy API will probably be good enough, though.")
 	end
 
-	return
-		get_server_location_legacy()
-		or get_server_location_Lite()
+	local location = get_server_location_legacy()
+	if location ~= nil then
+		return location
+	end
+	
+	if token ~= nil then
+		location = get_server_location_Lite()
+		if location ~= nil then
+			return location
+		end
+	end
+
+	return nil
 end
 
 local location_maybe = get_server_location()

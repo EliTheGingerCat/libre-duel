@@ -14,13 +14,12 @@ local function is_on_cooldown(player: Player, name: string): boolean
 		return false
 	end
 
-	local is_cool = end_time > os.clock()
-
-	if is_cool then
-		remove_cooldown(player, name)
+	if end_time > os.clock() then
+		return true
 	end
 
-	return is_cool
+	remove_cooldown(player, name)
+	return false
 end
 
 return is_on_cooldown

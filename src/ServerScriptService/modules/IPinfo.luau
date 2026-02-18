@@ -52,8 +52,8 @@ local function extract_data(success: boolean, result: HttpResponseData): {}?
 		return nil
 	end
 
-	local success, data = pcall(HttpService.JSONDecode, HttpService, result.Body)
-	if not success then
+	local success_decode, data = pcall(HttpService.JSONDecode, HttpService, result.Body)
+	if not success_decode then
 		print("[IPinfo] Failed to decode JSON. Result:", data)
 		return nil
 	end

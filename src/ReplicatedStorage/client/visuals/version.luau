@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local React = require(ReplicatedStorage.vendor.ReactLua.React)
+local React = require(ReplicatedStorage.Packages.react)
+local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 
 local colours = require(ReplicatedStorage.modules.colours)
 local create_element = React.createElement
@@ -35,6 +36,5 @@ local function version()
 		)
 	)
 end
-
 
 return version

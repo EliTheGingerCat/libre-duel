@@ -7,7 +7,8 @@ local colours = require(ReplicatedStorage.modules.colours)
 local get_perceived_lightness = require(ReplicatedStorage.modules.get_perceived_lightness)
 local keybinds = require(ReplicatedStorage.client.modules.keybinds)
 local location_default = require(ReplicatedStorage.modules.location_default)
-local React = require(ReplicatedStorage.vendor.ReactLua.React)
+local React = require(ReplicatedStorage.Packages.react)
+local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local scale = require(script.Parent.scale)
 
 local create_element = React.createElement

@@ -1,7 +1,8 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local React = require(ReplicatedStorage.vendor.ReactLua.React)
+local React = require(ReplicatedStorage.Packages.react)
+local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local scale = require(script.Parent.scale)
 local tool_state = require(script.Parent.Parent.modules.tool_state)
 local tools = require(script.Parent.Parent.modules.tools)
