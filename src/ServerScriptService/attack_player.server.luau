@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
 local add_cooldown = require(ReplicatedStorage.modules.add_cooldown)
+local apply_hit_highlight = require(script.Parent.modules.apply_hit_highlight)
 local apply_knockback = require(ReplicatedStorage.modules.apply_knockback)
 local is_on_cooldown = require(ReplicatedStorage.modules.is_on_cooldown)
 local play_sound = require(script.Parent.modules.play_sound)
@@ -73,6 +74,8 @@ local function on_event(player: Player, target_character: unknown): ()
 	target_humanoid.Health -= sword_damage
 
 	apply_knockback(attacker_root, target_root, 0.75, true)
+
+	apply_hit_highlight(target_character, 0.6)
 
 	play_sound("player_damaged", target_position)
 
