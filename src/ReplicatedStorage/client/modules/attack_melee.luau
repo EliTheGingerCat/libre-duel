@@ -12,9 +12,8 @@ local get_mouse_target = require(script.Parent.get_mouse_target)
 local local_player = Players.LocalPlayer
 
 local function attack_melee(): ()
-
-	local target = get_mouse_target()
-	if target == nil then
+	local target_hitbox: BasePart? = get_mouse_target()
+	if target_hitbox == nil then
 		debug_print("Mouse target is missing.")
 		return
 	end
@@ -25,7 +24,7 @@ local function attack_melee(): ()
 		return
 	end
 
-	local target_character = target.instance.Parent.Parent -- hitbox >> HumanoidRootPart >> Character
+	local target_character = target_hitbox.Parent.Parent -- hitbox >> HumanoidRootPart >> Character
 	if target_character == nil then
 		debug_print("Mouse target's character is missing.")
 		return
@@ -44,7 +43,7 @@ local function attack_melee(): ()
 
 	local target_position = target_root.CFrame.Position
 
-	local distance = (target.position - local_position).Magnitude
+	local distance = (target_position - local_position).Magnitude
 	if distance > player_range then
 		debug_print("Too far.")
 		return
