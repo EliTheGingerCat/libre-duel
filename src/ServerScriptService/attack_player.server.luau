@@ -72,7 +72,7 @@ local function on_event(player: Player, target_character: unknown): ()
 
 	target_humanoid.Health -= sword_damage
 
-	apply_knockback(attacker_root, target_root, 0.75, true)
+	apply_knockback(attacker_root, target_root, 0.8, false)
 
 	play_sound("player_damaged", target_position)
 

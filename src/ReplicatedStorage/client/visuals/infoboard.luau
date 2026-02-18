@@ -5,6 +5,8 @@ local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 
 local create_element = React.createElement
 
+local colours = require(ReplicatedStorage.modules.colours)
+
 type TextXAlignment = "Center" | "Left" | "Right"
 
 type props_text_label = {
@@ -59,11 +61,8 @@ local function point_display(props: props_points_display)
     })
 end
 
-local colour_blue = "#0da2dd"
-local colour_green = "#5bd34c"
-local colour_red = "#b14c4e"
-
 local function infoboard()
+
     local kills = 41
     local map = "Astro"
     local points_blue = 1
@@ -114,14 +113,14 @@ local function infoboard()
 					Rotation = -90,
             })),
             create_element(point_display, {
-                colour = colour_red,
+                colour = `#{colours.red:ToHex()}`,
                 layout_order = 1,
                 name = "points_red",
                 points = points_red,
                 text_alignment_c1 = "Left",
             }),
             create_element(point_display, {
-                colour = colour_blue,
+                colour = `#{colours.blue:ToHex()}`,
                 layout_order = 2,
                 name = "points_blue",
                 points = points_blue,
@@ -130,28 +129,28 @@ local function infoboard()
             create_element(text_label, {
                 layout_order = 3,
                 name = "map",
-                text = `<font color="{colour_green}">Map: </font>{map}`,
+                text = `<font color="#{colours.green:ToHex()}">Map: </font>{map}`,
                 text_alignment_c1 = "Left",
                 text_size = 30,
             }),
             create_element(text_label, {
                 layout_order = 4,
                 name = "timer",
-                text = `<font color="{colour_green}">Time: </font>{time_string}`,
+                text = `<font color="#{colours.green:ToHex()}">Time: </font>{time_string}`,
                 text_alignment_c1 = "Right",
                 text_size = 30,
             }),
             create_element(text_label, {
                 layout_order = 5,
                 name = "kills",
-                text = `<font color="{colour_green}">Kills: </font>{kills}`,
+                text = `<font color="#{colours.green:ToHex()}">Kills: </font>{kills}`,
                 text_alignment_c1 = "Left",
                 text_size = 30,
             }),
             create_element(text_label, {
                 layout_order = 6,
                 name = "points_self",
-                text = `<font color="{colour_green}">Goals: </font>{points_self}`,
+                text = `<font color="#{colours.green:ToHex()}">Goals: </font>{points_self}`,
                 text_alignment_c1 = "Right",
                 text_size = 30,
             })
