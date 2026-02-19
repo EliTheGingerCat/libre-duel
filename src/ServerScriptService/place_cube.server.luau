@@ -1,14 +1,18 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
+local add_cooldown = require(ReplicatedStorage.modules.add_cooldown)
 local create_cube = require(ReplicatedStorage.modules.create_cube)
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.modules.cube_in_hitbox)
 local debug_print = require(script.Parent.modules.debug_print)
+local get_player_cps = require(script.Parent.modules.get_player_cps)
 local get_player_position = require(ReplicatedStorage.modules.get_player_position)
+local is_on_cooldown = require(ReplicatedStorage.modules.is_on_cooldown)
+local mitigation_config = require(script.Parent.modules.mitigation_config)
+local play_sound = require(ServerScriptService.modules.play_sound)
 local player_range_server = require(ServerScriptService.modules.player_range_server)
 local snap_coordinate = require(ReplicatedStorage.modules.snap_coordinate)
-local play_sound = require(ServerScriptService.modules.play_sound)
 
 local function verify_coordinate(coordinate: number): boolean
 	return coordinate == snap_coordinate(coordinate)
@@ -55,6 +59,15 @@ local function on_invoke(player: Player, cube_position: unknown): boolean
 	if occupied_player then
 		debug_print("Occupied by player.")
 		return false
+	end
+
+	if is_on_cooldown(player, "place_cube_mitigation") then
+		debug_print("Player is mitigated.")
+	end
+
+	if get_player_cps(player) >= mitigation_config.cps_treshold and math.random(1, 100) <= mitigation_config.rejection_chance then
+		add_cooldown(player, "place_cube_mitigation", mitigation_config.duration)
+		return
 	end
 
 	cube_cache[cube_position] = true

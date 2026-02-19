@@ -10,8 +10,6 @@ local function apply_hit_highlight(character: Model, duration: number, colour: C
 	highlight.OutlineTransparency = 1
 	highlight.Parent = character
 
-	print(character.Name)
-
 	Debris:AddItem(highlight, duration)
 end
 
