@@ -116,9 +116,7 @@ local function game_stop(state: state): ()
 
 		-- i don't really know why roblox doesn't set the team color back when the team is destroyed.
 		for _, player in team.players do
-			if player.Parent then
-				player.TeamColor = BrickColor.new("White")
-			end
+			player.TeamColor = BrickColor.new("White")
 		end
 
 		team.cage:Destroy()
