@@ -65,14 +65,15 @@ local function notification_component(props: {
 	end
 	
 	return create_element("Frame", {
-		Size = UDim2.new(1, 0, 0, 26), -- Slightly bigger from 22 to 26
-		Position = UDim2.new(0, 0, 1, -(index * 30)),
+		AutomaticSize = "X",
+		Size = UDim2.new(0, 0, 0, 28),
+		Position = UDim2.new(0, 0, 1, -(index * 32)),
 		AnchorPoint = Vector2.new(0, 1),
 		BackgroundColor3 = colours.black,
 		BackgroundTransparency = 0.5 + (transparency * 0.5),
 	},
 		create_element("UICorner", {
-			CornerRadius = UDim.new(0, 13),
+			CornerRadius = UDim.new(1, 0),
 		}),
 		create_element("UIStroke", {
 			Thickness = 1,
@@ -89,16 +90,17 @@ local function notification_component(props: {
 			})
 		),
 		create_element("UIPadding", {
-			PaddingTop = UDim.new(0, 2),
-			PaddingBottom = UDim.new(0, 2),
-			PaddingLeft = UDim.new(0, 2),
-			PaddingRight = UDim.new(0, 2),
+			PaddingTop = UDim.new(0, 3), --without this the text would look offset and Ugly!
+			PaddingBottom = UDim.new(0, 0),
+			PaddingLeft = UDim.new(0, 10),
+			PaddingRight = UDim.new(0, 10),
 		}),
 		create_element("TextLabel", {
-			Size = UDim2.new(1, 0, 1, 0),
+			AutomaticSize = "XY",
+			Size = UDim2.new(0, 0, 0, 0),
 			BackgroundTransparency = 1,
 			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-			TextSize = 15, -- Slightly bigger from 14 to 15
+			TextSize = 24, -- Slightly bigger from 14 to 15
 			Text = notification.message,
 			TextColor3 = colours.white,
 			TextXAlignment = Enum.TextXAlignment.Center,
