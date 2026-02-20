@@ -195,6 +195,7 @@ return IPinfo_token
 - Place all requires in the same spot.
 - Order requires alphabetically.
 - Use `Color3.new` over the other constructors (`fromHex`, `fromHSV`, `fromRGB`).
+- Use `BrickColor.new` over the other constructors (`BrickColor.palette`, `BrickColor.Red`, and so on).
 - Functions should return a single value.
 - Add type annotations to all function parameters and return values. Exceptions:
 	- Do not annotate the return type if it is a React element.

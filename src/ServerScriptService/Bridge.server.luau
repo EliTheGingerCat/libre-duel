@@ -33,8 +33,8 @@ local team_colours = {
 }
 
 local Color3_to_BrickColor = {
-	[colours.blue] = BrickColor.Blue(),
-	[colours.red] = BrickColor.Red(),
+	[colours.blue] = BrickColor.new("Bright blue"),
+	[colours.red] = BrickColor.new("Bright red"),
 }
 
 local function find_team_by_Roblox(state: state, Roblox_team: Team): team?
