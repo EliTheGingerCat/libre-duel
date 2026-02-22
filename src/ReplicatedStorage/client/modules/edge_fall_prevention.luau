@@ -88,7 +88,7 @@ function edge_fall_prevention.enable()
 		overhang_part.CanCollide = true
 		overhang_part.Transparency = 1
 		overhang_part.CastShadow = false
-		overhang_part.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
+		overhang_part.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0, 0, 0, 0) --Density has to be 0.0001 so roblox stops crying in the console...
 		overhang_part.Parent = workspace
 	end
 
@@ -103,19 +103,6 @@ function edge_fall_prevention.enable()
 		update_character_cache()
 
 		if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then return end
-
-		-- FloorMaterial is checked first bc it's significantly faster than querying the state machine
-		local is_airborne = (cached_hum.FloorMaterial == Enum.Material.Air)
-			or (cached_hum:GetState() == Enum.HumanoidStateType.Freefall)
-			or (cached_hum:GetState() == Enum.HumanoidStateType.Jumping)
-
-		if is_airborne then
-			if last_floor_part ~= nil then
-				overhang_part.CFrame = hiding_cframe
-				last_floor_part = nil
-			end
-			return
-		end
 
 		local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
 		local ray = workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
@@ -138,11 +125,6 @@ function edge_fall_prevention.enable()
 
 					overhang_part.CFrame = hit_inst.CFrame * CFrame.new(0, (floor_size.Y * 0.5) - (overhang_thickness * 0.5), 0)
 				end
-			end
-		else
-			if last_floor_part ~= nil then
-				overhang_part.CFrame = hiding_cframe
-				last_floor_part = nil
 			end
 		end
 	end)
