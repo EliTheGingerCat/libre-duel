@@ -23,14 +23,13 @@ local floor_ray_check = RaycastParams.new()
 floor_ray_check.FilterType = Enum.RaycastFilterType.Exclude
 
 local overhang_offset = sneaking_constants.overhang
+local hiding_cframe = CFrame.new(0, math.huge, 0)
 local overhang_thickness = 0.05
 
 local cached_char, cached_root, cached_hum
 local cached_camera = Workspace.CurrentCamera
 local last_floor_part = nil
 local is_enabled = false
-
-local cast_size = Vector3.new(2, 0.1, 2)
 
 local function update_character_cache()
 	local char = player.Character
@@ -89,9 +88,9 @@ function edge_fall_prevention.enable()
 		overhang_part.Name = "sneak_overhang"
 		overhang_part.Anchored = true
 		overhang_part.CanCollide = true
-		overhang_part.Transparency = 0.5
+		overhang_part.Transparency = 1
 		overhang_part.CastShadow = false
-		overhang_part.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0, 0, 0, 0)
+		overhang_part.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0, 0, 0, 0) --Density has to be 0.0001 so roblox stops crying in the console...
 		overhang_part.Parent = Workspace
 	end
 
@@ -107,12 +106,8 @@ function edge_fall_prevention.enable()
 
 		if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then return end
 
-		local drop_dist = -(cached_hum.HipHeight + (cached_root.Size.Y * 0.5) + 0.5)
-		local drop_vec = Vector3.new(0, drop_dist, 0)
-
-		local cast_cframe = CFrame.new(cached_root.Position)
-
-		local ray = Workspace:Blockcast(cast_cframe, cast_size, drop_vec, floor_ray_check)
+		local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
+		local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
 
 		if ray and ray.Instance then
 			local hit_inst = ray.Instance
@@ -143,10 +138,9 @@ function edge_fall_prevention.enable()
 			return old_move_function(self, vec, face)
 		end
 
-		local hum_state = cached_hum:GetState()
 		local is_airborne = (cached_hum.FloorMaterial == Enum.Material.Air)
-			or (hum_state == Enum.HumanoidStateType.Freefall)
-			or (hum_state == Enum.HumanoidStateType.Jumping)
+			or (cached_hum:GetState() == Enum.HumanoidStateType.Freefall)
+			or (cached_hum:GetState() == Enum.HumanoidStateType.Jumping)
 
 		if not is_airborne then
 			local look_ahead = (cached_hum.WalkSpeed / 60) * 1.5
@@ -208,11 +202,8 @@ function edge_fall_prevention.disable()
 		local standing_on_overhang = false
 
 		if cached_root and cached_hum and cached_hum.Health > 0 then
-			local drop_dist = -(cached_hum.HipHeight + (cached_root.Size.Y * 0.5) + 0.5)
-			local drop_vec = Vector3.new(0, drop_dist, 0)
-			local cast_cframe = CFrame.new(cached_root.Position)
-
-			local ray = Workspace:Blockcast(cast_cframe, cast_size, drop_vec, floor_ray_check)
+			local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
+			local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
 			if ray and ray.Instance == overhang_part then
 				standing_on_overhang = true
 			end
@@ -224,11 +215,8 @@ function edge_fall_prevention.disable()
 				local still_on = false
 
 				if cached_root and cached_hum and cached_hum.Health > 0 then
-					local drop_dist = -(cached_hum.HipHeight + (cached_root.Size.Y * 0.5) + 0.5)
-					local drop_vec = Vector3.new(0, drop_dist, 0)
-					local cast_cframe = CFrame.new(cached_root.Position)
-
-					local ray = Workspace:Blockcast(cast_cframe, cast_size, drop_vec, floor_ray_check)
+					local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
+					local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
 					if ray and ray.Instance == overhang_part then
 						still_on = true
 					end
