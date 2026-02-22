@@ -1,10 +1,10 @@
-local players = game:GetService("Players")
-local workspace = game:GetService("Workspace")
-local run_service = game:GetService("RunService")
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
 
 local sneaking_constants = require(script.Parent.sneaking_constants)
 
-local player = players.LocalPlayer
+local player = Players.LocalPlayer
 
 local edge_fall_prevention = {}
 
@@ -27,7 +27,7 @@ local hiding_cframe = CFrame.new(0, math.huge, 0)
 local overhang_thickness = 0.05
 
 local cached_char, cached_root, cached_hum
-local cached_camera = workspace.CurrentCamera
+local cached_camera = Workspace.CurrentCamera
 local last_floor_part = nil
 local is_enabled = false
 
@@ -68,7 +68,7 @@ local function get_controls()
 end
 
 local function is_direction_safe(pos, offset, drop_vec)
-	return workspace:Raycast(pos + offset, drop_vec, move_ray_check) ~= nil
+	return Workspace:Raycast(pos + offset, drop_vec, move_ray_check) ~= nil
 end
 
 function edge_fall_prevention.enable()
@@ -91,23 +91,23 @@ function edge_fall_prevention.enable()
 		overhang_part.Transparency = 1
 		overhang_part.CastShadow = false
 		overhang_part.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0, 0, 0, 0) --Density has to be 0.0001 so roblox stops crying in the console...
-		overhang_part.Parent = workspace
+		overhang_part.Parent = Workspace
 	end
 
-	camera_connection = workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
-		cached_camera = workspace.CurrentCamera
+	camera_connection = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+		cached_camera = Workspace.CurrentCamera
 		if cached_char then
 			move_ray_check.FilterDescendantsInstances = {cached_char, cached_camera}
 		end
 	end)
 
-	update_connection = run_service.Heartbeat:Connect(function()
+	update_connection = RunService.Heartbeat:Connect(function()
 		update_character_cache()
 
 		if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then return end
 
 		local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-		local ray = workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
+		local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
 
 		if ray and ray.Instance then
 			local hit_inst = ray.Instance
@@ -203,7 +203,7 @@ function edge_fall_prevention.disable()
 
 		if cached_root and cached_hum and cached_hum.Health > 0 then
 			local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-			local ray = workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
+			local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
 			if ray and ray.Instance == overhang_part then
 				standing_on_overhang = true
 			end
@@ -211,13 +211,13 @@ function edge_fall_prevention.disable()
 
 		-- The part should only be removed if the player isn't standing on it, so they can still stand on it without falling
 		if standing_on_overhang then
-			cleanup_connection = run_service.Heartbeat:Connect(function()
+			cleanup_connection = RunService.Heartbeat:Connect(function()
 				update_character_cache()
 				local still_on = false
 
 				if cached_root and cached_hum and cached_hum.Health > 0 then
 					local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-					local ray = workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
+					local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
 					if ray and ray.Instance == overhang_part then
 						still_on = true
 					end
