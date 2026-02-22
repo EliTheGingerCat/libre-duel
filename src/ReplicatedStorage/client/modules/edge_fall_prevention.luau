@@ -2,6 +2,8 @@ local players = game:GetService("Players")
 local workspace = game:GetService("Workspace")
 local run_service = game:GetService("RunService")
 
+local sneaking_constants = require(script.Parent.sneaking_constants)
+
 local player = players.LocalPlayer
 
 local edge_fall_prevention = {}
@@ -20,8 +22,8 @@ move_ray_check.FilterType = Enum.RaycastFilterType.Exclude
 local floor_ray_check = RaycastParams.new()
 floor_ray_check.FilterType = Enum.RaycastFilterType.Exclude
 
-local hang_offset = 1.0
-local hiding_cframe = CFrame.new(0, -10000, 0)
+local overhang_offset = sneaking_constants.overhang
+local hiding_cframe = CFrame.new(0, math.huge, 0)
 local overhang_thickness = 0.05
 
 local cached_char, cached_root, cached_hum
@@ -118,9 +120,9 @@ function edge_fall_prevention.enable()
 					local floor_size = hit_inst.Size
 
 					overhang_part.Size = Vector3.new(
-						floor_size.X + (hang_offset * 2),
+						floor_size.X + (overhang_offset * 2),
 						overhang_thickness,
-						floor_size.Z + (hang_offset * 2)
+						floor_size.Z + (overhang_offset * 2)
 					)
 
 					overhang_part.CFrame = hit_inst.CFrame * CFrame.new(0, (floor_size.Y * 0.5) - (overhang_thickness * 0.5), 0)
