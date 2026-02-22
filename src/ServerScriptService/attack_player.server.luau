@@ -78,6 +78,12 @@ local function on_event(player: Player, target_character: unknown): ()
 		return
 	end
 
+	--i'm surprised this basic sanity check was not yet added
+	--credits to nothm for finding
+	if attacker_character == target_character then
+		player:Kick("Cheating")
+	end
+
 	if Players:GetPlayerFromCharacter(attacker_character).Team == Players:GetPlayerFromCharacter(target_character).Team
 		and not Players:GetPlayerFromCharacter(attacker_character).Neutral and not Players:GetPlayerFromCharacter(target_character).Neutral
 		then
