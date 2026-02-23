@@ -5,7 +5,12 @@ registry = "test"
 [[package]]
 name = "elithegingercat/libre-duel"
 version = "0.1.0"
-dependencies = [["chrono", "parihsz/chrono@2.0.0-experimental"], ["react", "jsdotlua/react@17.2.1"], ["react-roblox", "jsdotlua/react-roblox@17.2.1"], ["signal", "sleitnick/signal@2.0.3"]]
+dependencies = [["chrono", "parihsz/chrono@2.0.0-experimental"], ["react", "jsdotlua/react@17.2.1"], ["react-roblox", "jsdotlua/react-roblox@17.2.1"], ["signal", "sleitnick/signal@2.0.3"], ["drop", "jackdotink/drop@1.0.2"]]
+
+[[package]]
+name = "jackdotink/drop"
+version = "1.0.2"
+dependencies = []
 
 [[package]]
 name = "jsdotlua/boolean"
