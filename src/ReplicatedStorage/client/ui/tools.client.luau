@@ -1,12 +1,12 @@
 local UserInputService = game:GetService("UserInputService")
 
-local attack_melee = require(script.Parent.modules.combat.attack_melee)
-local dissolve_cube = require(script.Parent.modules.cube.dissolve_cube)
-local keybinds = require(script.Parent.modules.util.keybinds)
-local place_cube = require(script.Parent.modules.cube.place_cube)
-local table_flip = require(script.Parent.modules.util.table_flip)
-local tool_state = require(script.Parent.modules.ui.tool_state)
-local tools = require(script.Parent.modules.ui.tools)
+local attack_melee = require(script.Parent.Parent.combat.attack_melee)
+local dissolve_cube = require(script.Parent.Parent.cube.dissolve_cube)
+local keybinds = require(script.Parent.Parent.util.keybinds)
+local place_cube = require(script.Parent.Parent.cube.place_cube)
+local table_flip = require(script.Parent.Parent.util.table_flip)
+local tool_state = require(script.Parent.tool_state)
+local tools = require(script.Parent.tool_list)
 
 type tool = tools.tool
 

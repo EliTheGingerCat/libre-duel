@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Debris = game:GetService("Debris")
 
-local colours = require(ReplicatedStorage.modules.ui.colours)
+local colours = require(ReplicatedStorage.shared.ui.colours)
 
 local function apply_hit_highlight(character: Model, duration: number, colour: Color3?)
 	local highlight = Instance.new("Highlight")

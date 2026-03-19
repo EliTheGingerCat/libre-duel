@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local IPinfo = require(script.Parent.IPinfo)
-local location_default = require(ReplicatedStorage.modules.ui.location_default)
+local location_default = require(ReplicatedStorage.shared.ui.location_default)
 
 local location = location_default
 

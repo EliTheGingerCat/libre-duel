@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
-local keybinds = require(script.Parent.modules.util.keybinds)
+local keybinds = require(script.Parent.keybinds)
 
 local function on_input_began(input: InputObject): ()
 	if input.KeyCode == keybinds.debug_server then

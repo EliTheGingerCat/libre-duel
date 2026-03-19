@@ -3,10 +3,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local cube_cache = require(ReplicatedStorage.modules.cube.cube_cache)
-local cube_dissolve_time = require(ReplicatedStorage.modules.cube.cube_dissolve_time)
+local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
+local cube_dissolve_time = require(ReplicatedStorage.shared.cube.cube_dissolve_time)
 local debug_print = require(ServerScriptService.util.debug_print)
-local get_player_position = require(ReplicatedStorage.modules.player.get_player_position)
+local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
 local player_range_server = require(ServerScriptService.combat.player_range_server)
 
 type dissolving = {

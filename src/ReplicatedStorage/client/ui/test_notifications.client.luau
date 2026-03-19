@@ -1,6 +1,6 @@
 local RunService = game:GetService("RunService")
 
-local notification_management = require(script.Parent.modules.ui.notification_management)
+local notification_management = require(script.Parent.notification_management)
 
 -- Manually change this to enable. Should always be disabled in the official repository, so if this variable is changed, avoid staging that change to Git. However, this can get annoying. Perhaps it should be managed by a chat command, a keybind, or the like.
 local enabled = false

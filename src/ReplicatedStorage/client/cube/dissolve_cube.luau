@@ -3,12 +3,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
-local cube_cache = require(ReplicatedStorage.modules.cube.cube_cache)
-local cube_dissolve_time = require(ReplicatedStorage.modules.cube.cube_dissolve_time)
+local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
+local cube_dissolve_time = require(ReplicatedStorage.shared.cube.cube_dissolve_time)
 local debug_print = require(script.Parent.Parent.util.debug_print)
 local keybinds = require(script.Parent.Parent.util.keybinds)
-local get_player_position = require(ReplicatedStorage.modules.player.get_player_position)
-local player_range = require(ReplicatedStorage.modules.combat.player_range)
+local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
+local player_range = require(ReplicatedStorage.shared.combat.player_range)
 local transparency_maximum = require(script.Parent.transparency_maximum)
 
 local local_player = Players.LocalPlayer
