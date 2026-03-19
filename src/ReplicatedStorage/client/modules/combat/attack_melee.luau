@@ -1,12 +1,12 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local add_cooldown = require(ReplicatedStorage.modules.add_cooldown)
-local debug_print = require(script.Parent.debug_print)
-local get_player_position = require(ReplicatedStorage.modules.get_player_position)
-local is_on_cooldown = require(ReplicatedStorage.modules.is_on_cooldown)
-local player_range = require(ReplicatedStorage.modules.player_range)
-local sword_cooldown  = require(ReplicatedStorage.modules.sword_cooldown)
+local add_cooldown = require(ReplicatedStorage.modules.cooldown.add_cooldown)
+local debug_print = require(script.Parent.Parent.util.debug_print)
+local get_player_position = require(ReplicatedStorage.modules.player.get_player_position)
+local is_on_cooldown = require(ReplicatedStorage.modules.cooldown.is_on_cooldown)
+local player_range = require(ReplicatedStorage.modules.combat.player_range)
+local sword_cooldown  = require(ReplicatedStorage.modules.combat.sword_cooldown)
 local get_mouse_target = require(script.Parent.get_mouse_target)
 
 local local_player = Players.LocalPlayer

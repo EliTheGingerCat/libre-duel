@@ -1,7 +1,7 @@
 local UserInputService = game:GetService("UserInputService")
 
-local keybinds = require(script.Parent.modules.keybinds)
-local set_player_sneak = require(script.Parent.modules.set_player_sneak)
+local keybinds = require(script.Parent.modules.util.keybinds)
+local set_player_sneak = require(script.Parent.modules.sneak.set_player_sneak)
 
 local function on_input_began(input: InputObject, gameProcessed: boolean)
 	if gameProcessed then return end

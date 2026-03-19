@@ -5,7 +5,7 @@ local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 
 local create_element = React.createElement
 
-local colours = require(ReplicatedStorage.modules.colours)
+local colours = require(ReplicatedStorage.modules.ui.colours)
 
 type TextXAlignment = "Center" | "Left" | "Right"
 

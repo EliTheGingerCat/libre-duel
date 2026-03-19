@@ -1,7 +1,8 @@
 local Players = game:GetService("Players")
+local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
-local debug_print = require(script.Parent.modules.debug_print)
+local debug_print = require(ServerScriptService.util.debug_print)
 local hitbox = ServerStorage.hitbox
 local cube_hitbox = ServerStorage.cube_hitbox
 

@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local IPinfo = require(script.Parent.modules.IPinfo)
-local location_default = require(ReplicatedStorage.modules.location_default)
+local IPinfo = require(script.Parent.IPinfo)
+local location_default = require(ReplicatedStorage.modules.ui.location_default)
 
 local location = location_default
 
@@ -36,7 +36,7 @@ local function get_server_location_Lite(): string?
 end
 
 local function get_token(): string?
-	local token_module = script.Parent.modules:FindFirstChild("IPinfo_token") :: ModuleScript?
+	local token_module = script.Parent:FindFirstChild("IPinfo_token") :: ModuleScript?
 	if token_module ~= nil then
 		return require(token_module) :: string
 	end

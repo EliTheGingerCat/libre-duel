@@ -1,6 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local cps_dictionary = require(script.Parent.modules.cps_dictionary)
+local cps_dictionary = require(script.Parent.cps_dictionary)
 
 local function add_and_remove(player: Player)
 	cps_dictionary[player] = cps_dictionary[player] or 0

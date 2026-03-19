@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 
 local sneaking_constants = require(script.Parent.sneaking_constants)
-local debug_print = require(script.Parent.debug_print)
+local debug_print = require(script.Parent.Parent.util.debug_print)
 
 local edge_fall_prevention = require(script.Parent.edge_fall_prevention)
 
