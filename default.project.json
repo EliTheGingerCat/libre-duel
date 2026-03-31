@@ -40,7 +40,7 @@
     },
 
     "ServerScriptService": {
-      "$path": "./src/ServerScriptService",
+      "$path": "./src/ServerScriptService"
     },
 
     "ServerStorage": {
