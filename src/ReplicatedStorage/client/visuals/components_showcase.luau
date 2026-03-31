@@ -8,6 +8,7 @@ local saturation_slider = require(script.Parent.saturation_slider)
 local slider = require(script.Parent.slider)
 local text_input = require(script.Parent.text_input)
 local React = require(ReplicatedStorage.Packages.react)
+local scale = require(script.Parent.scale)
 local title_bar = require(script.Parent.title_bar)
 local warning_text = require(script.Parent.warning_text)
 
@@ -15,6 +16,7 @@ local create_element = React.createElement
 
 local function components_showcase()
 	return create_element("ScreenGui",{
+		Enabled = true, -- Todo: bind to a key, disable by default
 		Name = "Components Showcase",
 	},
 		create_element("Frame",{
@@ -23,6 +25,7 @@ local function components_showcase()
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromOffset(1366, 768),
 		},
+			create_element(scale),
 			create_element("UICorner",{
 				CornerRadius = UDim.new(0, 65),
 			}),
