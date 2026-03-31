@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local workspace = game:GetService("Workspace")
 
 local create_cube = require(ReplicatedStorage.modules.create_cube)
 local cube_cache = require(ReplicatedStorage.modules.cube_cache)
@@ -15,8 +16,10 @@ local local_mouse = local_player:GetMouse()
 
 local cube_size_half = cube_size / 2
 local cube_size_half_soft = cube_size_half * 0.9
-local pos = cube_size_half_soft
-local neg = cube_size_half_soft * -1
+
+-- Create params once
+local build_ray_params = RaycastParams.new()
+build_ray_params.FilterType = Enum.RaycastFilterType.Exclude
 
 local function snap_position(position: Vector3): Vector3
 	return Vector3.new(
@@ -27,7 +30,17 @@ local function snap_position(position: Vector3): Vector3
 end
 
 local function place_cube(): ()
-	if local_mouse.Target == nil then
+	local ignore_list = {local_player.Character}
+	local overhang = workspace:FindFirstChild("sneak_overhang")
+	if overhang then
+		table.insert(ignore_list, overhang)
+	end
+	build_ray_params.FilterDescendantsInstances = ignore_list
+
+	local mouse_ray = local_mouse.UnitRay
+	local ray_result = workspace:Raycast(mouse_ray.Origin, mouse_ray.Direction * 1000, build_ray_params)
+
+	if not ray_result then
 		debug_print("Mouse target is missing.")
 		return
 	end
@@ -38,15 +51,15 @@ local function place_cube(): ()
 		return
 	end
 
-	local hit_position = local_mouse.Hit.Position
-
+	local hit_position = ray_result.Position
 	local distance = (hit_position - local_position).Magnitude
+
 	if distance > player_range then
 		debug_print("Too far.")
 		return
 	end
 
-	local offset = Vector3.FromNormalId(local_mouse.TargetSurface) * cube_size_half_soft
+	local offset = ray_result.Normal * cube_size_half_soft
 	local snapped = snap_position(hit_position + offset)
 
 	local occupied_cube = cube_cache[snapped]
@@ -67,7 +80,6 @@ local function place_cube(): ()
 
 	local success: boolean = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
 
-	-- Whether the server accepts or rejects the cube, this local one is no longer necessary.
 	cube_temporary:Destroy()
 
 	if success then

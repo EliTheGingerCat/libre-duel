@@ -7,6 +7,7 @@ local scale = require(script.Parent.scale)
 local tool_state = require(script.Parent.Parent.modules.tool_state)
 local tools = require(script.Parent.Parent.modules.tools)
 
+local colours = require(ReplicatedStorage.modules.colours)
 local create_element = React.createElement
 local local_player = Players.LocalPlayer
 local use_effect = React.useEffect
@@ -44,10 +45,10 @@ local function slider_display(props: {
 			ZIndex = 3,
 			Text = tostring(math.ceil(props.fill_value)),
 			TextScaled = true,
-			TextColor3 = Color3.fromRGB(255, 255, 255),
+			TextColor3 = colours.white,
 		}),
 		create_element("Frame", {
-			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+			BackgroundColor3 = colours.white,
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.fromScale(0, 0.5),
 			Size = UDim2.fromScale(props.fill_value / props.fill_total, 1),
@@ -168,12 +169,12 @@ local function health_main()
 	local health_main = use_health_main()
 
 	local props_slider = {
-		colour_background = Color3.fromRGB(91, 43, 44),
+		colour_background = colours.red_900,
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(177, 76, 78)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(132, 62, 63)),
+			ColorSequenceKeypoint.new(0, colours.red_700),
+			ColorSequenceKeypoint.new(1, colours.red_800),
 		}),
-		colour_stroke = Color3.fromRGB(146, 60, 62),
+		colour_stroke = colours.red_900,
 		fill_total = 100,
 		fill_value = health_main,
 		name = "health_main",
@@ -184,19 +185,19 @@ local function health_main()
 	return create_element(slider_display, props_slider)
 end
 
-local function health_extra(props: {
-	health_extra: number
+local function health_shield(props: {
+	health_shield: number
 })
 	local props_slider = {
-		colour_background = Color3.fromRGB(121, 85, 1),
+		colour_background = colours.sky_800,
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, Color3.fromRGB(239, 173, 82)),
-			ColorSequenceKeypoint.new(1, Color3.fromRGB(211, 170, 34)),
+			ColorSequenceKeypoint.new(0, colours.sky_600),
+			ColorSequenceKeypoint.new(1, colours.sky_700),
 		}),
-		colour_stroke = Color3.fromRGB(170, 140, 39),
+		colour_stroke = colours.sky_800,
 		fill_total = 20,
-		fill_value = props.health_extra,
-		name = "health_extra",
+		fill_value = props.health_shield,
+		name = "health_shield",
 		position_y_offset = -46,
 		size_x_scale = 0.4,
 	}
@@ -205,7 +206,7 @@ local function health_extra(props: {
 end
 
 local function health_bar(props: {
-	health_extra: number,
+	health_shield: number,
 })
 	return create_element("Frame", {
 		Name = "health_bar",
@@ -213,21 +214,21 @@ local function health_bar(props: {
 		Size = UDim2.fromScale(1, 1),
 	},
 		create_element(health_main),
-		props.health_extra > 0 and create_element(health_extra, {
-			health_extra = props.health_extra
+		props.health_shield > 0 and create_element(health_shield, {
+			health_shield = props.health_shield
 		})
 	)
 end
 
 local function active_slot_addendum()
 	return create_element("UIStroke", {
-		Color = Color3.fromRGB(255, 255, 255),
+		Color = colours.white,
 		Thickness = 2,
 	},
 		create_element("UIGradient", {
 			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, Color3.fromRGB(201, 201, 201)),
-				ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+				ColorSequenceKeypoint.new(0, colours.light_grey),
+				ColorSequenceKeypoint.new(1, colours.dark_grey),
 			}),
 			Rotation = -90,
 		})
@@ -240,8 +241,8 @@ local function slot(props: {
 	text: string,
 })
 	return create_element("Frame", {
-		BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-		BackgroundTransparency = 0.75,
+		BackgroundColor3 = colours.black,
+		BackgroundTransparency = 0.8,
 		Name = props.id,
 		Size = UDim2.fromScale(1, 1),
 		LayoutOrder = props.id,
@@ -252,7 +253,7 @@ local function slot(props: {
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(0.8, 0.8),
 			Text = props.text,
-			TextColor3 = Color3.new(1, 1, 1),
+			TextColor3 = colours.white,
 			TextScaled = true,
 			TextSize = 20,
 		}),
@@ -322,7 +323,7 @@ local function hotbar()
 	},
 		create_element("Frame", {
 				AnchorPoint = Vector2.new(0.5, 1),
-				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+				BackgroundColor3 = colours.black,
 				BackgroundTransparency = 0.5,
 				Position = UDim2.new(0.5, 0, 1, -10),
 				Size = UDim2.fromOffset(680, 80),
@@ -331,20 +332,20 @@ local function hotbar()
 				CornerRadius = UDim.new(0.45, 0),
 			}),
 			create_element("UIStroke", {
-				Color = Color3.fromRGB(255, 255, 255),
+				Color = colours.white,
 				Thickness = 2,
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.fromRGB(201, 201, 201)),
-						ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+						ColorSequenceKeypoint.new(0, colours.light_grey),
+						ColorSequenceKeypoint.new(1, colours.dark_grey),
 					}),
 					Rotation = -90,
 				})
 			),
 			create_element(scale),
 			create_element(health_bar, {
-				health_extra = 0,
+				health_shield = 0,
 			}),
 			create_element(slots_container)
 		)

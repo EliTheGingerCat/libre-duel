@@ -6,6 +6,7 @@ local function apply_knockback(attacker: Part, target: Part, strength: number?, 
 	local constant_strength_enabled = constant_strength ~= false
 
 	local direction = target.Position - attacker.Position
+	direction = Vector3.new(direction.X, 0, direction.Z)
 
 	if constant_strength_enabled then
 		if direction.Magnitude > 0 then
@@ -16,7 +17,7 @@ local function apply_knockback(attacker: Part, target: Part, strength: number?, 
 	local attachment = Instance.new("Attachment")
 
 	local constant_velocity = Instance.new("LinearVelocity")
-	constant_velocity.MaxForce = 150000
+	constant_velocity.MaxForce = math.huge
 	constant_velocity.Attachment0 = attachment
 	constant_velocity.VectorVelocity = Vector3.new(direction.X, 9.5, direction.Z) * strength_result
 	constant_velocity.Parent = attachment
@@ -24,7 +25,7 @@ local function apply_knockback(attacker: Part, target: Part, strength: number?, 
 	-- Breter98: m~memowwy lyeaks awe bawwd~~~ OwO
 	-- Eli: This would not just be a memory leak... the player would keep being knocked back forever.
 	Debris:AddItem(attachment, 0.3)
-	
+
 	attachment.Parent = target
 end
 
