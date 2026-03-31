@@ -1,6 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local React = require(ReplicatedStorage.vendor.ReactLua.React)
+local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 

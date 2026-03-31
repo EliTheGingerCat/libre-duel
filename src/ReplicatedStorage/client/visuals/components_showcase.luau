@@ -7,7 +7,7 @@ local information_text = require(script.Parent.information_text)
 local saturation_slider = require(script.Parent.saturation_slider)
 local slider = require(script.Parent.slider)
 local text_input = require(script.Parent.text_input)
-local React = require(ReplicatedStorage.vendor.ReactLua.React)
+local React = require(ReplicatedStorage.Packages.react)
 local title_bar = require(script.Parent.title_bar)
 local warning_text = require(script.Parent.warning_text)
 
