@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 
 local get_perceived_lightness = require(ReplicatedStorage.modules.get_perceived_lightness)
 local keybinds = require(ReplicatedStorage.client.modules.keybinds)
@@ -9,6 +8,7 @@ local location_default = require(ReplicatedStorage.modules.location_default)
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local scale = require(script.Parent.scale)
+local use_if_key_held = require(script.Parent.use_if_key_held)
 
 local create_element = React.createElement
 local local_player = Players.LocalPlayer
@@ -196,38 +196,6 @@ local function location_display()
 		Size = UDim2.new(0.5, 0, 0, 40),
 		Text = location_text,
 	})
-end
-
--- `key` must be constant.
-local function use_if_key_held(key: Enum.KeyCode): boolean
-	local held, set_held = use_state(UserInputService:IsKeyDown(key))
-
-	use_effect(function()
-		local function on_input_began(input: InputObject): ()
-			if input.KeyCode == key then
-				set_held(true)
-			end
-		end
-
-		local connection_began = UserInputService.InputBegan:Connect(on_input_began)
-
-		local function on_input_ended(input: InputObject): ()
-			if input.KeyCode == key then
-				set_held(false)
-			end
-		end
-
-		local connection_ended = UserInputService.InputEnded:Connect(on_input_ended)
-
-		local function destroy()
-			connection_began:Disconnect()
-			connection_ended:Disconnect()
-		end
-
-		return destroy
-	end, {}) -- Zero dependencies since `key` is constant.
-
-	return held
 end
 
 local function tablist()

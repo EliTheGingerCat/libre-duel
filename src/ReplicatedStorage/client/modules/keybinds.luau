@@ -1,4 +1,5 @@
 local keybinds = {
+	components_showcase = Enum.KeyCode.C,
 	debug_local = Enum.KeyCode.P,
 	debug_server = Enum.KeyCode.M,
 	slot = {
