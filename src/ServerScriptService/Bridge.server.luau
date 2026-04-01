@@ -11,6 +11,7 @@ type team = {
 	cage: Model,
 	index: number,
 	goal: Part,
+	name: string,
 	players: {Player},
 	points: number,
 	spawn_part: Part,
@@ -136,11 +137,11 @@ local function process_goal(state: state, player: Player, team: team): ()
 	ReplicatedStorage.remotes.score_self:FireClient(player)
 
 	if team.points >= win_points then
-		debug_print(`Team "{team.Roblox_team.Name}" wins.`)
+		debug_print(`Team "{team.name}" wins.`)
 		game_stop(state)
 		return
 	else
-		debug_print(`Team "{team.Roblox_team.Name}" scored. They have {team.points} points.`)
+		debug_print(`Team "{team.name}" scored. They have {team.points} points.`)
 		ReplicatedStorage.remotes.score_team:FireAllClients(team.index)
 	end
 
@@ -256,6 +257,7 @@ local function create_map(number_teams: number): state
 			cage = cage,
 			index = index,
 			goal = goal,
+			name = `team #{iteration}`,
 			players = {},
 			points = 0,
 			spawn_part = spawn_part,
