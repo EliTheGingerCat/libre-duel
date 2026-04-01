@@ -1,6 +1,8 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Teams = game:GetService("Teams")
+local Workspace = game:GetService("Workspace")
 
 local colours = require(ReplicatedStorage.shared.ui.colours)
 local debug_print = require(script.Parent.util.debug_print)
@@ -48,22 +50,23 @@ local function find_team_by_Roblox(state: state, Roblox_team: Team): team?
 	return nil
 end
 
+-- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`. 
+local function CFrame_from_position(position: Vector3): CFrame
+	return CFrame.new(position)
+end
+
 local function move_player(player: Player, position: Vector3): ()
 	local character = player.Character
 	if character == nil then
 		return
 	end
 
-	local root_part = character:FindFirstChild("HumanoidRootPart")
-	if root_part == nil then
-		return
-	end
+	local current_pivot = character:GetPivot()
+	local current_rotation = current_pivot.Rotation
+	local new_position_frame = CFrame_from_position(position)
+	local new_pivot = new_position_frame * current_rotation
 
-	if not root_part:IsA("BasePart") then
-		return
-	end
-
-	root_part.Position = position
+	character:PivotTo(new_pivot)
 end
 
 local function open_cages(state: state): ()
@@ -279,7 +282,12 @@ local function setup_map(state: state): ()
 				return
 			end
 
-			local character = toucher.Parent
+			local humanoid_root = toucher.Parent
+			if humanoid_root == nil then
+				return
+			end
+
+			local character = humanoid_root.Parent
 			if character == nil then
 				return
 			end
@@ -311,7 +319,19 @@ local function setup_map(state: state): ()
 			process_goal(state, player, scoring_team)
 		end
 
-		team.goal.Touched:Connect(on_touched)
+		local function on_heartbeat(): ()
+			local overlap_parameters = OverlapParams.new()
+			-- ~ investigate: For some reason, collision group seems to not be respected.
+			overlap_parameters.CollisionGroup = "hitbox"
+
+			local hitboxes = Workspace:GetPartBoundsInBox(team.goal.CFrame, team.goal.Size, overlap_parameters)
+
+			for _, hitbox in hitboxes do
+				on_touched(hitbox)
+			end
+		end
+
+		RunService.Heartbeat:Connect(on_heartbeat)
 	end
 end
 
