@@ -20,7 +20,6 @@ type team = {
 
 type state = {
 	cages_are_closed: boolean,
-	score_debounce: boolean,
 	teams: {team},
 }
 
@@ -71,11 +70,11 @@ local function move_player(player: Player, position: Vector3): ()
 end
 
 local function open_cages(state: state): ()
-	state.cages_are_closed = true
-
 	for _, team in state.teams do
 		team.cage.Parent = nil
 	end
+
+	state.cages_are_closed = false
 end
 
 local function close_cages(state: state): ()
@@ -95,16 +94,6 @@ end
 local function close_then_open_cages(state: state): ()
 	close_cages(state)
 	task.delay(cage_time, open_cages, state)
-end
-
-local function debounce_score_yield(state: state): ()
-	state.score_debounce = true
-	task.wait(1)
-	state.score_debounce = false
-end
-
-local function debounce_score(state: state): ()
-	task.spawn(debounce_score_yield, state)
 end
 
 -- GameStop
@@ -131,7 +120,6 @@ local function game_stop(state: state): ()
 end
 
 local function process_goal(state: state, player: Player, team: team): ()
-	debounce_score(state)
 	team.points += 1
 
 	ReplicatedStorage.remotes.score_self:FireClient(player)
@@ -145,6 +133,7 @@ local function process_goal(state: state, player: Player, team: team): ()
 		ReplicatedStorage.remotes.score_team:FireAllClients(team.index)
 	end
 
+	-- ~ investigate: It might be too slow to only set `cages_are_closed` at this point, since `cages_are_closed` is also used to debounce scoring.
 	close_then_open_cages(state)
 end
 
@@ -269,7 +258,6 @@ local function create_map(number_teams: number): state
 
 	local state: state = {
 		cages_are_closed = false,
-		score_debounce = false,
 		teams = teams,
 	}
 
@@ -280,7 +268,7 @@ end
 local function setup_map(state: state): ()
 	for _, team in state.teams do
 		local function on_touched(toucher: BasePart): ()
-			if state.score_debounce then
+			if state.cages_are_closed == true then
 				return
 			end
 
@@ -342,12 +330,10 @@ local function setup_player(state: state, player: Player, team: team): ()
 	player.Team = team.Roblox_team
 
 	local function on_character_loaded(): ()
-		if state.cages_are_closed then
-			move_player(player, team.spawn_part.Position)
-		end
+		move_player(player, team.spawn_part.Position)
 	end
 
-	player.CharacterAppearanceLoaded:Connect(on_character_loaded)
+	player.CharacterAdded:Connect(on_character_loaded)
 end
 
 local function setup_initial_players(state: state, players: {Player}): ()
@@ -408,10 +394,7 @@ end
 local function add_new_player(state: state, player: Player): ()
 	local team = get_smallest_team(state)
 	setup_player(state, player, team)
-
-	if state.cages_are_closed then
-		move_player(player, team.spawn_part.Position)
-	end
+	move_player(player, team.spawn_part.Position)
 end
 
 local function on_players_changed(): ()
