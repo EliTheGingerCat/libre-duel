@@ -2,8 +2,8 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Teams = game:GetService("Teams")
 
-local colours = require(ReplicatedStorage.modules.colours)
-local debug_print = require(script.Parent.modules.debug_print)
+local colours = require(ReplicatedStorage.shared.ui.colours)
+local debug_print = require(script.Parent.util.debug_print)
 
 type team = {
 	cage: Model,
