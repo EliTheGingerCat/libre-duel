@@ -64,8 +64,9 @@ local function slider_display(props: {
 	)
 end
 
+type state_setter<T> = (((T) -> T) | T) -> ()
 local function use_character(): Model?
-	local character, set_character = use_state(local_player.Character)
+	local character: Model?, set_character: state_setter<Model?> = use_state(local_player.Character)
 
 	local function effect_character_formation()
 		local function on_character_added(character: Model): ()
