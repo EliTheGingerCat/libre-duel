@@ -61,7 +61,8 @@
         "FilteringEnabled": true,
         "Gravity": 100.0
       },
-      "$path": "./src/Workspace"
+      "$path": "./src/Workspace",
+      "Terrain": {}
     },
     "StarterPlayer": {
       "$properties": {
