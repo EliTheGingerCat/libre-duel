@@ -69,6 +69,11 @@
         "CharacterJumpHeight": 3,
         "CharacterUseJumpPower": false
       }
+    },
+    "TextChatService": {
+      "$properties": {
+        "ChatVersion": "TextChatService"
+      }
     }
   }
 }
