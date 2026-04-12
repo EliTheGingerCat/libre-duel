@@ -1,4 +1,3 @@
-local RemoteCursorService = game:GetService("RemoteCursorService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local debug_print = require(script.Parent.Parent.util.debug_print)
