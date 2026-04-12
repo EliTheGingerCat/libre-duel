@@ -7,6 +7,8 @@ realm = "shared"
 [dependencies]
 chrono = "parihsz/chrono@2.0.0-experimental"
 
+cryptography = "daily3014/cryptography@3.1.1"
+
 react = "jsdotlua/react@17.1.0"
 react-roblox = "jsdotlua/react-roblox@17.1.0"
 
