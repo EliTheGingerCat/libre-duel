@@ -2,7 +2,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local keybinds = require(script.Parent.keybinds)
 
-local debug_enabled = false
+local debug_enabled = true
 
 local function debug_print(...: any): ()
 	if debug_enabled then

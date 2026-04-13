@@ -12,6 +12,7 @@ local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 local mitigation_config = require(ServerScriptService.mitigation.mitigation_config)
 local play_sound = require(ServerScriptService.util.play_sound)
 local player_range_server = require(ServerScriptService.combat.player_range_server)
+local secure_remote = require(ServerScriptService.cryptography.secure_remote)
 local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 
 local function verify_coordinate(coordinate: number): boolean
@@ -80,4 +81,4 @@ local function on_invoke(player: Player, cube_position: unknown): boolean
 	return true
 end
 
-ReplicatedStorage.remotes.place_cube.OnServerInvoke = on_invoke
+secure_remote.on_server_invoke_encrypted(ReplicatedStorage.remotes.place_cube, on_invoke)

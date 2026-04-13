@@ -4,7 +4,7 @@ local RunService = game:GetService("RunService")
 local creator_id = game.CreatorId
 local is_studio = RunService:IsStudio()
 
-local debug_enabled = false
+local debug_enabled = true
 
 local function debug_print(...: any): ()
 	if debug_enabled then
