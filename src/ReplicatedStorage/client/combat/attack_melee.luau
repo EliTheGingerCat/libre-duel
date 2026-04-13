@@ -57,7 +57,7 @@ local function attack_melee(): ()
 
 	debug_print("Success. Attacking.")
 
-	secure_remote.fire_server_encrypted(ReplicatedStorage.remotes.attack_player, target_character)
+	secure_remote.fire_server_encrypted(ReplicatedStorage.remotes.attack_player, target_character.Name)
 	add_cooldown(local_player, "attack_melee", sword_cooldown)
 end
 

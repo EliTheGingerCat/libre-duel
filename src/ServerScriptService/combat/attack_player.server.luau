@@ -15,7 +15,14 @@ local secure_remote = require(ServerScriptService.cryptography.secure_remote)
 local sword_cooldown_server = require(script.Parent.sword_cooldown_server)
 local sword_damage = require(ReplicatedStorage.shared.combat.sword_damage)
 
-local function on_event(player: Player, target_character: unknown): ()
+local function on_event(player: Player, target_name: unknown): ()
+
+	local target_character = workspace:FindFirstChild(target_name) :: Model?
+	if target_character == nil then
+		debug_print("Target character not found in Workspace.")
+		return
+	end
+
 	if typeof(target_character) ~= "Instance" then
 		debug_print("Target character is not an Instance.")
 		return
@@ -89,19 +96,22 @@ local function on_event(player: Player, target_character: unknown): ()
 	if Players:GetPlayerFromCharacter(attacker_character).Team == Players:GetPlayerFromCharacter(target_character).Team
 		and not Players:GetPlayerFromCharacter(attacker_character).Neutral and not Players:GetPlayerFromCharacter(target_character).Neutral
 		then
+		debug_print("Attacker and target are on the same team.")
 		return
 	end
 
 	local distance = (target_position - attacker_position).Magnitude
 	if distance > player_range_server then
+		debug_print("Too far.")
 		return
 	end
 
 	if get_player_cps(player) >= mitigation_config.cps_treshold and math.random(1, 100) <= mitigation_config.rejection_chance then
 		add_cooldown(player, "attack_melee_mitigation", mitigation_config.duration)
+		debug_print("Attacker has triggered a mitigation.")
 		return
 	end
-
+	debug_print("Attack success.")
 
 	target_humanoid.Health -= sword_damage
 

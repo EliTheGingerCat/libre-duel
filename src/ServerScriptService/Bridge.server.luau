@@ -50,7 +50,7 @@ local function find_team_by_Roblox(state: state, Roblox_team: Team): team?
 	return nil
 end
 
--- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`. 
+-- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`.
 local function CFrame_from_position(position: Vector3): CFrame
 	return CFrame.new(position)
 end
