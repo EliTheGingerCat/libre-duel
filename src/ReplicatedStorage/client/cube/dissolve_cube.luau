@@ -49,7 +49,7 @@ local function find_by_id(id: number): state_any?
 		end
 	end
 
-	debug_print(`There is no state with id "{id}".`)
+	debug_print(`Error: There is no state with id "{id}".`)
 	return nil
 end
 
@@ -61,7 +61,7 @@ local function remove_by_id(id: number): ()
 		end
 	end
 
-	debug_print(`There is no state with id "{id}".`)
+	debug_print(`Error: There is no state with id "{id}".`)
 end
 
 local function cleanup_local(state: state_local): state_pending
@@ -115,8 +115,11 @@ local function on_heartbeat_passive(): ()
 	dissolve_start(cube)
 end
 
+local activate_input_ended
 local function activate_heartbeat_passive(): ()
 	connection_heartbeat_passive = RunService.Heartbeat:Connect(on_heartbeat_passive)
+	activate_input_ended()
+	debug_print("Activated passive heartbeat.")
 end
 
 local function disable_heartbeat_passive(): ()
@@ -147,6 +150,15 @@ local function on_input_ended(input: InputObject): ()
 	end
 end
 
+activate_input_ended = function(): ()
+	if connection_input ~= nil then
+		debug_print("`input_ended` is already connected.")
+		return
+	end
+
+	connection_input = UserInputService.InputEnded:Connect(on_input_ended)
+end
+
 -- If the return value is false, the client will stop dissolving.
 local function can_dissolve(cube: Part?): string?
 	if cube == nil then
@@ -175,7 +187,11 @@ local function can_dissolve(cube: Part?): string?
 end
 
 local function on_heartbeat_active(): ()
-	local state = assert(local_dissolving, "Local dissolving is missing.")
+	local state = local_dissolving
+	if state == nil then
+		debug_print("Error: Local dissolving is missing.")
+		return
+	end
 	
 	local cube_now = local_mouse.Target
 	local fail_message = can_dissolve(cube_now)
@@ -183,10 +199,12 @@ local function on_heartbeat_active(): ()
 	if fail == true then
 		-- As this runs every Heartbeat, do not spam the fail message nor the pausing.
 		if fail_message ~= state.last_fail then
+			if state.last_fail == nil then
+				-- This is the first time the dissolving has failed since it started or since it last resumed (if it paused).
+				dissolve_pause(state)
+			end
 			state.last_fail = fail_message
 			debug_print(fail_message)
-
-			dissolve_pause(state)
 		end
 
 		-- Maybe whatever is preventing dissolution will cease. Do not stop dissolving --- keep checking. Only releasing of the keybind should stop all operations.
@@ -226,10 +244,15 @@ dissolve_start = function(cube: Part): ()
 		return
 	end
 
+	if local_dissolving ~= nil then
+		debug_print("Error: A local dissolving is already active.")
+		return
+	end
+
 	disable_heartbeat_passive()
 
 	if connection_input == nil then
-		connection_input = UserInputService.InputEnded:Connect(on_input_ended)
+		activate_input_ended()
 	end
 
 	id += 1
@@ -237,6 +260,8 @@ dissolve_start = function(cube: Part): ()
 	local cube_target = cube
 	local connection_heartbeat = RunService.Heartbeat:Connect(on_heartbeat_active)
 	local time_start = tick()
+
+	debug_print("Activated active heartbeat.")
 
 	-- This connection is always made, even when debug mode is disabled.
 	local function on_destroying(): ()
@@ -255,7 +280,6 @@ dissolve_start = function(cube: Part): ()
 
 	table.insert(dissolvings, state)
 
-	assert(local_dissolving == nil, "A local dissolving is already active.")
 	local_dissolving = state
 
 	ReplicatedStorage.remotes.dissolve_cube:FireServer(id, cube)
