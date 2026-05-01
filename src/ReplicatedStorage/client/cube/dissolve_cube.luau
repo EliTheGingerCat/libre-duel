@@ -64,6 +64,7 @@ local function remove_by_id(id: number): ()
 	debug_print(`Error: There is no state with id "{id}".`)
 end
 
+-- The state_local `state` must not be used after this point.
 local function cleanup_local(state: state_local): state_pending
 	local_dissolving = nil
 	
@@ -78,16 +79,16 @@ local function cleanup_local(state: state_local): state_pending
 	return state_pending
 end
 
+-- The pending `state` must not be used after this point.
 local function cleanup_pending(state: state_pending): ()
 	state.connection_destroying:Disconnect()
-	-- The state is now dead.
 	remove_by_id(state.id)
 end
 
 -- Destroys the state.
 local function cleanup_all(state: state_local): ()
-	cleanup_local(state)
-	cleanup_pending(state)
+	local state_pending = cleanup_local(state)
+	cleanup_pending(state_pending)
 end
 
 local function set_dissolution_display(state: state_any, fraction: number): ()
@@ -105,7 +106,7 @@ local function dissolve_stop(state: state_local): ()
 end
 
 local dissolve_start
-local function dissolve_new_cube(state: state_local, cube: Part): ()
+local function dissolve_new_cube(state: state_local, cube: BasePart): ()
 	dissolve_stop(state)
 	dissolve_start(cube)
 end
@@ -138,7 +139,7 @@ end
 
 local function on_input_ended(input: InputObject): ()
 	if input.UserInputType == keybinds.tool_use then
-		if local_dissolving then
+		if local_dissolving ~= nil then
 			dissolve_stop(local_dissolving)
 		end
 
@@ -160,7 +161,7 @@ activate_input_ended = function(): ()
 end
 
 -- If the return value is false, the client will stop dissolving.
-local function can_dissolve(cube: Part?): string?
+local function can_dissolve(cube: Instance?): string?
 	if cube == nil then
 		return "Mouse is not pointing at anything."
 	end
@@ -236,7 +237,7 @@ local function on_heartbeat_active(): ()
 	end
 end
 
-dissolve_start = function(cube: Part): ()
+dissolve_start = function(cube: BasePart): ()
 	local fail_message = can_dissolve(cube)
 	local failed = fail_message ~= nil
 	if failed == true then
@@ -257,7 +258,7 @@ dissolve_start = function(cube: Part): ()
 
 	id += 1
 
-	local cube_target = cube
+	local cube_target: Part = cube :: any
 	local connection_heartbeat = RunService.Heartbeat:Connect(on_heartbeat_active)
 	local time_start = tick()
 
