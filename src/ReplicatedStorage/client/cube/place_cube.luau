@@ -9,7 +9,6 @@ local cube_size = require(ReplicatedStorage.shared.cube.cube_size)
 local debug_print = require(script.Parent.Parent.util.debug_print)
 local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
 local player_range = require(ReplicatedStorage.shared.combat.player_range)
-local secure_remote = require(ReplicatedStorage.client.cryptography.secure_remote)
 local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 
 local local_player = Players.LocalPlayer
@@ -79,7 +78,7 @@ local function place_cube(): ()
 	cube_temporary.Position = snapped
 	cube_temporary.Parent = workspace
 
-	local success: boolean = secure_remote.invoke_server_encrypted(ReplicatedStorage.remotes.place_cube, snapped)
+	local success: boolean = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
 
 	cube_temporary:Destroy()
 

@@ -11,7 +11,6 @@ local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 local mitigation_config = require(ServerScriptService.mitigation.mitigation_config)
 local play_sound = require(ServerScriptService.util.play_sound)
 local player_range_server = require(script.Parent.player_range_server)
-local secure_remote = require(ServerScriptService.cryptography.secure_remote)
 local sword_cooldown_server = require(script.Parent.sword_cooldown_server)
 local sword_damage = require(ReplicatedStorage.shared.combat.sword_damage)
 
@@ -124,4 +123,4 @@ local function on_event(player: Player, target_name: unknown): ()
 	add_cooldown(player, "attack_melee", sword_cooldown_server)
 end
 
-secure_remote.on_server_event_encrypted(ReplicatedStorage.remotes.attack_player, on_event)
+ReplicatedStorage.remotes.attack_player.OnServerEvent:Connect(on_event)
