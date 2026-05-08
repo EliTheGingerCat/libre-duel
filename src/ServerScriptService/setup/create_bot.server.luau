@@ -5,6 +5,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local debug_print = require(ServerScriptService.util.debug_print)
+local entity = require(ReplicatedStorage.shared.entity)
 local Chrono_entity = require(ReplicatedStorage.shared.shortcuts.Chrono_entity)
 
 local model_Scientist = ServerStorage.assets.Scientist
@@ -27,6 +28,10 @@ local function on_fire(player: Player): ()
 	model_clone.Parent = Workspace
 
 	Chrono_entity.new("DEFAULT", model_clone, "NATIVE", initial_frame)
+
+	entity.create({
+		character = model_clone,
+	})
 end
 
 local function on_player_removing(player: Player): ()

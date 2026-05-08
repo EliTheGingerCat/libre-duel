@@ -6,17 +6,13 @@ local Workspace = game:GetService("Workspace")
 
 local colours = require(ReplicatedStorage.shared.ui.colours)
 local debug_print = require(script.Parent.util.debug_print)
+local entity_mod = require(ReplicatedStorage.shared.entity)
+local replication = require(ReplicatedStorage.shared.replication)
+local team_mod = require(ReplicatedStorage.shared.team)
 
-type team = {
-	cage: Model,
-	index: number,
-	goal: Part,
-	name: string,
-	players: {Player},
-	points: number,
-	spawn_part: Part,
-	Roblox_team: Team,
-}
+type entity = entity_mod.entity
+local replicate_update = replication.replicate_update
+type team = team_mod.team
 
 type state = {
 	cages_are_closed: boolean,
@@ -26,7 +22,7 @@ type state = {
 local active = false
 local cage_time = 3
 local current_state: state? = nil
-local total_players = #Players:GetPlayers()
+local total_entities = #Players:GetPlayers()
 local win_points = 5
 
 local team_colours = {
@@ -39,24 +35,13 @@ local Color3_to_BrickColor = {
 	[colours.red] = BrickColor.new("Bright red"),
 }
 
-local function find_team_by_Roblox(state: state, Roblox_team: Team): team?
-	for _, team in state.teams do
-		if team.Roblox_team == Roblox_team then
-			return team
-		end
-	end
-
-	debug_print(`Failed to find Roblox-team "{Roblox_team.Name}" in state.`)
-	return nil
-end
-
 -- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`. 
 local function CFrame_from_position(position: Vector3): CFrame
 	return CFrame.new(position)
 end
 
-local function move_player(player: Player, position: Vector3): ()
-	local character = player.Character
+local function move_entity(entity: entity, position: Vector3): ()
+	local character = entity_mod.get_character(entity)
 	if character == nil then
 		return
 	end
@@ -85,8 +70,8 @@ local function close_cages(state: state): ()
 
 		local spawn_location = team.spawn_part.Position
 
-		for _, player in team.players do
-			move_player(player, spawn_location)
+		for _, player in team.members do
+			move_entity(player, spawn_location)
 		end
 	end
 end
@@ -108,8 +93,11 @@ local function game_stop(state: state): ()
 	for _, team in state.teams do
 
 		-- i don't really know why roblox doesn't set the team color back when the team is destroyed.
-		for _, player in team.players do
-			player.TeamColor = BrickColor.new("White")
+		for _, entity in team.members do
+			if entity.player == nil then
+				continue
+			end
+			entity.player.TeamColor = BrickColor.new("White")
 		end
 
 		team.cage:Destroy()
@@ -119,10 +107,13 @@ local function game_stop(state: state): ()
 	end
 end
 
-local function process_goal(state: state, player: Player, team: team): ()
+local function process_goal(state: state, entity: entity, team: team): ()
 	team.points += 1
+	replicate_update(team_mod, team, team_mod.property_map.points)
 
-	ReplicatedStorage.remotes.score_self:FireClient(player)
+	if entity.player ~= nil then
+		ReplicatedStorage.remotes.score_self:FireClient(entity.player)
+	end
 
 	if team.points >= win_points then
 		debug_print(`Team "{team.name}" wins.`)
@@ -130,7 +121,7 @@ local function process_goal(state: state, player: Player, team: team): ()
 		return
 	else
 		debug_print(`Team "{team.name}" scored. They have {team.points} points.`)
-		ReplicatedStorage.remotes.score_team:FireAllClients(team.index)
+		ReplicatedStorage.remotes.score_team:FireAllClients(team.id)
 	end
 
 	-- ~ investigate: It might be too slow to only set `cages_are_closed` at this point, since `cages_are_closed` is also used to debounce scoring.
@@ -242,16 +233,16 @@ local function create_map(number_teams: number): state
 
 		local index = #teams + 1
 
-		local team: team = {
+		local team = team_mod.create({
 			cage = cage,
 			index = index,
 			goal = goal,
+			members = {},
 			name = `team #{iteration}`,
-			players = {},
 			points = 0,
 			spawn_part = spawn_part,
 			Roblox_team = Roblox_team,
-		}
+		})
 
 		teams[index] = team
 	end
@@ -291,22 +282,22 @@ local function setup_map(state: state): ()
 				return
 			end
 
-			local player = Players:GetPlayerFromCharacter(character)
-			if player == nil then
+			local entity = entity_mod.find_by_character(character)
+			if entity == nil then
 				return
 			end
 
-			local player_team = player.Team
-			if player_team == team.Roblox_team then
+			if entity.team_id == team.id or entity.team_id == nil then
 				return
 			end
 
-			local scoring_team = find_team_by_Roblox(state, player_team)
+			local scoring_team = team_mod.find_by_id(entity.team_id)
 			if scoring_team == nil then
+				debug_print(`Error: No team was found with id {entity.team_id}.`)
 				return
 			end
 
-			process_goal(state, player, scoring_team)
+			process_goal(state, entity, scoring_team)
 		end
 
 		local function on_heartbeat(): ()
@@ -325,39 +316,41 @@ local function setup_map(state: state): ()
 	end
 end
 
-local function setup_player(state: state, player: Player, team: team): ()
-	table.insert(team.players, player)
-	player.Team = team.Roblox_team
+local function setup_entity(state: state, entity: entity, team: team): ()
+	team_mod.members_add(team, {entity})
+	entity.team_id = team.id
 
-	local function on_character_loaded(): ()
-		move_player(player, team.spawn_part.Position)
+	if entity.player ~= nil then
+		local function on_character_loaded(): ()
+			move_entity(entity, team.spawn_part.Position)
+		end
+
+		entity.player.CharacterAdded:Connect(on_character_loaded)
 	end
-
-	player.CharacterAdded:Connect(on_character_loaded)
 end
 
-local function setup_initial_players(state: state, players: {Player}): ()
-	local index_player = 0
-	local size_players = #players
+local function setup_initial_entities(state: state, entities: {entity}): ()
+	local index_entity = 0
+	local size_entities = #entities
 	local index_team = 0
 	local size_teams = #state.teams
 
 	while true do
-		index_player += 1
-		if index_player > size_players then
+		index_entity += 1
+		if index_entity > size_entities then
 			return
 		end
-		local player = players[index_player]
+		local entity = entities[index_entity]
 
 		index_team += 1
 		index_team = (index_team - 1) % size_teams + 1
 		local team = state.teams[index_team]
 
-		setup_player(state, player, team)
+		setup_entity(state, entity, team)
 	end
 end
 
-local function game_start(players: {Player}): ()
+local function game_start(entities: {entity}): ()
 	if active == true then
 		debug_print("Can not start since the game is already running.")
 		return
@@ -368,7 +361,7 @@ local function game_start(players: {Player}): ()
 
 	local state = create_map(2)
 	setup_map(state)
-	setup_initial_players(state, players)
+	setup_initial_entities(state, entities)
 	close_then_open_cages(state)
 end
 
@@ -377,7 +370,7 @@ local function get_smallest_team(state: state): team
 	local smallest_teams: {team} = {}
 
 	for _, team in state.teams do
-		local count = #team.players
+		local count = #team.members
 		if count == smallest_count then
 			smallest_count = count
 			table.clear(smallest_teams)
@@ -391,19 +384,19 @@ local function get_smallest_team(state: state): team
 	return random_smallest_team
 end
 
-local function add_new_player(state: state, player: Player): ()
+local function add_new_entity(state: state, entity: entity): ()
 	local team = get_smallest_team(state)
-	setup_player(state, player, team)
-	move_player(player, team.spawn_part.Position)
+	setup_entity(state, entity, team)
+	move_entity(entity, team.spawn_part.Position)
 end
 
-local function on_players_changed(): ()
+local function on_entities_changed(): ()
 	-- This used to be 2, but now it is 1 for testing purposes.
 	-- TODO: Add a way to manually start the game.
-	if total_players >= 1 then
+	if total_entities >= 1 then
 		if active == false then
-			local all_players = Players:GetPlayers()
-			task.delay(5, game_start, all_players)
+			local all_entities = entity_mod.all_entities
+			task.delay(5, game_start, all_entities)
 		end
 	else
 		if active == true then
@@ -414,17 +407,27 @@ local function on_players_changed(): ()
 end
 
 local function on_player_added(player: Player): ()
-	total_players += 1
-	on_players_changed()
+	local entity = entity_mod.create({
+		player = player,
+	})
+	total_entities += 1
+	on_entities_changed()
 
 	if current_state ~= nil then
-		add_new_player(current_state, player)
+		add_new_entity(current_state, entity)
 	end
 end
 Players.PlayerAdded:Connect(on_player_added)
 
 local function on_player_removing(player: Player): ()
-	total_players -= 1
-	on_players_changed()
+	local entity = entity_mod.find_by_player(player)
+	if entity == nil then
+		debug_print(`Error: No entity found for player "{player.Name}".`)
+		return
+	end
+
+	entity_mod.destroy(entity)
+	total_entities -= 1
+	on_entities_changed()
 end
 Players.PlayerRemoving:Connect(on_player_removing)

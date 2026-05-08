@@ -1,11 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local add_cooldown = require(ReplicatedStorage.shared.cooldown.add_cooldown)
 local apply_hit_highlight = require(script.Parent.apply_hit_highlight)
 local apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
 local debug_print = require(ServerScriptService.util.debug_print)
+local entity = require(ReplicatedStorage.shared.entity)
 local get_player_cps = require(ServerScriptService.mitigation.get_player_cps)
 local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 local mitigation_config = require(ServerScriptService.mitigation.mitigation_config)
@@ -42,6 +42,12 @@ local function on_event(player: Player, target_character: unknown): ()
 		return
 	end
 
+	local target_entity = entity.find_by_character(target_character)
+	if target_entity == nil then
+		debug_print("Target entity was not found.")
+		return
+	end
+
 	local target_position = target_root.CFrame.Position
 
 	local attacker_character = player.Character
@@ -67,6 +73,12 @@ local function on_event(player: Player, target_character: unknown): ()
 		return
 	end
 
+	local attacker_entity = entity.find_by_character(attacker_character)
+	if attacker_entity == nil then
+		debug_print("Attacker entity was not found.")
+		return
+	end
+
 	local attacker_position = attacker_root.CFrame.Position
 
 	if is_on_cooldown(player, "attack_melee") then
@@ -85,9 +97,8 @@ local function on_event(player: Player, target_character: unknown): ()
 		player:Kick("Cheating")
 	end
 
-	if Players:GetPlayerFromCharacter(attacker_character).Team == Players:GetPlayerFromCharacter(target_character).Team
-		and not Players:GetPlayerFromCharacter(attacker_character).Neutral and not Players:GetPlayerFromCharacter(target_character).Neutral
-		then
+	if attacker_entity.team_id == target_entity.team_id and attacker_entity.team_id ~= nil then
+		debug_print("Entities are on the same team.")
 		return
 	end
 
