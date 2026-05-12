@@ -25,9 +25,14 @@ local function attack_melee(): ()
 	end
 	local_position += Vector3.new(0, 3, 0) --adding a y offset because calculating reach from the head tends to feel better.
 
-	local target_root = target_hitbox.Parent :: Part?
+	local target_root = target_hitbox.Parent
 	if target_root == nil then
 		debug_print("Mouse target's parent is missing. This should be a humanoid root part.")
+		return
+	end
+
+	if not target_root:IsA("Part") then
+		debug_print("Mouse target's parent (humanoid root part) is not a part.")
 		return
 	end
 

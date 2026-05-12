@@ -83,10 +83,13 @@ end
 
 -- GameStop
 local function game_stop(state: state): ()
-	if active == true then
+	if active == false then
 		debug_print("Can not stop since the game is not running.")
 		return
 	end
+	active = false
+
+	current_state = nil
 
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(false)
 
@@ -326,6 +329,8 @@ local function setup_entity(state: state, entity: entity, team: team): ()
 		end
 
 		entity.player.CharacterAdded:Connect(on_character_loaded)
+
+		entity.player.TeamColor = team.Roblox_team.TeamColor
 	end
 end
 
@@ -355,11 +360,13 @@ local function game_start(entities: {entity}): ()
 		debug_print("Can not start since the game is already running.")
 		return
 	end
+	active = true
 
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(true)
 	ReplicatedStorage.remotes.map_name:FireAllClients("test")
 
 	local state = create_map(2)
+	current_state = state
 	setup_map(state)
 	setup_initial_entities(state, entities)
 	close_then_open_cages(state)
@@ -406,16 +413,22 @@ local function on_entities_changed(): ()
 	end
 end
 
-local function on_player_added(player: Player): ()
-	local entity = entity_mod.create({
-		player = player,
-	})
+local function on_entity_added(entity: entity): ()
 	total_entities += 1
 	on_entities_changed()
 
-	if current_state ~= nil then
+	if active == true then
+		assert(current_state, "language analysis")
 		add_new_entity(current_state, entity)
 	end
+end
+
+entity_mod.on_new_entity:Connect(on_entity_added)
+
+local function on_player_added(player: Player): ()
+	entity_mod.create({
+		player = player,
+	})
 end
 Players.PlayerAdded:Connect(on_player_added)
 
