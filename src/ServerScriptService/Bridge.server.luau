@@ -108,6 +108,7 @@ local function game_stop(state: state): ()
 
 		team.cage:Destroy()
 		team.goal:Destroy()
+		team.goal_listener:Disconnect()
 		team.spawn_part:Destroy()
 		team.Roblox_team:Destroy()
 	end
@@ -318,7 +319,7 @@ local function setup_map(state: state): ()
 			end
 		end
 
-		RunService.Heartbeat:Connect(on_heartbeat)
+		team.goal_listener = RunService.Heartbeat:Connect(on_heartbeat)
 	end
 end
 

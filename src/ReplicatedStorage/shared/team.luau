@@ -14,6 +14,7 @@ export type team = {
 	cage: Model,
 	id: number,
 	goal: Part,
+	goal_listener: RBXScriptConnection,
 	members: {entity},
 	name: string,
 	points: number,
@@ -64,12 +65,16 @@ local function team_create(options: creation_options): team
 		cage = options.cage,
 		id = team_id,
 		goal = options.goal,
+		goal_listener = nil :: any,
 		members = options.members,
 		name = options.name,
 		points = options.points,
 		spawn_part = options.spawn_part,
 		Roblox_team = options.Roblox_team,
 	}
+
+	-- Eli: `goal_listener` is added later, so it is not sent to the clients, though I think signal connections can not be sent over the network anyway. Regardless,
+	-- `goal_listener = nil :: any` is bad practice.
 
 	team_add(team)
 
