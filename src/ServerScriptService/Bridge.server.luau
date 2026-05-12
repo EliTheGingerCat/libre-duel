@@ -402,12 +402,11 @@ local function add_new_entity(state: state, entity: entity): ()
 end
 
 local function on_entities_changed(): ()
-	-- This used to be 2, but now it is 1 for testing purposes.
 	-- TODO: Add a way to manually start the game.
-	if total_entities >= 1 then
+	if total_entities >= 2 then
 		if active == false then
 			local all_entities = entity_mod.all_entities
-			task.delay(5, game_start, all_entities)
+			game_start(all_entities)
 		end
 	else
 		if active == true then
