@@ -35,16 +35,15 @@ type class = {
 	replication_receiver: replication_receiver,
 }
 
-type class_module = {
+export type class_module = {
 	class_id: number,
 	properties: {[number]: any},
+	replication_receiver: replication_receiver,
 	[any]: any,
 }
 
 local all_classes: {[number]: class} = {}
 local all_replication_events: {replication_event} = {}
-
-local id = 0
 
 --- @server
 local function print_server_only(): ()
@@ -100,12 +99,10 @@ local function replicate_destroy(class: class_module, object_id: number): ()
 	})
 end
 
-local function register_class(replication_receiver: replication_receiver): number
-	id += 1
-	all_classes[id] = {
-		replication_receiver = replication_receiver,
+local function register_class(class: class_module): ()
+	all_classes[class.class_id] = {
+		replication_receiver = class.replication_receiver,
 	}
-	return id
 end
 
 local replication = {

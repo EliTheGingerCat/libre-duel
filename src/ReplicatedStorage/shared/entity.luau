@@ -16,6 +16,7 @@ export type entity = {
 }
 
 local all_entities: {entity} = {}
+local class_id = 1
 local class_placeholder: any
 local properties = {"character", "id", "player", "team"}
 
@@ -179,9 +180,7 @@ local function receive_replication(event: replication_event): ()
 	end
 end
 
-local class_id = replication.register_class(receive_replication)
-
-local entity_mod = {
+local entity_mod: replication.class_module = {
 	all_entities = all_entities,
 	class_id = class_id,
 	create = entity_create,
@@ -193,7 +192,10 @@ local entity_mod = {
 	get_textual_reference = get_textual_reference,
 	properties = properties,
 	property_map = property_name_to_id,
+	replication_receiver = receive_replication,
 }
 class_placeholder = entity_mod
+
+replication.register_class(entity_mod)
 
 return entity_mod

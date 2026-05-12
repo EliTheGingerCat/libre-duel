@@ -22,6 +22,7 @@ export type team = {
 }
 
 local all_teams: {team} = {}
+local class_id = 2
 local class_placeholder: any
 local properties = {"cage", "id", "goal", "name", "players", "points", "spawn_part", "Roblox_team"}
 
@@ -186,19 +187,20 @@ local function receive_replication(event: replication_event): ()
 	end
 end
 
-local class_id = replication.register_class(receive_replication)
-
-local team_mod = {
+local team_mod: replication.class_module = {
 	class_id = class_id,
 	create = team_create,
 	destroy = team_destroy,
 	find_by_id = find_by_id,
 	properties = properties,
 	property_map = property_name_to_id,
+	replication_receiver = receive_replication,
 
 	members_add = members_add,
 	members_remove = members_remove,
 }
 class_placeholder = team_mod
+
+replication.register_class(team_mod)
 
 return team_mod
