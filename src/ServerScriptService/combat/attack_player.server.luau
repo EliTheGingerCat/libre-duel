@@ -94,7 +94,9 @@ local function on_event(player: Player, target_character: unknown): ()
 	--i'm surprised this basic sanity check was not yet added
 	--credits to nothm for finding
 	if attacker_character == target_character then
+		debug_print("Attacker is trying to attack self and will be kicked.")
 		player:Kick("Cheating")
+		return
 	end
 
 	if attacker_entity.team_id == target_entity.team_id and attacker_entity.team_id ~= nil then
