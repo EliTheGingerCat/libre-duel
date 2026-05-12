@@ -12,19 +12,26 @@ local get_mouse_target = require(script.Parent.get_mouse_target)
 local local_player = Players.LocalPlayer
 
 local function attack_melee(): ()
-	local target_hitbox: BasePart? = get_mouse_target()
+	local target_hitbox = get_mouse_target()
 	if target_hitbox == nil then
 		debug_print("Mouse target is missing.")
 		return
 	end
 
-	local local_position = get_player_position(local_player) + Vector3.new(0, 3, 0) --adding a y offset because calculating reach from the head tends to feel better.
+	local local_position = get_player_position(local_player)
 	if local_position == nil then
 		debug_print("Local position is missing.")
 		return
 	end
+	local_position += Vector3.new(0, 3, 0) --adding a y offset because calculating reach from the head tends to feel better.
 
-	local target_character = target_hitbox.Parent.Parent -- hitbox >> HumanoidRootPart >> Character
+	local target_root = target_hitbox.Parent :: Part?
+	if target_root == nil then
+		debug_print("Mouse target's parent is missing. This should be a humanoid root part.")
+		return
+	end
+
+	local target_character = target_root.Parent
 	if target_character == nil then
 		debug_print("Mouse target's character is missing.")
 		return
@@ -32,12 +39,6 @@ local function attack_melee(): ()
 
 	if not target_character:IsA("Model") then
 		debug_print("Mouse target's parent is not a Model.")
-		return
-	end
-
-	local target_root = target_character:FindFirstChild("HumanoidRootPart") :: Part?
-	if target_root == nil then
-		debug_print("Humanoid root part is missing.")
 		return
 	end
 

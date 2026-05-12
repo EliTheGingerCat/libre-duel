@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 
 local local_player = Players.LocalPlayer
 
-local function get_mouse_target(): Instance?
+local function get_mouse_target(): BasePart?
 	local local_camera = workspace.CurrentCamera
 	local screen_center = local_camera.ViewportSize / 2
 
