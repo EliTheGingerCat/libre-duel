@@ -30,6 +30,8 @@ local team_colours = {
 	colours.blue,
 }
 
+local colour_neutral = BrickColor.new("White")
+
 local Color3_to_BrickColor = {
 	[colours.blue] = BrickColor.new("Bright blue"),
 	[colours.red] = BrickColor.new("Bright red"),
@@ -100,7 +102,8 @@ local function game_stop(state: state): ()
 			if entity.player == nil then
 				continue
 			end
-			entity.player.TeamColor = BrickColor.new("White")
+			entity.player.Team = nil
+			entity.player.TeamColor = colour_neutral
 		end
 
 		team.cage:Destroy()
@@ -330,7 +333,7 @@ local function setup_entity(state: state, entity: entity, team: team): ()
 
 		entity.player.CharacterAdded:Connect(on_character_loaded)
 
-		entity.player.TeamColor = team.Roblox_team.TeamColor
+		entity.player.Team = team.Roblox_team
 	end
 end
 
