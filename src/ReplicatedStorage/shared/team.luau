@@ -1,4 +1,3 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 -- ~ Todo: Which debug print to use?
@@ -113,11 +112,13 @@ local function members_add(team: team, addees: {entity}): ()
 	if is_server == true then
 		local addee_ids = get_entity_ids(addees)
 
-		ReplicatedStorage.remotes.replication_special:FireAllClients({
-			kind = "team_members_add",
+		local event: replication.team_members_add = {
+			kind = "special",
+			kind_2 = "team_members_add",
 			team_id = team.id,
 			addees = addee_ids,
-		})
+		}
+		table.insert(replication.all_replication_events, event)
 	end
 end
 
@@ -136,11 +137,13 @@ local function members_remove(team: team, removees: {entity}): ()
 	if is_server == true then
 		local removee_ids = get_entity_ids(removees)
 
-		ReplicatedStorage.remotes.replication_special:FireAllClients({
-			kind = "team_members_remove",
+		local event: replication.team_members_remove = {
+			kind = "special",
+			kind_2 = "team_members_remove",
 			team_id = team.id,
-			addees = removee_ids,
-		})
+			removees = removee_ids,
+		}
+		table.insert(replication.all_replication_events, event)
 	end
 end
 

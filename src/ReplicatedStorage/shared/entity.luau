@@ -61,11 +61,12 @@ local function entity_create(options: creation_options): entity
 		team_id = options.team_id or nil,
 	}
 
-	entity_add(entity)
-
 	if is_server == true then
+		-- Must add to replication queue before firing `on_new_entity`.
 		replication.replicate_create(class_placeholder, entity)
 	end
+
+	entity_add(entity)
 
 	return entity
 end

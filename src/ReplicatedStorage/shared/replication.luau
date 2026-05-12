@@ -10,6 +10,22 @@ type object = {
 
 type object_container = {object}
 
+export type team_members_add = {
+	kind: "special",
+	kind_2: "team_members_add",
+	team_id: number,
+	addees: {number},
+}
+
+export type team_members_remove = {
+	kind: "special",
+	kind_2: "team_members_remove",
+	team_id: number,
+	removees: {number},
+}
+
+export type replication_event_special = team_members_add | team_members_remove
+
 export type replication_event = {
 	kind: "create",
 
@@ -27,7 +43,7 @@ export type replication_event = {
 
 	class_id: number,
 	object_id: number,
-}
+} | replication_event_special
 
 type replication_receiver = (event: replication_event) -> ()
 

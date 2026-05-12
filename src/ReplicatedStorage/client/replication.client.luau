@@ -6,22 +6,10 @@ local replication = require(ReplicatedStorage.shared.replication)
 local team_mod = require(ReplicatedStorage.shared.team)
 
 type replication_event = replication.replication_event
+type replication_event_special = replication.replication_event_special
 
-local function on_event_regular(events: {replication_event}): ()
-	for _, event in events do
-		replication.all_classes[event.class_id].replication_receiver(event)
-	end
-end
-ReplicatedStorage.remotes.replication.OnClientEvent:Connect(on_event_regular)
-
-type special_event = {
-	kind: "team_members_add",
-	team_id: number,
-	addees: {number},
-}
-
-local function on_event_special(event: special_event): ()
-	if event.kind == "team_members_add" then
+local function on_event_special(event: replication_event_special): ()
+	if event.kind_2 == "team_members_add" then
 		local team = team_mod.find_by_id(event.team_id)
 		if team == nil then
 			debug_print(`Error: Team of id {event.team_id} was not found.`)
@@ -40,4 +28,13 @@ local function on_event_special(event: special_event): ()
 	end
 end
 
-ReplicatedStorage.remotes.replication_special.OnClientEvent:Connect(on_event_special)
+local function on_event(events: {replication_event}): ()
+	for _, event in events do
+		if event.kind == "special" then
+			on_event_special(event)
+		else
+			replication.all_classes[event.class_id].replication_receiver(event)
+		end
+	end
+end
+ReplicatedStorage.remotes.replication.OnClientEvent:Connect(on_event)
