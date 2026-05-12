@@ -1,7 +1,9 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local debug_print = print
 local replication = require(script.Parent.replication)
+local signal = require(ReplicatedStorage.Packages.signal)
 
 local is_server = RunService:IsServer() == true
 type replication_event = replication.replication_event
@@ -18,6 +20,7 @@ export type entity = {
 local all_entities: {entity} = {}
 local class_id = 1
 local class_placeholder: any
+local on_new_entity = signal.new()
 local properties = {"character", "id", "player", "team"}
 
 local entity_id = 0
@@ -37,6 +40,7 @@ end
 
 local function entity_add(entity: entity): ()
 	table.insert(all_entities, entity)
+	on_new_entity:Fire(entity)
 end
 
 type creation_options = {
@@ -190,6 +194,7 @@ local entity_mod: replication.class_module = {
 	find_by_player = find_by_player,
 	get_character = get_character,
 	get_textual_reference = get_textual_reference,
+	on_new_entity = on_new_entity,
 	properties = properties,
 	property_map = property_name_to_id,
 	replication_receiver = receive_replication,
