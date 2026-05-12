@@ -187,7 +187,7 @@ local function receive_replication(event: replication_event): ()
 	end
 end
 
-local team_mod: replication.class_module = {
+local team_mod = {
 	class_id = class_id,
 	create = team_create,
 	destroy = team_destroy,

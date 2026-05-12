@@ -184,7 +184,7 @@ local function receive_replication(event: replication_event): ()
 	end
 end
 
-local entity_mod: replication.class_module = {
+local entity_mod = {
 	all_entities = all_entities,
 	class_id = class_id,
 	create = entity_create,
