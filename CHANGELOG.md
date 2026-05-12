@@ -18,3 +18,4 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Notifications.
 - Colour guide.
 - Knockback.
+- Bots.
