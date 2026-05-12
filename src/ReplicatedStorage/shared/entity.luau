@@ -55,7 +55,7 @@ local function entity_create(options: creation_options): entity
 	local entity: entity = {
 		character = options.character or nil,
 		id = entity_id,
-		is_bot = options.player ~= nil,
+		is_bot = options.player == nil,
 		name = options.name or nil,
 		player = options.player or nil,
 		team_id = options.team_id or nil,
