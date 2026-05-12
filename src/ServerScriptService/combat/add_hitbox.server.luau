@@ -1,10 +1,13 @@
-local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
+local entity_mod = require(ReplicatedStorage.shared.entity)
 local debug_print = require(ServerScriptService.util.debug_print)
 local hitbox = ServerStorage.hitbox
 local cube_hitbox = ServerStorage.cube_hitbox
+
+type entity = entity_mod.entity
 
 local function attach_part(template: BasePart, root: BasePart): ()
 	local clone = template:Clone()
@@ -25,16 +28,24 @@ local function on_character_added(character: Model): ()
 	attach_part(cube_hitbox, root)
 end
 
-local function on_player_added(player: Player): ()
-	if player.Character then
-		on_character_added(player.Character)
+local function on_new_entity(entity: entity): ()
+	if entity.player ~= nil then
+		local player = entity.player
+		if player.Character ~= nil then
+			on_character_added(player.Character)
+		end
+
+		player.CharacterAdded:Connect(on_character_added)
 	end
 
-	player.CharacterAdded:Connect(on_character_added)
+	if entity.character ~= nil then
+		-- is not player
+		on_character_added(entity.character)
+	end
 end
 
-for _, player in Players:GetPlayers() do
-	on_player_added(player)
+for _, entity in entity_mod.all_entities do
+	on_new_entity(entity)
 end
 
-Players.PlayerAdded:Connect(on_player_added)
+entity_mod.on_new_entity:Connect(on_new_entity)
