@@ -5,6 +5,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local Teams = game:GetService("Teams")
 local Workspace = game:GetService("Workspace")
 
+local bots_move = require(script.Parent.bots_move)
 local colours = require(ReplicatedStorage.shared.ui.colours)
 local debug_print = require(script.Parent.util.debug_print)
 local entity_mod = require(ReplicatedStorage.shared.entity)
@@ -63,10 +64,12 @@ local function open_cages(state: state): ()
 	end
 
 	state.cages_are_closed = false
+	bots_move.start()
 end
 
 local function close_cages(state: state): ()
 	state.cages_are_closed = true
+	bots_move.stop()
 
 	for _, team in state.teams do
 		team.cage.Parent = workspace

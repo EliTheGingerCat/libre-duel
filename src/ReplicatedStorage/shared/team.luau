@@ -200,6 +200,7 @@ local function receive_replication(event: replication_event): ()
 end
 
 local team_mod = {
+	all_teams = all_teams,
 	class_id = class_id,
 	create = team_create,
 	destroy = team_destroy,
