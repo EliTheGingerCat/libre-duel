@@ -238,19 +238,16 @@ local function create_map(number_teams: number): state
 		})
 		Roblox_team.Parent = Teams
 
-		local index = #teams + 1
-
 		local team = team_mod.create({
 			cage = cage,
-			index = index,
 			goal = goal,
 			name = `team #{iteration}`,
 			points = 0,
-			spawn_part = spawn_part,
 			Roblox_team = Roblox_team,
+			spawn_part = spawn_part,
 		})
 
-		teams[index] = team
+		table.insert(teams, team)
 	end
 
 	local state: state = {

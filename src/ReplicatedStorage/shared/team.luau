@@ -52,8 +52,8 @@ type creation_options = {
 	goal: Part,
 	name: string,
 	points: number,
-	spawn_part: Part,
 	Roblox_team: Team,
+	spawn_part: Part,
 }
 -- Eli: Haha. Team Create.
 local function team_create(options: creation_options): team
@@ -67,8 +67,8 @@ local function team_create(options: creation_options): team
 		members = {},
 		name = options.name,
 		points = options.points,
-		spawn_part = options.spawn_part,
 		Roblox_team = options.Roblox_team,
+		spawn_part = options.spawn_part,
 	}
 
 	-- Eli: `members` is not an option since the initial `members` are cleared in `receive_replication`.
