@@ -50,7 +50,6 @@ end
 type creation_options = {
 	cage: Model,
 	goal: Part,
-	members: {entity},
 	name: string,
 	points: number,
 	spawn_part: Part,
@@ -65,12 +64,14 @@ local function team_create(options: creation_options): team
 		id = team_id,
 		goal = options.goal,
 		goal_listener = nil :: any,
-		members = options.members,
+		members = {},
 		name = options.name,
 		points = options.points,
 		spawn_part = options.spawn_part,
 		Roblox_team = options.Roblox_team,
 	}
+
+	-- Eli: `members` is not an option since the initial `members` are cleared in `receive_replication`.
 
 	-- Eli: `goal_listener` is added later, so it is not sent to the clients, though I think signal connections can not be sent over the network anyway. Regardless,
 	-- `goal_listener = nil :: any` is bad practice.
@@ -163,6 +164,9 @@ end
 --- @client
 local function receive_replication(event: replication_event): ()
 	if event.kind == "create" then
+		local team: team = event.object
+		-- If this is not cleared, duplication will occur if members are added to a team in the same frame as when the team was created.
+		table.clear(team.members)
 		team_add(event.object)
 	elseif event.kind == "update" then
 		local object_id = event.object_id

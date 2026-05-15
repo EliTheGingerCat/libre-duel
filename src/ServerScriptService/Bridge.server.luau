@@ -244,7 +244,6 @@ local function create_map(number_teams: number): state
 			cage = cage,
 			index = index,
 			goal = goal,
-			members = {},
 			name = `team #{iteration}`,
 			points = 0,
 			spawn_part = spawn_part,
