@@ -417,13 +417,14 @@ local function on_entities_changed(): ()
 end
 
 local function on_entity_added(entity: entity): ()
-	total_entities += 1
-	on_entities_changed()
-
+	-- Must come before `on_entities_changed` since `on_entities_changed` may start the game, resulting in `setup_entity` called twice.
 	if active == true then
 		assert(current_state, "language analysis")
 		add_new_entity(current_state, entity)
 	end
+
+	total_entities += 1
+	on_entities_changed()
 end
 
 entity_mod.on_new_entity:Connect(on_entity_added)
