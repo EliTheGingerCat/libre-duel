@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local ServerStorage = game:GetService("ServerStorage")
 local Teams = game:GetService("Teams")
 local Workspace = game:GetService("Workspace")
 
@@ -258,6 +259,84 @@ local function create_map(number_teams: number): state
 	return state
 end
 
+local function team_from_base(base: Folder, team_number: number): team?
+	local base_goal = base:FindFirstChild("goal")
+	if base_goal == nil then
+		debug_print("Error: Goal was not found.")
+		return
+	end
+
+	if not base_goal:IsA("Part") then
+		debug_print("Error: Goal is not a part.")
+		return
+	end
+
+	local base_spawn = base:FindFirstChild("spawn")
+	if base_spawn == nil then
+		debug_print("Error: Spawn part was not found.")
+		return
+	end
+
+	if not base_spawn:IsA("Part") then
+		debug_print("Error: Spawn part is not actually a part.")
+		return
+	end
+
+	local colour = team_colours[team_number]
+
+	local cage = create_cage({
+		colour = colour,
+		name = "cage",
+		position = base_spawn.Position + Vector3.new(0, -3, 0)
+	})
+	cage.Parent = workspace
+
+	local Roblox_team = create_Roblox_team({
+		colour = Color3_to_BrickColor[colour],
+		name = `team #{team_number}`,
+	})
+	Roblox_team.Parent = Teams
+	
+	local team = team_mod.create({
+		cage = cage,
+		goal = base_goal,
+		name = `team #{team_number}`,
+		points = 0,
+		Roblox_team = Roblox_team,
+		spawn_part = base_spawn,
+	})
+
+	return team
+end
+
+local function pick_map(): state?
+	local teams: {team} = {}
+
+	local map_template = ServerStorage.maps.Bridge.Eyeglasses
+	local map = map_template:Clone()
+
+	local red_team = team_from_base(map.base_1, 1)
+	if red_team == nil then
+		return
+	end
+	table.insert(teams, red_team)
+
+	local blue_team = team_from_base(map.base_2, 2)
+	if blue_team == nil then
+		return
+	end
+	table.insert(teams, blue_team)
+
+	map.Parent = workspace
+
+	local state: state = {
+		cages_are_closed = false,
+		teams = teams,
+	}
+
+	return state
+end
+
 -- Maybe this should be merged into `create_map`.
 local function setup_map(state: state): ()
 	for _, team in state.teams do
@@ -360,16 +439,22 @@ local function game_start(entities: {entity}): ()
 		debug_print("Can not start since the game is already running.")
 		return
 	end
-	active = true
+
+	local state = pick_map()
+	if state == nil then
+		debug_print("Game failed to start.")
+		return
+	end
 
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(true)
-	ReplicatedStorage.remotes.map_name:FireAllClients("test")
+	ReplicatedStorage.remotes.map_name:FireAllClients("Eyeglasses")
 
-	local state = create_map(2)
 	current_state = state
 	setup_map(state)
 	setup_initial_entities(state, entities)
 	close_then_open_cages(state)
+
+	active = true
 end
 
 local function get_smallest_team(state: state): team
