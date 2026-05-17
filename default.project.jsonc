@@ -61,7 +61,7 @@
         "FilteringEnabled": true,
         "Gravity": 100.0
       },
-      "$path": "./src/Workspace",
+      "$path": "./src/Workspace_no_map", // serves without the map by default; change to "./src/Workspace" to serve with map
       "Terrain": {}
     },
     "StarterPlayer": {
