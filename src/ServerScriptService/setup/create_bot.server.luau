@@ -5,8 +5,9 @@ local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local debug_print = require(ServerScriptService.util.debug_print)
-local entity = require(ReplicatedStorage.shared.entity)
+local entity_mod = require(ReplicatedStorage.shared.entity)
 local Chrono_entity = require(ReplicatedStorage.shared.shortcuts.Chrono_entity)
+local Chrono_entity_mod = require(ReplicatedStorage.shared.shortcuts.Chrono_entity)
 
 local model_Scientist = ServerStorage.assets.Scientist
 
@@ -27,11 +28,21 @@ local function on_fire(player: Player): ()
 	model_clone.Name ..= ` of "{player.Name}" #{count_new}`
 	model_clone.Parent = Workspace
 
-	Chrono_entity.new("DEFAULT", model_clone, "NATIVE", initial_frame)
+	local entity_Chrono = Chrono_entity_mod.new("DEFAULT", model_clone, "NATIVE", initial_frame)
 
-	entity.create({
+	entity_mod.create({
 		character = model_clone,
 	})
+
+	local function on_primary_part_changed(): ()
+		local primary_part = model_clone.PrimaryPart
+		if primary_part == nil then
+			Chrono_entity.Destroy(entity_Chrono)
+			-- If this is not done, the output will be flooded with a repeated warning message. Regardless, Chrono entities require a primary part.
+		end
+	end
+
+	model_clone:GetPropertyChangedSignal("PrimaryPart"):Connect(on_primary_part_changed)
 end
 
 local function on_player_removing(player: Player): ()
