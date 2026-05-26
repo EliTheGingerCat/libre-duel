@@ -46,18 +46,13 @@ local function CFrame_from_position(position: Vector3): CFrame
 	return CFrame.new(position)
 end
 
-local function move_entity(entity: entity, position: Vector3): ()
+local function move_entity(entity: entity, frame: CFrame): ()
 	local character = entity_mod.get_character(entity)
 	if character == nil then
 		return
 	end
 
-	local current_pivot = character:GetPivot()
-	local current_rotation = current_pivot.Rotation
-	local new_position_frame = CFrame_from_position(position)
-	local new_pivot = new_position_frame * current_rotation
-
-	character:PivotTo(new_pivot)
+	character:PivotTo(frame)
 end
 
 local function open_cages(state: state): ()
@@ -76,10 +71,10 @@ local function close_cages(state: state): ()
 	for _, team in state.teams do
 		team.cage.Parent = workspace
 
-		local spawn_location = team.spawn_part.Position
+		local spawn_frame = team.spawn_part.CFrame
 
 		for _, player in team.members do
-			move_entity(player, spawn_location)
+			move_entity(player, spawn_frame)
 		end
 	end
 end
@@ -414,7 +409,7 @@ local function setup_entity(state: state, entity: entity, team: team): ()
 
 	if entity.player ~= nil then
 		local function on_character_loaded(): ()
-			move_entity(entity, team.spawn_part.Position)
+			move_entity(entity, team.spawn_part.CFrame)
 		end
 
 		entity.player.CharacterAdded:Connect(on_character_loaded)
@@ -489,7 +484,7 @@ end
 local function add_new_entity(state: state, entity: entity): ()
 	local team = get_smallest_team(state)
 	setup_entity(state, entity, team)
-	move_entity(entity, team.spawn_part.Position)
+	move_entity(entity, team.spawn_part.CFrame)
 end
 
 local function on_entities_changed(): ()
