@@ -32,6 +32,12 @@
       }
     },
 
+    "Players": {
+      "$properties": {
+        "RespawnTime": 0
+      }
+    },
+
     "ReplicatedStorage": {
       "$path": "./src/ReplicatedStorage",
       "Packages": {
