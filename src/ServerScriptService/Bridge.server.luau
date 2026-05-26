@@ -468,11 +468,11 @@ local function get_smallest_team(state: state): team
 
 	for _, team in state.teams do
 		local count = #team.members
-		if count == smallest_count then
+		if count < smallest_count then
 			smallest_count = count
 			table.clear(smallest_teams)
 			table.insert(smallest_teams, team)
-		elseif count < smallest_count then
+		elseif count == smallest_count then
 			table.insert(smallest_teams, team)
 		end
 	end
