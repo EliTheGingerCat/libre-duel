@@ -9,6 +9,7 @@ local bots_move = require(script.Parent.bots_move)
 local colours = require(ReplicatedStorage.shared.ui.colours)
 local debug_print = require(script.Parent.util.debug_print)
 local entity_mod = require(ReplicatedStorage.shared.entity)
+local lobby = Workspace.lobby
 local replication = require(ReplicatedStorage.shared.replication)
 local team_mod = require(ReplicatedStorage.shared.team)
 
@@ -18,6 +19,7 @@ type team = team_mod.team
 
 type state = {
 	cages_are_closed: boolean,
+	map: Model,
 	teams: {team},
 }
 
@@ -99,6 +101,9 @@ local function game_stop(state: state): ()
 
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(false)
 
+	lobby.Parent = Workspace
+	state.map:Destroy()
+
 	for _, team in state.teams do
 
 		-- i don't really know why roblox doesn't set the team color back when the team is destroyed.
@@ -111,9 +116,7 @@ local function game_stop(state: state): ()
 		end
 
 		team.cage:Destroy()
-		team.goal:Destroy()
 		team.goal_listener:Disconnect()
-		team.spawn_part:Destroy()
 		team.Roblox_team:Destroy()
 	end
 end
@@ -202,6 +205,7 @@ local function create_Roblox_team(properties: Roblox_team_properties): Team
 end
 
 local function create_map(number_teams: number): state
+	local map = Instance.new("Model")
 	local teams: {team} = {}
 
 	for iteration = 1, number_teams do
@@ -219,7 +223,7 @@ local function create_map(number_teams: number): state
 			position = spawn_position,
 			name = `team #{iteration}'s spawn`,
 		})
-		spawn_part.Parent = workspace
+		spawn_part.Parent = map
 
 		local cage = create_cage({
 			colour = colour,
@@ -233,7 +237,7 @@ local function create_map(number_teams: number): state
 			position = Vector3.new(c_1, 6, c_3),
 			name = `team #{iteration}'s goal`,
 		})
-		goal.Parent = workspace
+		goal.Parent = map
 
 		local colour_brick = Color3_to_BrickColor[colour]
 		local Roblox_team = create_Roblox_team({
@@ -256,6 +260,7 @@ local function create_map(number_teams: number): state
 
 	local state: state = {
 		cages_are_closed = false,
+		map = map,
 		teams = teams,
 	}
 
@@ -330,10 +335,9 @@ local function pick_map(): state?
 	end
 	table.insert(teams, blue_team)
 
-	map.Parent = workspace
-
 	local state: state = {
 		cages_are_closed = false,
+		map = map,
 		teams = teams,
 	}
 
@@ -399,6 +403,9 @@ local function setup_map(state: state): ()
 
 		team.goal_listener = RunService.Heartbeat:Connect(on_heartbeat)
 	end
+
+	state.map.Parent = Workspace
+	lobby.Parent = nil
 end
 
 local function setup_entity(state: state, entity: entity, team: team): ()
