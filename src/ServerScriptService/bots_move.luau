@@ -77,14 +77,23 @@ local function start_entity(entity: entity): ()
 			debug_print("Error: No enemy goals found.")
 			return
 		end
+		local closest_position = closest_goal.Position
 
 		local path = PathfindingService:CreatePath()
-		path:ComputeAsync(root_position, closest_goal.Position)
+		path:ComputeAsync(root_position, closest_position)
 
 		local waypoints = path:GetWaypoints()
 
 		local function follow_waypoints(): ()
 			for _, waypoint in waypoints do
+				local goal_displacement = closest_position - root.Position
+				local goal_distance = goal_displacement.Magnitude
+				if goal_distance <= 10 then
+					humanoid:MoveTo(closest_position)
+					humanoid.MoveToFinished:Wait()
+					continue
+				end
+
 				if waypoint.Action == Enum.PathWaypointAction.Walk then
 					humanoid:MoveTo(waypoint.Position)
 					humanoid.MoveToFinished:Wait()
