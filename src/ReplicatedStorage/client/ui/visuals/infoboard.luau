@@ -3,8 +3,10 @@ local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
+local team_mod = require(ReplicatedStorage.shared.team)
 
 local create_element = React.createElement
+type team = team_mod.team
 local use_effect = React.useEffect
 local use_state = React.useState
 
@@ -64,9 +66,7 @@ local function point_display(props: props_points_display)
 	})
 end
 
-local colour_blue = "#0da2dd"
 local colour_green = "#5bd34c"
-local colour_red = "#b14c4e"
 
 local function use_game_is_active(): boolean
 	local game_is_active, set_game_is_active = use_state(false)
@@ -177,38 +177,26 @@ local function use_points_self(): number
 	return points_self
 end
 
-local function use_points_teams(): {number}
-	local points_teams, set_points_teams = use_state({0, 0})
+local function use_teams(): {team}
+	local teams, set_teams = use_state(team_mod.all_teams)
 
-	local game_is_active = use_game_is_active()
-
-	local function effect_points_teams()
-		if game_is_active == true then
-			-- Game just started.
-			set_points_teams({0, 0})
+	local function effect_teams()
+		local function on_event(): ()
+			set_teams(team_mod.all_teams)
 		end
 
-		local function on_event(team_number: number): ()
-			local function updater(points_teams: {number}): {number}
-				local clone = table.clone(points_teams)
-				clone[team_number] += 1
-				return clone
-			end
-			set_points_teams(updater)
-		end
+		local connection = team_mod.on_any_team_changed:Connect(on_event)
 
-		local connection = ReplicatedStorage.remotes.score_team.OnClientEvent:Connect(on_event)
-
-		local function disconnect(): ()
+		local function destroy(): ()
 			connection:Disconnect()
 		end
 
-		return disconnect
+		return destroy
 	end
 
-	use_effect(effect_points_teams, {game_is_active})
+	use_effect(effect_teams, {})
 
-	return points_teams
+	return teams
 end
 
 local function use_time_elapsed(): number
@@ -255,13 +243,21 @@ local function infoboard()
 	local kills = use_kills()
 	local map = use_map()
 	local points_self = use_points_self()
-	local points_teams = use_points_teams()
+	local teams = use_teams()
 	local time_elapsed = use_time_elapsed()
 
-	-- ~ Todo: Get team colours from the server.
-	-- ~ Todo: Support an arbitrary amount of teams. This is already done on the server.
-	local points_red = points_teams[1]
-	local points_blue = points_teams[2]
+	local points_display_elements = {}
+	for index, team in teams do
+		local props_point_display: props_points_display = {
+			colour = "#" .. team.colour:ToHex(),
+			layout_order = index,
+			name = `points of team "{team.name}"`,
+			points = team.points,
+			text_alignment_c1 = if index % 2 == 0 then "Right" else "Left",
+		}
+		local element = create_element(point_display, props_point_display)
+		points_display_elements[index] = element
+	end
 
 	local minutes = time_elapsed // 60
 	local seconds = time_elapsed - minutes*60
@@ -308,20 +304,7 @@ local function infoboard()
 				}),
 					Rotation = -90,
 			})),
-			create_element(point_display, {
-				colour = colour_red,
-				layout_order = 1,
-				name = "points_red",
-				points = points_red,
-				text_alignment_c1 = "Left",
-			}),
-			create_element(point_display, {
-				colour = colour_blue,
-				layout_order = 2,
-				name = "points_blue",
-				points = points_blue,
-				text_alignment_c1 = "Right",
-			}),
+			points_display_elements,
 			create_element(text_label, {
 				layout_order = 3,
 				name = "map",

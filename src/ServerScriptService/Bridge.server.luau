@@ -138,7 +138,6 @@ local function process_goal(state: state, entity: entity, team: team): ()
 		return
 	else
 		debug_print(`Team "{team.name}" scored. They have {team.points} points.`)
-		ReplicatedStorage.remotes.score_team:FireAllClients(team.id)
 	end
 
 	-- ~ Investigate: It might be too slow to only set `cages_are_closed` at this point, since `cages_are_closed` is also used to debounce scoring.
@@ -251,6 +250,7 @@ local function create_map(number_teams: number): state
 
 		local team = team_mod.create({
 			cage = cage,
+			colour = colour,
 			goal = goal,
 			name = `team #{iteration}`,
 			points = 0,
@@ -310,6 +310,7 @@ local function team_from_base(base: Folder, team_number: number): team?
 	
 	local team = team_mod.create({
 		cage = cage,
+		colour = colour,
 		goal = base_goal,
 		name = `team #{team_number}`,
 		points = 0,

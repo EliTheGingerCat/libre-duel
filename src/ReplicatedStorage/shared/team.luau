@@ -1,9 +1,11 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 -- ~ Todo: Which debug print to use?
 local debug_print = print
 local entity_mod = require(script.Parent.entity)
 local replication = require(script.Parent.replication)
+local signal = require(ReplicatedStorage.Packages.signal)
 
 type entity = entity_mod.entity
 local is_server = RunService:IsServer()
@@ -11,6 +13,7 @@ type replication_event = replication.replication_event
 
 export type team = {
 	cage: Model,
+	colour: Color3,
 	id: number,
 	goal: Part,
 	goal_listener: RBXScriptConnection,
@@ -24,12 +27,14 @@ export type team = {
 local all_teams: {team} = {}
 local class_id = 2
 local class_placeholder: any
-local properties = {"cage", "id", "goal", "name", "players", "points", "spawn_part", "Roblox_team"}
+local on_any_team_changed = signal.new()
+local properties = {"cage", "colour", "id", "goal", "name", "players", "points", "spawn_part", "Roblox_team"}
 
 local team_id = 0
 
 type property_name_map = {
 	cage: number,
+	colour: Color3,
 	id: number,
 	goal: number,
 	members: number,
@@ -49,6 +54,7 @@ end
 
 type creation_options = {
 	cage: Model,
+	colour: Color3,
 	goal: Part,
 	name: string,
 	points: number,
@@ -61,6 +67,7 @@ local function team_create(options: creation_options): team
 	
 	local team: team = {
 		cage = options.cage,
+		colour = options.colour,
 		id = team_id,
 		goal = options.goal,
 		goal_listener = nil :: any,
@@ -168,6 +175,7 @@ local function receive_replication(event: replication_event): ()
 		-- If this is not cleared, duplication will occur if members are added to a team in the same frame as when the team was created.
 		table.clear(team.members)
 		team_add(event.object)
+		on_any_team_changed:Fire()
 	elseif event.kind == "update" then
 		local object_id = event.object_id
 		local property_id = event.property_id
@@ -186,6 +194,7 @@ local function receive_replication(event: replication_event): ()
 		end
 
 		team[property_index] = property_value
+		on_any_team_changed:Fire()
 	elseif event.kind == "destroy" then
 		local team = find_by_id(event.object_id)
 		if team == nil then
@@ -194,6 +203,7 @@ local function receive_replication(event: replication_event): ()
 		end
 
 		team_destroy(team)
+		on_any_team_changed:Fire()
 	else
 		debug_print(`Unknown replication event kind "{event.kind}".`)
 	end
@@ -205,6 +215,7 @@ local team_mod = {
 	create = team_create,
 	destroy = team_destroy,
 	find_by_id = find_by_id,
+	on_any_team_changed = on_any_team_changed,
 	properties = properties,
 	property_map = property_name_to_id,
 	replication_receiver = receive_replication,
