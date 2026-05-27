@@ -55,6 +55,14 @@ local function move_entity(entity: entity, frame: CFrame): ()
 	character:PivotTo(frame)
 end
 
+local function move_entity_to_spawn(entity: entity, spawn_part: Part): ()
+	move_entity(entity, spawn_part.CFrame)
+
+	if entity.player ~= nil then
+		ReplicatedStorage.remotes.camera_look:FireClient(entity.player, spawn_part.CFrame.Rotation)
+	end
+end
+
 local function open_cages(state: state): ()
 	for _, team in state.teams do
 		team.cage.Parent = nil
@@ -71,10 +79,10 @@ local function close_cages(state: state): ()
 	for _, team in state.teams do
 		team.cage.Parent = workspace
 
-		local spawn_frame = team.spawn_part.CFrame
+		local spawn_part = team.spawn_part
 
 		for _, player in team.members do
-			move_entity(player, spawn_frame)
+			move_entity_to_spawn(player, spawn_part)
 		end
 	end
 end
@@ -409,7 +417,7 @@ local function setup_entity(state: state, entity: entity, team: team): ()
 
 	if entity.player ~= nil then
 		local function on_character_loaded(): ()
-			move_entity(entity, team.spawn_part.CFrame)
+			move_entity_to_spawn(entity, team.spawn_part)
 		end
 
 		entity.player.CharacterAdded:Connect(on_character_loaded)
@@ -484,7 +492,7 @@ end
 local function add_new_entity(state: state, entity: entity): ()
 	local team = get_smallest_team(state)
 	setup_entity(state, entity, team)
-	move_entity(entity, team.spawn_part.CFrame)
+	move_entity_to_spawn(entity, team.spawn_part)
 end
 
 local function on_entities_changed(): ()
