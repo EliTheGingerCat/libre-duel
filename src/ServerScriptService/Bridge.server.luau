@@ -121,6 +121,7 @@ local function game_stop(state: state): ()
 		team.cage:Destroy()
 		team.goal_listener:Disconnect()
 		team.Roblox_team:Destroy()
+		team_mod.destroy(team)
 	end
 end
 
