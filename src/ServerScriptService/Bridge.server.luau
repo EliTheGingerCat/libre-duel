@@ -141,7 +141,7 @@ local function process_goal(state: state, entity: entity, team: team): ()
 		ReplicatedStorage.remotes.score_team:FireAllClients(team.id)
 	end
 
-	-- ~ investigate: It might be too slow to only set `cages_are_closed` at this point, since `cages_are_closed` is also used to debounce scoring.
+	-- ~ Investigate: It might be too slow to only set `cages_are_closed` at this point, since `cages_are_closed` is also used to debounce scoring.
 	close_then_open_cages(state)
 end
 
@@ -394,7 +394,7 @@ local function setup_map(state: state): ()
 
 		local function on_heartbeat(): ()
 			local overlap_parameters = OverlapParams.new()
-			-- ~ investigate: For some reason, collision group seems to not be respected.
+			-- ~ Investigate: For some reason, collision group seems to not be respected.
 			overlap_parameters.CollisionGroup = "hitbox"
 
 			local hitboxes = Workspace:GetPartBoundsInBox(team.goal.CFrame, team.goal.Size, overlap_parameters)
@@ -496,7 +496,7 @@ local function add_new_entity(state: state, entity: entity): ()
 end
 
 local function on_entities_changed(): ()
-	-- TODO: Add a way to manually start the game.
+	-- ~ Todo: Add a way to manually start the game.
 	if total_entities >= 2 then
 		if active == false then
 			local all_entities = entity_mod.all_entities

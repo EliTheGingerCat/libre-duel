@@ -82,7 +82,7 @@ local function get_legacy(target: string?): data_legacy
 	local target_string = target or ""
 	local success, result = request(`https://ipinfo.io/{target_string}`)
 	local data = extract_data(success, result)
-	-- TODO: Typecheck data at runtime
+	-- ~ Todo: Typecheck data at runtime
 	return data :: data_legacy
 end
 
@@ -101,7 +101,7 @@ local function get_Lite(target: string?): data_Lite
 	local target_string = target or "me"
 	local success, result = request_authorised(`https://api.ipinfo.io/lite/{target_string}`, use_token())
 	local data = extract_data(success, result)
-	-- TODO: Typecheck data at runtime
+	-- ~ Todo: Typecheck data at runtime
 	return data :: data_Lite
 end
 

@@ -1,4 +1,4 @@
--- ~ todo: Unused.
+-- ~ Todo: Unused.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
