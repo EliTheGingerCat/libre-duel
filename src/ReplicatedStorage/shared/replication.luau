@@ -96,7 +96,7 @@ local function replicate_update(class: class_module, object: object, property_id
 		class_id = class.class_id,
 		object_id = object.id,
 		property_id = property_id,
-		value = object[property_index],
+		property_value = object[property_index],
 	})
 end
 
