@@ -17,7 +17,12 @@ local function start_entity(entity: entity): ()
 		return
 	end
 
+	local path = PathfindingService:CreatePath()
+
 	local thread_follow: thread? = nil
+	local waypoints: {PathWaypoint} = {}
+	local waypoints_size = 0
+	local waypoint_index = 0
 
 	local function update_waypoints(): ()
 		if thread_follow ~= nil then
@@ -25,6 +30,9 @@ local function start_entity(entity: entity): ()
 			task.cancel(thread_follow)
 			thread_follow = nil
 		end
+		table.clear(waypoints)
+		waypoints_size = 0
+		waypoint_index = 0
 
 		local character = entity_mod.get_character(entity)
 		if character == nil then
@@ -79,24 +87,65 @@ local function start_entity(entity: entity): ()
 		end
 		local closest_position = closest_goal.Position
 
-		local path = PathfindingService:CreatePath()
-		path:ComputeAsync(root_position, closest_position)
+		-- Assume `size.x = size.z`.
+		local goal_boundary = closest_goal.Size.X / 2 + 1
 
-		local waypoints = path:GetWaypoints()
+		path:ComputeAsync(root_position, closest_position)
+		if path.Status == Enum.PathStatus.NoPath then
+			debug_print("No path found.")
+			task.delay(3, update_waypoints)
+			return
+		end
+
+		waypoints = path:GetWaypoints()
+		waypoints_size = #waypoints
+
+		local function go_to_position(target_position: Vector3): ()
+			humanoid:MoveTo(target_position)
+			local time_start = os.time()
+
+			while true do
+				local root_position_now = root.Position
+				local target_displacement = target_position - root_position_now
+				local target_distance = target_displacement.Magnitude
+				if target_distance <= 3 then
+					return
+				end
+
+				local time_now = os.time()
+				if time_now - time_start >= 3 then
+					debug_print("Ran out of time.")
+					task.defer(update_waypoints)
+					return
+				end
+
+				task.wait()
+			end
+		end
 
 		local function follow_waypoints(): ()
-			for _, waypoint in waypoints do
-				local goal_displacement = closest_position - root.Position
+			while true do
+				waypoint_index += 1
+				if waypoint_index > waypoints_size then
+					-- Uh oh. This is not good.
+					break
+				end
+				
+				local waypoint = waypoints[waypoint_index]
+
+				local root_position_now = root.Position
+				local target_position_on_plane = Vector3.new(closest_position.X, root_position_now.Y, closest_position.Z)
+				local goal_displacement = target_position_on_plane - root.Position
 				local goal_distance = goal_displacement.Magnitude
-				if goal_distance <= 10 then
-					humanoid:MoveTo(closest_position)
-					humanoid.MoveToFinished:Wait()
+				if goal_distance <= goal_boundary then
+					go_to_position(target_position_on_plane)
 					continue
 				end
 
 				if waypoint.Action == Enum.PathWaypointAction.Walk then
-					humanoid:MoveTo(waypoint.Position)
-					humanoid.MoveToFinished:Wait()
+					go_to_position(waypoint.Position)
+				elseif waypoint.Action == Enum.PathWaypointAction.Jump then
+					humanoid.Jump = true
 				end
 			end
 		end
@@ -105,6 +154,14 @@ local function start_entity(entity: entity): ()
 		thread_follow = thread_new
 		table.insert(all_threads, thread_new)
 	end
+
+	local function on_blocked(blocked_index: number): ()
+		if blocked_index >= waypoint_index then
+			update_waypoints()
+		end
+	end
+
+	path.Blocked:Connect(on_blocked)
 
 	local iteration = -1
 	local function on_heartbeat(): ()
