@@ -4,6 +4,8 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
+local PADDING_CHARACTER = "  "
+
 local function nametag(props: {
 	adornee: BasePart | Attachment,
 	extra_text: string,
@@ -30,7 +32,7 @@ local function nametag(props: {
 			Name = "Name",
 			Position = UDim2.fromScale(0.5, 1),
 			Size = UDim2.fromScale(0, 0.6),
-			Text = `  {props.name}  `,
+			Text = `{PADDING_CHARACTER}{props.name}{PADDING_CHARACTER}`,
 			TextColor3 = Color3.fromRGB(0, 255, 225),
 			TextScaled = true,
 			TextSize = 100,
