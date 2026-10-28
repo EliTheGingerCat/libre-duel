@@ -34,7 +34,15 @@ local function give_nametag_to_entity(entity: Model)
         container:Destroy()
     end)
 end
+
 for _, player in Players:GetPlayers() do
-    local character = player.Character or player.CharacterAdded:Wait()
-    give_nametag_to_entity(character)
+    player.CharacterAdded:Connect(function(character)
+        give_nametag_to_entity(character)
+    end)
 end
+
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        give_nametag_to_entity(character)
+    end)
+end)
