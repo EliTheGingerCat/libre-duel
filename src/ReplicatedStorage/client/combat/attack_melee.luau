@@ -5,6 +5,7 @@ local add_cooldown = require(ReplicatedStorage.shared.cooldown.add_cooldown)
 local debug_print = require(script.Parent.Parent.util.debug_print)
 local get_mouse_target = require(script.Parent.get_mouse_target)
 local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
+local hit_feedback = require(script.Parent.hit_feedback)
 local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 local player_range = require(ReplicatedStorage.shared.combat.player_range)
 local sword_cooldown  = require(ReplicatedStorage.shared.combat.sword_cooldown)
@@ -58,6 +59,7 @@ local function attack_melee(): ()
 
 	ReplicatedStorage.remotes.attack_player:FireServer(target_character.Name)
 	add_cooldown(local_player, "attack_melee", sword_cooldown)
+	hit_feedback.report(distance)
 end
 
 return attack_melee
