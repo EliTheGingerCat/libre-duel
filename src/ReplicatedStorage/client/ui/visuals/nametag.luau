@@ -56,7 +56,7 @@ local function nametag(props: {
 				})
 			),
 			create_element("UISizeConstraint", {
-				-- TextScaled stops growing at 100; cap the background height with it.
+				-- this is because textscaled stops growing at 100, so let's cap the background height with it
 				MaxSize = Vector2.new(math.huge, 100),
 			})
 		),
