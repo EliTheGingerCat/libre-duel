@@ -1,10 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local notification_management = require(script.Parent.Parent.notification_management)
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-
 local colours = require(ReplicatedStorage.shared.ui.colours)
+local notification_management = require(script.Parent.Parent.notification_management)
+local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
+
 local create_element = React.createElement
 type notification = notification_management.notification
 local use_effect = React.useEffect
@@ -135,6 +136,7 @@ local function use_notifications(): {notification}
 end
 
 local function notifications_container()
+	local content_ref = use_editable_hud()
 	local notifications = use_notifications()
 	
 	local notification_elements = {}
@@ -159,6 +161,7 @@ local function notifications_container()
 		ResetOnSpawn = false,
 	}, {
 		create_element("Frame", {
+			ref = content_ref,
 			AnchorPoint = Vector2.new(0, 1),
 			Position = UDim2.new(0, 15, 1, -15),
 			Size = UDim2.new(0, 240, 0, 180),

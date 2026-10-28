@@ -2,6 +2,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local attack_melee = require(script.Parent.Parent.combat.attack_melee)
 local dissolve_cube = require(script.Parent.Parent.cube.dissolve_cube)
+local editor_state = require(script.Parent.hud.editor_state)
 local keybinds = require(script.Parent.Parent.util.keybinds)
 local place_cube = require(script.Parent.Parent.cube.place_cube)
 local table_flip = require(script.Parent.Parent.util.table_flip)
@@ -23,6 +24,10 @@ set_tool(tool_cube or 1)
 local key_to_slot = table_flip(keybinds.slot)
 
 local function on_input_began(input: InputObject): ()
+	if editor_state.enabled then
+		return
+	end
+
 	local slot: number? = key_to_slot[input.KeyCode]
 	if slot ~= nil then
 		set_tool(slot)

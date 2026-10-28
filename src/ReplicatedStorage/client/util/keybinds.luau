@@ -2,6 +2,7 @@ local keybinds = {
 	components_showcase = Enum.KeyCode.C,
 	debug_local = Enum.KeyCode.P,
 	debug_server = Enum.KeyCode.M,
+	hud_editor = Enum.KeyCode.RightShift,
 	slot = {
 		[1] = Enum.KeyCode.One,
 		[2] = Enum.KeyCode.Two,

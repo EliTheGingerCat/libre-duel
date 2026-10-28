@@ -3,12 +3,12 @@ local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
+local colours = require(ReplicatedStorage.shared.ui.colours)
+local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
 local use_effect = React.useEffect
 local use_state = React.useState
-
-local colours = require(ReplicatedStorage.shared.ui.colours)
 
 type TextXAlignment = "Center" | "Left" | "Right"
 
@@ -251,6 +251,7 @@ local function use_time_elapsed(): number
 end
 
 local function infoboard()
+	local content_ref = use_editable_hud()
 	local game_is_active = use_game_is_active()
 	local kills = use_kills()
 	local map = use_map()
@@ -275,6 +276,7 @@ local function infoboard()
 		ScreenInsets = "None",
 	},
 		create_element("Frame", {
+				ref = content_ref,
 				AnchorPoint = Vector2.new(0.5, 0),
 				Position = UDim2.new(0.5, 0, 0, 10),
 				Size = UDim2.fromOffset(401, 127),

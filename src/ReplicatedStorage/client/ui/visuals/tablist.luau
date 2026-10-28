@@ -2,13 +2,14 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local React = require(ReplicatedStorage.Packages.react)
+local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local colours = require(ReplicatedStorage.shared.ui.colours)
 local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
 local keybinds = require(ReplicatedStorage.client.util.keybinds)
 local location_default = require(ReplicatedStorage.shared.ui.location_default)
-local React = require(ReplicatedStorage.Packages.react)
-local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local scale = require(script.Parent.scale)
+local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_if_key_held = require(script.Parent.use_if_key_held)
 
 local create_element = React.createElement
@@ -198,6 +199,7 @@ local function location_display()
 end
 
 local function tablist()
+	local content_ref = use_editable_hud()
 	local enabled = use_if_key_held(keybinds.tablist)
 
 	return create_element("ScreenGui", {
@@ -206,6 +208,7 @@ local function tablist()
 		ResetOnSpawn = false,
 	},
 		create_element("Frame", {
+			ref = content_ref,
 			AnchorPoint = Vector2.new(0.5, 0),
 			Position = UDim2.new(0.5, 0, 0, 147),
 			Size = UDim2.fromOffset(720, 0),
