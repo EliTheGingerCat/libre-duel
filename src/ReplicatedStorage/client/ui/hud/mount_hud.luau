@@ -57,7 +57,7 @@ local function mount_hud()
 	local disconnect_input = mount_input(keystrokes.content, mousestrokes.content)
 	local disconnect_combat = mount_combat(reach_label, combo_label)
 	local disconnect_paperdoll = mount_paperdoll(viewport)
-	local unregister_widgets: {() -> ()} = {}
+	local unregister_widgets: { () -> () } = {}
 	for _, widget in WIDGETS do
 		table.insert(unregister_widgets, registry.register(widget.content, widget.gui))
 	end

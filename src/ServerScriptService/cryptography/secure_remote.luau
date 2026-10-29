@@ -31,7 +31,7 @@ local function encrypt_for_player(player, data_table)
 		public = keys["public"],
 		nonce = nonce,
 		ciphertext = ciphertext,
-		tag = tag
+		tag = tag,
 	}
 end
 

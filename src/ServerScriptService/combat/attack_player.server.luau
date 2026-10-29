@@ -16,7 +16,6 @@ const SWORD_COOLDOWN_SERVER = require(script.Parent.SWORD_COOLDOWN_SERVER)
 const SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.SWORD_DAMAGE)
 
 local function on_event(player: Player, target_name: unknown): ()
-
 	local target_character = workspace:FindFirstChild(target_name) :: Model?
 	if target_character == nil then
 		debug_print("Target character not found in Workspace.")
@@ -93,9 +92,12 @@ local function on_event(player: Player, target_name: unknown): ()
 		player:Kick("Cheating")
 	end
 
-	if Players:GetPlayerFromCharacter(attacker_character).Team == Players:GetPlayerFromCharacter(target_character).Team
-		and not Players:GetPlayerFromCharacter(attacker_character).Neutral and not Players:GetPlayerFromCharacter(target_character).Neutral
-		then
+	if
+		Players:GetPlayerFromCharacter(attacker_character).Team
+			== Players:GetPlayerFromCharacter(target_character).Team
+		and not Players:GetPlayerFromCharacter(attacker_character).Neutral
+		and not Players:GetPlayerFromCharacter(target_character).Neutral
+	then
 		debug_print("Attacker and target are on the same team.")
 		return
 	end
@@ -106,7 +108,10 @@ local function on_event(player: Player, target_name: unknown): ()
 		return
 	end
 
-	if get_player_cps(player) >= MITIGATION_CONFIG.cps_treshold and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance then
+	if
+		get_player_cps(player) >= MITIGATION_CONFIG.cps_treshold
+		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
+	then
 		add_cooldown(player, "attack_melee_mitigation", MITIGATION_CONFIG.duration)
 		debug_print("Attacker has triggered a mitigation.")
 		return

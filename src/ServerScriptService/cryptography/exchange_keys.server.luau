@@ -10,7 +10,7 @@ local generate_keys = require(script.Parent.generate_keys)
 generate_keys()
 
 ReplicatedStorage.remotes.exchange_public_keys.OnServerInvoke = function(player, client_public)
-    client_keys[player] = client_public
-    debug_print("SERVER: ", buffer.tostring(client_public))
-    return keys["public"]
+	client_keys[player] = client_public
+	debug_print("SERVER: ", buffer.tostring(client_public))
+	return keys["public"]
 end

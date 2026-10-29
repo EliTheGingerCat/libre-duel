@@ -12,7 +12,7 @@ type team = {
 	index: number,
 	goal: Part,
 	name: string,
-	players: {Player},
+	players: { Player },
 	points: number,
 	spawn_part: Part,
 	Roblox_team: Team,
@@ -20,7 +20,7 @@ type team = {
 
 type state = {
 	cages_are_closed: boolean,
-	teams: {team},
+	teams: { team },
 }
 
 local active = false
@@ -106,7 +106,6 @@ local function game_stop(state: state): ()
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(false)
 
 	for _, team in state.teams do
-
 		-- i don't really know why roblox doesn't set the team color back when the team is destroyed.
 		for _, player in team.players do
 			player.TeamColor = BrickColor.new("White")
@@ -200,7 +199,7 @@ local function create_Roblox_team(properties: Roblox_team_properties): Team
 end
 
 local function create_map(number_teams: number): state
-	local teams: {team} = {}
+	local teams: { team } = {}
 
 	for iteration = 1, number_teams do
 		local colour_index = (iteration - 1) % #TEAM_COLOURS + 1
@@ -336,7 +335,7 @@ local function setup_player(state: state, player: Player, team: team): ()
 	player.CharacterAdded:Connect(on_character_loaded)
 end
 
-local function setup_initial_players(state: state, players: {Player}): ()
+local function setup_initial_players(state: state, players: { Player }): ()
 	local index_player = 0
 	local size_players = #players
 	local index_team = 0
@@ -357,7 +356,7 @@ local function setup_initial_players(state: state, players: {Player}): ()
 	end
 end
 
-local function game_start(players: {Player}): ()
+local function game_start(players: { Player }): ()
 	if active == true then
 		debug_print("Can not start since the game is already running.")
 		return
@@ -374,7 +373,7 @@ end
 
 local function get_smallest_team(state: state): team
 	local smallest_count = math.huge
-	local smallest_teams: {team} = {}
+	local smallest_teams: { team } = {}
 
 	for _, team in state.teams do
 		local count = #team.players

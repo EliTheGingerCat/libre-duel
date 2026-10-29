@@ -50,14 +50,16 @@ local function get_server_location(): string?
 		IPinfo.set_token(token)
 	else
 		-- Legacy is better anyway since it provides city.
-		print("Warning: No token was provided for IPinfo, so only the legacy API can be used. The legacy API will probably be good enough, though.")
+		print(
+			"Warning: No token was provided for IPinfo, so only the legacy API can be used. The legacy API will probably be good enough, though."
+		)
 	end
 
 	local location = get_server_location_legacy()
 	if location ~= nil then
 		return location
 	end
-	
+
 	if token ~= nil then
 		location = get_server_location_Lite()
 		if location ~= nil then

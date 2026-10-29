@@ -5,7 +5,7 @@
 const MITIGATION_CONFIG = {
 	cps_treshold = 28,
 	rejection_chance = 50, --percentage
-	duration = 0.5
+	duration = 0.5,
 }
 
 return MITIGATION_CONFIG

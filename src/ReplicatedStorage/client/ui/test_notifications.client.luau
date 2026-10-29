@@ -6,7 +6,7 @@ local notification_management = require(script.Parent.notification_management)
 const ENABLED = false
 
 if RunService:IsStudio() and ENABLED then
-	const WORDS = {"Hi!", "Hello!"}
+	const WORDS = { "Hi!", "Hello!" }
 
 	local function thread_notification(): ()
 		while true do

@@ -5,7 +5,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local create_element = React.createElement
 
 local function title_bar()
-	return create_element("TextLabel",{ --titlebar
+	return create_element("TextLabel", { --titlebar
 		AnchorPoint = Vector2.new(0.5, 0),
 		BackgroundTransparency = 1,
 		Position = UDim2.fromScale(0.5, 0),

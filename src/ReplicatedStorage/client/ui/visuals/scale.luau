@@ -17,10 +17,9 @@ local function scale_element()
 		local function update_scale()
 			local current_resolution = local_camera.ViewportSize
 
-			set_scale(math.min(
-				current_resolution.X / INTENDED_RESOLUTION.X,
-				current_resolution.Y / INTENDED_RESOLUTION.Y
-			))
+			set_scale(
+				math.min(current_resolution.X / INTENDED_RESOLUTION.X, current_resolution.Y / INTENDED_RESOLUTION.Y)
+			)
 		end
 
 		update_scale()

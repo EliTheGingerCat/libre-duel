@@ -16,11 +16,11 @@ const FADE_DURATION = 0.5
 
 local function use_fade_out(created_at: number): number
 	local transparency, set_transparency = use_state(0)
-	
+
 	local function effect_fade_out()
 		local time_since_creation = tick() - created_at
 		local time_until_fade = LIFETIME_UNTIL_FADE - time_since_creation
-		
+
 		local function thread_fade(): ()
 			if time_until_fade > 0 then
 				task.wait(time_until_fade)
@@ -38,14 +38,14 @@ local function use_fade_out(created_at: number): number
 		end
 
 		local task_fade = task.spawn(thread_fade)
-		
+
 		local function disconnect(): ()
 			task.cancel(task_fade)
 		end
 
 		return disconnect
 	end
-	
+
 	use_effect(effect_fade_out, {})
 
 	return transparency
@@ -58,30 +58,34 @@ local function notification_component(props: {
 })
 	local notification = props.notification
 	local index = props.index
-	
+
 	local transparency = use_fade_out(notification.created_at)
 
 	if transparency == 1 then
 		props.on_destroy()
 	end
-	
-	return create_element("Frame", {
-		AutomaticSize = "X",
-		Size = UDim2.new(0, 0, 0, 28),
-		Position = UDim2.new(0, 0, 1, -(index * 32)),
-		AnchorPoint = Vector2.new(0, 1),
-		BackgroundColor3 = COLOURS.black,
-		BackgroundTransparency = 0.5 + (transparency * 0.5),
-	},
+
+	return create_element(
+		"Frame",
+		{
+			AutomaticSize = "X",
+			Size = UDim2.new(0, 0, 0, 28),
+			Position = UDim2.new(0, 0, 1, -(index * 32)),
+			AnchorPoint = Vector2.new(0, 1),
+			BackgroundColor3 = COLOURS.black,
+			BackgroundTransparency = 0.5 + (transparency * 0.5),
+		},
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),
-		create_element("UIStroke", {
-			Thickness = 1,
-			Color = COLOURS.white,
-			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
-			Transparency = transparency,
-		}, 
+		create_element(
+			"UIStroke",
+			{
+				Thickness = 1,
+				Color = COLOURS.white,
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				Transparency = transparency,
+			},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, COLOURS.light_grey),
@@ -113,7 +117,7 @@ local function notification_component(props: {
 	)
 end
 
-local function use_notifications(): {notification}
+local function use_notifications(): { notification }
 	local notifications, set_notifications = use_state(notification_management.existing)
 
 	local function effect_notifications()
@@ -138,7 +142,7 @@ end
 local function notifications_container()
 	local content_ref = use_editable_hud()
 	local notifications = use_notifications()
-	
+
 	local notification_elements = {}
 	local notifications_length = #notifications
 	for index, notification in notifications do
@@ -148,12 +152,15 @@ local function notifications_container()
 			notification_management.remove(notification.id)
 		end
 
-		table.insert(notification_elements, create_element(notification_component, {
-			key = notification.id,
-			notification = notification,
-			index = display_order,
-			on_destroy = on_destroy,
-		}))
+		table.insert(
+			notification_elements,
+			create_element(notification_component, {
+				key = notification.id,
+				notification = notification,
+				index = display_order,
+				on_destroy = on_destroy,
+			})
+		)
 	end
 
 	return create_element("ScreenGui", {
@@ -166,9 +173,7 @@ local function notifications_container()
 			Position = UDim2.new(0, 15, 1, -15),
 			Size = UDim2.new(0, 240, 0, 180),
 			BackgroundTransparency = 1,
-		},
-			notification_elements
-		)
+		}, notification_elements),
 	})
 end
 

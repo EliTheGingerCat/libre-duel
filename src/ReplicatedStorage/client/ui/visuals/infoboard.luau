@@ -118,7 +118,7 @@ local function use_kills(): number
 		return disconnect
 	end
 
-	use_effect(effect_kills, {game_is_active})
+	use_effect(effect_kills, { game_is_active })
 
 	return kills
 end
@@ -172,24 +172,24 @@ local function use_points_self(): number
 		return disconnect
 	end
 
-	use_effect(effect_points_self, {game_is_active})
+	use_effect(effect_points_self, { game_is_active })
 
 	return points_self
 end
 
-local function use_points_teams(): {number}
-	local points_teams, set_points_teams = use_state({0, 0})
+local function use_points_teams(): { number }
+	local points_teams, set_points_teams = use_state({ 0, 0 })
 
 	local game_is_active = use_game_is_active()
 
 	local function effect_points_teams()
 		if game_is_active == true then
 			-- Game just started.
-			set_points_teams({0, 0})
+			set_points_teams({ 0, 0 })
 		end
 
 		local function on_event(team_number: number): ()
-			local function updater(points_teams: {number}): {number}
+			local function updater(points_teams: { number }): { number }
 				local clone = table.clone(points_teams)
 				clone[team_number] += 1
 				return clone
@@ -206,7 +206,7 @@ local function use_points_teams(): {number}
 		return disconnect
 	end
 
-	use_effect(effect_points_teams, {game_is_active})
+	use_effect(effect_points_teams, { game_is_active })
 
 	return points_teams
 end
@@ -238,14 +238,13 @@ local function use_time_elapsed(): number
 
 			return disconnect
 		else
-			local function disconnect(): ()
-			end
+			local function disconnect(): () end
 
 			return disconnect
 		end
 	end
 
-	use_effect(effect_time_elapsed, {game_is_active})
+	use_effect(effect_time_elapsed, { game_is_active })
 
 	return time_elapsed
 end
@@ -265,24 +264,28 @@ local function infoboard()
 	local points_blue = points_teams[2]
 
 	local minutes = time_elapsed // 60
-	local seconds = time_elapsed - minutes*60
+	local seconds = time_elapsed - minutes * 60
 	local time_string = string.format("%02d:%02d", minutes, seconds)
 
-	return create_element("ScreenGui", {
-		ClipToDeviceSafeArea = false,
-		Enabled = game_is_active,
-		Name = "infoboard",
-		ResetOnSpawn = false,
-		ScreenInsets = "None",
-	},
-		create_element("Frame", {
+	return create_element(
+		"ScreenGui",
+		{
+			ClipToDeviceSafeArea = false,
+			Enabled = game_is_active,
+			Name = "infoboard",
+			ResetOnSpawn = false,
+			ScreenInsets = "None",
+		},
+		create_element(
+			"Frame",
+			{
 				ref = content_ref,
 				AnchorPoint = Vector2.new(0.5, 0),
 				Position = UDim2.new(0.5, 0, 0, 10),
 				Size = UDim2.fromOffset(401, 127),
 				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				BackgroundTransparency = 0.5,
-		},
+			},
 			create_element("UIGridLayout", {
 				CellSize = UDim2.fromOffset(175, 32),
 				FillDirection = "Horizontal",
@@ -299,17 +302,20 @@ local function infoboard()
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0.3, 0),
 			}),
-			create_element("UIStroke", {
-				Thickness = 2,
-				Color = Color3.fromRGB(255, 255, 255),
-			},
+			create_element(
+				"UIStroke",
+				{
+					Thickness = 2,
+					Color = Color3.fromRGB(255, 255, 255),
+				},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-				}),
+						ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
+						ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
+					}),
 					Rotation = -90,
-			})),
+				})
+			),
 			create_element(point_display, {
 				colour = COLOUR_RED,
 				layout_order = 1,

@@ -24,13 +24,15 @@ local function slider_display(props: {
 	position_y_offset: number,
 	size_x_scale: number,
 })
-	return create_element("Frame", {
-		AnchorPoint = Vector2.new(0, 1),
-		BackgroundColor3 = props.colour_background,
-		Name = props.name,
-		Position = UDim2.fromOffset(10, props.position_y_offset),
-		Size = UDim2.new(props.size_x_scale, -20, 0, 26),
-	},
+	return create_element(
+		"Frame",
+		{
+			AnchorPoint = Vector2.new(0, 1),
+			BackgroundColor3 = props.colour_background,
+			Name = props.name,
+			Position = UDim2.fromOffset(10, props.position_y_offset),
+			Size = UDim2.new(props.size_x_scale, -20, 0, 26),
+		},
 		create_element("UICorner", {
 			CornerRadius = UDim.new(0.45, 0),
 		}),
@@ -48,18 +50,20 @@ local function slider_display(props: {
 			TextScaled = true,
 			TextColor3 = COLOURS.white,
 		}),
-		create_element("Frame", {
-			BackgroundColor3 = COLOURS.white,
-			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.fromScale(0, 0.5),
-			Size = UDim2.fromScale(props.fill_value / props.fill_total, 1),
-			ZIndex = 2,
-		},
+		create_element(
+			"Frame",
+			{
+				BackgroundColor3 = COLOURS.white,
+				AnchorPoint = Vector2.new(0, 0.5),
+				Position = UDim2.fromScale(0, 0.5),
+				Size = UDim2.fromScale(props.fill_value / props.fill_total, 1),
+				ZIndex = 2,
+			},
 			create_element("UIGradient", {
 				Color = props.colour_gradient,
 			}),
 			create_element("UICorner", {
-				CornerRadius = UDim.new(0.45, 0)
+				CornerRadius = UDim.new(0.45, 0),
 			})
 		)
 	)
@@ -113,7 +117,7 @@ local function use_character(): Model?
 		return disconnect
 	end
 
-	use_effect(effect_character_destroying, {character})
+	use_effect(effect_character_destroying, { character })
 
 	return character
 end
@@ -140,7 +144,7 @@ end
 local function use_health_main(): number
 	local humanoid = use_humanoid()
 	local health_main, set_health_main = use_state(get_health_optional(humanoid))
-	
+
 	local function effect_health_main()
 		if humanoid == nil then
 			set_health_main(0)
@@ -162,7 +166,7 @@ local function use_health_main(): number
 		return disconnect
 	end
 
-	use_effect(effect_health_main, {humanoid})
+	use_effect(effect_health_main, { humanoid })
 
 	return health_main
 end
@@ -188,7 +192,7 @@ local function health_main()
 end
 
 local function health_shield(props: {
-	health_shield: number
+	health_shield: number,
 })
 	local props_slider = {
 		colour_background = COLOURS.sky_800,
@@ -214,19 +218,18 @@ local function health_bar(props: {
 		Name = "health_bar",
 		BackgroundTransparency = 1,
 		Size = UDim2.fromScale(1, 1),
-	},
-		create_element(health_main),
-		props.health_shield > 0 and create_element(health_shield, {
-			health_shield = props.health_shield
-		})
-	)
+	}, create_element(health_main), props.health_shield > 0 and create_element(health_shield, {
+		health_shield = props.health_shield,
+	}))
 end
 
 local function active_slot_addendum()
-	return create_element("UIStroke", {
-		Color = COLOURS.white,
-		Thickness = 2,
-	},
+	return create_element(
+		"UIStroke",
+		{
+			Color = COLOURS.white,
+			Thickness = 2,
+		},
 		create_element("UIGradient", {
 			Color = ColorSequence.new({
 				ColorSequenceKeypoint.new(0, COLOURS.light_grey),
@@ -242,13 +245,15 @@ local function slot(props: {
 	id: number,
 	text: string,
 })
-	return create_element("Frame", {
-		BackgroundColor3 = COLOURS.black,
-		BackgroundTransparency = 0.8,
-		Name = props.id,
-		Size = UDim2.fromScale(1, 1),
-		LayoutOrder = props.id,
-	},
+	return create_element(
+		"Frame",
+		{
+			BackgroundColor3 = COLOURS.black,
+			BackgroundTransparency = 0.8,
+			Name = props.id,
+			Size = UDim2.fromScale(1, 1),
+			LayoutOrder = props.id,
+		},
 		create_element("TextLabel", {
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundTransparency = 1,
@@ -301,13 +306,15 @@ local function slots_container()
 		})
 	end
 
-	return create_element("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		BackgroundTransparency = 1,
-		Name = "slots_container",
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.new(1, -10, 1, -10),
-	},
+	return create_element(
+		"Frame",
+		{
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundTransparency = 1,
+			Name = "slots_container",
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.new(1, -10, 1, -10),
+		},
 		create_element("UIListLayout", {
 			Padding = UDim.new(0, 5),
 			FillDirection = "Horizontal",
@@ -320,11 +327,15 @@ end
 
 local function hotbar()
 	local content_ref = use_editable_hud()
-	return create_element("ScreenGui", {
-		Name = "Hotbar",
-		ResetOnSpawn = false,
-	},
-		create_element("Frame", {
+	return create_element(
+		"ScreenGui",
+		{
+			Name = "Hotbar",
+			ResetOnSpawn = false,
+		},
+		create_element(
+			"Frame",
+			{
 				ref = content_ref,
 				AnchorPoint = Vector2.new(0.5, 1),
 				BackgroundColor3 = COLOURS.black,
@@ -335,10 +346,12 @@ local function hotbar()
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0.45, 0),
 			}),
-			create_element("UIStroke", {
-				Color = COLOURS.white,
-				Thickness = 2,
-			},
+			create_element(
+				"UIStroke",
+				{
+					Color = COLOURS.white,
+					Thickness = 2,
+				},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, COLOURS.light_grey),

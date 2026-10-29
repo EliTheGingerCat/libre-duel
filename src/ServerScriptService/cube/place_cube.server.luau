@@ -19,11 +19,7 @@ local function verify_coordinate(coordinate: number): boolean
 end
 
 local function verify_position(position: Vector3): boolean
-	return (
-		    verify_coordinate(position.X)
-		and verify_coordinate(position.Y)
-		and verify_coordinate(position.Z)
-	)
+	return (verify_coordinate(position.X) and verify_coordinate(position.Y) and verify_coordinate(position.Z))
 end
 
 local function on_invoke(player: Player, cube_position: unknown): boolean
@@ -65,7 +61,10 @@ local function on_invoke(player: Player, cube_position: unknown): boolean
 		debug_print("Player is mitigated.")
 	end
 
-	if get_player_cps(player) >= MITIGATION_CONFIG.cps_treshold and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance then
+	if
+		get_player_cps(player) >= MITIGATION_CONFIG.cps_treshold
+		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
+	then
 		add_cooldown(player, "place_cube_mitigation", MITIGATION_CONFIG.duration)
 		return
 	end

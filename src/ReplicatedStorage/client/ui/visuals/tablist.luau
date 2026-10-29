@@ -17,24 +17,25 @@ local local_player = Players.LocalPlayer
 local use_effect = React.useEffect
 local use_state = React.useState
 
-
 local function player_card(props: {
 	colour: Color3,
 	image: string,
 	name: string,
 	order: number,
 })
-	return create_element("TextLabel", {
-		BackgroundColor3 = COLOURS.black,
-		BackgroundTransparency = 0.7,
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		LayoutOrder = props.order,
-		TextColor3 = props.colour,
-		TextScaled = true,
-		Size = UDim2.new(0.5, -5, 0, 38),
-		TextXAlignment = "Left",
-		Text = props.name,
-	},
+	return create_element(
+		"TextLabel",
+		{
+			BackgroundColor3 = COLOURS.black,
+			BackgroundTransparency = 0.7,
+			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			LayoutOrder = props.order,
+			TextColor3 = props.colour,
+			TextScaled = true,
+			Size = UDim2.new(0.5, -5, 0, 38),
+			TextXAlignment = "Left",
+			Text = props.name,
+		},
 		create_element("UIPadding", {
 			PaddingLeft = UDim.new(0, 40),
 			PaddingRight = UDim.new(0, 5),
@@ -42,11 +43,13 @@ local function player_card(props: {
 		create_element("UICorner", {
 			CornerRadius = UDim.new(0.5, 0),
 		}),
-		create_element("UIStroke", {
-			Color = COLOURS.white,
-			ApplyStrokeMode = "Border",
-			Thickness = 2,
-		},
+		create_element(
+			"UIStroke",
+			{
+				Color = COLOURS.white,
+				ApplyStrokeMode = "Border",
+				Thickness = 2,
+			},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, props.colour),
@@ -55,12 +58,14 @@ local function player_card(props: {
 				Rotation = -90,
 			})
 		),
-		create_element("ImageLabel", {
-			Position = UDim2.fromOffset(-40, 0),
-			BackgroundTransparency = 1,
-			Size = UDim2.fromOffset(38, 38),
-			Image = props.image,
-		},
+		create_element(
+			"ImageLabel",
+			{
+				Position = UDim2.fromOffset(-40, 0),
+				BackgroundTransparency = 1,
+				Size = UDim2.fromOffset(38, 38),
+				Image = props.image,
+			},
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0.5, 0),
 			})
@@ -68,7 +73,7 @@ local function player_card(props: {
 	)
 end
 
-local function use_players(): {Player}
+local function use_players(): { Player }
 	local players, set_players = use_state(Players:GetPlayers())
 
 	use_effect(function()
@@ -83,7 +88,7 @@ local function use_players(): {Player}
 			connection_added:Disconnect()
 			connection_removed:Disconnect()
 		end
-		
+
 		return destroy
 	end, {})
 
@@ -104,7 +109,9 @@ local function player_list()
 		})
 	end
 
-	return create_element("Folder", {},
+	return create_element(
+		"Folder",
+		{},
 		create_element("UIListLayout", {
 			Padding = UDim.new(0, 10),
 			FillDirection = "Horizontal",
@@ -140,12 +147,11 @@ local function ping_display()
 	const IDEAL_PING, BAD_PING = 40, 350
 
 	local progress = math.clamp((ping - IDEAL_PING) / (BAD_PING - IDEAL_PING), 0, 1)
-	local hue = (1/3) * (1 - progress)
+	local hue = (1 / 3) * (1 - progress)
 	local colour = Color3.fromHSV(hue, 0.61, 0.9) -- This does not use the colours modulescript but I am not sure how to make it.
 	local hex = "#" .. colour:ToHex()
 
 	local rich_text = string.format('<font color="%s">%d</font> ms', hex, math.round(ping))
-
 
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
@@ -158,7 +164,6 @@ local function ping_display()
 		RichText = true,
 	})
 end
-
 
 local location_saved = LOCATION_DEFAULT
 local function use_location(): LOCATION_DEFAULT.location
@@ -202,20 +207,24 @@ local function tablist()
 	local content_ref = use_editable_hud()
 	local enabled = use_if_key_held(KEYBINDS.tablist)
 
-	return create_element("ScreenGui", {
-		Enabled = enabled,
-		Name = "Tablist",
-		ResetOnSpawn = false,
-	},
-		create_element("Frame", {
-			ref = content_ref,
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.new(0.5, 0, 0, 147),
-			Size = UDim2.fromOffset(720, 0),
-			AutomaticSize = "Y",
-			BackgroundColor3 = COLOURS.black,
-			BackgroundTransparency = 0.5,
+	return create_element(
+		"ScreenGui",
+		{
+			Enabled = enabled,
+			Name = "Tablist",
+			ResetOnSpawn = false,
 		},
+		create_element(
+			"Frame",
+			{
+				ref = content_ref,
+				AnchorPoint = Vector2.new(0.5, 0),
+				Position = UDim2.new(0.5, 0, 0, 147),
+				Size = UDim2.fromOffset(720, 0),
+				AutomaticSize = "Y",
+				BackgroundColor3 = COLOURS.black,
+				BackgroundTransparency = 0.5,
+			},
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0, 39),
 			}),
@@ -225,11 +234,13 @@ local function tablist()
 				PaddingRight = UDim.new(0, 20),
 				PaddingTop = UDim.new(0, 20),
 			}),
-			create_element("UIStroke", {
-				Thickness = 2,
-				Color = COLOURS.white,
-				ApplyStrokeMode = "Border",
-			},
+			create_element(
+				"UIStroke",
+				{
+					Thickness = 2,
+					Color = COLOURS.white,
+					ApplyStrokeMode = "Border",
+				},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, COLOURS.light_grey),

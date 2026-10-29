@@ -29,7 +29,7 @@ local function encrypt_payload(raw_data)
 		public = keys["public"],
 		nonce = nonce,
 		ciphertext = ciphertext,
-		tag = tag
+		tag = tag,
 	}
 end
 

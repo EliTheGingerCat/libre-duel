@@ -19,7 +19,7 @@ type dissolving = {
 }
 
 type dissolvings = {
-	[Player]: {dissolving},
+	[Player]: { dissolving },
 }
 
 local connection_heartbeat: RBXScriptConnection?
@@ -32,7 +32,7 @@ local function find_dissolving(player: Player, id: number): dissolving?
 			return dissolving
 		end
 	end
-	
+
 	debug_print(`There is no dissolving with id "{id}".`)
 	return nil
 end
@@ -47,7 +47,9 @@ local function remove_dissolving(dissolving: dissolving): ()
 		end
 	end
 
-	debug_print(`Dissolving of player "{dissolving.player.Name}" with id "{dissolving.id}" seems to have already been removed.`)
+	debug_print(
+		`Dissolving of player "{dissolving.player.Name}" with id "{dissolving.id}" seems to have already been removed.`
+	)
 end
 
 local function dissolve_ceased(dissolving: dissolving): ()
@@ -107,8 +109,8 @@ end
 
 local function on_heartbeat(): ()
 	local now = tick()
-	local finished: {dissolving} = {}
-	local failed: {dissolving} = {}
+	local finished: { dissolving } = {}
+	local failed: { dissolving } = {}
 
 	for _, player_dissolvings in dissolvings do
 		for _, dissolving in player_dissolvings do
@@ -181,7 +183,7 @@ local function try_start(player: Player, id: unknown?, cube: unknown?): boolean
 		debug_print("Invalid arguments. Id is not a number.")
 		return false
 	end
-	
+
 	if typeof(cube) ~= "Instance" then
 		debug_print("Invalid arguments. Cube is not an instance.")
 		return false
@@ -193,7 +195,7 @@ local function try_start(player: Player, id: unknown?, cube: unknown?): boolean
 	end
 
 	if cube:HasTag("cube") == false then
-		debug_print("Cube does not have the \"cube\" tag, so it is not actually a cube.")
+		debug_print('Cube does not have the "cube" tag, so it is not actually a cube.')
 		return false
 	end
 
@@ -222,7 +224,7 @@ end
 
 local function on_fire_stop(player: Player, id: number): ()
 	local dissolving = find_dissolving(player, id)
-	
+
 	-- This function can be fired willy-nilly by players, so there is no guarantee that the player is actually dissolving anything. It can also be nil for honest players if they are experiencing great lag: they place a block, then start dissolving, but the server denies the dissolving because the block does not exist on the server yet.
 	if dissolving == nil then
 		return
@@ -230,7 +232,6 @@ local function on_fire_stop(player: Player, id: number): ()
 
 	dissolve_ceased(dissolving)
 end
-
 
 ReplicatedStorage.remotes.dissolve_cube.OnServerEvent:Connect(on_fire_start)
 ReplicatedStorage.remotes.dissolve_stop.OnServerEvent:Connect(on_fire_stop)

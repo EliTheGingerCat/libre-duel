@@ -1,11 +1,11 @@
 local Players = game:GetService("Players")
 
 export type player_cooldowns = {
-	[string]: number
+	[string]: number,
 }
 
 type all_cooldowns = {
-	[Player]: player_cooldowns
+	[Player]: player_cooldowns,
 }
 
 local cooldowns: all_cooldowns = {}

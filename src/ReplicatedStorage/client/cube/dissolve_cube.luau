@@ -39,7 +39,7 @@ type state_local = {
 
 type state_any = state_local | state_pending
 
-local dissolvings: {state_any} = {}
+local dissolvings: { state_any } = {}
 local local_dissolving: state_local?
 
 local function find_by_id(id: number): state_any?
@@ -67,7 +67,7 @@ end
 -- The state_local `state` must not be used after this point.
 local function cleanup_local(state: state_local): state_pending
 	local_dissolving = nil
-	
+
 	state.connection_heartbeat:Disconnect()
 
 	local state_pending = {
@@ -169,7 +169,7 @@ local function can_dissolve(cube: Instance?): string?
 	if not cube:IsA("Part") then
 		return "Mouse target is not a Part."
 	end
-	
+
 	if cube:HasTag("cube") == false then
 		return "Mouse target is not a cube."
 	end
@@ -193,7 +193,7 @@ local function on_heartbeat_active(): ()
 		debug_print("Error: Local dissolving is missing.")
 		return
 	end
-	
+
 	local cube_now = local_mouse.Target
 	local fail_message = can_dissolve(cube_now)
 	local fail = fail_message ~= nil
@@ -303,7 +303,7 @@ local function on_dissolve_failed(id: number): ()
 	if state == nil then
 		return
 	end
-	
+
 	set_dissolution_display(state, 0)
 	state.cube_target.Parent = workspace
 	debug_print("Server reported failure. Local cube was returned.")

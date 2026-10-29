@@ -1,7 +1,7 @@
 local keys = {
-    secret = nil,
-    masked = nil,
-    public = nil,
+	secret = nil,
+	masked = nil,
+	public = nil,
 }
 
 return keys

@@ -1,6 +1,8 @@
 const ALLOWED_NAMES = {
-	"attack_melee", "attack_melee_mitigation",
-	"place_cube", "place_cube_mitigation",
+	"attack_melee",
+	"attack_melee_mitigation",
+	"place_cube",
+	"place_cube_mitigation",
 }
 
 local function assert_cooldown_name(name: string): ()

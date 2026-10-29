@@ -26,78 +26,92 @@ local create_element = React.createElement
 
 local function components_showcase()
 	local enabled = use_if_key_held(KEYBINDS.components_showcase)
-	
-	return create_element("ScreenGui",{
-		Enabled = enabled,
-		Name = "Components Showcase",
-	},
-		create_element("Frame",{
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			BackgroundColor3 = Color3.fromRGB(35, 35, 35),
-			Position = UDim2.fromScale(0.5, 0.5),
-			Size = UDim2.fromOffset(1366, 768),
+
+	return create_element(
+		"ScreenGui",
+		{
+			Enabled = enabled,
+			Name = "Components Showcase",
 		},
+		create_element(
+			"Frame",
+			{
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+				Position = UDim2.fromScale(0.5, 0.5),
+				Size = UDim2.fromOffset(1366, 768),
+			},
 			create_element(scale),
-			create_element("UICorner",{
+			create_element("UICorner", {
 				CornerRadius = UDim.new(0, 65),
 			}),
-			create_element("UIStroke",{
-				Color = Color3.fromRGB(255, 255, 255), --i think fromRGB should be the Standard.
-				Thickness = 2,
-			},
-				create_element("UIGradient",{
+			create_element(
+				"UIStroke",
+				{
+					Color = Color3.fromRGB(255, 255, 255), --i think fromRGB should be the Standard.
+					Thickness = 2,
+				},
+				create_element("UIGradient", {
 					Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
 						ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-						}),
+					}),
 					Rotation = -90,
 				})
 			),
 			create_element(closing_button),
 			create_element(title_bar),
-			create_element("Frame",{ --container
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				BackgroundColor3 = Color3.fromRGB(47, 47, 47),
-				Position = UDim2.fromScale(0.5, 0.5),
-				Size = UDim2.new(1, -10, 1, -10),
-			},
-				create_element("UICorner",{
+			create_element(
+				"Frame",
+				{ --container
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundColor3 = Color3.fromRGB(47, 47, 47),
+					Position = UDim2.fromScale(0.5, 0.5),
+					Size = UDim2.new(1, -10, 1, -10),
+				},
+				create_element("UICorner", {
 					CornerRadius = UDim.new(0, 60),
 				}),
-				create_element("UIStroke",{
-				Color = Color3.fromRGB(255, 255, 255), --i think fromRGB should be the Standard.
-				Thickness = 2,
-				},
-					create_element("UIGradient",{
+				create_element(
+					"UIStroke",
+					{
+						Color = Color3.fromRGB(255, 255, 255), --i think fromRGB should be the Standard.
+						Thickness = 2,
+					},
+					create_element("UIGradient", {
 						Color = ColorSequence.new({
 							ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
 							ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-							}),
+						}),
 						Rotation = -90,
 					})
 				),
-				create_element("CanvasGroup",{
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0.5, 0.5),
-					BackgroundTransparency = 1,
-					Size = UDim2.fromScale(1, 1),
-				},
-					create_element("UICorner",{
+				create_element(
+					"CanvasGroup",
+					{
+						AnchorPoint = Vector2.new(0.5, 0.5),
+						Position = UDim2.fromScale(0.5, 0.5),
+						BackgroundTransparency = 1,
+						Size = UDim2.fromScale(1, 1),
+					},
+					create_element("UICorner", {
 						CornerRadius = UDim.new(0, 55),
 					}),
-					create_element("ScrollingFrame",{
-						AnchorPoint = Vector2.new(0.5, 1),
-						BackgroundTransparency = 1,
-						Position = UDim2.fromScale(0.5, 1),
-						Size = UDim2.new(1, -20, 1, -48),
-						ClipsDescendants = true,
-						ScrollBarThickness = 0,
-					},
-						create_element("UIListLayout",{
+					create_element(
+						"ScrollingFrame",
+						{
+							AnchorPoint = Vector2.new(0.5, 1),
+							BackgroundTransparency = 1,
+							Position = UDim2.fromScale(0.5, 1),
+							Size = UDim2.new(1, -20, 1, -48),
+							ClipsDescendants = true,
+							ScrollBarThickness = 0,
+						},
+						create_element("UIListLayout", {
 							SortOrder = "LayoutOrder",
 							Padding = UDim.new(0, 20),
 						}),
-						create_element("UIPadding",{
+						create_element("UIPadding", {
 							PaddingBottom = UDim.new(0, 5),
 							PaddingLeft = UDim.new(0, 10),
 							PaddingRight = UDim.new(0, 10),

@@ -10,11 +10,7 @@ local function apply_knockback(vector: Vector3, target: BasePart, strength_x: nu
 	constant_velocity.MaxForce = math.huge
 	constant_velocity.Attachment0 = attachment
 	constant_velocity.VectorVelocity =
-		Vector3.new(
-			vector.X * strength_x_result,
-			vector.Y + strength_y_result,
-			vector.Z * strength_x_result
-		)
+		Vector3.new(vector.X * strength_x_result, vector.Y + strength_y_result, vector.Z * strength_x_result)
 	constant_velocity.Parent = attachment
 
 	-- Breter98: m~memowwy lyeaks awe bawwd~~~ OwO

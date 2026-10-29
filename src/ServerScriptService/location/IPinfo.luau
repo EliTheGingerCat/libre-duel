@@ -2,7 +2,10 @@ local HttpService = game:GetService("HttpService")
 
 local token_saved: string?
 local function use_token(): string
-	assert(token_saved, "Token is missing. Please use `set_token` before accessing the API. Alternatively, use the legacy API.")
+	assert(
+		token_saved,
+		"Token is missing. Please use `set_token` before accessing the API. Alternatively, use the legacy API."
+	)
 	return token_saved
 end
 
@@ -13,7 +16,7 @@ end
 type HttpResponseData = {
 	Body: string?,
 	Headers: {
-		[string]: string
+		[string]: string,
 	},
 	StatusCode: number,
 	StatusMessage: string,
@@ -30,7 +33,7 @@ local function request(URL: string): (boolean, HttpResponseData)
 	})
 end
 
-local function request_authorised(URL: string,  token: string): (boolean, HttpResponseData)
+local function request_authorised(URL: string, token: string): (boolean, HttpResponseData)
 	return pcall(HttpService.RequestAsync, HttpService, {
 		Url = URL,
 		Method = "GET",

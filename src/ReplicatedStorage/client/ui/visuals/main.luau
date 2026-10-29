@@ -13,7 +13,9 @@ local version = require(script.Parent.version)
 local create_element = React.createElement
 
 local function main()
-	return create_element(React.Fragment, {},
+	return create_element(
+		React.Fragment,
+		{},
 		create_element(component_showcase),
 		create_element(crosshair),
 		create_element(gameplay_hud),

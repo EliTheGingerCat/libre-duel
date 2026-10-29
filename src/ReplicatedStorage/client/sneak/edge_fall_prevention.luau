@@ -33,15 +33,17 @@ local is_enabled = false
 
 local function update_character_cache()
 	local char = player.Character
-	if char == cached_char then return end
+	if char == cached_char then
+		return
+	end
 
 	cached_char = char
 	if char then
 		cached_root = char:FindFirstChild("HumanoidRootPart")
 		cached_hum = char:FindFirstChildOfClass("Humanoid")
 
-		floor_ray_check.FilterDescendantsInstances = {char}
-		move_ray_check.FilterDescendantsInstances = {char, cached_camera}
+		floor_ray_check.FilterDescendantsInstances = { char }
+		move_ray_check.FilterDescendantsInstances = { char, cached_camera }
 	else
 		cached_root = nil
 		cached_hum = nil
@@ -49,7 +51,9 @@ local function update_character_cache()
 end
 
 local function get_controls()
-	if controls_module then return controls_module end
+	if controls_module then
+		return controls_module
+	end
 
 	local player_scripts = player:WaitForChild("PlayerScripts", 5)
 	if player_scripts then
@@ -72,7 +76,9 @@ local function is_direction_safe(pos, offset, drop_vec)
 end
 
 function edge_fall_prevention.enable()
-	if is_enabled then return end
+	if is_enabled then
+		return
+	end
 	is_enabled = true
 
 	if cleanup_connection then
@@ -81,7 +87,9 @@ function edge_fall_prevention.enable()
 	end
 
 	local controls = get_controls()
-	if not controls or old_move_function then return end
+	if not controls or old_move_function then
+		return
+	end
 
 	if not overhang_part then
 		overhang_part = Instance.new("Part")
@@ -97,14 +105,16 @@ function edge_fall_prevention.enable()
 	camera_connection = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
 		cached_camera = Workspace.CurrentCamera
 		if cached_char then
-			move_ray_check.FilterDescendantsInstances = {cached_char, cached_camera}
+			move_ray_check.FilterDescendantsInstances = { cached_char, cached_camera }
 		end
 	end)
 
 	update_connection = RunService.Heartbeat:Connect(function()
 		update_character_cache()
 
-		if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then return end
+		if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then
+			return
+		end
 
 		local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
 		local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
@@ -125,7 +135,8 @@ function edge_fall_prevention.enable()
 						floor_size.Z + (OVERHANG_OFFSET * 2)
 					)
 
-					overhang_part.CFrame = hit_inst.CFrame * CFrame.new(0, (floor_size.Y * 0.5) - (OVERHANG_THICKNESS * 0.5), 0)
+					overhang_part.CFrame = hit_inst.CFrame
+						* CFrame.new(0, (floor_size.Y * 0.5) - (OVERHANG_THICKNESS * 0.5), 0)
 				end
 			end
 		end
@@ -176,7 +187,9 @@ function edge_fall_prevention.enable()
 end
 
 function edge_fall_prevention.disable()
-	if not is_enabled then return end
+	if not is_enabled then
+		return
+	end
 	is_enabled = false
 
 	if update_connection then

@@ -14,7 +14,6 @@ local function add_and_remove(player: Player)
 	end
 end
 
-
 ReplicatedStorage.remotes.mouse_click.OnServerEvent:Connect(function(player)
 	add_and_remove(player)
 end)

@@ -8,7 +8,7 @@ local get_player_position = require(ReplicatedStorage.shared.player.get_player_p
 local hit_feedback = require(script.Parent.hit_feedback)
 local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const PLAYER_RANGE = require(ReplicatedStorage.shared.combat.PLAYER_RANGE)
-const SWORD_COOLDOWN  = require(ReplicatedStorage.shared.combat.SWORD_COOLDOWN)
+const SWORD_COOLDOWN = require(ReplicatedStorage.shared.combat.SWORD_COOLDOWN)
 
 local local_player = Players.LocalPlayer
 

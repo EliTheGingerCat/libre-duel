@@ -9,12 +9,12 @@ export type notification = {
 }
 
 local current_id = 0
-local existing_notifications: {notification} = {}
+local existing_notifications: { notification } = {}
 local on_change = signal.new()
 
 local function notification_add(message: string): ()
 	current_id += 1
-	
+
 	local new_notification: notification = {
 		id = current_id,
 		message = message,

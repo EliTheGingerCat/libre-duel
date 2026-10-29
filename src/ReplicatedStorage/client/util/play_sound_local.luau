@@ -6,28 +6,28 @@ if anyone has some better SOUNDS that can be used here, please submit a pull req
 --]]
 
 const SOUNDS = {
-    cube_place = {2164165859, 6586979979}, --multiple SOUNDS can be added for variety
-    player_damaged = {6586979979},
+	cube_place = { 2164165859, 6586979979 }, --multiple SOUNDS can be added for variety
+	player_damaged = { 6586979979 },
 }
 
 local function play_sound_local(name: string, position: Vector3): ()
-    local list = SOUNDS[name]
-    assert(list, `Sound list "{name}" was not found.`)
+	local list = SOUNDS[name]
+	assert(list, `Sound list "{name}" was not found.`)
 
-    local id = list[math.random(1, #list)]
-    assert(id, `No ids were found in sound list "{name}".`)
+	local id = list[math.random(1, #list)]
+	assert(id, `No ids were found in sound list "{name}".`)
 
-    local part = Instance.new("Part")
-    part.Position = position
+	local part = Instance.new("Part")
+	part.Position = position
 
-    local sound = Instance.new("Sound")
-    sound.PlayOnRemove = true
-    sound.SoundId = `rbxassetid://{id}`
-    sound.Parent = part
+	local sound = Instance.new("Sound")
+	sound.PlayOnRemove = true
+	sound.SoundId = `rbxassetid://{id}`
+	sound.Parent = part
 
-    part.Parent = workspace
+	part.Parent = workspace
 
-    part:Destroy()
+	part:Destroy()
 end
 
 return play_sound_local

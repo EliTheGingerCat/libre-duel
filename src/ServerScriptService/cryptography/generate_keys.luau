@@ -8,9 +8,9 @@ const CSPRNG = cryptography.Utilities.CSPRNG
 const X25519 = cryptography.Verification.EdDSA.X25519
 
 local function generate_keys()
-    keys["secret"] = CSPRNG.Ed25519Random()
-    keys["masked"] = X25519.Mask(keys["secret"])
-    keys["public"] = X25519.PublicKey(keys["masked"])
+	keys["secret"] = CSPRNG.Ed25519Random()
+	keys["masked"] = X25519.Mask(keys["secret"])
+	keys["public"] = X25519.PublicKey(keys["masked"])
 end
 
 return generate_keys

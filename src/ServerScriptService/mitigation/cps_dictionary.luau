@@ -1,3 +1,3 @@
-local cps_dictionary: {[Player]: number} = {}
+local cps_dictionary: { [Player]: number } = {}
 
 return cps_dictionary
