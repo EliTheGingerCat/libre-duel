@@ -16,5 +16,7 @@ signal = "sleitnick/signal@2.0.3"
 
 conch = "alicesaidhi/conch@0.4.0"
 
+conch-ui = "alicesaidhi/conch-ui@0.4.0"
+
 [server-dependencies]
 drop = "jackdotink/drop@1.0.2"

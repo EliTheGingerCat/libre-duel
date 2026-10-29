@@ -13,6 +13,16 @@ version = "0.4.0"
 dependencies = []
 
 [[package]]
+name = "alicesaidhi/conch-ui"
+version = "0.4.0"
+dependencies = [["conch", "alicesaidhi/conch@0.4.0"], ["language", "alicesaidhi/conch-language@0.4.0"], ["vide", "centau/vide@0.4.1"]]
+
+[[package]]
+name = "centau/vide"
+version = "0.4.1"
+dependencies = []
+
+[[package]]
 name = "daily3014/cryptography"
 version = "3.1.1"
 dependencies = []
@@ -20,7 +30,7 @@ dependencies = []
 [[package]]
 name = "elithegingercat/libre-duel"
 version = "0.1.0"
-dependencies = [["chrono", "parihsz/chrono@2.0.0-experimental"], ["conch", "alicesaidhi/conch@0.4.0"], ["cryptography", "daily3014/cryptography@3.1.1"], ["react", "jsdotlua/react@17.2.1"], ["react-roblox", "jsdotlua/react-roblox@17.2.1"], ["signal", "sleitnick/signal@2.0.3"], ["drop", "jackdotink/drop@1.0.2"]]
+dependencies = [["chrono", "parihsz/chrono@2.0.0-experimental"], ["conch", "alicesaidhi/conch@0.4.0"], ["conch-ui", "alicesaidhi/conch-ui@0.4.0"], ["cryptography", "daily3014/cryptography@3.1.1"], ["react", "jsdotlua/react@17.2.1"], ["react-roblox", "jsdotlua/react-roblox@17.2.1"], ["signal", "sleitnick/signal@2.0.3"], ["drop", "jackdotink/drop@1.0.2"]]
 
 [[package]]
 name = "jackdotink/drop"
