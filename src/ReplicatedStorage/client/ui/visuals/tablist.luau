@@ -4,10 +4,10 @@ local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-local colours = require(ReplicatedStorage.shared.ui.colours)
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
-local keybinds = require(ReplicatedStorage.client.util.keybinds)
-local location_default = require(ReplicatedStorage.shared.ui.location_default)
+const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 local scale = require(script.Parent.scale)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_if_key_held = require(script.Parent.use_if_key_held)
@@ -25,7 +25,7 @@ local function player_card(props: {
 	order: number,
 })
 	return create_element("TextLabel", {
-		BackgroundColor3 = colours.black,
+		BackgroundColor3 = COLOURS.black,
 		BackgroundTransparency = 0.7,
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 		LayoutOrder = props.order,
@@ -43,14 +43,14 @@ local function player_card(props: {
 			CornerRadius = UDim.new(0.5, 0),
 		}),
 		create_element("UIStroke", {
-			Color = colours.white,
+			Color = COLOURS.white,
 			ApplyStrokeMode = "Border",
 			Thickness = 2,
 		},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, props.colour),
-					ColorSequenceKeypoint.new(1, colours.dark_grey),
+					ColorSequenceKeypoint.new(1, COLOURS.dark_grey),
 				}),
 				Rotation = -90,
 			})
@@ -137,9 +137,9 @@ end
 
 local function ping_display()
 	local ping = use_ping()
-	local ideal_ping, bad_ping = 40, 350
+	const IDEAL_PING, BAD_PING = 40, 350
 
-	local progress = math.clamp((ping - ideal_ping) / (bad_ping - ideal_ping), 0, 1)
+	local progress = math.clamp((ping - IDEAL_PING) / (BAD_PING - IDEAL_PING), 0, 1)
 	local hue = (1/3) * (1 - progress)
 	local colour = Color3.fromHSV(hue, 0.61, 0.9) -- This does not use the colours modulescript but I am not sure how to make it.
 	local hex = "#" .. colour:ToHex()
@@ -151,7 +151,7 @@ local function ping_display()
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0.5, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		TextColor3 = colours.light_grey,
+		TextColor3 = COLOURS.light_grey,
 		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),
 		Text = "Ping: " .. rich_text,
@@ -160,8 +160,8 @@ local function ping_display()
 end
 
 
-local location_saved = location_default
-local function use_location(): location_default.location
+local location_saved = LOCATION_DEFAULT
+local function use_location(): LOCATION_DEFAULT.location
 	local location, set_location = use_state(location_saved)
 
 	use_effect(function()
@@ -191,7 +191,7 @@ local function location_display()
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-		TextColor3 = colours.light_grey,
+		TextColor3 = COLOURS.light_grey,
 		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),
 		Text = location_text,
@@ -200,7 +200,7 @@ end
 
 local function tablist()
 	local content_ref = use_editable_hud()
-	local enabled = use_if_key_held(keybinds.tablist)
+	local enabled = use_if_key_held(KEYBINDS.tablist)
 
 	return create_element("ScreenGui", {
 		Enabled = enabled,
@@ -213,7 +213,7 @@ local function tablist()
 			Position = UDim2.new(0.5, 0, 0, 147),
 			Size = UDim2.fromOffset(720, 0),
 			AutomaticSize = "Y",
-			BackgroundColor3 = colours.black,
+			BackgroundColor3 = COLOURS.black,
 			BackgroundTransparency = 0.5,
 		},
 			create_element("UICorner", {
@@ -227,13 +227,13 @@ local function tablist()
 			}),
 			create_element("UIStroke", {
 				Thickness = 2,
-				Color = colours.white,
+				Color = COLOURS.white,
 				ApplyStrokeMode = "Border",
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, colours.light_grey),
-						ColorSequenceKeypoint.new(1, colours.dark_grey),
+						ColorSequenceKeypoint.new(0, COLOURS.light_grey),
+						ColorSequenceKeypoint.new(1, COLOURS.dark_grey),
 					}),
 					Rotation = -90,
 				})

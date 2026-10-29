@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-local colours = require(ReplicatedStorage.shared.ui.colours)
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local notification_management = require(script.Parent.Parent.notification_management)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
@@ -11,15 +11,15 @@ type notification = notification_management.notification
 local use_effect = React.useEffect
 local use_state = React.useState
 
-local lifetime_until_fade = 3
-local fade_duration = 0.5
+const LIFETIME_UNTIL_FADE = 3
+const FADE_DURATION = 0.5
 
 local function use_fade_out(created_at: number): number
 	local transparency, set_transparency = use_state(0)
 	
 	local function effect_fade_out()
 		local time_since_creation = tick() - created_at
-		local time_until_fade = lifetime_until_fade - time_since_creation
+		local time_until_fade = LIFETIME_UNTIL_FADE - time_since_creation
 		
 		local function thread_fade(): ()
 			if time_until_fade > 0 then
@@ -29,7 +29,7 @@ local function use_fade_out(created_at: number): number
 			local time_since_start_fading = 0
 
 			while true do
-				local new_transparency = math.min(1, time_since_start_fading / fade_duration)
+				local new_transparency = math.min(1, time_since_start_fading / FADE_DURATION)
 				set_transparency(new_transparency)
 
 				local time_waited = task.wait()
@@ -70,7 +70,7 @@ local function notification_component(props: {
 		Size = UDim2.new(0, 0, 0, 28),
 		Position = UDim2.new(0, 0, 1, -(index * 32)),
 		AnchorPoint = Vector2.new(0, 1),
-		BackgroundColor3 = colours.black,
+		BackgroundColor3 = COLOURS.black,
 		BackgroundTransparency = 0.5 + (transparency * 0.5),
 	},
 		create_element("UICorner", {
@@ -78,14 +78,14 @@ local function notification_component(props: {
 		}),
 		create_element("UIStroke", {
 			Thickness = 1,
-			Color = colours.white,
+			Color = COLOURS.white,
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Transparency = transparency,
 		}, 
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, colours.light_grey),
-					ColorSequenceKeypoint.new(1, colours.dark_grey),
+					ColorSequenceKeypoint.new(0, COLOURS.light_grey),
+					ColorSequenceKeypoint.new(1, COLOURS.dark_grey),
 				}),
 				Rotation = -90,
 			})
@@ -103,7 +103,7 @@ local function notification_component(props: {
 			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 			TextSize = 24, -- Slightly bigger from 14 to 15
 			Text = notification.message,
-			TextColor3 = colours.white,
+			TextColor3 = COLOURS.white,
 			TextXAlignment = Enum.TextXAlignment.Center,
 			TextYAlignment = Enum.TextYAlignment.Center,
 			TextScaled = false,

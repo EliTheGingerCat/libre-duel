@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
 
-local sneaking_constants = require(script.Parent.sneaking_constants)
+const SNEAKING_CONSTANTS = require(script.Parent.SNEAKING_CONSTANTS)
 local debug_print = require(script.Parent.Parent.util.debug_print)
 
 local edge_fall_prevention = require(script.Parent.edge_fall_prevention)
@@ -30,13 +30,13 @@ local function set_player_sneak(set_to_state: boolean)
 	sneaking_state = set_to_state
 
 	if sneaking_state then
-		humanoid.WalkSpeed = default_walkspeed * sneaking_constants.speed_change
-		humanoid.CameraOffset -= Vector3.new(0, sneaking_constants.camera_offset, 0)
+		humanoid.WalkSpeed = default_walkspeed * SNEAKING_CONSTANTS.speed_change
+		humanoid.CameraOffset -= Vector3.new(0, SNEAKING_CONSTANTS.camera_offset, 0)
 
 		edge_fall_prevention.enable()
 	else
 		humanoid.WalkSpeed = default_walkspeed
-		humanoid.CameraOffset += Vector3.new(0, sneaking_constants.camera_offset, 0)
+		humanoid.CameraOffset += Vector3.new(0, SNEAKING_CONSTANTS.camera_offset, 0)
 
 		edge_fall_prevention.disable()
 	end

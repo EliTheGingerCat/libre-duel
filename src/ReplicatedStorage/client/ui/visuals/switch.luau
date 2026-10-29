@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local colours = {
+const COLOURS = {
 	active = Color3.fromRGB(76, 177, 80),
 	not_active = Color3.fromRGB(177, 76, 78),
 }
@@ -47,7 +47,7 @@ local function switch(props: props)
 			},
 				create_element("UIGradient",{
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, if props.active == true then colours.active else colours.not_active),
+						ColorSequenceKeypoint.new(0, if props.active == true then COLOURS.active else COLOURS.not_active),
 						ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
 					}),
 				})

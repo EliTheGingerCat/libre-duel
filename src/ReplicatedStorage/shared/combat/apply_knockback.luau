@@ -1,25 +1,20 @@
 local Debris = game:GetService("Debris")
 
--- `constant_strength` ensures that the distance between the attacker and the target does not affect knockback. In general, it should be `true`. An example of when it should be `false` is when the knockback is from an explosive.
-local function apply_knockback(attacker: Part, target: Part, strength: number?, constant_strength: boolean?): ()
-	local strength_result = strength or 1
-	local constant_strength_enabled = constant_strength ~= false
-
-	local direction = target.Position - attacker.Position
-	direction = Vector3.new(direction.X, 0, direction.Z)
-
-	if constant_strength_enabled then
-		if direction.Magnitude > 0 then
-			direction = direction.Unit * 25
-		end
-	end
+local function apply_knockback(vector: Vector3, target: BasePart, strength_x: number?, strength_y: number?): ()
+	local strength_x_result = strength_x or 1
+	local strength_y_result = strength_y or 1
 
 	local attachment = Instance.new("Attachment")
 
 	local constant_velocity = Instance.new("LinearVelocity")
 	constant_velocity.MaxForce = math.huge
 	constant_velocity.Attachment0 = attachment
-	constant_velocity.VectorVelocity = Vector3.new(direction.X, 9.5, direction.Z) * strength_result
+	constant_velocity.VectorVelocity =
+		Vector3.new(
+			vector.X * strength_x_result,
+			vector.Y + strength_y_result,
+			vector.Z * strength_x_result
+		)
 	constant_velocity.Parent = attachment
 
 	-- Breter98: m~memowwy lyeaks awe bawwd~~~ OwO

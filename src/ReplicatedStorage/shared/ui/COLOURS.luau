@@ -3,13 +3,13 @@
 --[[
 Intended usage:
 - If applicable, use a contextual colour, such as "error".
-- Otherwise, use basic colours, such as "red", "orange", and so on.
+- Otherwise, use basic COLOURS, such as "red", "orange", and so on.
 - If one wants an even more specific colour, then use a numerical colour, such as "red_50", "red_100", and so on.
 
-The contextual colours and basic colours are just aliases of the numerical colours. These aliases are defined below all the numerical colours.
+The contextual COLOURS and basic COLOURS are just aliases of the numerical COLOURS. These aliases are defined below all the numerical COLOURS.
 ]]
 
-local colours = {
+const COLOURS = {
 	["red_50"] = Color3.fromHSV(1.00, 0.033, 1.00),
 	["red_100"] = Color3.fromHSV(1.00, 0.072, 1.00),
 	["red_200"] = Color3.fromHSV(1.00, 0.137, 1.00),
@@ -227,35 +227,35 @@ local colours = {
 	["grey_950"] = Color3.fromHSV(0, 0.000, 0.07),
 }
 
--- Basic colours.
+-- Basic COLOURS.
 
-colours.red = colours.red_500
-colours.orange = colours.orange_500
-colours.amber = colours.amber_500
-colours.yellow = colours.yellow_500
-colours.lime = colours.lime_500
-colours.green = colours.green_500
-colours.emerald = colours.emerald_500
-colours.teal = colours.teal_500
-colours.cyan = colours.cyan_500
-colours.sky = colours.sky_500
-colours.blue = colours.blue_500
-colours.indigo = colours.indigo_500
-colours.violet = colours.violet_500
-colours.purple = colours.purple_500
-colours.fuchsia = colours.fuchsia_500
-colours.pink = colours.pink_500
-colours.rose = colours.rose_500
-colours.grey = colours.grey_500
-colours.light_grey = colours.grey_300
-colours.dark_grey = colours.grey_700
-colours.black = colours.grey_950
-colours.white = colours.grey_50
+COLOURS.red = COLOURS.red_500
+COLOURS.orange = COLOURS.orange_500
+COLOURS.amber = COLOURS.amber_500
+COLOURS.yellow = COLOURS.yellow_500
+COLOURS.lime = COLOURS.lime_500
+COLOURS.green = COLOURS.green_500
+COLOURS.emerald = COLOURS.emerald_500
+COLOURS.teal = COLOURS.teal_500
+COLOURS.cyan = COLOURS.cyan_500
+COLOURS.sky = COLOURS.sky_500
+COLOURS.blue = COLOURS.blue_500
+COLOURS.indigo = COLOURS.indigo_500
+COLOURS.violet = COLOURS.violet_500
+COLOURS.purple = COLOURS.purple_500
+COLOURS.fuchsia = COLOURS.fuchsia_500
+COLOURS.pink = COLOURS.pink_500
+COLOURS.rose = COLOURS.rose_500
+COLOURS.grey = COLOURS.grey_500
+COLOURS.light_grey = COLOURS.grey_300
+COLOURS.dark_grey = COLOURS.grey_700
+COLOURS.black = COLOURS.grey_950
+COLOURS.white = COLOURS.grey_50
 
--- Contextual colours.
+-- Contextual COLOURS.
 
-colours.error = colours.red_400
-colours.info = colours.blue_400
-colours.success = colours.green_400
+COLOURS.error = COLOURS.red_400
+COLOURS.info = COLOURS.blue_400
+COLOURS.success = COLOURS.green_400
 
-return colours
+return COLOURS

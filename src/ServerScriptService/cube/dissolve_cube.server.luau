@@ -4,10 +4,10 @@ local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
-local cube_dissolve_time = require(ReplicatedStorage.shared.cube.cube_dissolve_time)
+const CUBE_DISSOLVE_TIME = require(ReplicatedStorage.shared.cube.CUBE_DISSOLVE_TIME)
 local debug_print = require(ServerScriptService.util.debug_print)
 local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
-local player_range_server = require(ServerScriptService.combat.player_range_server)
+const PLAYER_RANGE_SERVER = require(ServerScriptService.combat.PLAYER_RANGE_SERVER)
 
 type dissolving = {
 	cube: Part,
@@ -90,7 +90,7 @@ local function should_fail(dissolving: dissolving): boolean
 	end
 
 	local distance = (dissolving.cube.Position - player_position).Magnitude
-	if distance > player_range_server then
+	if distance > PLAYER_RANGE_SERVER then
 		debug_print("User moved too far away.")
 		return true
 	end
@@ -123,7 +123,7 @@ local function on_heartbeat(): ()
 			end
 
 			local time_elapsed = now - dissolving.time_start
-			local time_fraction = time_elapsed / cube_dissolve_time
+			local time_fraction = time_elapsed / CUBE_DISSOLVE_TIME
 			dissolve_progress(dissolving, time_fraction)
 		end
 	end
@@ -162,7 +162,7 @@ local function start_dissolving(player: Player, id: number, cube: Part): ()
 		id = id,
 		player = player,
 		time_start = tick(), -- Can be bad for laggy players.
-		time_end = tick() + cube_dissolve_time,
+		time_end = tick() + CUBE_DISSOLVE_TIME,
 	}
 	table.insert(dissolvings[player], dissolving)
 	total_dissolvings += 1
@@ -204,7 +204,7 @@ local function try_start(player: Player, id: unknown?, cube: unknown?): boolean
 	end
 
 	local distance = (cube.Position - player_position).Magnitude
-	if distance > player_range_server then
+	if distance > PLAYER_RANGE_SERVER then
 		debug_print("Too far.")
 		return false
 	end

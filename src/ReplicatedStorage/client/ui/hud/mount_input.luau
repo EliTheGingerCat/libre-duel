@@ -8,9 +8,9 @@ type mouse_button = {
 	clicks: { number },
 }
 
-local released_colour = Color3.new(17 / 255, 17 / 255, 17 / 255)
-local pressed_key_colour = Color3.new(80 / 255, 80 / 255, 80 / 255)
-local pressed_mouse_colour = Color3.new(40 / 255, 40 / 255, 40 / 255)
+const RELEASED_COLOUR = Color3.new(17 / 255, 17 / 255, 17 / 255)
+const PRESSED_KEY_COLOUR = Color3.new(80 / 255, 80 / 255, 80 / 255)
+const PRESSED_MOUSE_COLOUR = Color3.new(40 / 255, 40 / 255, 40 / 255)
 
 local function mount_input(keystrokes: Frame, mousestrokes: Frame)
 	local keys: { [Enum.KeyCode]: GuiObject } = {}
@@ -51,12 +51,12 @@ local function mount_input(keystrokes: Frame, mousestrokes: Frame)
 		if button.label.Text ~= text then
 			button.label.Text = text
 		end
-		button.label.BackgroundColor3 = if button.pressed then pressed_mouse_colour else released_colour
+		button.label.BackgroundColor3 = if button.pressed then PRESSED_MOUSE_COLOUR else RELEASED_COLOUR
 	end
 
 	local function reset_input(): ()
 		for _, key in keys do
-			key.BackgroundColor3 = released_colour
+			key.BackgroundColor3 = RELEASED_COLOUR
 		end
 		for _, button in buttons do
 			button.pressed = false
@@ -71,7 +71,7 @@ local function mount_input(keystrokes: Frame, mousestrokes: Frame)
 	local function on_input_began(input: InputObject, processed: boolean): ()
 		local key = keys[input.KeyCode]
 		if key and not processed and user_input_service:GetFocusedTextBox() == nil then
-			key.BackgroundColor3 = pressed_key_colour
+			key.BackgroundColor3 = PRESSED_KEY_COLOUR
 		end
 		local button = buttons[input.UserInputType]
 		if button then
@@ -84,7 +84,7 @@ local function mount_input(keystrokes: Frame, mousestrokes: Frame)
 	local function on_input_ended(input: InputObject): ()
 		local key = keys[input.KeyCode]
 		if key then
-			key.BackgroundColor3 = released_colour
+			key.BackgroundColor3 = RELEASED_COLOUR
 		end
 		local button = buttons[input.UserInputType]
 		if button then

@@ -1,4 +1,4 @@
-local keybinds = {
+const KEYBINDS = {
 	components_showcase = Enum.KeyCode.C,
 	debug_local = Enum.KeyCode.P,
 	debug_server = Enum.KeyCode.M,
@@ -20,4 +20,4 @@ local keybinds = {
 	player_sneak = Enum.KeyCode.LeftShift,
 }
 
-return keybinds
+return KEYBINDS

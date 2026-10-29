@@ -3,14 +3,14 @@ local RunService = game:GetService("RunService")
 local notification_management = require(script.Parent.notification_management)
 
 -- Manually change this to enable. Should always be disabled in the official repository, so if this variable is changed, avoid staging that change to Git. However, this can get annoying. Perhaps it should be managed by a chat command, a keybind, or the like.
-local enabled = false
+const ENABLED = false
 
-if RunService:IsStudio() and enabled then
-	local words = {"Hi!", "Hello!"}
+if RunService:IsStudio() and ENABLED then
+	const WORDS = {"Hi!", "Hello!"}
 
 	local function thread_notification(): ()
 		while true do
-			notification_management.add(words[math.random(1, #words)])
+			notification_management.add(WORDS[math.random(1, #WORDS)])
 			task.wait(math.random(0.3, 2))
 		end
 	end

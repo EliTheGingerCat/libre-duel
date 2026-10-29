@@ -8,11 +8,12 @@ local apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
 local debug_print = require(ServerScriptService.util.debug_print)
 local get_player_cps = require(ServerScriptService.mitigation.get_player_cps)
 local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
-local mitigation_config = require(ServerScriptService.mitigation.mitigation_config)
+local knockback_multiplier = require(script.Parent.knockback_multiplier)
+const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONFIG)
 local play_sound = require(ServerScriptService.util.play_sound)
-local player_range_server = require(script.Parent.player_range_server)
-local sword_cooldown_server = require(script.Parent.sword_cooldown_server)
-local sword_damage = require(ReplicatedStorage.shared.combat.sword_damage)
+const PLAYER_RANGE_SERVER = require(script.Parent.PLAYER_RANGE_SERVER)
+const SWORD_COOLDOWN_SERVER = require(script.Parent.SWORD_COOLDOWN_SERVER)
+const SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.SWORD_DAMAGE)
 
 local function on_event(player: Player, target_name: unknown): ()
 
@@ -100,27 +101,27 @@ local function on_event(player: Player, target_name: unknown): ()
 	end
 
 	local distance = (target_position - attacker_position).Magnitude
-	if distance > player_range_server then
+	if distance > PLAYER_RANGE_SERVER then
 		debug_print("Too far.")
 		return
 	end
 
-	if get_player_cps(player) >= mitigation_config.cps_treshold and math.random(1, 100) <= mitigation_config.rejection_chance then
-		add_cooldown(player, "attack_melee_mitigation", mitigation_config.duration)
+	if get_player_cps(player) >= MITIGATION_CONFIG.cps_treshold and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance then
+		add_cooldown(player, "attack_melee_mitigation", MITIGATION_CONFIG.duration)
 		debug_print("Attacker has triggered a mitigation.")
 		return
 	end
 	debug_print("Attack success.")
 
-	target_humanoid.Health -= sword_damage
+	target_humanoid.Health -= SWORD_DAMAGE
 
-	apply_knockback(attacker_root, target_root, 0.75, true)
+	apply_knockback(attacker_root.CFrame.LookVector, target_root, knockback_multiplier.X, knockback_multiplier.Y)
 
 	apply_hit_highlight(target_character, 0.6)
 
 	play_sound("player_damaged", target_position)
 
-	add_cooldown(player, "attack_melee", sword_cooldown_server)
+	add_cooldown(player, "attack_melee", SWORD_COOLDOWN_SERVER)
 end
 
 ReplicatedStorage.remotes.attack_player.OnServerEvent:Connect(on_event)

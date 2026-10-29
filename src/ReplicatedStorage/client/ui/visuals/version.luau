@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 
-local colours = require(ReplicatedStorage.shared.ui.colours)
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local create_element = React.createElement
 
 local function version()
@@ -18,18 +18,18 @@ local function version()
 			Position = UDim2.new(0, 10, 1, 0),
 			Size = UDim2.fromOffset(320, 50),
 			Text = "Libre Duel — Pre-release",
-			TextColor3 = colours.white,
+			TextColor3 = COLOURS.white,
 			TextSize = 20,
 			TextXAlignment = Enum.TextXAlignment.Left
 		},
 			create_element("UIStroke", {
-				Color = colours.white,
+				Color = COLOURS.white,
 				Thickness = 0.1
 			}),
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, colours.light_grey),
-					ColorSequenceKeypoint.new(1, colours.dark_grey),
+					ColorSequenceKeypoint.new(0, COLOURS.light_grey),
+					ColorSequenceKeypoint.new(1, COLOURS.dark_grey),
 				}),
 				Rotation = -90,
 			})

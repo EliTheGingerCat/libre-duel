@@ -1,7 +1,7 @@
 local players = game:GetService("Players")
 local replicated_storage = game:GetService("ReplicatedStorage")
 
-local cube_size = require(replicated_storage.shared.cube.cube_size)
+const CUBE_SIZE = require(replicated_storage.shared.cube.CUBE_SIZE)
 local hit_feedback = require(replicated_storage.client.combat.hit_feedback)
 
 local local_player = players.LocalPlayer
@@ -24,7 +24,7 @@ local function mount_combat(reach_label: TextLabel, combo_label: TextLabel)
 	local function on_hit(distance: number): ()
 		combo += 1
 		combo_label.Text = `Combo: {combo}`
-		reach_label.Text = string.format("%.2f cubes", distance / cube_size)
+		reach_label.Text = string.format("%.2f cubes", distance / CUBE_SIZE)
 	end
 
 	local function detach_character(): ()

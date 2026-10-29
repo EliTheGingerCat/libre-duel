@@ -1,11 +1,11 @@
 local CollectionService = game:GetService("CollectionService")
 
-local cube_size = require(script.Parent.cube_size)
+const CUBE_SIZE = require(script.Parent.CUBE_SIZE)
 
 local function cube_in_hitbox(position: Vector3, ignore_player: Player?): boolean
 	local parts = workspace:GetPartBoundsInBox(
 		CFrame.new(position),
-		Vector3.new(cube_size, cube_size, cube_size)
+		Vector3.new(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE)
 	)
 
 	for _, part in parts do

@@ -4,12 +4,12 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
-local cube_dissolve_time = require(ReplicatedStorage.shared.cube.cube_dissolve_time)
+const CUBE_DISSOLVE_TIME = require(ReplicatedStorage.shared.cube.CUBE_DISSOLVE_TIME)
 local debug_print = require(script.Parent.Parent.util.debug_print)
-local keybinds = require(script.Parent.Parent.util.keybinds)
+const KEYBINDS = require(script.Parent.Parent.util.KEYBINDS)
 local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
-local player_range = require(ReplicatedStorage.shared.combat.player_range)
-local transparency_maximum = require(script.Parent.transparency_maximum)
+const PLAYER_RANGE = require(ReplicatedStorage.shared.combat.PLAYER_RANGE)
+const TRANSPARENCY_MAXIMUM = require(script.Parent.TRANSPARENCY_MAXIMUM)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
@@ -138,7 +138,7 @@ local function local_dissolving_finished(state: state_local): ()
 end
 
 local function on_input_ended(input: InputObject): ()
-	if input.UserInputType == keybinds.tool_use then
+	if input.UserInputType == KEYBINDS.tool_use then
 		if local_dissolving ~= nil then
 			dissolve_stop(local_dissolving)
 		end
@@ -180,7 +180,7 @@ local function can_dissolve(cube: Instance?): string?
 	end
 
 	local distance = (cube.Position - local_position).Magnitude
-	if distance > player_range then
+	if distance > PLAYER_RANGE then
 		return "Too far."
 	end
 
@@ -227,9 +227,9 @@ local function on_heartbeat_active(): ()
 	end
 
 	local time_elapsed = tick() - state.time_start
-	local time_fraction = math.min(1, time_elapsed / cube_dissolve_time)
-	-- See `transparency_maximum.luau` for an explanation of this operation.
-	local transparency_fraction = time_fraction * transparency_maximum
+	local time_fraction = math.min(1, time_elapsed / CUBE_DISSOLVE_TIME)
+	-- See `TRANSPARENCY_MAXIMUM.luau` for an explanation of this operation.
+	local transparency_fraction = time_fraction * TRANSPARENCY_MAXIMUM
 	set_dissolution_display(state, transparency_fraction)
 
 	if time_fraction >= 1 then

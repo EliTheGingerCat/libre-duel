@@ -29,17 +29,17 @@ local function mount_hud()
 	local reach = create_widget(templates.ReachCounter, Vector2.new(1, 0), UDim2.new(1, -12, 0, 63))
 	local combo = create_widget(templates.ComboCounter, Vector2.new(1, 0), UDim2.new(1, -12, 0, 12))
 	local paperdoll = create_widget(templates.Paperdoll, Vector2.new(0, 1), UDim2.new(0, 12, 1, -12))
-	local widgets = { keystrokes, mousestrokes, reach, combo, paperdoll }
+	const WIDGETS = { keystrokes, mousestrokes, reach, combo, paperdoll }
 	local player_gui = players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
 	assert(player_gui)
-	for _, widget in widgets do
+	for _, widget in WIDGETS do
 		widget.gui.Parent = player_gui
 	end
 
 	local function update_scale(): ()
 		local size = mousestrokes.gui.AbsoluteSize
 		local scale = math.min(1, size.X / 900, size.Y / 700)
-		for _, widget in widgets do
+		for _, widget in WIDGETS do
 			widget.scale.Scale = scale
 		end
 		keystrokes.content.Position = UDim2.new(1, -12, 1, -12 - 166 * scale)
@@ -58,7 +58,7 @@ local function mount_hud()
 	local disconnect_combat = mount_combat(reach_label, combo_label)
 	local disconnect_paperdoll = mount_paperdoll(viewport)
 	local unregister_widgets: {() -> ()} = {}
-	for _, widget in widgets do
+	for _, widget in WIDGETS do
 		table.insert(unregister_widgets, registry.register(widget.content, widget.gui))
 	end
 
@@ -70,7 +70,7 @@ local function mount_hud()
 		for _, unregister in unregister_widgets do
 			unregister()
 		end
-		for _, widget in widgets do
+		for _, widget in WIDGETS do
 			widget.gui:Destroy()
 		end
 	end

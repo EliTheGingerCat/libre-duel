@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local colours = {
+const COLOURS = {
 	not_active = Color3.fromRGB(54, 54, 54),
 	active = Color3.fromRGB(71, 71, 71),
 }
@@ -17,7 +17,7 @@ type props = {
 
 local function check_box(props: props)
 	return create_element("Frame",{
-		BackgroundColor3 = if props.active == true then colours.active else colours.not_active,
+		BackgroundColor3 = if props.active == true then COLOURS.active else COLOURS.not_active,
 		Size = UDim2.fromOffset(40, 40),
 	},
 		create_element("UICorner",{

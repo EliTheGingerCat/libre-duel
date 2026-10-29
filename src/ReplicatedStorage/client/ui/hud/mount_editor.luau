@@ -7,7 +7,7 @@ local user_input_service = game:GetService("UserInputService")
 local create_widget = require(script.Parent.editor_widget)
 local editor_state = require(script.Parent.editor_state)
 local geometry = require(script.Parent.editor_geometry)
-local keybinds = require(script.Parent.Parent.Parent.util.keybinds)
+const KEYBINDS = require(script.Parent.Parent.Parent.util.KEYBINDS)
 local registry = require(script.Parent.registry)
 
 type drag_state = {
@@ -198,7 +198,7 @@ local function mount_editor()
 	end
 
 	local function on_input_began(input: InputObject, processed: boolean): ()
-		if input.KeyCode == keybinds.hud_editor and not processed and user_input_service:GetFocusedTextBox() == nil then
+		if input.KeyCode == KEYBINDS.hud_editor and not processed and user_input_service:GetFocusedTextBox() == nil then
 			set_enabled(not editor_state.enabled)
 			return
 		end

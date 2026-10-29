@@ -7,8 +7,8 @@ export type location = {
 	result: string,
 }
 
-local location_default: location = {
+const LOCATION_DEFAULT: location = {
 	status = "loading",
 }
 
-return location_default
+return LOCATION_DEFAULT

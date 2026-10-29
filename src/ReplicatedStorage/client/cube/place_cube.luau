@@ -5,17 +5,17 @@ local workspace = game:GetService("Workspace")
 local create_cube = require(ReplicatedStorage.shared.cube.create_cube)
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.shared.cube.cube_in_hitbox)
-local cube_size = require(ReplicatedStorage.shared.cube.cube_size)
+const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
 local debug_print = require(script.Parent.Parent.util.debug_print)
 local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
-local player_range = require(ReplicatedStorage.shared.combat.player_range)
+const PLAYER_RANGE = require(ReplicatedStorage.shared.combat.PLAYER_RANGE)
 local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
 
-local cube_size_half = cube_size / 2
-local cube_size_half_soft = cube_size_half * 0.9
+const CUBE_SIZE_HALF = CUBE_SIZE / 2
+const CUBE_SIZE_HALF_SOFT = CUBE_SIZE_HALF * 0.9
 
 -- Create params once
 local build_ray_params = RaycastParams.new()
@@ -54,12 +54,12 @@ local function place_cube(): ()
 	local hit_position = ray_result.Position
 	local distance = (hit_position - local_position).Magnitude
 
-	if distance > player_range then
+	if distance > PLAYER_RANGE then
 		debug_print("Too far.")
 		return
 	end
 
-	local offset = ray_result.Normal * cube_size_half_soft
+	local offset = ray_result.Normal * CUBE_SIZE_HALF_SOFT
 	local snapped = snap_position(hit_position + offset)
 
 	local occupied_cube = cube_cache[snapped]

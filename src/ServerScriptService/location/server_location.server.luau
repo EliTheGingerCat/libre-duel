@@ -1,9 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local IPinfo = require(script.Parent.IPinfo)
-local location_default = require(ReplicatedStorage.shared.ui.location_default)
+const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 
-local location = location_default
+local location = LOCATION_DEFAULT
 
 local function get_server_location_legacy(): string?
 	local data = IPinfo.get_legacy()
@@ -80,7 +80,7 @@ else
 	}
 end
 
-local function on_invoke(): location_default.location
+local function on_invoke(): LOCATION_DEFAULT.location
 	return location
 end
 

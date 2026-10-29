@@ -4,7 +4,7 @@ local RunService = game:GetService("RunService")
 local Teams = game:GetService("Teams")
 local Workspace = game:GetService("Workspace")
 
-local colours = require(ReplicatedStorage.shared.ui.colours)
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local debug_print = require(script.Parent.util.debug_print)
 
 type team = {
@@ -24,19 +24,19 @@ type state = {
 }
 
 local active = false
-local cage_time = 3
+const CAGE_TIME = 3
 local current_state: state? = nil
 local total_players = #Players:GetPlayers()
-local win_points = 5
+const WIN_POINTS = 5
 
-local team_colours = {
-	colours.red,
-	colours.blue,
+const TEAM_COLOURS = {
+	COLOURS.red,
+	COLOURS.blue,
 }
 
-local Color3_to_BrickColor = {
-	[colours.blue] = BrickColor.new("Bright blue"),
-	[colours.red] = BrickColor.new("Bright red"),
+const COLOUR3_TO_BRICKCOLOUR = {
+	[COLOURS.blue] = BrickColor.new("Bright blue"),
+	[COLOURS.red] = BrickColor.new("Bright red"),
 }
 
 local function find_team_by_Roblox(state: state, Roblox_team: Team): team?
@@ -93,7 +93,7 @@ end
 
 local function close_then_open_cages(state: state): ()
 	close_cages(state)
-	task.delay(cage_time, open_cages, state)
+	task.delay(CAGE_TIME, open_cages, state)
 end
 
 -- GameStop
@@ -124,7 +124,7 @@ local function process_goal(state: state, player: Player, team: team): ()
 
 	ReplicatedStorage.remotes.score_self:FireClient(player)
 
-	if team.points >= win_points then
+	if team.points >= WIN_POINTS then
 		debug_print(`Team "{team.name}" wins.`)
 		game_stop(state)
 		return
@@ -203,8 +203,8 @@ local function create_map(number_teams: number): state
 	local teams: {team} = {}
 
 	for iteration = 1, number_teams do
-		local colour_index = (iteration - 1) % #team_colours + 1
-		local colour = team_colours[colour_index]
+		local colour_index = (iteration - 1) % #TEAM_COLOURS + 1
+		local colour = TEAM_COLOURS[colour_index]
 
 		local c_1 = (iteration - 1) * 12
 		local c_3 = 0
@@ -233,7 +233,7 @@ local function create_map(number_teams: number): state
 		})
 		goal.Parent = workspace
 
-		local colour_brick = Color3_to_BrickColor[colour]
+		local colour_brick = COLOUR3_TO_BRICKCOLOUR[colour]
 		local Roblox_team = create_Roblox_team({
 			colour = colour_brick,
 			name = `team #{iteration}`,

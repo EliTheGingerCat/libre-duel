@@ -9,9 +9,9 @@ local debug_print = require(ServerScriptService.util.debug_print)
 local get_player_cps = require(ServerScriptService.mitigation.get_player_cps)
 local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
 local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
-local mitigation_config = require(ServerScriptService.mitigation.mitigation_config)
+const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONFIG)
 local play_sound = require(ServerScriptService.util.play_sound)
-local player_range_server = require(ServerScriptService.combat.player_range_server)
+const PLAYER_RANGE_SERVER = require(ServerScriptService.combat.PLAYER_RANGE_SERVER)
 local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 
 local function verify_coordinate(coordinate: number): boolean
@@ -39,7 +39,7 @@ local function on_invoke(player: Player, cube_position: unknown): boolean
 	end
 
 	local distance = (cube_position - player_position).Magnitude
-	if distance > player_range_server then
+	if distance > PLAYER_RANGE_SERVER then
 		debug_print("Too far.")
 		return false
 	end
@@ -65,8 +65,8 @@ local function on_invoke(player: Player, cube_position: unknown): boolean
 		debug_print("Player is mitigated.")
 	end
 
-	if get_player_cps(player) >= mitigation_config.cps_treshold and math.random(1, 100) <= mitigation_config.rejection_chance then
-		add_cooldown(player, "place_cube_mitigation", mitigation_config.duration)
+	if get_player_cps(player) >= MITIGATION_CONFIG.cps_treshold and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance then
+		add_cooldown(player, "place_cube_mitigation", MITIGATION_CONFIG.duration)
 		return
 	end
 

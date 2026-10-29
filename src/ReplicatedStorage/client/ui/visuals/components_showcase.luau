@@ -14,7 +14,7 @@ local saturation_slider = require(script.Parent.saturation_slider)
 local slider = require(script.Parent.slider)
 local text_input = require(script.Parent.text_input)
 local React = require(ReplicatedStorage.Packages.react)
-local keybinds = require(ReplicatedStorage.client.util.keybinds)
+const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 local scale = require(script.Parent.scale)
 local switch = require(script.Parent.switch)
 local title_bar = require(script.Parent.title_bar)
@@ -25,7 +25,7 @@ local warning_text = require(script.Parent.warning_text)
 local create_element = React.createElement
 
 local function components_showcase()
-	local enabled = use_if_key_held(keybinds.components_showcase)
+	local enabled = use_if_key_held(KEYBINDS.components_showcase)
 	
 	return create_element("ScreenGui",{
 		Enabled = enabled,

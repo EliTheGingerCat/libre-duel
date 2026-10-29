@@ -8,9 +8,9 @@ local get_shared_key = require(ReplicatedStorage.shared.cryptography.get_shared_
 local serialiser = require(ReplicatedStorage.shared.cryptography.serialiser)
 
 local Blake3 = cryptography.Hashing.Blake3
-local CSPRNG = cryptography.Utilities.CSPRNG
-local X25519 = cryptography.Verification.EdDSA.X25519
-local AEAD = cryptography.Encryption.AEAD
+const CSPRNG = cryptography.Utilities.CSPRNG
+const X25519 = cryptography.Verification.EdDSA.X25519
+const AEAD = cryptography.Encryption.AEAD
 
 local secure_remote = {}
 

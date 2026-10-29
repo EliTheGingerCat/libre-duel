@@ -8,7 +8,7 @@ local local_camera = workspace.CurrentCamera
 local use_effect = React.useEffect
 local use_state = React.useState
 
-local intended_resolution = Vector2.new(1920, 1080)
+const INTENDED_RESOLUTION = Vector2.new(1920, 1080)
 
 local function scale_element()
 	local scale, set_scale = use_state(1)
@@ -18,8 +18,8 @@ local function scale_element()
 			local current_resolution = local_camera.ViewportSize
 
 			set_scale(math.min(
-				current_resolution.X / intended_resolution.X,
-				current_resolution.Y / intended_resolution.Y
+				current_resolution.X / INTENDED_RESOLUTION.X,
+				current_resolution.Y / INTENDED_RESOLUTION.Y
 			))
 		end
 

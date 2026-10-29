@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local PADDING_CHARACTER = "  "
+const PADDING_CHARACTER = "  "
 
 local function nametag(props: {
 	adornee: BasePart | Attachment,

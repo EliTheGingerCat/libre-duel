@@ -5,8 +5,8 @@ local RunService = game:GetService("RunService")
 -- > local humanoid = game:GetService("Workspace"):FindFirstChild("clone of " .. game:GetService("Players"):GetPlayers()[1].Name).Humanoid humanoid.Health = humanoid.MaxHealth
 -- (Make sure to run in server.)
 
-local enabled = false
-if RunService:IsStudio() and enabled then
+const ENABLED = false
+if RunService:IsStudio() and ENABLED then
 	local function clone_maybe_not_archivable<T>(instance: T & Instance): T
 		local archivable = instance.Archivable
 		instance.Archivable = true

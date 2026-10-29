@@ -2,26 +2,26 @@ local PhysicsService = game:GetService("PhysicsService")
 local Players = game:GetService("Players")
 
 -- 1. Create Groups
-local group_character = "character"
-local group_hitbox = "hitbox"
+const GROUP_CHARACTER = "character"
+const GROUP_HITBOX = "hitbox"
 
-PhysicsService:RegisterCollisionGroup(group_character)
-PhysicsService:RegisterCollisionGroup(group_hitbox)
+PhysicsService:RegisterCollisionGroup(GROUP_CHARACTER)
+PhysicsService:RegisterCollisionGroup(GROUP_HITBOX)
 
 -- 2. Set Rules
 -- "hitbox" (the ray) should pass through "character" (the limbs)
-PhysicsService:CollisionGroupSetCollidable(group_hitbox, group_character, false)
+PhysicsService:CollisionGroupSetCollidable(GROUP_HITBOX, GROUP_CHARACTER, false)
 -- "hitbox" (the ray) should hit "hitbox" (the target)
-PhysicsService:CollisionGroupSetCollidable(group_hitbox, group_hitbox, true)
+PhysicsService:CollisionGroupSetCollidable(GROUP_HITBOX, GROUP_HITBOX, true)
 -- "hitbox" (the ray) should hit "Default" (walls/floor)
-PhysicsService:CollisionGroupSetCollidable(group_hitbox, "Default", true)
+PhysicsService:CollisionGroupSetCollidable(GROUP_HITBOX, "Default", true)
 
 -- 3. Apply Groups (Robustly)
 local function set_collision_group(part: BasePart)
 	if part.Name == "hitbox" then
-		part.CollisionGroup = group_hitbox
+		part.CollisionGroup = GROUP_HITBOX
 	else
-		part.CollisionGroup = group_character
+		part.CollisionGroup = GROUP_CHARACTER
 	end
 end
 

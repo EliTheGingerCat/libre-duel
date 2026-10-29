@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-local colours = require(ReplicatedStorage.shared.ui.colours)
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -64,9 +64,9 @@ local function point_display(props: props_points_display)
 	})
 end
 
-local colour_blue = "#0da2dd"
-local colour_green = "#5bd34c"
-local colour_red = "#b14c4e"
+const COLOUR_BLUE = "#0da2dd"
+const COLOUR_GREEN = "#5bd34c"
+const COLOUR_RED = "#b14c4e"
 
 local function use_game_is_active(): boolean
 	local game_is_active, set_game_is_active = use_state(false)
@@ -259,7 +259,7 @@ local function infoboard()
 	local points_teams = use_points_teams()
 	local time_elapsed = use_time_elapsed()
 
-	-- TODO: Get team colours from the server.
+	-- TODO: Get team COLOURS from the server.
 	-- TODO: Support an arbitrary amount of teams. This is already done on the server.
 	local points_red = points_teams[1]
 	local points_blue = points_teams[2]
@@ -311,14 +311,14 @@ local function infoboard()
 					Rotation = -90,
 			})),
 			create_element(point_display, {
-				colour = colour_red,
+				colour = COLOUR_RED,
 				layout_order = 1,
 				name = "points_red",
 				points = points_red,
 				text_alignment_c1 = "Left",
 			}),
 			create_element(point_display, {
-				colour = colour_blue,
+				colour = COLOUR_BLUE,
 				layout_order = 2,
 				name = "points_blue",
 				points = points_blue,
@@ -327,28 +327,28 @@ local function infoboard()
 			create_element(text_label, {
 				layout_order = 3,
 				name = "map",
-				text = `<font color="{colour_green}">Map: </font>{map}`,
+				text = `<font color="{COLOUR_GREEN}">Map: </font>{map}`,
 				text_alignment_c1 = "Left",
 				text_size = 30,
 			}),
 			create_element(text_label, {
 				layout_order = 4,
 				name = "timer",
-				text = `<font color="{colour_green}">Time: </font>{time_string}`,
+				text = `<font color="{COLOUR_GREEN}">Time: </font>{time_string}`,
 				text_alignment_c1 = "Right",
 				text_size = 30,
 			}),
 			create_element(text_label, {
 				layout_order = 5,
 				name = "kills",
-				text = `<font color="{colour_green}">Kills: </font>{kills}`,
+				text = `<font color="{COLOUR_GREEN}">Kills: </font>{kills}`,
 				text_alignment_c1 = "Left",
 				text_size = 30,
 			}),
 			create_element(text_label, {
 				layout_order = 6,
 				name = "points_self",
-				text = `<font color="{colour_green}">Goals: </font>{points_self}`,
+				text = `<font color="{COLOUR_GREEN}">Goals: </font>{points_self}`,
 				text_alignment_c1 = "Right",
 				text_size = 30,
 			})

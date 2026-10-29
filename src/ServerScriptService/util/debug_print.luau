@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local creator_id = game.CreatorId
-local is_studio = RunService:IsStudio()
+const CREATOR_ID = game.CreatorId
+const IS_STUDIO = RunService:IsStudio()
 
 local debug_enabled = true
 
@@ -14,8 +14,8 @@ local function debug_print(...: any): ()
 end
 
 local function on_event(player: Player): ()
-	local is_owner = player.UserId == creator_id
-	local has_permission = is_studio or is_owner
+	local is_owner = player.UserId == CREATOR_ID
+	local has_permission = IS_STUDIO or is_owner
 	if not has_permission then
 		return
 	end

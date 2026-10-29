@@ -1,4 +1,4 @@
-local cube_size = require(script.Parent.cube_size)
+const CUBE_SIZE = require(script.Parent.CUBE_SIZE)
 
 local id = 0
 
@@ -9,7 +9,7 @@ local function create_cube(): Part
 	cube:AddTag("cube")
 	cube.Material = Enum.Material.Brick
 	cube.Name = `Cube #{id}`
-	cube.Size = Vector3.one * cube_size
+	cube.Size = Vector3.one * CUBE_SIZE
 	return cube
 end
 

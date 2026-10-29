@@ -8,6 +8,8 @@ export type layout = {
 	offset: Vector2,
 }
 
+const SNAP_DISTANCE = 9
+
 local function anchor_axis(value: number): number
 	return if value < 1 / 3 then 0 elseif value > 2 / 3 then 1 else 0.5
 end
@@ -21,7 +23,7 @@ local function get_layout(rect: rectangle, bounds: Vector2, preview_factor: numb
 	}
 end
 
-local handles = {
+const HANDLES = {
 	Vector2.new(-1, -1),
 	Vector2.new(0, -1),
 	Vector2.new(1, -1),
@@ -38,7 +40,7 @@ local function contains(rect: rectangle, point: Vector2): boolean
 end
 
 local function get_handle(rect: rectangle, point: Vector2): Vector2?
-	for _, handle in handles do
+	for _, handle in HANDLES do
 		local position = rect.position + rect.size * ((handle + Vector2.one) / 2)
 		if (point - position).Magnitude <= 9 then
 			return handle
@@ -62,7 +64,7 @@ local function move(rect: rectangle, delta: Vector2, others: { rectangle }, boun
 	local max_y = math.max(0, bounds.Y - rect.size.Y)
 	local position = rect.position + delta
 	position = Vector2.new(math.clamp(position.X, 0, max_x), math.clamp(position.Y, 0, max_y))
-	local snap_x, snap_y = 9, 9
+	local snap_x, snap_y = SNAP_DISTANCE, SNAP_DISTANCE
 	local offset_x, offset_y = 0, 0
 	for _, target in targets(others, bounds) do
 		for _, fraction in { 0, 0.5, 1 } do
@@ -106,7 +108,7 @@ local function resize(
 	maximum = math.max(0.001, maximum)
 	local minimum = math.min(0.25 / multiplier, maximum)
 	factor = math.clamp(factor, minimum, maximum)
-	local snap_distance = 9
+	local snap_distance = SNAP_DISTANCE
 	local snapped_factor = factor
 	for _, target in targets(others, bounds) do
 		for _, axis in { Vector2.xAxis, Vector2.yAxis } do

@@ -3,10 +3,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-local colours = require(ReplicatedStorage.shared.ui.colours)
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local scale = require(script.Parent.scale)
 local tool_state = require(script.Parent.Parent.tool_state)
-local tools = require(script.Parent.Parent.tool_list)
+const TOOLS = require(script.Parent.Parent.TOOL_LIST)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -46,10 +46,10 @@ local function slider_display(props: {
 			ZIndex = 3,
 			Text = tostring(math.ceil(props.fill_value)),
 			TextScaled = true,
-			TextColor3 = colours.white,
+			TextColor3 = COLOURS.white,
 		}),
 		create_element("Frame", {
-			BackgroundColor3 = colours.white,
+			BackgroundColor3 = COLOURS.white,
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.fromScale(0, 0.5),
 			Size = UDim2.fromScale(props.fill_value / props.fill_total, 1),
@@ -171,12 +171,12 @@ local function health_main()
 	local health_main = use_health_main()
 
 	local props_slider = {
-		colour_background = colours.red_900,
+		colour_background = COLOURS.red_900,
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, colours.red_700),
-			ColorSequenceKeypoint.new(1, colours.red_800),
+			ColorSequenceKeypoint.new(0, COLOURS.red_700),
+			ColorSequenceKeypoint.new(1, COLOURS.red_800),
 		}),
-		colour_stroke = colours.red_900,
+		colour_stroke = COLOURS.red_900,
 		fill_total = 100,
 		fill_value = health_main,
 		name = "health_main",
@@ -191,12 +191,12 @@ local function health_shield(props: {
 	health_shield: number
 })
 	local props_slider = {
-		colour_background = colours.sky_800,
+		colour_background = COLOURS.sky_800,
 		colour_gradient = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, colours.sky_600),
-			ColorSequenceKeypoint.new(1, colours.sky_700),
+			ColorSequenceKeypoint.new(0, COLOURS.sky_600),
+			ColorSequenceKeypoint.new(1, COLOURS.sky_700),
 		}),
-		colour_stroke = colours.sky_800,
+		colour_stroke = COLOURS.sky_800,
 		fill_total = 20,
 		fill_value = props.health_shield,
 		name = "health_shield",
@@ -224,13 +224,13 @@ end
 
 local function active_slot_addendum()
 	return create_element("UIStroke", {
-		Color = colours.white,
+		Color = COLOURS.white,
 		Thickness = 2,
 	},
 		create_element("UIGradient", {
 			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, colours.light_grey),
-				ColorSequenceKeypoint.new(1, colours.dark_grey),
+				ColorSequenceKeypoint.new(0, COLOURS.light_grey),
+				ColorSequenceKeypoint.new(1, COLOURS.dark_grey),
 			}),
 			Rotation = -90,
 		})
@@ -243,7 +243,7 @@ local function slot(props: {
 	text: string,
 })
 	return create_element("Frame", {
-		BackgroundColor3 = colours.black,
+		BackgroundColor3 = COLOURS.black,
 		BackgroundTransparency = 0.8,
 		Name = props.id,
 		Size = UDim2.fromScale(1, 1),
@@ -255,7 +255,7 @@ local function slot(props: {
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(0.8, 0.8),
 			Text = props.text,
-			TextColor3 = colours.white,
+			TextColor3 = COLOURS.white,
 			TextScaled = true,
 			TextSize = 20,
 		}),
@@ -297,7 +297,7 @@ local function slots_container()
 		slots[id] = create_element(slot, {
 			active = id == active_slot,
 			id = id,
-			text = tools[id] :: string or "",
+			text = TOOLS[id] :: string or "",
 		})
 	end
 
@@ -327,7 +327,7 @@ local function hotbar()
 		create_element("Frame", {
 				ref = content_ref,
 				AnchorPoint = Vector2.new(0.5, 1),
-				BackgroundColor3 = colours.black,
+				BackgroundColor3 = COLOURS.black,
 				BackgroundTransparency = 0.5,
 				Position = UDim2.new(0.5, 0, 1, -10),
 				Size = UDim2.fromOffset(680, 80),
@@ -336,13 +336,13 @@ local function hotbar()
 				CornerRadius = UDim.new(0.45, 0),
 			}),
 			create_element("UIStroke", {
-				Color = colours.white,
+				Color = COLOURS.white,
 				Thickness = 2,
 			},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, colours.light_grey),
-						ColorSequenceKeypoint.new(1, colours.dark_grey),
+						ColorSequenceKeypoint.new(0, COLOURS.light_grey),
+						ColorSequenceKeypoint.new(1, COLOURS.dark_grey),
 					}),
 					Rotation = -90,
 				})

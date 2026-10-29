@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local colours = {
+const COLOURS = {
 	not_active = Color3.fromRGB(54, 54, 54),
 	active = Color3.fromRGB(71, 71, 71),
 }
@@ -16,7 +16,7 @@ type props = {
 local function button(props: props)
 	return create_element("TextButton",{
 		AutomaticSize = "X",
-		BackgroundColor3 = if props.is_pressed == true then colours.active else colours.not_active,
+		BackgroundColor3 = if props.is_pressed == true then COLOURS.active else COLOURS.not_active,
 		Size = UDim2.fromOffset(200, 50),
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 		TextColor3 = Color3.fromRGB(198, 198, 198),

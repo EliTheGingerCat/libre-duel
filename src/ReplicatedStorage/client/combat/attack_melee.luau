@@ -7,8 +7,8 @@ local get_mouse_target = require(script.Parent.get_mouse_target)
 local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
 local hit_feedback = require(script.Parent.hit_feedback)
 local is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
-local player_range = require(ReplicatedStorage.shared.combat.player_range)
-local sword_cooldown  = require(ReplicatedStorage.shared.combat.sword_cooldown)
+const PLAYER_RANGE = require(ReplicatedStorage.shared.combat.PLAYER_RANGE)
+const SWORD_COOLDOWN  = require(ReplicatedStorage.shared.combat.SWORD_COOLDOWN)
 
 local local_player = Players.LocalPlayer
 
@@ -45,7 +45,7 @@ local function attack_melee(): ()
 	local target_position = target_root.CFrame.Position
 
 	local distance = (target_position - local_position).Magnitude
-	if distance > player_range then
+	if distance > PLAYER_RANGE then
 		debug_print("Too far.")
 		return
 	end
@@ -58,7 +58,7 @@ local function attack_melee(): ()
 	debug_print("Success. Attacking.")
 
 	ReplicatedStorage.remotes.attack_player:FireServer(target_character.Name)
-	add_cooldown(local_player, "attack_melee", sword_cooldown)
+	add_cooldown(local_player, "attack_melee", SWORD_COOLDOWN)
 	hit_feedback.report(distance)
 end
 
