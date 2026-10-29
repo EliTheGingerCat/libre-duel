@@ -3,6 +3,16 @@
 registry = "test"
 
 [[package]]
+name = "alicesaidhi/conch"
+version = "0.4.0"
+dependencies = [["language", "alicesaidhi/conch-language@0.4.0"]]
+
+[[package]]
+name = "alicesaidhi/conch-language"
+version = "0.4.0"
+dependencies = []
+
+[[package]]
 name = "daily3014/cryptography"
 version = "3.1.1"
 dependencies = []
@@ -10,7 +20,7 @@ dependencies = []
 [[package]]
 name = "elithegingercat/libre-duel"
 version = "0.1.0"
-dependencies = [["chrono", "parihsz/chrono@2.0.0-experimental"], ["cryptography", "daily3014/cryptography@3.1.1"], ["react", "jsdotlua/react@17.2.1"], ["react-roblox", "jsdotlua/react-roblox@17.2.1"], ["signal", "sleitnick/signal@2.0.3"], ["drop", "jackdotink/drop@1.0.2"]]
+dependencies = [["chrono", "parihsz/chrono@2.0.0-experimental"], ["conch", "alicesaidhi/conch@0.4.0"], ["cryptography", "daily3014/cryptography@3.1.1"], ["react", "jsdotlua/react@17.2.1"], ["react-roblox", "jsdotlua/react-roblox@17.2.1"], ["signal", "sleitnick/signal@2.0.3"], ["drop", "jackdotink/drop@1.0.2"]]
 
 [[package]]
 name = "jackdotink/drop"
