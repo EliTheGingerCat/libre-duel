@@ -20,5 +20,7 @@ signal = "sleitnick/signal@2.0.3"
 
 table-util = "sleitnick/table-util@1.2.1"
 
+FastCast2 = "weenachuangkud/fastcast2@0.1.4"
+
 [server-dependencies]
 drop = "jackdotink/drop@1.0.2"

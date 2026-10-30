@@ -40,6 +40,7 @@ local function on_input_began(input: InputObject): ()
 			place_cube()
 		elseif tool_selected == "dissolver" then
 			dissolve_cube()
+		elseif tool_selected == "bow" then
 		end
 	end
 end
