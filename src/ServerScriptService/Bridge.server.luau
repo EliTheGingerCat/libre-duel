@@ -6,6 +6,7 @@ local Workspace = game:GetService("Workspace")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local debug_print = require(script.Parent.util.debug_print)
+const match_session = require(script.Parent.queue.match_session)
 
 type team = {
 	cage: Model,
@@ -20,6 +21,7 @@ type team = {
 
 type state = {
 	cages_are_closed: boolean,
+	connections: { RBXScriptConnection },
 	teams: { team },
 }
 
@@ -92,15 +94,28 @@ local function close_cages(state: state): ()
 end
 
 local function close_then_open_cages(state: state): ()
+	if current_state ~= state then
+		return
+	end
 	close_cages(state)
-	task.delay(CAGE_TIME, open_cages, state)
+	local function open_current_cages(): ()
+		if current_state == state then
+			open_cages(state)
+		end
+	end
+	task.delay(CAGE_TIME, open_current_cages)
 end
 
 -- GameStop
 local function game_stop(state: state): ()
-	if active == true then
+	if active == false then
 		debug_print("Can not stop since the game is not running.")
 		return
+	end
+	active = false
+	current_state = nil
+	for _, connection in state.connections do
+		connection:Disconnect()
 	end
 
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(false)
@@ -116,6 +131,7 @@ local function game_stop(state: state): ()
 		team.spawn_part:Destroy()
 		team.Roblox_team:Destroy()
 	end
+	match_session.finish()
 end
 
 local function process_goal(state: state, player: Player, team: team): ()
@@ -257,6 +273,7 @@ local function create_map(number_teams: number): state
 
 	local state: state = {
 		cages_are_closed = false,
+		connections = {},
 		teams = teams,
 	}
 
@@ -267,7 +284,7 @@ end
 local function setup_map(state: state): ()
 	for _, team in state.teams do
 		local function on_touched(toucher: BasePart): ()
-			if state.cages_are_closed == true then
+			if current_state ~= state or state.cages_are_closed == true then
 				return
 			end
 
@@ -320,7 +337,7 @@ local function setup_map(state: state): ()
 			end
 		end
 
-		RunService.Heartbeat:Connect(on_heartbeat)
+		table.insert(state.connections, RunService.Heartbeat:Connect(on_heartbeat))
 	end
 end
 
@@ -332,7 +349,7 @@ local function setup_player(state: state, player: Player, team: team): ()
 		move_player(player, team.spawn_part.Position)
 	end
 
-	player.CharacterAdded:Connect(on_character_loaded)
+	table.insert(state.connections, player.CharacterAdded:Connect(on_character_loaded))
 end
 
 local function setup_initial_players(state: state, players: { Player }): ()
@@ -356,7 +373,7 @@ local function setup_initial_players(state: state, players: { Player }): ()
 	end
 end
 
-local function game_start(players: { Player }): ()
+local function game_start(players: { Player }, roster: match_session.roster?): ()
 	if active == true then
 		debug_print("Can not start since the game is already running.")
 		return
@@ -365,10 +382,43 @@ local function game_start(players: { Player }): ()
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(true)
 	ReplicatedStorage.remotes.map_name:FireAllClients("test")
 
-	local state = create_map(2)
+	local team_count = 2
+	if roster then
+		team_count = 0
+		for _ in roster do
+			team_count += 1
+		end
+	end
+	const state = create_map(team_count)
+	active = true
+	current_state = state
 	setup_map(state)
-	setup_initial_players(state, players)
+	if roster then
+		for index, team in state.teams do
+			for _, user_id in roster[`team{index}`] do
+				const player = Players:GetPlayerByUserId(user_id)
+				if player then
+					setup_player(state, player, team)
+				end
+			end
+		end
+	else
+		setup_initial_players(state, players)
+	end
 	close_then_open_cages(state)
+end
+
+local function on_match_ready(): ()
+	const roster = match_session.get_roster()
+	if roster then
+		game_start(Players:GetPlayers(), roster)
+	end
+end
+
+if not RunService:IsStudio() then
+	match_session.ready:Connect(on_match_ready)
+	on_match_ready()
+	return
 end
 
 local function get_smallest_team(state: state): team

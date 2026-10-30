@@ -1,191 +1,93 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
+const MessagingService = game:GetService("MessagingService")
+const Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const RunService = game:GetService("RunService")
+const TeleportService = game:GetService("TeleportService")
 
-local generate_random_username = require(ReplicatedStorage.shared.util.generate_random_username)
-local table_util = require(ReplicatedStorage.Packages["table-util"])
+const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
+const match_host = require(script.Parent.match_host)
+const queue_lobby = require(script.Parent.queue_lobby)
+const queue_record = require(script.Parent.queue_record)
 
-local join_queue = ReplicatedStorage.remotes.join_queue
+const IS_RESERVED = game.PrivateServerId ~= "" and game.PrivateServerOwnerId == 0
+const next_join: { [Player]: number } = {}
 
-local leave_queue = ReplicatedStorage.remotes.leave_queue
-
-type entity = Player | string
-type mode = "solo" | "duo"
-type team = string
-type guid = string
-
-type queue_type = {
-	teams: number,
-	ept: number, -- ept: entities per team
-}
-
-type queue_types = {
-	[mode]: queue_type,
-}
-
-local queue_types: queue_types = {
-	solo = {
-		teams = 2,
-		ept = 1,
-	},
-	duo = {
-		teams = 2,
-		ept = 2,
-	},
-}
-
-type open_queue = {
-	guid: guid,
-	mode: mode,
-	teams: { [team]: { entity } },
-}
-
-type open_queues = {
-	[guid]: open_queue,
-}
-
-local open_queues: open_queues = {}
-
-type queueing_entities = { [entity]: {
-	queue: guid,
-	team: team,
-} }
-
-local queueing_entities: queueing_entities = {}
-
-type error = "entity_already_queued" | "entity_already_not_queued"
-
-type success = true
-
-local function get_open_queue(mode: mode): open_queue
-	for i, v in open_queues do
-		if open_queues[i]["mode"] == mode then
-			return open_queues[i]
-		end
+local function on_join(player: Player, requested_mode: unknown): boolean
+	const mode: queue_record.mode? = queue_record.parse_mode(requested_mode)
+	if RunService:IsStudio() or mode == nil or match_host.contains(player) or os.clock() < (next_join[player] or 0) then
+		return false
 	end
-
-	local guid: guid = HttpService:GenerateGUID()
-	const teams: { [team]: { entity } } = {}
-	for team_index = 1, queue_types[mode].teams do
-		teams[`team{team_index}`] = {}
-	end
-
-	open_queues[guid] = {
-		guid = guid,
-		mode = mode,
-		teams = teams,
-	}
-	return open_queues[guid]
+	next_join[player] = os.clock() + QUEUE_CONFIG.join_interval
+	return queue_lobby.enqueue(player, mode)
 end
 
-local function get_smaller_team(queue: open_queue): team
-	local smaller_team: team? = nil
-	local smaller_size = math.huge
-	for team_name, team_entities in queue.teams do
-		const size = #team_entities
-		if size < smaller_size then
-			smaller_team = team_name
-			smaller_size = size
-		end
+local function on_leave(player: Player): boolean
+	if not queue_lobby.leave(player) then
+		return false
 	end
-	assert(smaller_team)
-	return smaller_team
-end
-
-local function get_entity_queue(entity: entity): open_queue?
-	local v = queueing_entities[entity]
-	if not v then
-		return nil
-	else
-		return open_queues[v.queue]
-	end
-end
-
--- true: the queue is full!
-local function is_queue_full(guid: guid): boolean
-	local target = open_queues[guid]
-	local entity_count = 0
-	for _, team_entities in target.teams do
-		entity_count += #team_entities
-	end
-	return entity_count >= queue_types[target.mode].teams * queue_types[target.mode].ept
-end
-
-local function remove_entity_from_queue(entity: entity): ()
-	local entity_queue = queueing_entities[entity]
-
-	if not entity_queue then
-		return
-	end
-
-	local queue = open_queues[entity_queue.queue]
-	if not queue then
-		return
-	end
-
-	const team_entities = queue.teams[entity_queue.team]
-
-	local index = table.find(team_entities, entity)
-	if index then
-		table.remove(team_entities, index)
-	end
-
-	queueing_entities[entity] = nil
-end
-
-local function on_queue_filled(guid: guid): ()
-	table.freeze(open_queues[guid])
-	local t = table_util.Copy(open_queues[guid], true)
-	open_queues[guid] = nil
-
-	for team_name, team_entities in t.teams do
-		for _, entity in team_entities do
-			print(`Teleporting {entity} to the game as {team_name}`)
-			remove_entity_from_queue(entity)
-		end
-	end
-end
-
-local function enter_entity_into_queue(entity: entity, guid: guid, lazy: boolean): error | success
-	if get_entity_queue(entity) and lazy then
-		return "entity_already_queued"
-	end
-	if get_entity_queue(entity) and not lazy then
-		remove_entity_from_queue(entity)
-	end
-	local queue = open_queues[guid]
-	const selected_team = get_smaller_team(queue)
-	queueing_entities[entity] = {
-		queue = queue.guid,
-		team = selected_team,
-	}
-	table.insert(queue.teams[selected_team], entity)
-
-	if is_queue_full(guid) then
-		on_queue_filled(guid)
+	if IS_RESERVED then
+		return match_host.leave(player)
 	end
 	return true
 end
 
-for i = 1, 4 do
-	local rand = generate_random_username()
-	enter_entity_into_queue(rand, get_open_queue("duo").guid, false)
-	print(`added {rand} into the queue`)
+local function on_player_added(player: Player): ()
+	if IS_RESERVED then
+		task.spawn(match_host.accept, player)
+	end
 end
 
-print(open_queues)
-
-Players.PlayerRemoving:Connect(function(player)
-	remove_entity_from_queue(player)
-end)
-
-join_queue.OnServerInvoke = function(entity)
-	enter_entity_into_queue(entity, get_open_queue("solo").guid, false)
-	print(get_entity_queue(entity))
+local function on_player_removing(player: Player): ()
+	next_join[player] = nil
+	queue_lobby.on_player_removing(player)
+	match_host.on_player_removing(player)
 end
 
-leave_queue.OnServerInvoke = function(entity)
-	remove_entity_from_queue(entity)
-	print(get_entity_queue(entity))
-	print(open_queues)
+local function on_ready(message: { Data: unknown }): ()
+	const data = queue_record.as_dictionary(message.Data)
+	const id = if data then data.id else nil
+	if data == nil or typeof(id) ~= "string" then
+		return
+	end
+	const mode: queue_record.mode? = queue_record.parse_mode(data.mode)
+	if mode then
+		queue_lobby.wake(mode, id)
+	end
 end
+
+local function subscribe(): ()
+	for attempt = 1, 3 do
+		const ok, result = pcall(MessagingService.SubscribeAsync, MessagingService, QUEUE_CONFIG.ready_topic, on_ready)
+		if ok then
+			return
+		end
+		warn(result)
+		task.wait(2 ^ attempt)
+	end
+end
+
+local function run(): ()
+	while true do
+		queue_lobby.step()
+		match_host.step()
+		task.wait(1)
+	end
+end
+
+ReplicatedStorage.remotes.join_queue.OnServerInvoke = on_join
+ReplicatedStorage.remotes.leave_queue.OnServerInvoke = on_leave
+
+-- Studio cannot perform live teleports
+if RunService:IsStudio() then
+	return
+end
+
+Players.PlayerAdded:Connect(on_player_added)
+Players.PlayerRemoving:Connect(on_player_removing)
+TeleportService.TeleportInitFailed:Connect(queue_lobby.on_teleport_failed)
+for _, player in Players:GetPlayers() do
+	on_player_added(player)
+end
+
+task.spawn(subscribe)
+task.spawn(run)
