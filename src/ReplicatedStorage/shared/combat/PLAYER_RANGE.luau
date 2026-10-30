@@ -1,3 +1,0 @@
-const PLAYER_RANGE = 13
-
-return PLAYER_RANGE

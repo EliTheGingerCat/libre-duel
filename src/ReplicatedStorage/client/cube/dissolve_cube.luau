@@ -6,9 +6,9 @@ local UserInputService = game:GetService("UserInputService")
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 const CUBE_DISSOLVE_TIME = require(ReplicatedStorage.shared.cube.CUBE_DISSOLVE_TIME)
 local debug_print = require(script.Parent.Parent.util.debug_print)
+const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
+local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 const KEYBINDS = require(script.Parent.Parent.util.KEYBINDS)
-local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
-const PLAYER_RANGE = require(ReplicatedStorage.shared.combat.PLAYER_RANGE)
 const TRANSPARENCY_MAXIMUM = require(script.Parent.TRANSPARENCY_MAXIMUM)
 
 local local_player = Players.LocalPlayer
@@ -174,13 +174,13 @@ local function can_dissolve(cube: Instance?): string?
 		return "Mouse target is not a cube."
 	end
 
-	local local_position = get_player_position(local_player)
+	local local_position = get_entity_position(local_player)
 	if local_position == nil then
 		return "Local position is missing."
 	end
 
 	local distance = (cube.Position - local_position).Magnitude
-	if distance > PLAYER_RANGE then
+	if distance > ENTITY_RANGE then
 		return "Too far."
 	end
 

@@ -1,10 +1,13 @@
-local assert_cooldown_name = require(script.Parent.assert_cooldown_name)
-local cooldowns = require(script.Parent.cooldowns)
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local function add_cooldown(player: Player, name: string, duration: number): ()
+const assert_cooldown_name = require(script.Parent.assert_cooldown_name)
+const cooldowns = require(script.Parent.cooldowns)
+const registry = require(ReplicatedStorage.shared.entity.registry)
+
+local function add_cooldown(entity: registry.entity, name: string, duration: number): ()
 	assert_cooldown_name(name)
-	cooldowns[player] = cooldowns[player] or {}
-	cooldowns[player][name] = os.clock() + duration
+	cooldowns[entity] = cooldowns[entity] or {}
+	cooldowns[entity][name] = os.clock() + duration
 end
 
 return add_cooldown

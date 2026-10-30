@@ -1,19 +1,17 @@
-local Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-export type player_cooldowns = {
+const registry = require(ReplicatedStorage.shared.entity.registry)
+
+export type entity_cooldowns = {
 	[string]: number,
 }
 
-type all_cooldowns = {
-	[Player]: player_cooldowns,
-}
+const cooldowns: { [registry.entity]: entity_cooldowns } = {}
 
-local cooldowns: all_cooldowns = {}
-
-local function on_player_removing(player: Player): ()
-	cooldowns[player] = nil
+local function on_entity_removed(entity: registry.entity): ()
+	cooldowns[entity] = nil
 end
 
-Players.PlayerRemoving:Connect(on_player_removing)
+registry.removed:Connect(on_entity_removed)
 
 return cooldowns

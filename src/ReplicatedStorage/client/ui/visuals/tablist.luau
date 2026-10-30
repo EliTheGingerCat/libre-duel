@@ -2,12 +2,12 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local React = require(ReplicatedStorage.Packages.react)
-local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
+local React = require(ReplicatedStorage.Packages.react)
+const registry = require(ReplicatedStorage.shared.entity.registry)
 local scale = require(script.Parent.scale)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_if_key_held = require(script.Parent.use_if_key_held)
@@ -17,7 +17,7 @@ local local_player = Players.LocalPlayer
 local use_effect = React.useEffect
 local use_state = React.useState
 
-local function player_card(props: {
+local function entity_card(props: {
 	colour: Color3,
 	image: string,
 	name: string,
@@ -73,39 +73,39 @@ local function player_card(props: {
 	)
 end
 
-local function use_players(): { Player }
-	local players, set_players = use_state(Players:GetPlayers())
+local function use_entities(): { registry.entity }
+	const entities, set_entities = use_state(registry.get_all())
 
-	use_effect(function()
-		local function on_player_list_change(player: Player): ()
-			set_players(Players:GetPlayers())
+	local function subscribe_to_entities()
+		local function on_entity_list_change(): ()
+			set_entities(registry.get_all())
 		end
-
-		local connection_added = Players.PlayerAdded:Connect(on_player_list_change)
-		local connection_removed = Players.PlayerRemoving:Connect(on_player_list_change)
-
-		local function destroy()
-			connection_added:Disconnect()
-			connection_removed:Disconnect()
+		const connection = registry.changed:Connect(on_entity_list_change)
+		on_entity_list_change()
+		local function destroy(): ()
+			connection:Disconnect()
 		end
-
 		return destroy
-	end, {})
-
-	return players
+	end
+	use_effect(subscribe_to_entities, {})
+	return entities
 end
 
-local function player_list()
-	local players = use_players()
+local function entity_list()
+	const entities = use_entities()
 
 	local cards = {}
-	for index, player in players do
-		cards[index] = create_element(player_card, {
-			key = player.UserId,
-			colour = player.TeamColor.Color,
-			image = `rbxthumb://type=AvatarBust&id={player.UserId}&w=50&h=50`,
-			name = player.Name,
-			order = get_perceived_lightness(player.TeamColor.Color) * -10000, --multiplying because the LayoutOrder property automatically rounds off decimals and i want accuracy.
+	for index, entity in entities do
+		const team = registry.get_team(entity)
+		const colour = if team then team.TeamColor.Color else COLOURS.white
+		const image = if type(entity) == "string" then "" else `rbxthumb://type=AvatarBust&id={entity.UserId}&w=50&h=50`
+		const key = if type(entity) == "string" then `bot:{entity}` else `player:{entity.UserId}`
+		cards[index] = create_element(entity_card, {
+			key = key,
+			colour = colour,
+			image = image,
+			name = registry.get_name(entity),
+			order = get_perceived_lightness(colour) * -10000,
 		})
 	end
 
@@ -250,7 +250,7 @@ local function tablist()
 				})
 			),
 			create_element(scale),
-			create_element(player_list),
+			create_element(entity_list),
 			create_element(location_display),
 			create_element(ping_display)
 		)

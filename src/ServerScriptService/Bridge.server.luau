@@ -1,19 +1,20 @@
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local Teams = game:GetService("Teams")
-local Workspace = game:GetService("Workspace")
+const Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const RunService = game:GetService("RunService")
+const Teams = game:GetService("Teams")
+const Workspace = game:GetService("Workspace")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
-local debug_print = require(script.Parent.util.debug_print)
+const debug_print = require(script.Parent.util.debug_print)
 const match_session = require(script.Parent.queue.match_session)
+const registry = require(ReplicatedStorage.shared.entity.registry)
 
 type team = {
 	cage: Model,
 	index: number,
 	goal: Part,
 	name: string,
-	players: { Player },
+	entities: { registry.entity },
 	points: number,
 	spawn_part: Part,
 	Roblox_team: Team,
@@ -22,13 +23,13 @@ type team = {
 type state = {
 	cages_are_closed: boolean,
 	connections: { RBXScriptConnection },
+	character_connection: registry.connection?,
 	teams: { team },
 }
 
 local active = false
 const CAGE_TIME = 3
 local current_state: state? = nil
-local total_players = #Players:GetPlayers()
 const WIN_POINTS = 5
 
 const TEAM_COLOURS = {
@@ -41,14 +42,12 @@ const COLOUR3_TO_BRICKCOLOUR = {
 	[COLOURS.red] = BrickColor.new("Bright red"),
 }
 
-local function find_team_by_Roblox(state: state, Roblox_team: Team): team?
+local function find_team_by_entity(state: state, entity: registry.entity): team?
 	for _, team in state.teams do
-		if team.Roblox_team == Roblox_team then
+		if table.find(team.entities, entity) then
 			return team
 		end
 	end
-
-	debug_print(`Failed to find Roblox-team "{Roblox_team.Name}" in state.`)
 	return nil
 end
 
@@ -57,16 +56,16 @@ local function CFrame_from_position(position: Vector3): CFrame
 	return CFrame.new(position)
 end
 
-local function move_player(player: Player, position: Vector3): ()
-	local character = player.Character
+local function move_entity(entity: registry.entity, position: Vector3): ()
+	const character = registry.get_character(entity)
 	if character == nil then
 		return
 	end
 
-	local current_pivot = character:GetPivot()
-	local current_rotation = current_pivot.Rotation
-	local new_position_frame = CFrame_from_position(position)
-	local new_pivot = new_position_frame * current_rotation
+	const current_pivot = character:GetPivot()
+	const current_rotation = current_pivot.Rotation
+	const new_position_frame = CFrame_from_position(position)
+	const new_pivot = new_position_frame * current_rotation
 
 	character:PivotTo(new_pivot)
 end
@@ -85,10 +84,10 @@ local function close_cages(state: state): ()
 	for _, team in state.teams do
 		team.cage.Parent = workspace
 
-		local spawn_location = team.spawn_part.Position
+		const spawn_location = team.spawn_part.Position
 
-		for _, player in team.players do
-			move_player(player, spawn_location)
+		for _, entity in team.entities do
+			move_entity(entity, spawn_location)
 		end
 	end
 end
@@ -114,6 +113,9 @@ local function game_stop(state: state): ()
 	end
 	active = false
 	current_state = nil
+	if state.character_connection then
+		state.character_connection:Disconnect()
+	end
 	for _, connection in state.connections do
 		connection:Disconnect()
 	end
@@ -121,9 +123,8 @@ local function game_stop(state: state): ()
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(false)
 
 	for _, team in state.teams do
-		-- i don't really know why roblox doesn't set the team color back when the team is destroyed.
-		for _, player in team.players do
-			player.TeamColor = BrickColor.new("White")
+		for _, entity in team.entities do
+			registry.set_team(entity, nil)
 		end
 
 		team.cage:Destroy()
@@ -134,10 +135,12 @@ local function game_stop(state: state): ()
 	match_session.finish()
 end
 
-local function process_goal(state: state, player: Player, team: team): ()
+local function process_goal(state: state, entity: registry.entity, team: team): ()
 	team.points += 1
 
-	ReplicatedStorage.remotes.score_self:FireClient(player)
+	if type(entity) ~= "string" then
+		ReplicatedStorage.remotes.score_self:FireClient(entity)
+	end
 
 	if team.points >= WIN_POINTS then
 		debug_print(`Team "{team.name}" wins.`)
@@ -158,7 +161,7 @@ type spawn_part_properties = {
 	name: string,
 }
 local function create_spawn_part(properties: spawn_part_properties): Part
-	local spawn_part = Instance.new("Part")
+	const spawn_part = Instance.new("Part")
 	spawn_part.Anchored = true
 	spawn_part.CanCollide = false
 	spawn_part.Color = properties.colour
@@ -175,10 +178,10 @@ type cage_properties = {
 	name: string,
 }
 local function create_cage(properties: cage_properties): Model
-	local cage_model = Instance.new("Model")
+	const cage_model = Instance.new("Model")
 	cage_model.Name = properties.name
 
-	local cage_part = Instance.new("Part")
+	const cage_part = Instance.new("Part")
 	cage_part.Anchored = true
 	cage_part.Color = properties.colour
 	cage_part.Position = properties.position
@@ -194,7 +197,7 @@ type goal_part_properties = {
 	name: string,
 }
 local function create_goal_part(properties: goal_part_properties): Part
-	local goal_part = Instance.new("Part")
+	const goal_part = Instance.new("Part")
 	goal_part.Anchored = true
 	goal_part.Color = properties.colour
 	goal_part.Position = properties.position
@@ -208,61 +211,61 @@ type Roblox_team_properties = {
 	name: string,
 }
 local function create_Roblox_team(properties: Roblox_team_properties): Team
-	local Roblox_team = Instance.new("Team")
+	const Roblox_team = Instance.new("Team")
 	Roblox_team.TeamColor = properties.colour
 	Roblox_team.Name = properties.name
 	return Roblox_team
 end
 
 local function create_map(number_teams: number): state
-	local teams: { team } = {}
+	const teams: { team } = {}
 
 	for iteration = 1, number_teams do
-		local colour_index = (iteration - 1) % #TEAM_COLOURS + 1
-		local colour = TEAM_COLOURS[colour_index]
+		const colour_index = (iteration - 1) % #TEAM_COLOURS + 1
+		const colour = TEAM_COLOURS[colour_index]
 
-		local c_1 = (iteration - 1) * 12
-		local c_3 = 0
+		const c_1 = (iteration - 1) * 12
+		const c_3 = 0
 
-		local cage_position = Vector3.new(c_1, 15, c_3)
-		local spawn_position = cage_position + Vector3.new(0, 6, 0)
+		const cage_position = Vector3.new(c_1, 15, c_3)
+		const spawn_position = cage_position + Vector3.new(0, 6, 0)
 
-		local spawn_part = create_spawn_part({
+		const spawn_part = create_spawn_part({
 			colour = colour,
 			position = spawn_position,
 			name = `team #{iteration}'s spawn`,
 		})
 		spawn_part.Parent = workspace
 
-		local cage = create_cage({
+		const cage = create_cage({
 			colour = colour,
 			position = cage_position,
 			name = `team #{iteration}'s cage`,
 		})
 		cage.Parent = workspace
 
-		local goal = create_goal_part({
+		const goal = create_goal_part({
 			colour = colour,
 			position = Vector3.new(c_1, 6, c_3),
 			name = `team #{iteration}'s goal`,
 		})
 		goal.Parent = workspace
 
-		local colour_brick = COLOUR3_TO_BRICKCOLOUR[colour]
-		local Roblox_team = create_Roblox_team({
+		const colour_brick = COLOUR3_TO_BRICKCOLOUR[colour]
+		const Roblox_team = create_Roblox_team({
 			colour = colour_brick,
 			name = `team #{iteration}`,
 		})
 		Roblox_team.Parent = Teams
 
-		local index = #teams + 1
+		const index = #teams + 1
 
-		local team: team = {
+		const team: team = {
 			cage = cage,
 			index = index,
 			goal = goal,
 			name = `team #{iteration}`,
-			players = {},
+			entities = {},
 			points = 0,
 			spawn_part = spawn_part,
 			Roblox_team = Roblox_team,
@@ -271,7 +274,7 @@ local function create_map(number_teams: number): state
 		teams[index] = team
 	end
 
-	local state: state = {
+	const state: state = {
 		cages_are_closed = false,
 		connections = {},
 		teams = teams,
@@ -288,49 +291,35 @@ local function setup_map(state: state): ()
 				return
 			end
 
-			local humanoid_root = toucher.Parent
-			if humanoid_root == nil then
-				return
-			end
-
-			local character = humanoid_root.Parent
+			const character = toucher:FindFirstAncestorOfClass("Model")
 			if character == nil then
 				return
 			end
 
-			if not character:IsA("Model") then
+			const humanoid = character:FindFirstChildOfClass("Humanoid")
+			if humanoid == nil or humanoid.Health <= 0 then
 				return
 			end
 
-			local humanoid = character:FindFirstChildOfClass("Humanoid")
-			if humanoid == nil then
+			const entity = registry.from_character(character)
+			if entity == nil then
 				return
 			end
 
-			local player = Players:GetPlayerFromCharacter(character)
-			if player == nil then
+			const scoring_team = find_team_by_entity(state, entity)
+			if scoring_team == nil or scoring_team == team then
 				return
 			end
 
-			local player_team = player.Team
-			if player_team == team.Roblox_team then
-				return
-			end
-
-			local scoring_team = find_team_by_Roblox(state, player_team)
-			if scoring_team == nil then
-				return
-			end
-
-			process_goal(state, player, scoring_team)
+			process_goal(state, entity, scoring_team)
 		end
 
 		local function on_heartbeat(): ()
-			local overlap_parameters = OverlapParams.new()
+			const overlap_parameters = OverlapParams.new()
 			-- ~ investigate: For some reason, collision group seems to not be respected.
 			overlap_parameters.CollisionGroup = "hitbox"
 
-			local hitboxes = Workspace:GetPartBoundsInBox(team.goal.CFrame, team.goal.Size, overlap_parameters)
+			const hitboxes = Workspace:GetPartBoundsInBox(team.goal.CFrame, team.goal.Size, overlap_parameters)
 
 			for _, hitbox in hitboxes do
 				on_touched(hitbox)
@@ -341,39 +330,39 @@ local function setup_map(state: state): ()
 	end
 end
 
-local function setup_player(state: state, player: Player, team: team): ()
-	table.insert(team.players, player)
-	player.Team = team.Roblox_team
-
-	local function on_character_loaded(): ()
-		move_player(player, team.spawn_part.Position)
+local function setup_entity(state: state, entity: registry.entity, team: team): ()
+	if find_team_by_entity(state, entity) ~= nil then
+		return
 	end
-
-	table.insert(state.connections, player.CharacterAdded:Connect(on_character_loaded))
+	table.insert(team.entities, entity)
+	registry.set_team(entity, team.Roblox_team)
+	move_entity(entity, team.spawn_part.Position)
 end
 
-local function setup_initial_players(state: state, players: { Player }): ()
-	local index_player = 0
-	local size_players = #players
-	local index_team = 0
-	local size_teams = #state.teams
+local function setup_initial_entities(state: state, entities: { registry.entity }): ()
+	for index, entity in entities do
+		const team = state.teams[(index - 1) % #state.teams + 1]
+		setup_entity(state, entity, team)
+	end
+end
 
-	while true do
-		index_player += 1
-		if index_player > size_players then
-			return
+local function get_smallest_team(state: state): team
+	local smallest_count = math.huge
+	const smallest_teams: { team } = {}
+	for _, team in state.teams do
+		const count = #team.entities
+		if count < smallest_count then
+			smallest_count = count
+			table.clear(smallest_teams)
 		end
-		local player = players[index_player]
-
-		index_team += 1
-		index_team = (index_team - 1) % size_teams + 1
-		local team = state.teams[index_team]
-
-		setup_player(state, player, team)
+		if count == smallest_count then
+			table.insert(smallest_teams, team)
+		end
 	end
+	return smallest_teams[math.random(1, #smallest_teams)]
 end
 
-local function game_start(players: { Player }, roster: match_session.roster?): ()
+local function game_start(entities: { registry.entity }, roster: match_session.roster?): ()
 	if active == true then
 		debug_print("Can not start since the game is already running.")
 		return
@@ -393,17 +382,29 @@ local function game_start(players: { Player }, roster: match_session.roster?): (
 	active = true
 	current_state = state
 	setup_map(state)
+	local function on_character_added(_character: Model, entity: registry.entity): ()
+		const team = find_team_by_entity(state, entity)
+		if team then
+			move_entity(entity, team.spawn_part.Position)
+		end
+	end
+	state.character_connection = registry.character_added:Connect(on_character_added)
 	if roster then
 		for index, team in state.teams do
 			for _, user_id in roster[`team{index}`] do
 				const player = Players:GetPlayerByUserId(user_id)
 				if player then
-					setup_player(state, player, team)
+					setup_entity(state, player, team)
 				end
 			end
 		end
+		for _, entity in entities do
+			if type(entity) == "string" then
+				setup_entity(state, entity, get_smallest_team(state))
+			end
+		end
 	else
-		setup_initial_players(state, players)
+		setup_initial_entities(state, entities)
 	end
 	close_then_open_cages(state)
 end
@@ -411,69 +412,62 @@ end
 local function on_match_ready(): ()
 	const roster = match_session.get_roster()
 	if roster then
-		game_start(Players:GetPlayers(), roster)
+		game_start(registry.get_all(), roster)
 	end
 end
 
-if not RunService:IsStudio() then
+local start_pending = false
+
+local function start_studio_match(): ()
+	start_pending = false
+	const entities = registry.get_all()
+	if not active and #entities > 0 then
+		game_start(entities, nil)
+	end
+end
+
+local function on_entities_changed(): ()
+	if not RunService:IsStudio() then
+		return
+	end
+	if #registry.get_all() > 0 then
+		if not active and not start_pending then
+			start_pending = true
+			task.delay(5, start_studio_match)
+		end
+	elseif current_state then
+		game_stop(current_state)
+	end
+end
+
+local function on_entity_added(entity: registry.entity): ()
+	const state = current_state
+	if state and (RunService:IsStudio() or type(entity) == "string") then
+		setup_entity(state, entity, get_smallest_team(state))
+	end
+	on_entities_changed()
+end
+
+local function on_entity_removed(entity: registry.entity): ()
+	const state = current_state
+	if state then
+		const team = find_team_by_entity(state, entity)
+		if team then
+			const index = table.find(team.entities, entity)
+			if index then
+				table.remove(team.entities, index)
+			end
+		end
+	end
+	on_entities_changed()
+end
+
+registry.added:Connect(on_entity_added)
+registry.removed:Connect(on_entity_removed)
+
+if RunService:IsStudio() then
+	on_entities_changed()
+else
 	match_session.ready:Connect(on_match_ready)
 	on_match_ready()
-	return
 end
-
-local function get_smallest_team(state: state): team
-	local smallest_count = math.huge
-	local smallest_teams: { team } = {}
-
-	for _, team in state.teams do
-		local count = #team.players
-		if count == smallest_count then
-			smallest_count = count
-			table.clear(smallest_teams)
-			table.insert(smallest_teams, team)
-		elseif count < smallest_count then
-			table.insert(smallest_teams, team)
-		end
-	end
-
-	local random_smallest_team = smallest_teams[math.random(1, #smallest_teams)]
-	return random_smallest_team
-end
-
-local function add_new_player(state: state, player: Player): ()
-	local team = get_smallest_team(state)
-	setup_player(state, player, team)
-	move_player(player, team.spawn_part.Position)
-end
-
-local function on_players_changed(): ()
-	-- This used to be 2, but now it is 1 for testing purposes.
-	-- TODO: Add a way to manually start the game.
-	if total_players >= 1 then
-		if active == false then
-			local all_players = Players:GetPlayers()
-			task.delay(5, game_start, all_players)
-		end
-	else
-		if active == true then
-			assert(current_state, "Current state is missing.")
-			game_stop(current_state)
-		end
-	end
-end
-
-local function on_player_added(player: Player): ()
-	total_players += 1
-	on_players_changed()
-
-	if current_state ~= nil then
-		add_new_player(current_state, player)
-	end
-end
-Players.PlayerAdded:Connect(on_player_added)
-
-local function on_player_removing(player: Player): ()
-	total_players -= 1
-	on_players_changed()
-end
-Players.PlayerRemoving:Connect(on_player_removing)

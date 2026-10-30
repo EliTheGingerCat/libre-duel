@@ -7,8 +7,8 @@ local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.shared.cube.cube_in_hitbox)
 const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
 local debug_print = require(script.Parent.Parent.util.debug_print)
-local get_player_position = require(ReplicatedStorage.shared.player.get_player_position)
-const PLAYER_RANGE = require(ReplicatedStorage.shared.combat.PLAYER_RANGE)
+const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
+local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 
 local local_player = Players.LocalPlayer
@@ -41,7 +41,7 @@ local function place_cube(): ()
 		return
 	end
 
-	local local_position = get_player_position(local_player)
+	local local_position = get_entity_position(local_player)
 	if local_position == nil then
 		debug_print("Local position is missing.")
 		return
@@ -50,7 +50,7 @@ local function place_cube(): ()
 	local hit_position = ray_result.Position
 	local distance = (hit_position - local_position).Magnitude
 
-	if distance > PLAYER_RANGE then
+	if distance > ENTITY_RANGE then
 		debug_print("Too far.")
 		return
 	end
@@ -64,9 +64,9 @@ local function place_cube(): ()
 		return
 	end
 
-	local occupied_player = cube_in_hitbox(snapped)
-	if occupied_player then
-		debug_print("Occupied by player.")
+	local occupied_entity = cube_in_hitbox(snapped)
+	if occupied_entity then
+		debug_print("Occupied by entity.")
 		return
 	end
 

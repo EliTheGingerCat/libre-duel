@@ -1,0 +1,3 @@
+const ENTITY_RANGE = 13
+
+return ENTITY_RANGE

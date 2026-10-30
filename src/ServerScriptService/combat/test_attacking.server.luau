@@ -1,5 +1,8 @@
 local Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+
+const registry = require(ReplicatedStorage.shared.entity.registry)
 
 -- This is helpful:
 -- > local humanoid = game:GetService("Workspace"):FindFirstChild("clone of " .. game:GetService("Players"):GetPlayers()[1].Name).Humanoid humanoid.Health = humanoid.MaxHealth
@@ -22,6 +25,7 @@ if RunService:IsStudio() and ENABLED then
 
 			clone:PivotTo(character:GetPivot() * CFrame.new(Vector3.new(3, 0, 0)))
 			clone.Parent = workspace
+			registry.register_bot(clone.Name, clone)
 		end
 
 		if player.Character ~= nil and player:HasAppearanceLoaded() then
