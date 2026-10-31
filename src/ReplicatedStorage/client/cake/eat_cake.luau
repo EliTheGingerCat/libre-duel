@@ -4,8 +4,8 @@ const UserInputService = game:GetService("UserInputService")
 
 const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
-const tool_state = require(ReplicatedStorage.client.ui.tool_state)
-const TOOLS = require(ReplicatedStorage.client.ui.TOOL_LIST)
+const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
+const tool_state = require(ReplicatedStorage.client.tools.tool_state)
 
 const set_cake_state = ReplicatedStorage.remotes.set_cake_state
 

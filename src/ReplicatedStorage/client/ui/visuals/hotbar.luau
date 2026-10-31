@@ -4,8 +4,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local scale = require(script.Parent.scale)
-local tool_state = require(script.Parent.Parent.tool_state)
-const TOOLS = require(script.Parent.Parent.TOOL_LIST)
+const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
+local tool_state = require(ReplicatedStorage.client.tools.tool_state)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement

@@ -4,7 +4,7 @@ const CAKE_EATING_DURATION = require(script.Parent.CAKE_EATING_DURATION)
 
 const set_cake_state = ReplicatedStorage.remotes.set_cake_state
 
-type eating_timestamps = { [Player]: number }
+type eating_timestamps = { [Player]: number, thread }
 local eating_timestamps: eating_timestamps = {}
 
 local function heal_player(player: Player): ()
