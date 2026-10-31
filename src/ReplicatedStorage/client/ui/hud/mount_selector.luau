@@ -7,8 +7,23 @@ const WIDGET_NAMES: { [string]: string } = {
 	ComboCounter = "Combo Counter",
 	FpsCounter = "FPS Counter",
 	Paperdoll = "Paperdoll",
+	Hotbar = "Hotbar",
+	infoboard = "Infoboard",
+	Tablist = "Player List",
+	Notifications = "Notifications",
 }
-const WIDGET_ORDER = { "Keystrokes", "Mousestrokes", "FpsCounter", "ReachCounter", "ComboCounter", "Paperdoll" }
+const WIDGET_ORDER = {
+	"Keystrokes",
+	"Mousestrokes",
+	"FpsCounter",
+	"ReachCounter",
+	"ComboCounter",
+	"Paperdoll",
+	"Hotbar",
+	"infoboard",
+	"Notifications",
+	"Tablist",
+}
 
 local function mount_selector(player_gui: PlayerGui, display_order: number, on_close: () -> ())
 	local template = script.Parent.selector_template
@@ -61,7 +76,12 @@ local function mount_selector(player_gui: PlayerGui, display_order: number, on_c
 		if not screen.Enabled then
 			return
 		end
+		local shown: { [string]: boolean } = {}
 		for index, item in registry.entries do
+			if shown[item.screen.Name] then
+				continue
+			end
+			shown[item.screen.Name] = true
 			local tile = template.tile:Clone()
 			tile.Name = item.screen.Name
 			tile.Text = WIDGET_NAMES[item.screen.Name] or item.screen.Name
@@ -93,9 +113,8 @@ local function mount_selector(player_gui: PlayerGui, display_order: number, on_c
 					math.max(0.001, math.min(1, available.X / math.max(1, size.X), available.Y / math.max(1, size.Y)))
 			end
 			local function select_widget(): ()
-				item.hidden = false
-				item.refresh()
 				close()
+				registry.add(item)
 			end
 			table.insert(resize_previews, resize)
 			table.insert(tile_connections, preview:GetPropertyChangedSignal("AbsoluteSize"):Connect(resize))

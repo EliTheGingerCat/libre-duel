@@ -2,7 +2,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
-local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local scale = require(script.Parent.scale)
 local tool_state = require(script.Parent.Parent.tool_state)
@@ -355,8 +354,8 @@ local function slots_container()
 	)
 end
 
-local function hotbar()
-	local content_ref = use_editable_hud()
+local function hotbar(props: use_editable_hud.props)
+	local content_ref = use_editable_hud(hotbar, props)
 	return create_element(
 		"ScreenGui",
 		{

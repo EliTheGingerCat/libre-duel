@@ -36,7 +36,9 @@ end
 
 local function notification_remove(id: number): ()
 	local index = notification_find(id)
-	assert(index ~= nil, `Could not find index of notification of id {id}.`)
+	if index == nil then
+		return
+	end
 	table.remove(existing_notifications, index)
 	on_change:Fire()
 end

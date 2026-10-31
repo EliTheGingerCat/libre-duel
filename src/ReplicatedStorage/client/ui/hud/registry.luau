@@ -1,4 +1,8 @@
 local geometry = require(script.Parent.editor_geometry)
+local widget_copies = require(script.Parent.widget_copies)
+local widget_corners = require(script.Parent.widget_corners)
+
+export type factory = widget_copies.factory
 
 export type entry = {
 	content: GuiObject,
@@ -9,6 +13,9 @@ export type entry = {
 	multiplier: number,
 	hidden: boolean,
 	preview: Frame?,
+	corners: widget_corners.controller,
+	create: factory?,
+	on_remove: (() -> ())?,
 	refresh: () -> (),
 }
 
@@ -32,7 +39,7 @@ local function subscribe(callback: () -> ())
 	return disconnect
 end
 
-local function register(content: GuiObject, screen: ScreenGui)
+local function register(content: GuiObject, screen: ScreenGui, create: factory?, on_remove: (() -> ())?)
 	local default_position = content.Position
 	local default_anchor = content.AnchorPoint
 	local container = Instance.new("Frame")
@@ -75,10 +82,13 @@ local function register(content: GuiObject, screen: ScreenGui)
 		container = container,
 		screen = screen,
 		scale = scale,
-		layout = nil,
+		layout = if on_remove then { anchor = Vector2.new(0.5, 0.5), offset = Vector2.zero } else nil,
 		multiplier = 1,
 		hidden = false,
 		preview = nil,
+		corners = widget_corners(content),
+		create = create,
+		on_remove = on_remove,
 		refresh = refresh,
 	}
 
@@ -106,6 +116,7 @@ local function register(content: GuiObject, screen: ScreenGui)
 	notify()
 
 	local function unregister(): ()
+		item.corners.disconnect()
 		size_connection:Disconnect()
 		position_connection:Disconnect()
 		local index = table.find(entries, item)
@@ -121,7 +132,31 @@ local function register(content: GuiObject, screen: ScreenGui)
 	return unregister
 end
 
+local function add(item: entry): ()
+	if item.hidden then
+		item.hidden = false
+		item.refresh()
+		return
+	end
+	local create = item.create
+	if not create then
+		return
+	end
+	widget_copies.add(create)
+end
+
+local function remove(item: entry): ()
+	item.hidden = true
+	item.refresh()
+	if item.on_remove then
+		item.on_remove()
+	end
+end
+
 return {
+	add = add,
+	remove = remove,
+	clear_duplicates = widget_copies.clear,
 	entries = entries,
 	register = register,
 	subscribe = subscribe,

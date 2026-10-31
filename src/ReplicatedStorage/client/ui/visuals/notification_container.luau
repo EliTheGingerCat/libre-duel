@@ -1,10 +1,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
-local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local notification_management = require(script.Parent.Parent.notification_management)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
+local use_editor_enabled = require(script.Parent.Parent.hud.use_editor_enabled)
 
 local create_element = React.createElement
 type notification = notification_management.notification
@@ -13,11 +13,16 @@ local use_state = React.useState
 
 const LIFETIME_UNTIL_FADE = 3
 const FADE_DURATION = 0.5
+const EXAMPLE_NOTIFICATION: notification = { id = 0, message = "Example notification", created_at = 0 }
 
-local function use_fade_out(created_at: number): number
+local function use_fade_out(created_at: number, preview: boolean): number
 	local transparency, set_transparency = use_state(0)
 
 	local function effect_fade_out()
+		if preview then
+			set_transparency(0)
+			return
+		end
 		local time_since_creation = tick() - created_at
 		local time_until_fade = LIFETIME_UNTIL_FADE - time_since_creation
 
@@ -31,6 +36,9 @@ local function use_fade_out(created_at: number): number
 			while true do
 				local new_transparency = math.min(1, time_since_start_fading / FADE_DURATION)
 				set_transparency(new_transparency)
+				if new_transparency == 1 then
+					return
+				end
 
 				local time_waited = task.wait()
 				time_since_start_fading += time_waited
@@ -40,13 +48,16 @@ local function use_fade_out(created_at: number): number
 		local task_fade = task.spawn(thread_fade)
 
 		local function disconnect(): ()
-			task.cancel(task_fade)
+			if coroutine.status(task_fade) ~= "dead" then
+				task.cancel(task_fade)
+			end
 		end
 
 		return disconnect
 	end
 
-	use_effect(effect_fade_out, {})
+	local dependencies: { number | boolean } = { created_at, preview }
+	use_effect(effect_fade_out, dependencies)
 
 	return transparency
 end
@@ -55,15 +66,19 @@ local function notification_component(props: {
 	notification: notification,
 	index: number,
 	on_destroy: () -> (),
+	preview: boolean?,
 })
 	local notification = props.notification
 	local index = props.index
 
-	local transparency = use_fade_out(notification.created_at)
+	local transparency = use_fade_out(notification.created_at, props.preview == true)
 
-	if transparency == 1 then
-		props.on_destroy()
+	local function effect_destroy()
+		if transparency == 1 then
+			props.on_destroy()
+		end
 	end
+	use_effect(effect_destroy, { transparency == 1 })
 
 	return create_element(
 		"Frame",
@@ -139,11 +154,24 @@ local function use_notifications(): { notification }
 	return notifications
 end
 
-local function notifications_container()
-	local content_ref = use_editable_hud()
+local function notifications_container(props: use_editable_hud.props)
+	local content_ref = use_editable_hud(notifications_container, props)
+	local editor_enabled = use_editor_enabled()
 	local notifications = use_notifications()
 
 	local notification_elements = {}
+	if editor_enabled and #notifications == 0 then
+		table.insert(
+			notification_elements,
+			create_element(notification_component, {
+				key = "example",
+				notification = EXAMPLE_NOTIFICATION,
+				index = 1,
+				preview = true,
+				on_destroy = function() end,
+			})
+		)
+	end
 	local notifications_length = #notifications
 	for index, notification in notifications do
 		local display_order = notifications_length - index + 1 -- Convert to bottom-up index

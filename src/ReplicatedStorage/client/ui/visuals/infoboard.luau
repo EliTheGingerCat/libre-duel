@@ -2,8 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.Packages.react)
-local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -249,8 +247,8 @@ local function use_time_elapsed(): number
 	return time_elapsed
 end
 
-local function infoboard()
-	local content_ref = use_editable_hud()
+local function infoboard(props: use_editable_hud.props)
+	local content_ref = use_editable_hud(infoboard, props)
 	local game_is_active = use_game_is_active()
 	local kills = use_kills()
 	local map = use_map()

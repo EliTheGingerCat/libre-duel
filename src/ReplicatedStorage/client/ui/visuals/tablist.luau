@@ -203,8 +203,8 @@ local function location_display()
 	})
 end
 
-local function tablist()
-	local content_ref = use_editable_hud()
+local function tablist(props: use_editable_hud.props)
+	local content_ref = use_editable_hud(tablist, props)
 	local enabled = use_if_key_held(KEYBINDS.tablist)
 
 	return create_element(

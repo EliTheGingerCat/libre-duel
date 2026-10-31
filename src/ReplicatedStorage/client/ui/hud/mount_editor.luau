@@ -7,7 +7,7 @@ local user_input_service = game:GetService("UserInputService")
 local create_widget = require(script.Parent.editor_widget)
 local editor_state = require(script.Parent.editor_state)
 local geometry = require(script.Parent.editor_geometry)
-local mount_selector = require(script.Parent.mount_selector)
+local mount_menus = require(script.Parent.mount_menus)
 const KEYBINDS = require(script.Parent.Parent.Parent.util.KEYBINDS)
 local registry = require(script.Parent.registry)
 
@@ -38,10 +38,7 @@ local function mount_editor()
 	local saved_mouse_icon = user_input_service.MouseIconEnabled
 	local saved_camera: Camera? = nil
 	local saved_camera_type = Enum.CameraType.Custom
-	local selector_open = false
-	local selector = mount_selector(player_gui, screen.DisplayOrder + 1, function()
-		selector_open = false
-	end)
+	local menus = mount_menus(player_gui, screen.DisplayOrder + 1)
 
 	local function get_pointer(): Vector2
 		local inset = gui_service:GetGuiInset()
@@ -125,7 +122,7 @@ local function mount_editor()
 	local function update_editor(): ()
 		user_input_service.MouseBehavior = Enum.MouseBehavior.Default
 		user_input_service.MouseIconEnabled = true
-		if selector_open then
+		if menus.is_open() then
 			return
 		end
 		local pointer = get_pointer()
@@ -139,11 +136,35 @@ local function mount_editor()
 		end
 	end
 
+	local function prepare_menu(): ()
+		finish_drag()
+		hovered = nil
+		for _, view in views do
+			view.hover(false, Vector2.zero)
+		end
+	end
+
+	local function delete_widget(item: registry.entry): ()
+		if not editor_state.enabled or menus.is_open() then
+			return
+		end
+		prepare_menu()
+		registry.remove(item)
+	end
+
+	local function open_settings(item: registry.entry): ()
+		if not editor_state.enabled or menus.is_open() then
+			return
+		end
+		prepare_menu()
+		menus.open_settings(item)
+	end
+
 	local function sync_widgets(): ()
 		finish_drag()
 		hovered = nil
 		for _, view in views do
-			view.bounds:Destroy()
+			view.destroy()
 			view.item.preview = nil
 			if table.find(registry.entries, view.item) then
 				view.item.refresh()
@@ -156,7 +177,7 @@ local function mount_editor()
 		for _, item in registry.entries do
 			item.preview = preview
 			item.refresh()
-			table.insert(views, create_widget(item, template.widget_bounds, preview))
+			table.insert(views, create_widget(item, template.widget_bounds, preview, delete_widget, open_settings))
 		end
 	end
 
@@ -166,9 +187,8 @@ local function mount_editor()
 
 	local function set_enabled(enabled: boolean): ()
 		finish_drag()
-		selector_open = false
-		selector.set_enabled(false)
-		editor_state.enabled = enabled
+		menus.close()
+		editor_state.set_enabled(enabled)
 		screen.Enabled = enabled
 		if enabled then
 			saved_mouse_behavior = user_input_service.MouseBehavior
@@ -220,7 +240,7 @@ local function mount_editor()
 	end
 
 	local function on_input_began(input: InputObject): ()
-		if not editor_state.enabled or selector_open or input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+		if not editor_state.enabled or menus.is_open() or input.UserInputType ~= Enum.UserInputType.MouseButton1 then
 			return
 		end
 		local pointer = get_pointer()
@@ -229,14 +249,10 @@ local function mount_editor()
 		if not view then
 			return
 		end
-		if view.bounds.Visible and button_contains(view.delete_button, pointer) then
-			view.item.hidden = true
-			view.item.refresh()
-			view.hover(false, pointer)
-			hovered = nil
-			return
-		end
-		if view.bounds.Visible and button_contains(view.settings_button, pointer) then
+		if
+			view.bounds.Visible
+			and (button_contains(view.delete_button, pointer) or button_contains(view.settings_button, pointer))
+		then
 			return
 		end
 		local rect = view.get_rectangle()
@@ -271,16 +287,11 @@ local function mount_editor()
 	end
 
 	local function open_selector(): ()
-		if not editor_state.enabled or selector_open then
+		if not editor_state.enabled or menus.is_open() then
 			return
 		end
-		finish_drag()
-		hovered = nil
-		for _, view in views do
-			view.hover(false, Vector2.zero)
-		end
-		selector_open = true
-		selector.set_enabled(true)
+		prepare_menu()
+		menus.open_selector()
 	end
 
 	local connections = {
@@ -302,7 +313,7 @@ local function mount_editor()
 	local function disconnect(): ()
 		set_enabled(false)
 		context_action_service:UnbindAction("hud_editor_toggle")
-		selector.disconnect()
+		menus.disconnect()
 		unsubscribe()
 		for _, connection in connections do
 			connection:Disconnect()

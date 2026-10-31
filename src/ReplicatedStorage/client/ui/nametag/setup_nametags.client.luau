@@ -28,21 +28,53 @@ local function on_character_added(character: Model, entity: registry.entity): ()
 	const container = Instance.new("Folder")
 	const tree = ReactRoblox.createRoot(container)
 
-	local function render_health(health: number): ()
+	local function render(): ()
+		local team = registry.get_team(entity)
 		tree:render(ReactRoblox.createPortal(
 			create_element(nametag, {
 				adornee = head,
-				name = registry.get_name(entity),
-				extra_text = `♥ {math.round(health)}`,
+				name = if type(entity) == "string" then registry.get_name(entity) else entity.DisplayName,
+				colour = if team then team.TeamColor.Color else Color3.fromRGB(255, 255, 255),
+				extra_text = `♥ {math.round(humanoid.Health)}`,
 			}),
 			head
 		))
 	end
 
-	const health_connection = humanoid.HealthChanged:Connect(render_health)
+	local team: Team? = nil
+	local team_connection: RBXScriptConnection? = nil
+	local function on_identity_changed(): ()
+		local current_team = registry.get_team(entity)
+		if team ~= current_team then
+			if team_connection then
+				team_connection:Disconnect()
+			end
+			team = current_team
+			team_connection = if team then team:GetPropertyChangedSignal("TeamColor"):Connect(render) else nil
+		end
+		render()
+	end
+	const health_connection = humanoid.HealthChanged:Connect(render)
+	const identity_connection = registry.changed:Connect(on_identity_changed)
+	local display_name_connection: RBXScriptConnection? = nil
+	if type(entity) ~= "string" then
+		display_name_connection = entity:GetPropertyChangedSignal("DisplayName"):Connect(render)
+	end
 	local destroying_connection: RBXScriptConnection? = nil
+	local active = true
 	local function cleanup(): ()
+		if not active then
+			return
+		end
+		active = false
 		health_connection:Disconnect()
+		identity_connection:Disconnect()
+		if display_name_connection then
+			display_name_connection:Disconnect()
+		end
+		if team_connection then
+			team_connection:Disconnect()
+		end
 		if destroying_connection then
 			destroying_connection:Disconnect()
 		end
@@ -52,7 +84,7 @@ local function on_character_added(character: Model, entity: registry.entity): ()
 	end
 	cleanups[entity] = cleanup
 	destroying_connection = head.Destroying:Once(cleanup)
-	render_health(humanoid.Health)
+	on_identity_changed()
 end
 
 registry.character_added:Connect(on_character_added)

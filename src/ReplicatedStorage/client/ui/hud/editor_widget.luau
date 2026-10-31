@@ -14,9 +14,16 @@ export type view = {
 	refresh: () -> (),
 	hover: (boolean, Vector2) -> (),
 	get_rectangle: () -> geometry.rectangle,
+	destroy: () -> (),
 }
 
-local function create_widget(item: registry.entry, template: Frame, preview: Frame): view
+local function create_widget(
+	item: registry.entry,
+	template: Frame,
+	preview: Frame,
+	on_delete: (registry.entry) -> (),
+	on_settings: (registry.entry) -> ()
+): view
 	local bounds = template:Clone()
 	bounds.AnchorPoint = Vector2.zero
 	bounds.Parent = preview
@@ -65,6 +72,18 @@ local function create_widget(item: registry.entry, template: Frame, preview: Fra
 		end
 	end
 
+	local delete_connection = delete_button.Activated:Connect(function()
+		on_delete(item)
+	end)
+	local settings_connection = settings_button.Activated:Connect(function()
+		on_settings(item)
+	end)
+	local function destroy(): ()
+		delete_connection:Disconnect()
+		settings_connection:Disconnect()
+		bounds:Destroy()
+	end
+
 	return {
 		item = item,
 		bounds = bounds,
@@ -73,6 +92,7 @@ local function create_widget(item: registry.entry, template: Frame, preview: Fra
 		refresh = refresh,
 		hover = hover,
 		get_rectangle = get_rectangle,
+		destroy = destroy,
 	}
 end
 

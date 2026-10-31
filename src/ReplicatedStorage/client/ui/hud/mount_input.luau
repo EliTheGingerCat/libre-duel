@@ -12,38 +12,37 @@ const RELEASED_COLOUR = Color3.new(17 / 255, 17 / 255, 17 / 255)
 const PRESSED_KEY_COLOUR = Color3.new(80 / 255, 80 / 255, 80 / 255)
 const PRESSED_MOUSE_COLOUR = Color3.new(40 / 255, 40 / 255, 40 / 255)
 
-local function mount_input(keystrokes: Frame, mousestrokes: Frame)
+local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 	local keys: { [Enum.KeyCode]: GuiObject } = {}
 	for _, key_code in { Enum.KeyCode.W, Enum.KeyCode.A, Enum.KeyCode.S, Enum.KeyCode.D, Enum.KeyCode.Space } do
-		local key = keystrokes:FindFirstChild(key_code.Name)
-		assert(key and key:IsA("GuiObject"))
-		keys[key_code] = key
+		if keystrokes then
+			local key = keystrokes:FindFirstChild(key_code.Name)
+			assert(key and key:IsA("GuiObject"))
+			keys[key_code] = key
+		end
 	end
-	local left = mousestrokes:FindFirstChild("Lmb")
-	local right = mousestrokes:FindFirstChild("Rmb")
-	assert(left and left:IsA("TextLabel"))
-	assert(right and right:IsA("TextLabel"))
-	local buttons: { [Enum.UserInputType]: mouse_button } = {
-		[Enum.UserInputType.MouseButton1] = {
-			label = left,
-			name = "Left",
-			pressed = false,
-			clicks = {},
-		},
-		[Enum.UserInputType.MouseButton2] = {
-			label = right,
-			name = "Right",
-			pressed = false,
-			clicks = {},
-		},
-	}
-	local top = mousestrokes:FindFirstChild("Top")
-	assert(top and top:IsA("ImageLabel"))
-	local point = top:FindFirstChild("Point")
-	assert(point and point:IsA("Frame"))
+	local buttons: { [Enum.UserInputType]: mouse_button } = {}
+	local point: Frame? = nil
+	if mousestrokes then
+		for input_type, name in { [Enum.UserInputType.MouseButton1] = "Lmb", [Enum.UserInputType.MouseButton2] = "Rmb" } do
+			local label = mousestrokes:FindFirstChild(name)
+			assert(label and label:IsA("TextLabel"))
+			buttons[input_type] = {
+				label = label,
+				name = if name == "Lmb" then "Left" else "Right",
+				pressed = false,
+				clicks = {},
+			}
+		end
+		local top = mousestrokes:FindFirstChild("Top")
+		assert(top and top:IsA("ImageLabel"))
+		local child = top:FindFirstChild("Point")
+		assert(child and child:IsA("Frame"))
+		child.AnchorPoint = Vector2.new(0.5, 0.5)
+		point = child
+	end
 	local pending_delta = Vector2.zero
 	local displayed_delta = Vector2.zero
-	point.AnchorPoint = Vector2.new(0.5, 0.5)
 
 	local function update_button(button: mouse_button): ()
 		local count = #button.clicks
@@ -65,7 +64,9 @@ local function mount_input(keystrokes: Frame, mousestrokes: Frame)
 		end
 		pending_delta = Vector2.zero
 		displayed_delta = Vector2.zero
-		point.Position = UDim2.fromScale(0.5, 0.5)
+		if point then
+			point.Position = UDim2.fromScale(0.5, 0.5)
+		end
 	end
 
 	local function on_input_began(input: InputObject, processed: boolean): ()
@@ -108,7 +109,9 @@ local function mount_input(keystrokes: Frame, mousestrokes: Frame)
 		)
 		pending_delta = Vector2.zero
 		displayed_delta = displayed_delta:Lerp(target, 1 - math.exp(-25 * delta_time))
-		point.Position = UDim2.fromScale(0.5 + displayed_delta.X, 0.5 + displayed_delta.Y)
+		if point then
+			point.Position = UDim2.fromScale(0.5 + displayed_delta.X, 0.5 + displayed_delta.Y)
+		end
 
 		local cutoff = os.clock() - 1
 		for _, button in buttons do

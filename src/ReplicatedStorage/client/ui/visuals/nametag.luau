@@ -10,6 +10,7 @@ local function nametag(props: {
 	adornee: BasePart | Attachment,
 	extra_text: string,
 	name: string,
+	colour: Color3,
 })
 	return create_element(
 		"BillboardGui",
@@ -37,7 +38,7 @@ local function nametag(props: {
 				Position = UDim2.fromScale(0.5, 1),
 				Size = UDim2.fromScale(0, 0.6),
 				Text = `{PADDING_CHARACTER}{props.name}{PADDING_CHARACTER}`,
-				TextColor3 = Color3.fromRGB(0, 255, 225),
+				TextColor3 = props.colour,
 				TextScaled = true,
 				TextSize = 100,
 				TextWrapped = true,
@@ -57,7 +58,7 @@ local function nametag(props: {
 				},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 255, 216)),
+						ColorSequenceKeypoint.new(0, props.colour),
 						ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
 					}),
 					Rotation = -90,
