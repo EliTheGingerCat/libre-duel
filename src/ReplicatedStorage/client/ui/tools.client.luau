@@ -1,5 +1,7 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
+local pull_bow = require(ReplicatedStorage.client.bow.pull_bow)
 local attack_melee = require(script.Parent.Parent.combat.attack_melee)
 local dissolve_cube = require(script.Parent.Parent.cube.dissolve_cube)
 local editor_state = require(script.Parent.hud.editor_state)
@@ -41,6 +43,7 @@ local function on_input_began(input: InputObject): ()
 		elseif tool_selected == "dissolver" then
 			dissolve_cube()
 		elseif tool_selected == "bow" then
+			pull_bow()
 		end
 	end
 end
