@@ -4,6 +4,7 @@ local UserInputService = game:GetService("UserInputService")
 local pull_bow = require(ReplicatedStorage.client.bow.pull_bow)
 local attack_melee = require(script.Parent.Parent.combat.attack_melee)
 local dissolve_cube = require(script.Parent.Parent.cube.dissolve_cube)
+local eat_cake = require(script.Parent.Parent.cake.eat_cake)
 local editor_state = require(script.Parent.hud.editor_state)
 const KEYBINDS = require(script.Parent.Parent.util.KEYBINDS)
 local place_cube = require(script.Parent.Parent.cube.place_cube)
@@ -17,6 +18,7 @@ local tool_selected: tool? = nil
 
 local function set_tool(slot: number): ()
 	tool_selected = TOOLS[slot]
+	tool_state.current = slot
 	tool_state.on_change:Fire(slot)
 end
 
@@ -44,6 +46,8 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 			dissolve_cube()
 		elseif tool_selected == "bow" then
 			pull_bow()
+		elseif tool_selected == "cake" then
+			eat_cake()
 		end
 	end
 end

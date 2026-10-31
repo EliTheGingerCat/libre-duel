@@ -36,7 +36,7 @@ local function pull_bow(): ()
 	draw_character = character
 end
 
--- The suffix distinguishes this function from the shoot_bow remote.
+-- i added "f" to stop lua from thinking i'm reffering to the remote (short for function)
 local function shoot_bow_f(character: Model, dt: number): ()
 	const head = character:FindFirstChild("Head")
 	if head == nil or not head:IsA("BasePart") then
@@ -49,7 +49,6 @@ local function shoot_bow_f(character: Model, dt: number): ()
 
 	const origin = head.Position
 	local direction = (Mouse.Hit.Position - origin).Unit
-	print("shot")
 	shoot_bow:InvokeServer(origin, direction, dt)
 end
 
