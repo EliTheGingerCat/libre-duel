@@ -85,6 +85,7 @@ local function use_character(): Model?
 		end
 
 		local connection_character_removing = local_player.CharacterRemoving:Connect(on_character_removing)
+		set_character(local_player.Character)
 
 		local function disconnect(): ()
 			connection_character_added:Disconnect()
@@ -100,7 +101,9 @@ local function use_character(): Model?
 		local connection_character_destroying: RBXScriptConnection?
 		if character ~= nil then
 			local function on_character_destroying(): ()
-				set_character(nil)
+				set_character(function(current)
+					return if current == character then nil else current
+				end)
 			end
 
 			connection_character_destroying = character.Destroying:Connect(on_character_destroying)
@@ -124,12 +127,39 @@ end
 
 local function use_humanoid(): Humanoid?
 	local character = use_character()
+	local humanoid: Humanoid?, set_humanoid: state_setter<Humanoid?> =
+		use_state(if character then character:FindFirstChildOfClass("Humanoid") else nil)
 
-	if character == nil then
-		return nil
+	local function effect_humanoid()
+		if character == nil then
+			set_humanoid(nil)
+			return
+		end
+
+		local function update_humanoid(): ()
+			set_humanoid(character:FindFirstChildOfClass("Humanoid"))
+		end
+
+		local function on_child_changed(child: Instance): ()
+			if child:IsA("Humanoid") then
+				update_humanoid()
+			end
+		end
+
+		local connection_child_added = character.ChildAdded:Connect(on_child_changed)
+		local connection_child_removed = character.ChildRemoved:Connect(on_child_changed)
+		update_humanoid()
+
+		local function disconnect(): ()
+			connection_child_added:Disconnect()
+			connection_child_removed:Disconnect()
+		end
+
+		return disconnect
 	end
 
-	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	use_effect(effect_humanoid, { character })
+
 	return humanoid
 end
 

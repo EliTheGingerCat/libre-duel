@@ -128,6 +128,8 @@ local function on_invoke(player: Player, origin: unknown, direction: unknown, dt
 		attack_entity(player, player, math.clamp(BOW_DAMAGE / 2 * dt, 5, BOW_DAMAGE), {
 			direction = root.CFrame.LookVector,
 		})
+		-- was not actually failed, just returning false because i don't want to waste raycasts
+		return false
 	end
 
 	const cast_params = RaycastParams.new()

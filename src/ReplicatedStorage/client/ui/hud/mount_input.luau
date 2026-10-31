@@ -100,8 +100,12 @@ local function mount_input(keystrokes: Frame, mousestrokes: Frame)
 	end
 
 	local function on_render(delta_time: number): ()
-		local target =
-			Vector2.new(math.clamp(pending_delta.X / 40, -0.42, 0.42), math.clamp(pending_delta.Y / 40, -0.38, 0.38))
+		-- Keep the 60 FPS sensitivity consistent across frame rates.
+		local normalized_delta = if delta_time > 0 then pending_delta / (60 * delta_time) else Vector2.zero
+		local target = Vector2.new(
+			math.clamp(normalized_delta.X / 40, -0.42, 0.42),
+			math.clamp(normalized_delta.Y / 40, -0.38, 0.38)
+		)
 		pending_delta = Vector2.zero
 		displayed_delta = displayed_delta:Lerp(target, 1 - math.exp(-25 * delta_time))
 		point.Position = UDim2.fromScale(0.5 + displayed_delta.X, 0.5 + displayed_delta.Y)

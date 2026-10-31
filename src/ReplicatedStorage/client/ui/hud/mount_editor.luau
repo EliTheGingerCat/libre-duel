@@ -7,6 +7,7 @@ local user_input_service = game:GetService("UserInputService")
 local create_widget = require(script.Parent.editor_widget)
 local editor_state = require(script.Parent.editor_state)
 local geometry = require(script.Parent.editor_geometry)
+local mount_selector = require(script.Parent.mount_selector)
 const KEYBINDS = require(script.Parent.Parent.Parent.util.KEYBINDS)
 local registry = require(script.Parent.registry)
 
@@ -24,7 +25,9 @@ local function mount_editor()
 	local template = script.Parent.editor_template
 	local screen = template.screen:Clone()
 	local preview = screen:FindFirstChild("Bounds")
+	local new_button = screen:FindFirstChild("new_button")
 	assert(preview and preview:IsA("Frame"))
+	assert(new_button and new_button:IsA("TextButton"))
 	local player_gui = players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
 	assert(player_gui)
 	screen.Parent = player_gui
@@ -35,6 +38,10 @@ local function mount_editor()
 	local saved_mouse_icon = user_input_service.MouseIconEnabled
 	local saved_camera: Camera? = nil
 	local saved_camera_type = Enum.CameraType.Custom
+	local selector_open = false
+	local selector = mount_selector(player_gui, screen.DisplayOrder + 1, function()
+		selector_open = false
+	end)
 
 	local function get_pointer(): Vector2
 		local inset = gui_service:GetGuiInset()
@@ -118,6 +125,9 @@ local function mount_editor()
 	local function update_editor(): ()
 		user_input_service.MouseBehavior = Enum.MouseBehavior.Default
 		user_input_service.MouseIconEnabled = true
+		if selector_open then
+			return
+		end
 		local pointer = get_pointer()
 		update_drag(pointer)
 		for _, view in views do
@@ -156,6 +166,8 @@ local function mount_editor()
 
 	local function set_enabled(enabled: boolean): ()
 		finish_drag()
+		selector_open = false
+		selector.set_enabled(false)
 		editor_state.enabled = enabled
 		screen.Enabled = enabled
 		if enabled then
@@ -197,12 +209,18 @@ local function mount_editor()
 		sync_widgets()
 	end
 
-	local function on_input_began(input: InputObject, processed: boolean): ()
-		if input.KeyCode == KEYBINDS.hud_editor and not processed and user_input_service:GetFocusedTextBox() == nil then
-			set_enabled(not editor_state.enabled)
-			return
+	local function toggle_editor(_action_name: string, input_state: Enum.UserInputState): Enum.ContextActionResult
+		if user_input_service:GetFocusedTextBox() ~= nil then
+			return Enum.ContextActionResult.Pass
 		end
-		if not editor_state.enabled or input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+		if input_state == Enum.UserInputState.Begin then
+			set_enabled(not editor_state.enabled)
+		end
+		return Enum.ContextActionResult.Sink
+	end
+
+	local function on_input_began(input: InputObject): ()
+		if not editor_state.enabled or selector_open or input.UserInputType ~= Enum.UserInputType.MouseButton1 then
 			return
 		end
 		local pointer = get_pointer()
@@ -252,16 +270,39 @@ local function mount_editor()
 		end
 	end
 
+	local function open_selector(): ()
+		if not editor_state.enabled or selector_open then
+			return
+		end
+		finish_drag()
+		hovered = nil
+		for _, view in views do
+			view.hover(false, Vector2.zero)
+		end
+		selector_open = true
+		selector.set_enabled(true)
+	end
+
 	local connections = {
+		new_button.Activated:Connect(open_selector),
 		user_input_service.InputBegan:Connect(on_input_began),
 		user_input_service.InputEnded:Connect(on_input_ended),
 		user_input_service.WindowFocusReleased:Connect(finish_drag),
 		preview:GetPropertyChangedSignal("AbsoluteSize"):Connect(on_size_changed),
 	}
+	context_action_service:BindActionAtPriority(
+		"hud_editor_toggle",
+		toggle_editor,
+		false,
+		Enum.ContextActionPriority.High.Value + 1,
+		KEYBINDS.hud_editor
+	)
 	local unsubscribe = registry.subscribe(sync_widgets)
 
 	local function disconnect(): ()
 		set_enabled(false)
+		context_action_service:UnbindAction("hud_editor_toggle")
+		selector.disconnect()
 		unsubscribe()
 		for _, connection in connections do
 			connection:Disconnect()
