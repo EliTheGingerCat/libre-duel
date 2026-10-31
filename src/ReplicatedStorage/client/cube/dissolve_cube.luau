@@ -1,20 +1,17 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 const CUBE_DISSOLVE_TIME = require(ReplicatedStorage.shared.cube.CUBE_DISSOLVE_TIME)
 local debug_print = require(script.Parent.Parent.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
-const KEYBINDS = require(script.Parent.Parent.util.KEYBINDS)
 const TRANSPARENCY_MAXIMUM = require(script.Parent.TRANSPARENCY_MAXIMUM)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
 
-local connection_input: RBXScriptConnection?
 local connection_heartbeat_passive: RBXScriptConnection?
 
 -- This whole id system is probably not necessary since RemoteEvent communication travels in order and Luau is single-threaded, but this system is already so complicated that I want this as a safeguard against insanity.
@@ -105,7 +102,7 @@ local function dissolve_stop(state: state_local): ()
 	cleanup_all(state)
 end
 
-local dissolve_start
+local dissolve_start: (Instance?) -> ()
 local function dissolve_new_cube(state: state_local, cube: BasePart): ()
 	dissolve_stop(state)
 	dissolve_start(cube)
@@ -116,10 +113,11 @@ local function on_heartbeat_passive(): ()
 	dissolve_start(cube)
 end
 
-local activate_input_ended
 local function activate_heartbeat_passive(): ()
+	if connection_heartbeat_passive ~= nil then
+		return
+	end
 	connection_heartbeat_passive = RunService.Heartbeat:Connect(on_heartbeat_passive)
-	activate_input_ended()
 	debug_print("Activated passive heartbeat.")
 end
 
@@ -137,27 +135,11 @@ local function local_dissolving_finished(state: state_local): ()
 	activate_heartbeat_passive()
 end
 
-local function on_input_ended(input: InputObject): ()
-	if input.UserInputType == KEYBINDS.tool_use then
-		if local_dissolving ~= nil then
-			dissolve_stop(local_dissolving)
-		end
-
-		disable_heartbeat_passive()
-
-		assert(connection_input, "language analysis")
-		connection_input:Disconnect()
-		connection_input = nil
+local function stop(): ()
+	if local_dissolving ~= nil then
+		dissolve_stop(local_dissolving)
 	end
-end
-
-activate_input_ended = function(): ()
-	if connection_input ~= nil then
-		debug_print("`input_ended` is already connected.")
-		return
-	end
-
-	connection_input = UserInputService.InputEnded:Connect(on_input_ended)
+	disable_heartbeat_passive()
 end
 
 -- If the return value is false, the client will stop dissolving.
@@ -237,11 +219,15 @@ local function on_heartbeat_active(): ()
 	end
 end
 
-dissolve_start = function(cube: BasePart): ()
+local function start_cube(cube: Instance?): ()
 	local fail_message = can_dissolve(cube)
 	local failed = fail_message ~= nil
 	if failed == true then
 		debug_print(`Failed to start dissolving: {fail_message}`)
+		return
+	end
+
+	if cube == nil or not cube:IsA("Part") then
 		return
 	end
 
@@ -252,13 +238,9 @@ dissolve_start = function(cube: BasePart): ()
 
 	disable_heartbeat_passive()
 
-	if connection_input == nil then
-		activate_input_ended()
-	end
-
 	id += 1
 
-	local cube_target: Part = cube :: any
+	const cube_target = cube
 	local connection_heartbeat = RunService.Heartbeat:Connect(on_heartbeat_active)
 	local time_start = tick()
 
@@ -285,6 +267,8 @@ dissolve_start = function(cube: BasePart): ()
 
 	ReplicatedStorage.remotes.dissolve_cube:FireServer(id, cube)
 end
+
+dissolve_start = start_cube
 
 local function on_dissolve_suceeded(id: number): ()
 	local state: state_pending? = find_by_id(id)
@@ -313,4 +297,7 @@ end
 ReplicatedStorage.remotes.dissolve_finished.OnClientEvent:Connect(on_dissolve_suceeded)
 ReplicatedStorage.remotes.dissolve_failed.OnClientEvent:Connect(on_dissolve_failed)
 
-return activate_heartbeat_passive
+return {
+	start = activate_heartbeat_passive,
+	stop = stop,
+}

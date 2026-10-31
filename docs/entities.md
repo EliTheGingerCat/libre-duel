@@ -45,13 +45,3 @@ cooldowns and pending dissolving operations and frees its Bridge team slot.
 Unregistering does not destroy the character or its hitboxes. Bot AI, spawning,
 and respawning remain the caller's responsibility; register each replacement
 character after unregistering the previous one.
-
-## Verification in Studio
-
-Start a playtest with a player and a registered humanoid bot. Check that both
-appear in the tab list, receive nametags, and join Bridge teams. Verify that each
-can score against the opposing goal and that cages move both characters. Check
-player-to-bot, bot-to-player, and bot-to-bot attacks, including friendly fire,
-range, death, and cooldown rejection. Test bot block placement and dissolving,
-then remove a bot during dissolving and confirm that its progress clears. Finally,
-respawn a player and register a replacement bot to check character setup again.

@@ -1,11 +1,11 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const LOADOUT = require(ReplicatedStorage.client.tools.LOADOUT)
+local React = require(ReplicatedStorage.Packages.react)
 local scale = require(script.Parent.scale)
-local tool_state = require(script.Parent.Parent.tool_state)
-const TOOLS = require(script.Parent.Parent.TOOL_LIST)
+const tool_state = require(ReplicatedStorage.client.tools.state)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -331,7 +331,7 @@ local function slots_container()
 		slots[id] = create_element(slot, {
 			active = id == active_slot,
 			id = id,
-			text = TOOLS[id] :: string or "",
+			text = LOADOUT[id] or "",
 		})
 	end
 
