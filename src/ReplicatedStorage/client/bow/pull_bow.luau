@@ -1,60 +1,84 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
+const Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const UserInputService = game:GetService("UserInputService")
 
-local FastCast2 = require(ReplicatedStorage.Packages:WaitForChild("FastCast2"))
-local registry = require(ReplicatedStorage.shared.entity.registry)
-local BEHAVIOUR = require(ReplicatedStorage.shared.bow.bow_fastcast_behaviour)
+const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
+const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+const tool_state = require(ReplicatedStorage.client.ui.tool_state)
+const TOOLS = require(ReplicatedStorage.client.ui.TOOL_LIST)
 
-local shoot_bow = ReplicatedStorage.remotes.shoot_bow
+const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
-type hit_handler = (unknown, RaycastResult, Vector3, Instance?) -> ()
-type caster_api = {
-	Hit: {
-		Connect: (self: unknown, callback: hit_handler) -> unknown,
-	},
-	RaycastFire: (self: unknown, Vector3, Vector3, number, typeof(FastCast2.newBehavior())) -> unknown,
-}
+const player = Players.LocalPlayer
+const Mouse = player:GetMouse()
 
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local Head = character:WaitForChild("Head")
-local Mouse = player:GetMouse()
+local draw_started: number? = nil
+local draw_character: Model? = nil
 
-local CastParams = RaycastParams.new()
-CastParams.FilterDescendantsInstances = { character }
-CastParams.FilterType = Enum.RaycastFilterType.Exclude
-CastParams.IgnoreWater = true
+local function cancel_draw(): ()
+	draw_started = nil
+	draw_character = nil
+end
 
-local behavior = FastCast2.newBehavior()
-behavior.MaxDistance = BEHAVIOUR.MAX_PROJ_DISTANCE
-behavior.RaycastParams = CastParams
-behavior.HighFidelityBehavior = BEHAVIOUR.HD_BEHAVIOUR
-behavior.HighFidelitySegmentSize = BEHAVIOUR.HD_SEGMENT_SIZE
-behavior.Acceleration = BEHAVIOUR.ACCELERATION
-behavior.CosmeticBulletContainer = BEHAVIOUR.BULLET_CONTAINER
-behavior.CosmeticBulletTemplate = BEHAVIOUR.BULLET_TEMPLATE
-
-const caster = (FastCast2.new() :: unknown) :: caster_api
-FastCast2.Init("BulkMoveTo")
-
-local function on_hit(_cast: unknown, result: RaycastResult, _velocity: Vector3, _bullet: Instance?): ()
-	const character = result.Instance:FindFirstAncestorOfClass("Model")
+local function pull_bow(): ()
+	if editor_state.enabled or TOOLS[tool_state.current] ~= "bow" then
+		return
+	end
+	const character = player.Character
 	if character == nil then
 		return
 	end
-	const target = registry.from_character(character)
-	if target == nil then
+	const humanoid = character:FindFirstChildOfClass("Humanoid")
+	if humanoid == nil or humanoid.Health <= 0 then
 		return
 	end
-	print(`Hit: {registry.get_name(target)}`)
+	draw_started = os.clock()
+	draw_character = character
 end
-caster.Hit:Connect(on_hit)
 
-local function pull_bow(): ()
-	local origin = Head.Position
+-- The suffix distinguishes this function from the shoot_bow remote.
+local function shoot_bow_f(character: Model, dt: number): ()
+	const head = character:FindFirstChild("Head")
+	if head == nil or not head:IsA("BasePart") then
+		return
+	end
+	const humanoid = character:FindFirstChildOfClass("Humanoid")
+	if humanoid == nil or humanoid.Health <= 0 then
+		return
+	end
+
+	const origin = head.Position
 	local direction = (Mouse.Hit.Position - origin).Unit
-	caster:RaycastFire(origin, direction, BEHAVIOUR.SPEED, behavior)
-	shoot_bow:InvokeServer(origin, direction)
+	print("shot")
+	shoot_bow:InvokeServer(origin, direction, dt)
 end
+
+local function on_input_ended(input: InputObject, game_processed: boolean): ()
+	if input.UserInputType ~= KEYBINDS.tool_use then
+		return
+	end
+
+	const started = draw_started
+	const character = draw_character
+	cancel_draw()
+	if game_processed or editor_state.enabled or TOOLS[tool_state.current] ~= "bow" then
+		return
+	end
+	if started == nil or character == nil or character ~= player.Character then
+		return
+	end
+	shoot_bow_f(character, os.clock() - started)
+end
+
+local function on_tool_changed(slot: number): ()
+	if TOOLS[slot] ~= "bow" then
+		cancel_draw()
+	end
+end
+
+UserInputService.InputEnded:Connect(on_input_ended)
+UserInputService.WindowFocusReleased:Connect(cancel_draw)
+player.CharacterRemoving:Connect(cancel_draw)
+tool_state.on_change:Connect(on_tool_changed)
 
 return pull_bow

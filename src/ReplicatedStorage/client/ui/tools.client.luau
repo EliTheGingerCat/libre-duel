@@ -25,8 +25,8 @@ set_tool(tool_cube or 1)
 
 local key_to_slot = table_flip(KEYBINDS.slot)
 
-local function on_input_began(input: InputObject): ()
-	if editor_state.enabled then
+local function on_input_began(input: InputObject, game_processed: boolean): ()
+	if game_processed or editor_state.enabled then
 		return
 	end
 

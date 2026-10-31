@@ -4,6 +4,7 @@ const ServerScriptService = game:GetService("ServerScriptService")
 const add_cooldown = require(ReplicatedStorage.shared.cooldown.add_cooldown)
 const apply_hit_highlight = require(script.Parent.apply_hit_highlight)
 const apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
+const BOW_DAMAGE = require(ServerScriptService.bow.BOW_DAMAGE)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(script.Parent.ENTITY_RANGE_SERVER)
 const get_player_cps = require(ServerScriptService.mitigation.get_player_cps)
@@ -13,9 +14,14 @@ const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONF
 const play_sound = require(ServerScriptService.util.play_sound)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 const SWORD_COOLDOWN_SERVER = require(script.Parent.SWORD_COOLDOWN_SERVER)
-const SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.SWORD_DAMAGE)
 
-local function attack_entity(attacker: registry.entity, target: registry.entity): boolean
+type projectile_hit = {
+	direction: Vector3,
+}
+
+-- Projectile hits must come from a server cast, rather than a client-supplied target.
+local function attack_entity(attacker: registry.entity, target: registry.entity, damage: number,  hit: projectile_hit?): boolean
+	const is_melee = hit == nil
 	const target_character = registry.get_character(target)
 	if target_character == nil or not target_character:IsDescendantOf(workspace) then
 		debug_print("Target character not found in Workspace.")
@@ -66,20 +72,20 @@ local function attack_entity(attacker: registry.entity, target: registry.entity)
 
 	const attacker_position = attacker_root.CFrame.Position
 
-	if is_on_cooldown(attacker, "attack_melee") then
+	if is_melee and is_on_cooldown(attacker, "attack_melee") then
 		debug_print("Attacker is on cooldown.")
 		return false
 	end
 
-	if is_on_cooldown(attacker, "attack_melee_mitigation") then
+	if is_melee and is_on_cooldown(attacker, "attack_melee_mitigation") then
 		debug_print("Attacker is mitigated.")
 		return false
 	end
 
 	--i'm surprised this basic sanity check was not yet added
 	--credits to nothm for finding
-	if attacker_character == target_character then
-		if type(attacker) ~= "string" then
+	if is_melee and attacker_character == target_character then
+		if is_melee and type(attacker) ~= "string" then
 			attacker:Kick("Cheating")
 		end
 		return false
@@ -87,19 +93,20 @@ local function attack_entity(attacker: registry.entity, target: registry.entity)
 
 	const attacker_team = registry.get_team(attacker)
 	const target_team = registry.get_team(target)
-	if attacker_team ~= nil and attacker_team == target_team then
+	if attacker_team ~= nil and attacker_team == target_team and attacker ~= target then
 		debug_print("Attacker and target are on the same team.")
 		return false
 	end
 
 	const distance = (target_position - attacker_position).Magnitude
-	if distance > ENTITY_RANGE_SERVER then
+	if is_melee and distance > ENTITY_RANGE_SERVER then
 		debug_print("Too far.")
 		return false
 	end
 
 	if
-		type(attacker) ~= "string"
+		is_melee
+		and type(attacker) ~= "string"
 		and get_player_cps(attacker) >= MITIGATION_CONFIG.cps_treshold
 		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
 	then
@@ -109,15 +116,23 @@ local function attack_entity(attacker: registry.entity, target: registry.entity)
 	end
 	debug_print("Attack success.")
 
-	target_humanoid.Health -= SWORD_DAMAGE
+	target_humanoid.Health -= damage
 
-	apply_knockback(attacker_root.CFrame.LookVector, target_root, knockback_multiplier.X, knockback_multiplier.Y)
+	local hit_no_y: Vector3
+	if hit then
+		hit_no_y = Vector3.new(hit.direction.X, 0, hit.direction.Z)
+	end
+
+	const direction = if hit_no_y then hit_no_y else attacker_root.CFrame.LookVector
+	apply_knockback(direction, target_root, knockback_multiplier.X, knockback_multiplier.Y)
 
 	apply_hit_highlight(target_character, 0.6)
 
 	play_sound("player_damaged", target_position)
 
-	add_cooldown(attacker, "attack_melee", SWORD_COOLDOWN_SERVER)
+	if is_melee then
+		add_cooldown(attacker, "attack_melee", SWORD_COOLDOWN_SERVER)
+	end
 	return true
 end
 

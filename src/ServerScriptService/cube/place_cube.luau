@@ -71,7 +71,7 @@ local function place_cube(entity: registry.entity, cube_position: Vector3): bool
 
 	const clone = create_cube()
 	clone.Position = cube_position
-	clone.Parent = workspace
+	clone.Parent = workspace.runtime_instances.cubes
 	play_sound("cube_place", cube_position)
 
 	return true

@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local signal = require(ReplicatedStorage.Packages.signal)
 
-local on_change: signal.Signal<number> = signal.new()
+local on_change = signal.new()
 
 local state = {
 	current = 1,

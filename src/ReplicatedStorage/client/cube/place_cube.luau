@@ -72,7 +72,7 @@ local function place_cube(): ()
 
 	local cube_temporary = create_cube()
 	cube_temporary.Position = snapped
-	cube_temporary.Parent = workspace
+	cube_temporary.Parent = workspace.runtime_instances.cubes
 
 	local success: boolean = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
 

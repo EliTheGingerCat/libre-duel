@@ -1,4 +1,5 @@
 const ALLOWED_NAMES = {
+	"attack_bow",
 	"attack_melee",
 	"attack_melee_mitigation",
 	"place_cube",
