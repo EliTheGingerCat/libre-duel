@@ -21,16 +21,12 @@ local function heal_player(player: Player): ()
 	humanoid.Health = 100
 end
 
-local thread_returned: boolean
-
 local function check_eating_finished(player: Player): boolean
 	task.wait(CAKE_EATING_DURATION)
 	if eating_timestamps[player]["time"] and os.time() - eating_timestamps[player]["time"] >= CAKE_EATING_DURATION then
 		heal_player(player)
-		thread_returned = true
 		return true
 	end
-	thread_returned = false
 	return false
 end
 
@@ -38,6 +34,7 @@ set_cake_state.OnServerInvoke = function(player, new_state: boolean)
 	local eating_state = eating_timestamps[player]
 	if eating_state ~= nil then
 		local thread = eating_state.thread
+		-- this is not necessary, i just don't want threads to stack up (it's probably a negligible performance hit, but small things add up!)
 		if thread ~= nil then
 			task.cancel(thread)
 		end
@@ -51,7 +48,13 @@ set_cake_state.OnServerInvoke = function(player, new_state: boolean)
 			thread = nil,
 		}
 		eating_timestamps[player]["time"] = os.time()
-		local thread = task.spawn(check_eating_finished, player)
+
+		local thread_returned: boolean
+
+		local thread = task.spawn(function()
+			thread_returned = check_eating_finished(player)
+		end)
+
 		eating_timestamps[player]["thread"] = thread
 		while coroutine.status(thread) ~= "dead" do
 			task.wait()
