@@ -3,8 +3,8 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const UserInputService = game:GetService("UserInputService")
 
 const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
+const get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
-const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
 const tool_state = require(ReplicatedStorage.client.tools.tool_state)
 
 const set_cake_state = ReplicatedStorage.remotes.set_cake_state
@@ -15,8 +15,13 @@ const character = player.Character or player.CharacterAdded:Wait()
 local eating: boolean = false
 local eating_buffer: boolean = false
 
+local function is_cake(slot: number): boolean
+	const tool = get_slot_tool(slot)
+	return tool ~= nil and tool.behaviour == "cake"
+end
+
 local function eat_cake()
-	if TOOLS[tool_state.current] == "cake" then
+	if is_cake(tool_state.current) then
 		eating = true
 		local finished = set_cake_state:InvokeServer(eating)
 		if finished then
@@ -53,7 +58,7 @@ local function on_input_ended(input: InputObject, game_processed: boolean): ()
 		return
 	end
 	eating_buffer = false
-	if game_processed or editor_state.enabled or TOOLS[tool_state.current] ~= "cake" then
+	if game_processed or editor_state.enabled or not is_cake(tool_state.current) then
 		return
 	end
 	if eating == false or character == nil or character ~= player.Character then

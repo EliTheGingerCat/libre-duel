@@ -5,11 +5,11 @@ local UserInputService = game:GetService("UserInputService")
 
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 const CUBE_DISSOLVE_TIME = require(ReplicatedStorage.shared.cube.CUBE_DISSOLVE_TIME)
-local debug_print = require(script.Parent.Parent.util.debug_print)
+local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
-const KEYBINDS = require(script.Parent.Parent.util.KEYBINDS)
-const TRANSPARENCY_MAXIMUM = require(script.Parent.TRANSPARENCY_MAXIMUM)
+const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+const TRANSPARENCY_MAXIMUM = require(ReplicatedStorage.client.cube.TRANSPARENCY_MAXIMUM)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()

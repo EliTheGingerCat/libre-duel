@@ -3,8 +3,8 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const UserInputService = game:GetService("UserInputService")
 
 const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
+const get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
-const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
 const tool_state = require(ReplicatedStorage.client.tools.tool_state)
 
 const shoot_bow = ReplicatedStorage.remotes.shoot_bow
@@ -15,13 +15,18 @@ const Mouse = player:GetMouse()
 local draw_started: number? = nil
 local draw_character: Model? = nil
 
+local function is_bow(slot: number): boolean
+	const tool = get_slot_tool(slot)
+	return tool ~= nil and tool.behaviour == "bow"
+end
+
 local function cancel_draw(): ()
 	draw_started = nil
 	draw_character = nil
 end
 
 local function pull_bow(): ()
-	if editor_state.enabled or TOOLS[tool_state.current] ~= "bow" then
+	if editor_state.enabled or not is_bow(tool_state.current) then
 		return
 	end
 	const character = player.Character
@@ -60,7 +65,7 @@ local function on_input_ended(input: InputObject, game_processed: boolean): ()
 	const started = draw_started
 	const character = draw_character
 	cancel_draw()
-	if game_processed or editor_state.enabled or TOOLS[tool_state.current] ~= "bow" then
+	if game_processed or editor_state.enabled or not is_bow(tool_state.current) then
 		return
 	end
 	if started == nil or character == nil or character ~= player.Character then
@@ -70,7 +75,7 @@ local function on_input_ended(input: InputObject, game_processed: boolean): ()
 end
 
 local function on_tool_changed(slot: number): ()
-	if TOOLS[slot] ~= "bow" then
+	if not is_bow(slot) then
 		cancel_draw()
 	end
 end

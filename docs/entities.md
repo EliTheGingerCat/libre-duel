@@ -24,8 +24,9 @@ Server bot code can call the same gameplay modules as player remote handlers:
 
 - `ServerScriptService/combat/attack_entity(attacker, target)` returns whether an
   attack succeeded. Both arguments are entities.
-- `ServerScriptService/cube/place_cube(entity, position)` returns whether a block
-  was placed.
+- `ServerScriptService/cube/place_cube(entity, position, tool_id?)` returns
+  whether a block was placed. `tool_id` selects a cube variant and defaults to
+  `"cube"`.
 - `ServerScriptService/cube/dissolve_cube.start(entity, id, cube)` starts dissolving
   and returns whether the request was accepted. Use `.stop(entity, id)` to cancel.
 

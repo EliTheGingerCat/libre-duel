@@ -3,8 +3,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local scale = require(script.Parent.scale)
-const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
 local tool_state = require(ReplicatedStorage.client.tools.tool_state)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
@@ -329,10 +329,11 @@ local function slots_container()
 
 	local slots = {}
 	for id = 1, 9 do
+		const tool = get_slot_tool(id)
 		slots[id] = create_element(slot, {
 			active = id == active_slot,
 			id = id,
-			text = TOOLS[id] :: string or "",
+			text = if tool ~= nil then tool.name else "",
 		})
 	end
 
