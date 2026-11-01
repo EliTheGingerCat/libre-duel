@@ -6,6 +6,7 @@ local attack_melee = require(script.Parent.Parent.combat.attack_melee)
 local dissolve_cube = require(script.Parent.Parent.cube.dissolve_cube)
 local editor_state = require(script.Parent.hud.editor_state)
 const KEYBINDS = require(script.Parent.Parent.util.KEYBINDS)
+local mode_selector_state = require(script.Parent.matchmaking.mode_selector_state)
 local place_cube = require(script.Parent.Parent.cube.place_cube)
 local table_flip = require(script.Parent.Parent.util.table_flip)
 local tool_state = require(script.Parent.tool_state)
@@ -35,6 +36,10 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 		set_tool(slot)
 	end
 
+	if mode_selector_state.enabled then
+		return
+	end
+
 	if input.UserInputType == KEYBINDS.tool_use then
 		if tool_selected == "sword" then
 			attack_melee()
@@ -44,6 +49,8 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 			dissolve_cube()
 		elseif tool_selected == "bow" then
 			pull_bow()
+		elseif tool_selected == "mode_selector" then
+			mode_selector_state.set_enabled(true)
 		end
 	end
 end

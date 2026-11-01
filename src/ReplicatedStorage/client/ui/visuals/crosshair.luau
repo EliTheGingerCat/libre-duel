@@ -5,6 +5,7 @@ local RunService = game:GetService("RunService")
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local editor_state = require(script.Parent.Parent.hud.editor_state)
+local mode_selector_state = require(script.Parent.Parent.matchmaking.mode_selector_state)
 
 local create_element = React.createElement
 local useState = React.useState
@@ -16,6 +17,7 @@ local function crosshair()
 	useEffect(function()
 		local conn = RunService.RenderStepped:Connect(function()
 			local isLocked = not editor_state.enabled
+				and not mode_selector_state.enabled
 				and UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter
 			setLocked(isLocked)
 			UserInputService.MouseIconEnabled = not isLocked
