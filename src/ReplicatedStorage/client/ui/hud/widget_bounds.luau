@@ -7,6 +7,9 @@ local create_element = React.createElement
 local function action_button(props: {
 	image: string,
 	anchor: number,
+	-- You could infer the side by the anchor value but I prefer this :3.
+	side: "left" | "right",
+	color: Color3Value,
 	button_ref: { current: ImageButton? },
 	on_activate: () -> (),
 })
@@ -18,10 +21,16 @@ local function action_button(props: {
 		BackgroundColor3 = Color3.new(0, 0, 0),
 		BackgroundTransparency = 0.5,
 		Image = props.image,
+		ImageColor3 = props.color,
 		BorderSizePixel = 0,
 		ZIndex = 21,
 		[React.Event.Activated] = props.on_activate,
-	}, create_element("UICorner", { CornerRadius = UDim.new(0, 8) }))
+	}, create_element("UICorner", {
+				BottomLeftRadius = if props.side == "right" then UDim.new(0, 0) else UDim.new(0, 8),
+				TopLeftRadius = if props.side == "right" then UDim.new(0, 0) else UDim.new(0, 8),
+				BottomRightRadius = if props.side == "left" then UDim.new(0, 0) else UDim.new(0, 8),
+				TopRightRadius = if props.side == "left" then UDim.new(0, 0) else UDim.new(0, 8),
+	}))
 end
 
 local function widget_bounds(props: {
@@ -65,12 +74,15 @@ local function widget_bounds(props: {
 		Delete = create_element(action_button, {
 			button_ref = props.delete_ref,
 			anchor = 1,
+			side = "left",
+			color = Color3.fromRGB(255, 84, 84),
 			image = "rbxassetid://78109412963567",
 			on_activate = props.on_delete,
 		}),
 		Settings = create_element(action_button, {
 			button_ref = props.settings_ref,
 			anchor = 0,
+			side = "right",
 			image = "rbxassetid://104330757164550",
 			on_activate = props.on_settings,
 		}),
