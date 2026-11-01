@@ -21,9 +21,7 @@ type drag_state = {
 	handle: Vector2?,
 }
 
-local function mount_editor()
-	local template = script.Parent.editor_template
-	local screen = template.screen:Clone()
+local function mount_editor(screen: ScreenGui)
 	local preview = screen:FindFirstChild("Bounds")
 	local new_button = screen:FindFirstChild("new_button")
 	assert(preview and preview:IsA("Frame"))
@@ -45,11 +43,14 @@ local function mount_editor()
 		return user_input_service:GetMouseLocation() - inset - preview.AbsolutePosition
 	end
 
-	local function preview_factor(item: registry.entry): number
-		return preview.AbsoluteSize.X / math.max(1, item.screen.AbsoluteSize.X)
+	local function preview_factor(): number
+		return preview.AbsoluteSize.X / math.max(1, screen.AbsoluteSize.X)
 	end
 
-	local function button_contains(button: ImageButton, pointer: Vector2): boolean
+	local function button_contains(button: ImageButton?, pointer: Vector2): boolean
+		if not button then
+			return false
+		end
 		return geometry.contains({
 			position = button.AbsolutePosition - preview.AbsolutePosition,
 			size = button.AbsoluteSize,
@@ -59,8 +60,8 @@ local function mount_editor()
 	local function find_hovered(pointer: Vector2): create_widget.view?
 		if hovered and not hovered.item.hidden then
 			if
-				button_contains(hovered.delete_button, pointer)
-				or button_contains(hovered.settings_button, pointer)
+				button_contains(hovered.delete_button.current, pointer)
+				or button_contains(hovered.settings_button.current, pointer)
 				or geometry.get_handle(hovered.get_rectangle(), pointer)
 			then
 				return hovered
@@ -85,7 +86,7 @@ local function mount_editor()
 			and table.find(registry.entries, current.view.item)
 		then
 			current.view.item.layout =
-				geometry.get_layout(current.rect, preview.AbsoluteSize, preview_factor(current.view.item))
+				geometry.get_layout(current.rect, preview.AbsoluteSize, preview_factor())
 			current.view.item.refresh()
 		end
 	end
@@ -114,7 +115,7 @@ local function mount_editor()
 		current.view.item.layout = {
 			anchor = current.anchor,
 			offset = (rect.position + rect.size * current.anchor - preview.AbsoluteSize * current.anchor)
-				/ preview_factor(current.view.item),
+				/ preview_factor(),
 		}
 		current.view.item.refresh()
 	end
@@ -177,7 +178,7 @@ local function mount_editor()
 		for _, item in registry.entries do
 			item.preview = preview
 			item.refresh()
-			table.insert(views, create_widget(item, template.widget_bounds, preview, delete_widget, open_settings))
+			table.insert(views, create_widget(item, preview, delete_widget, open_settings))
 		end
 	end
 
@@ -250,8 +251,8 @@ local function mount_editor()
 			return
 		end
 		if
-			view.bounds.Visible
-			and (button_contains(view.delete_button, pointer) or button_contains(view.settings_button, pointer))
+			view.bounds.current and view.bounds.current.Visible
+			and (button_contains(view.delete_button.current, pointer) or button_contains(view.settings_button.current, pointer))
 		then
 			return
 		end
@@ -318,7 +319,6 @@ local function mount_editor()
 		for _, connection in connections do
 			connection:Disconnect()
 		end
-		screen:Destroy()
 	end
 	return disconnect
 end

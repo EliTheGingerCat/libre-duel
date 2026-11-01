@@ -14,10 +14,13 @@ const next_join: { [Player]: number } = {}
 
 local function on_join(player: Player, requested_mode: unknown): boolean
 	const mode: queue_record.mode? = queue_record.parse_mode(requested_mode)
-	if RunService:IsStudio() or mode == nil or match_host.contains(player) or os.clock() < (next_join[player] or 0) then
+	if RunService:IsStudio() or mode == nil or os.clock() < (next_join[player] or 0) then
 		return false
 	end
 	next_join[player] = os.clock() + QUEUE_CONFIG.join_interval
+	if not match_host.leave_queue(player) or not queue_lobby.leave(player) then
+		return false
+	end
 	return queue_lobby.enqueue(player, mode)
 end
 

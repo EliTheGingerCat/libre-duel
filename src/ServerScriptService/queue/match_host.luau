@@ -5,6 +5,7 @@ const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
 const match_session = require(script.Parent.match_session)
 const queue_lobby = require(script.Parent.queue_lobby)
 const queue_record = require(script.Parent.queue_record)
+local queue_status = require(script.Parent.queue_status)
 const queue_store = require(script.Parent.queue_store)
 
 type record = queue_record.record
@@ -51,6 +52,7 @@ local function requeue(context: context): ()
 	end
 	queue_store.update(context.mode, context.id, cancel_match)
 	for player in context.players do
+		queue_status.clear(player)
 		task.spawn(queue_lobby.enqueue, player, context.mode)
 	end
 end
@@ -136,6 +138,7 @@ local function accept(player: Player): ()
 		return
 	end
 	context.players[player] = token
+	queue_status.start(player, mode)
 	context.next_poll = 0
 end
 
@@ -196,6 +199,9 @@ local function refresh(context: context): ()
 						roster[team_name] = user_ids
 					end
 					context.started = true
+					for player in context.players do
+						queue_status.clear(player)
+					end
 					match_session.start(roster)
 				else
 					requeue(context)
@@ -218,12 +224,9 @@ local function step(): ()
 	end
 end
 
-local function contains(player: Player): boolean
-	return validating[player] == true or (current ~= nil and current.players[player] ~= nil)
-end
-
 local function on_player_removing(player: Player): ()
 	validating[player] = nil
+	queue_status.clear(player)
 	const context = current
 	if context then
 		const token = context.players[player]
@@ -232,6 +235,16 @@ local function on_player_removing(player: Player): ()
 			task.spawn(queue_store.release, context.mode, context.id, player.UserId, token)
 		end
 	end
+end
+
+local function leave_queue(player: Player): boolean
+	if validating[player] or (current and current.started and current.players[player] ~= nil) then
+		return false
+	end
+	if current and current.players[player] ~= nil then
+		on_player_removing(player)
+	end
+	return true
 end
 
 local function leave(player: Player): boolean
@@ -256,8 +269,8 @@ match_session.finished:Connect(on_finished)
 
 return {
 	accept = accept,
-	contains = contains,
 	leave = leave,
+	leave_queue = leave_queue,
 	on_player_removing = on_player_removing,
 	step = step,
 }

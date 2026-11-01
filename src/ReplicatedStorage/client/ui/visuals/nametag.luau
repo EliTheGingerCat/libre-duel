@@ -59,7 +59,7 @@ local function nametag(props: {
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, props.colour),
-						ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0)),
+						ColorSequenceKeypoint.new(1, Color3.fromRGB(52, 52, 52)),
 					}),
 					Rotation = -90,
 				})

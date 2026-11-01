@@ -1,4 +1,4 @@
-export type tool = "sword" | "cube" | "dissolver" | "bow" | "cake"
+export type tool = "sword" | "cube" | "dissolver" | "bow" | "cake" | "mode_selector"
 
 const TOOLS: { [number]: tool } = {
 	[1] = "sword",
@@ -6,6 +6,7 @@ const TOOLS: { [number]: tool } = {
 	[3] = "dissolver",
 	[4] = "bow",
 	[5] = "cake",
+	[9] = "mode_selector",
 }
 
 return TOOLS

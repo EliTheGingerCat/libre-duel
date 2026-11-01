@@ -5,6 +5,7 @@ const TeleportService = game:GetService("TeleportService")
 
 const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
 const queue_record = require(script.Parent.queue_record)
+local queue_status = require(script.Parent.queue_status)
 const queue_store = require(script.Parent.queue_store)
 
 type mode = queue_record.mode
@@ -43,6 +44,7 @@ local function forget(ticket: ticket): ()
 		return
 	end
 	pending[ticket.player] = nil
+	queue_status.clear(ticket.player)
 	const group = groups[ticket.id]
 	if group then
 		group.tickets[ticket.player] = nil
@@ -124,6 +126,7 @@ local function enqueue(player: Player, mode: mode): boolean
 		retry_at = 0,
 	}
 	pending[player] = ticket
+	queue_status.start(player, mode)
 	local group = groups[selected.id]
 	if group == nil then
 		group = {
@@ -149,6 +152,7 @@ local function teleport_player(ticket: ticket): ()
 		return
 	end
 	ticket.teleporting = true
+	ticket.player:SetAttribute("QueueTeleporting", true)
 	ticket.attempts += 1
 	const options = Instance.new("TeleportOptions")
 	options.ReservedServerId = ticket.id
@@ -161,6 +165,7 @@ local function teleport_player(ticket: ticket): ()
 	const ok, failure = pcall(TeleportService.TeleportAsync, TeleportService, game.PlaceId, { ticket.player }, options)
 	if not ok and pending[ticket.player] == ticket then
 		ticket.teleporting = false
+		ticket.player:SetAttribute("QueueTeleporting", false)
 		ticket.retry_at = os.time() + 2 ^ ticket.attempts
 		warn(failure)
 	end
@@ -283,6 +288,7 @@ local function on_teleport_failed(
 		return
 	end
 	ticket.teleporting = false
+	player:SetAttribute("QueueTeleporting", false)
 	ticket.retry_at = os.time() + 2 ^ ticket.attempts
 	warn(failure)
 end

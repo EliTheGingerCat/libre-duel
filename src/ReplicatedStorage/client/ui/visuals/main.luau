@@ -6,6 +6,7 @@ local crosshair = require(script.Parent.crosshair)
 local gameplay_hud = require(script.Parent.gameplay_hud)
 local hotbar = require(script.Parent.hotbar)
 local infoboard = require(script.Parent.infoboard)
+local matchmaking = require(script.Parent.matchmaking)
 local notification_container = require(script.Parent.notification_container)
 local tablist = require(script.Parent.tablist)
 local version = require(script.Parent.version)
@@ -21,6 +22,7 @@ local function main()
 		create_element(gameplay_hud),
 		create_element(hotbar),
 		create_element(infoboard),
+		create_element(matchmaking),
 		create_element(notification_container),
 		create_element(tablist),
 		create_element(version)

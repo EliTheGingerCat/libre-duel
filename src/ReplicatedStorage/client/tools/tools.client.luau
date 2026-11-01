@@ -8,6 +8,7 @@ local editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 local place_cube = require(ReplicatedStorage.client.cube.place_cube)
 local pull_bow = require(ReplicatedStorage.client.bow.pull_bow)
+local mode_selector_state = require(ReplicatedStorage.client.ui.matchmaking.mode_selector_state)
 local table_flip = require(ReplicatedStorage.client.util.table_flip)
 const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
 local tool_state = require(ReplicatedStorage.client.tools.tool_state)
@@ -37,6 +38,10 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 		set_tool(slot)
 	end
 
+	if mode_selector_state.enabled then
+		return
+	end
+
 	if input.UserInputType == KEYBINDS.tool_use then
 		if tool_selected == "sword" then
 			attack_melee()
@@ -46,6 +51,8 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 			dissolve_cube()
 		elseif tool_selected == "bow" then
 			pull_bow()
+		elseif tool_selected == "mode_selector" then
+			mode_selector_state.set_enabled(true)
 		elseif tool_selected == "cake" then
 			eat_cake()
 		end

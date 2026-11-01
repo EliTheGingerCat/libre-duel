@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local notification_management = require(script.Parent.Parent.notification_management)
+local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_editor_enabled = require(script.Parent.Parent.hud.use_editor_enabled)
 
@@ -89,6 +90,7 @@ local function notification_component(props: {
 			AnchorPoint = Vector2.new(0, 1),
 			BackgroundColor3 = COLOURS.black,
 			BackgroundTransparency = 0.5 + (transparency * 0.5),
+			ZIndex = 2,
 		},
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
@@ -128,6 +130,7 @@ local function notification_component(props: {
 			TextScaled = false,
 			TextTransparency = transparency,
 			RichText = true,
+			ZIndex = 3,
 		})
 	)
 end
@@ -157,10 +160,11 @@ end
 local function notifications_container(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(notifications_container, props)
 	local editor_enabled = use_editor_enabled()
-	local notifications = use_notifications()
+	local current_notifications = use_notifications()
+	local notifications: { notification } = if props.preview then {} else current_notifications
 
 	local notification_elements = {}
-	if editor_enabled and #notifications == 0 then
+	if (editor_enabled or props.preview) and #notifications == 0 then
 		table.insert(
 			notification_elements,
 			create_element(notification_component, {
@@ -191,14 +195,15 @@ local function notifications_container(props: use_editable_hud.props)
 		)
 	end
 
-	return create_element("ScreenGui", {
+	return create_element(hud_screen, {
 		Name = "Notifications",
+		preview = props.preview,
 		ResetOnSpawn = false,
 	}, {
 		create_element("Frame", {
 			ref = content_ref,
-			AnchorPoint = Vector2.new(0, 1),
-			Position = UDim2.new(0, 15, 1, -15),
+			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0, 1),
+			Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0, 15, 1, -15),
 			Size = UDim2.new(0, 240, 0, 180),
 			BackgroundTransparency = 1,
 		}, notification_elements),
