@@ -6,7 +6,7 @@ const TOOLS: { [number]: tool } = {
 	[3] = "dissolver",
 	[4] = "bow",
 	[5] = "cake",
-	[6] = "mode_selector",
+	[9] = "mode_selector",
 }
 
 return TOOLS
