@@ -4,8 +4,8 @@ const UserInputService = game:GetService("UserInputService")
 
 const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
-const tool_state = require(ReplicatedStorage.client.ui.tool_state)
-const TOOLS = require(ReplicatedStorage.client.ui.TOOL_LIST)
+const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
+const tool_state = require(ReplicatedStorage.client.tools.tool_state)
 
 const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
@@ -36,7 +36,7 @@ local function pull_bow(): ()
 	draw_character = character
 end
 
--- The suffix distinguishes this function from the shoot_bow remote.
+-- i added "f" to stop lua from thinking i'm reffering to the remote (short for function)
 local function shoot_bow_f(character: Model, dt: number): ()
 	const head = character:FindFirstChild("Head")
 	if head == nil or not head:IsA("BasePart") then
@@ -49,7 +49,6 @@ local function shoot_bow_f(character: Model, dt: number): ()
 
 	const origin = head.Position
 	local direction = (Mouse.Hit.Position - origin).Unit
-	print("shot")
 	shoot_bow:InvokeServer(origin, direction, dt)
 end
 

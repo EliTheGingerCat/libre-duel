@@ -1,16 +1,17 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
+local attack_melee = require(ReplicatedStorage.client.combat.attack_melee)
+local dissolve_cube = require(ReplicatedStorage.client.cube.dissolve_cube)
+local eat_cake = require(ReplicatedStorage.client.cake.eat_cake)
+local editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
+const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+local place_cube = require(ReplicatedStorage.client.cube.place_cube)
 local pull_bow = require(ReplicatedStorage.client.bow.pull_bow)
-local attack_melee = require(script.Parent.Parent.combat.attack_melee)
-local dissolve_cube = require(script.Parent.Parent.cube.dissolve_cube)
-local editor_state = require(script.Parent.hud.editor_state)
-const KEYBINDS = require(script.Parent.Parent.util.KEYBINDS)
-local mode_selector_state = require(script.Parent.matchmaking.mode_selector_state)
-local place_cube = require(script.Parent.Parent.cube.place_cube)
-local table_flip = require(script.Parent.Parent.util.table_flip)
-local tool_state = require(script.Parent.tool_state)
-const TOOLS = require(script.Parent.TOOL_LIST)
+local mode_selector_state = require(ReplicatedStorage.client.ui.matchmaking.mode_selector_state)
+local table_flip = require(ReplicatedStorage.client.util.table_flip)
+const TOOLS = require(ReplicatedStorage.client.tools.TOOL_LIST)
+local tool_state = require(ReplicatedStorage.client.tools.tool_state)
 
 type tool = TOOLS.tool
 
@@ -18,6 +19,7 @@ local tool_selected: tool? = nil
 
 local function set_tool(slot: number): ()
 	tool_selected = TOOLS[slot]
+	tool_state.current = slot
 	tool_state.on_change:Fire(slot)
 end
 
@@ -51,6 +53,8 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 			pull_bow()
 		elseif tool_selected == "mode_selector" then
 			mode_selector_state.set_enabled(true)
+		elseif tool_selected == "cake" then
+			eat_cake()
 		end
 	end
 end
