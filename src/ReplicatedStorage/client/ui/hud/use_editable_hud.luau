@@ -5,11 +5,14 @@ local react_roblox = require(replicated_storage.Packages["react-roblox"])
 local registry = require(script.Parent.registry)
 
 type content_ref = { current: GuiObject? }
-export type props = { on_remove: (() -> ())? }
+export type props = { on_remove: (() -> ())?, preview: boolean? }
 
 local function use_editable_hud(component: (props) -> unknown, props: props): content_ref
 	local ref: content_ref = react.useRef(nil)
 	local function register_content()
+		if props.preview then
+			return
+		end
 		local content = ref.current
 		if not content then
 			return
@@ -35,7 +38,10 @@ local function use_editable_hud(component: (props) -> unknown, props: props): co
 			)
 			return disconnect
 		end
-		return registry.register(content, screen, create, props.on_remove)
+		local function render_preview()
+			return react.createElement(component, { preview = true })
+		end
+		return registry.register(content, screen, create, props.on_remove, render_preview)
 	end
 	-- Restore the native parent before React removes its host instances.
 	react.useLayoutEffect(register_content, {})

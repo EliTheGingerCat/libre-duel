@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.Packages.react)
+local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -266,11 +267,12 @@ local function infoboard(props: use_editable_hud.props)
 	local time_string = string.format("%02d:%02d", minutes, seconds)
 
 	return create_element(
-		"ScreenGui",
+		hud_screen,
 		{
 			ClipToDeviceSafeArea = false,
 			Enabled = game_is_active,
 			Name = "infoboard",
+			preview = props.preview,
 			ResetOnSpawn = false,
 			ScreenInsets = "None",
 		},
@@ -278,8 +280,8 @@ local function infoboard(props: use_editable_hud.props)
 			"Frame",
 			{
 				ref = content_ref,
-				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.new(0.5, 0, 0, 10),
+				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 0),
+				Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 0, 10),
 				Size = UDim2.fromOffset(401, 127),
 				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				BackgroundTransparency = 0.5,

@@ -6,6 +6,7 @@ const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local scale = require(script.Parent.scale)
 local tool_state = require(script.Parent.Parent.tool_state)
 const TOOLS = require(script.Parent.Parent.TOOL_LIST)
+local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -357,19 +358,20 @@ end
 local function hotbar(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(hotbar, props)
 	return create_element(
-		"ScreenGui",
+		hud_screen,
 		{
 			Name = "Hotbar",
+			preview = props.preview,
 			ResetOnSpawn = false,
 		},
 		create_element(
 			"Frame",
 			{
 				ref = content_ref,
-				AnchorPoint = Vector2.new(0.5, 1),
+				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 1),
 				BackgroundColor3 = COLOURS.black,
 				BackgroundTransparency = 0.5,
-				Position = UDim2.new(0.5, 0, 1, -10),
+				Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 1, -10),
 				Size = UDim2.fromOffset(680, 80),
 			},
 			create_element("UICorner", {

@@ -9,6 +9,7 @@ const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 local React = require(ReplicatedStorage.Packages.react)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 local scale = require(script.Parent.scale)
+local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_if_key_held = require(script.Parent.use_if_key_held)
 
@@ -208,18 +209,19 @@ local function tablist(props: use_editable_hud.props)
 	local enabled = use_if_key_held(KEYBINDS.tablist)
 
 	return create_element(
-		"ScreenGui",
+		hud_screen,
 		{
 			Enabled = enabled,
 			Name = "Tablist",
+			preview = props.preview,
 			ResetOnSpawn = false,
 		},
 		create_element(
 			"Frame",
 			{
 				ref = content_ref,
-				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.new(0.5, 0, 0, 147),
+				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 0),
+				Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 0, 147),
 				Size = UDim2.fromOffset(720, 0),
 				AutomaticSize = "Y",
 				BackgroundColor3 = COLOURS.black,

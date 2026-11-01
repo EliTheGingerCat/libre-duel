@@ -16,6 +16,7 @@ export type entry = {
 	corners: widget_corners.controller,
 	create: factory?,
 	on_remove: (() -> ())?,
+	render_preview: (() -> unknown)?,
 	refresh: () -> (),
 }
 
@@ -39,26 +40,29 @@ local function subscribe(callback: () -> ())
 	return disconnect
 end
 
-local function register(content: GuiObject, screen: ScreenGui, create: factory?, on_remove: (() -> ())?)
+local function register(
+	content: GuiObject,
+	screen: ScreenGui,
+	create: factory?,
+	on_remove: (() -> ())?,
+	render_preview: (() -> unknown)?
+)
 	local default_position = content.Position
 	local default_anchor = content.AnchorPoint
-	local container = Instance.new("Frame")
-	container.Name = "hud_widget"
-	container.BackgroundTransparency = 1
+	local container = content.Parent
+	assert(container and container:IsA("Frame"))
 	container.Size = UDim2.fromOffset(content.AbsoluteSize.X, content.AbsoluteSize.Y)
-	container.Parent = screen
-	local scale = Instance.new("UIScale")
-	scale.Parent = container
+	local scale = container:FindFirstChildOfClass("UIScale")
+	assert(scale)
 	content.AnchorPoint = Vector2.zero
 	content.Position = UDim2.fromOffset(0, 0)
-	content.Parent = container
 
 	local item: entry
 	local function refresh(): ()
 		local preview = item.preview
-		local factor = if preview
-			then math.max(0.001, preview.AbsoluteSize.X / math.max(1, screen.AbsoluteSize.X))
-			else 1
+		local preview_screen = if preview then preview:FindFirstAncestorOfClass("ScreenGui") else nil
+		local width = if preview_screen then preview_screen.AbsoluteSize.X else screen.AbsoluteSize.X
+		local factor = if preview then math.max(0.001, preview.AbsoluteSize.X / math.max(1, width)) else 1
 		container.Parent = preview or screen
 		scale.Scale = item.multiplier * factor
 		container.Visible = not item.hidden
@@ -89,6 +93,7 @@ local function register(content: GuiObject, screen: ScreenGui, create: factory?,
 		corners = widget_corners(content),
 		create = create,
 		on_remove = on_remove,
+		render_preview = render_preview,
 		refresh = refresh,
 	}
 
@@ -124,10 +129,9 @@ local function register(content: GuiObject, screen: ScreenGui, create: factory?,
 			table.remove(entries, index)
 		end
 		notify()
-		content.Parent = screen
+		container.Parent = screen
 		content.AnchorPoint = default_anchor
 		content.Position = default_position
-		container:Destroy()
 	end
 	return unregister
 end
