@@ -1,11 +1,11 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const CUBE_SIZE = require(script.Parent.CUBE_SIZE)
-const registry = require(ReplicatedStorage.shared.tools.registry)
+const tool_registry = require(ReplicatedStorage.shared.tools.registry)
 
 local id = 0
 
-local function create_cube(appearance: registry.appearance): Part
+local function create_cube(appearance: tool_registry.appearance): Part
 	id += 1
 	local cube = Instance.new("Part")
 	cube.Anchored = true

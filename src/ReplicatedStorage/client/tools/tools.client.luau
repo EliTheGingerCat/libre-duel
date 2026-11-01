@@ -11,13 +11,13 @@ local mode_selector_state = require(ReplicatedStorage.client.ui.matchmaking.mode
 local open_mode_selector = require(script.Parent.mode_selector.open_mode_selector)
 local place_cube = require(script.Parent.cube.place_cube)
 local pull_bow = require(script.Parent.bow.pull_bow)
-local registry = require(ReplicatedStorage.shared.tools.registry)
 local table_flip = require(ReplicatedStorage.client.util.table_flip)
+local tool_registry = require(ReplicatedStorage.shared.tools.registry)
 const TOOLS = require(script.Parent.TOOL_LIST)
 local tool_state = require(script.Parent.tool_state)
 
 -- Variants share their base tool's behaviour, so each handler receives the selected tool to read its appearance.
-const HANDLERS: { [registry.behaviour]: (tool: registry.tool) -> () } = {
+const HANDLERS: { [tool_registry.behaviour]: (tool: tool_registry.tool) -> () } = {
 	bow = pull_bow,
 	cake = eat_cake,
 	cube = place_cube,
@@ -26,7 +26,7 @@ const HANDLERS: { [registry.behaviour]: (tool: registry.tool) -> () } = {
 	sword = attack_melee,
 }
 
-local tool_selected: registry.tool? = nil
+local tool_selected: tool_registry.tool? = nil
 
 local function set_tool(slot: number): ()
 	tool_selected = get_slot_tool(slot)

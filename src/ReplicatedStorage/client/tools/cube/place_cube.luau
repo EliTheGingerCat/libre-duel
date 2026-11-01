@@ -9,8 +9,8 @@ const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
-local registry = require(ReplicatedStorage.shared.tools.registry)
 local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
+local tool_registry = require(ReplicatedStorage.shared.tools.registry)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
@@ -26,7 +26,7 @@ local function snap_position(position: Vector3): Vector3
 	return Vector3.new(snap_coordinate(position.X), snap_coordinate(position.Y), snap_coordinate(position.Z))
 end
 
-local function place_cube(tool: registry.tool): ()
+local function place_cube(tool: tool_registry.tool): ()
 	local ignore_list = { local_player.Character }
 	local overhang = workspace:FindFirstChild("sneak_overhang")
 	if overhang then

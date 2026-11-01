@@ -30,8 +30,9 @@ and the server rejects ids that are not registered cube tools.
 
 `ReplicatedStorage/client/tools/TOOL_LIST.luau` maps hotbar slots to tool ids.
 Add a tool's id to a free slot to make it selectable. The hotbar shows each
-tool's `name`. Use `get_slot_tool(slot)` to resolve a slot to its tool, and check
-`tool.behaviour` rather than the id so variants are handled too.
+tool's `name`. Use `get_slot_tool(slot)` to resolve a slot to its tool. To check
+what a slot does, use `slot_has_behaviour(slot, behaviour)` rather than comparing
+ids, so variants are handled too.
 
 ## Adding a behaviour
 

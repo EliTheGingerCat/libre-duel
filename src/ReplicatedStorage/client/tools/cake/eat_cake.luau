@@ -3,8 +3,8 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const UserInputService = game:GetService("UserInputService")
 
 const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
-const get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+const slot_has_behaviour = require(ReplicatedStorage.client.tools.slot_has_behaviour)
 const tool_state = require(ReplicatedStorage.client.tools.tool_state)
 
 const set_cake_state = ReplicatedStorage.remotes.set_cake_state
@@ -15,13 +15,8 @@ const character = player.Character or player.CharacterAdded:Wait()
 local eating: boolean = false
 local eating_buffer: boolean = false
 
-local function is_cake(slot: number): boolean
-	const tool = get_slot_tool(slot)
-	return tool ~= nil and tool.behaviour == "cake"
-end
-
-local function eat_cake()
-	if is_cake(tool_state.current) then
+local function eat_cake(): ()
+	if slot_has_behaviour(tool_state.current, "cake") then
 		eating = true
 		local finished = set_cake_state:InvokeServer(eating)
 		if finished then
@@ -33,20 +28,20 @@ local function eat_cake()
 end
 
 --buffer system (if you hold then equip the apple, it will eat)
-local function on_input_began(input: InputObject)
+local function on_input_began(input: InputObject): ()
 	if input.UserInputType ~= KEYBINDS.tool_use then
 		return
 	end
 	eating_buffer = true
 end
 
-local function tool_change()
+local function tool_change(): ()
 	if eating_buffer == true then
 		eat_cake()
 	end
 end
 
-local function cancel_eat()
+local function cancel_eat(): ()
 	if eating == true then
 		eating = false
 		set_cake_state:InvokeServer(eating)
@@ -58,7 +53,7 @@ local function on_input_ended(input: InputObject, game_processed: boolean): ()
 		return
 	end
 	eating_buffer = false
-	if game_processed or editor_state.enabled or not is_cake(tool_state.current) then
+	if game_processed or editor_state.enabled or not slot_has_behaviour(tool_state.current, "cake") then
 		return
 	end
 	if eating == false or character == nil or character ~= player.Character then
