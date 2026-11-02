@@ -57,13 +57,6 @@ define("bow", "Bow", "bow")
 define("cake", "Cake", "cake")
 define("mode_selector", "Modes", "mode_selector")
 
-define_variant("sphere_cube", "cube", "Sphere", {
-	shape = Enum.PartType.Ball,
-})
-define_variant("brown_cube", "cube", "Brown cube", {
-	colour = Color3.new(124 / 255, 92 / 255, 70 / 255),
-})
-
 local function get(id: string): tool?
 	return tools[id]
 end
