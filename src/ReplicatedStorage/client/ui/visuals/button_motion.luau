@@ -15,6 +15,8 @@ local function button_motion()
 		assert(button and button:IsA("GuiButton"))
 		local resting_colour = button.BackgroundColor3
 		local resting_position = button.Position
+		local resting_size = button.Size
+		local stretch_size = resting_size
 		local auto_colour = button.AutoButtonColor
 		button.AutoButtonColor = false
 		local hovered, focused = false, false
@@ -23,6 +25,7 @@ local function button_motion()
 		local light_tween: Tween? = nil
 		local position_tween: Tween? = nil
 		local drag_connection: RBXScriptConnection? = nil
+		local size_connection: RBXScriptConnection? = nil
 
 		local function stop_tug(released: boolean?): ()
 			if drag_connection then
@@ -30,13 +33,18 @@ local function button_motion()
 				drag_connection = nil
 			end
 			if position_tween then
+				if size_connection then
+					size_connection:Disconnect()
+					size_connection = nil
+				end
 				position_tween:Cancel()
 				position_tween:Destroy()
 				position_tween = nil
 			end
 			if GuiService.ReducedMotionEnabled then
 				button.Position = resting_position
-			elseif button.Position ~= resting_position then
+				button.Size = resting_size
+			elseif button.Position ~= resting_position or button.Size ~= resting_size then
 				position_tween = TweenService:Create(
 					button,
 					TweenInfo.new(
@@ -44,8 +52,14 @@ local function button_motion()
 						if released then Enum.EasingStyle.Back else Enum.EasingStyle.Quint,
 						Enum.EasingDirection.Out
 					),
-					{ Position = resting_position }
+					{ Position = resting_position, Size = stretch_size }
 				)
+				local function restore_size(state: Enum.PlaybackState): ()
+					if state == Enum.PlaybackState.Completed then
+						button.Size = resting_size
+					end
+				end
+				size_connection = position_tween.Completed:Once(restore_size)
 				position_tween:Play()
 			end
 		end
@@ -66,7 +80,7 @@ local function button_motion()
 			end
 			local lit = active and (hovered or focused or down)
 			local amount = if down then 0.12 elseif lit then 0.055 else 0
-			local factor = if down then 0.97 elseif lit then 1.04 else 1
+			local factor = if down then 1.035 elseif lit then 1.02 else 1
 			local colour = resting_colour:Lerp(Color3.new(1, 1, 1), amount)
 			if GuiService.ReducedMotionEnabled then
 				scale.Scale = 1
@@ -111,6 +125,10 @@ local function button_motion()
 				pressed = input
 				stop_tug()
 				if position_tween then
+					if size_connection then
+						size_connection:Disconnect()
+						size_connection = nil
+					end
 					position_tween:Cancel()
 					position_tween:Destroy()
 					position_tween = nil
@@ -126,6 +144,11 @@ local function button_motion()
 						end
 						ancestor = ancestor.Parent
 					end
+					local slot = button.Parent
+					assert(slot and slot:IsA("GuiObject"))
+					local base_size = slot.AbsoluteSize / math.max(parent_scale, 0.001)
+					-- An explicit size also lets automatically sized text buttons stretch.
+					stretch_size = UDim2.fromOffset(base_size.X, base_size.Y)
 					local function drag(changed: InputObject): ()
 						if
 							(input.UserInputType == Enum.UserInputType.Touch and changed ~= input)
@@ -140,7 +163,9 @@ local function button_motion()
 							/ math.max(parent_scale, 0.001)
 						-- Resistance increases with distance and approaches a 24-pixel limit.
 						local offset = delta / (8 + delta.Magnitude / 24)
-						button.Position = resting_position + UDim2.fromOffset(offset.X, offset.Y)
+						button.Position = resting_position + UDim2.fromOffset(offset.X * 0.5, offset.Y * 0.5)
+						local stretch = Vector2.new(math.abs(offset.X), math.abs(offset.Y)) / 24 * 0.025
+						button.Size = UDim2.fromOffset(base_size.X * (1 + stretch.X), base_size.Y * (1 + stretch.Y))
 					end
 					drag_connection = UserInputService.InputChanged:Connect(drag)
 				end
@@ -172,6 +197,9 @@ local function button_motion()
 			GuiService:GetPropertyChangedSignal("ReducedMotionEnabled"):Connect(update),
 		}
 		local function disconnect(): ()
+			if size_connection then
+				size_connection:Disconnect()
+			end
 			if drag_connection then
 				drag_connection:Disconnect()
 			end
@@ -192,6 +220,7 @@ local function button_motion()
 			end
 			button.BackgroundColor3 = resting_colour
 			button.Position = resting_position
+			button.Size = resting_size
 			button.AutoButtonColor = auto_colour
 		end
 		return disconnect
