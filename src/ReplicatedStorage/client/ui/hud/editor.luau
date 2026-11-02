@@ -8,10 +8,11 @@ local create_element = React.createElement
 
 local function editor()
 	local ref = React.useRef(nil :: ScreenGui?)
+	local content_visible, set_content_visible = React.useBinding(true)
 	local function mount()
 		local screen = ref.current
 		assert(screen)
-		return mount_editor(screen)
+		return mount_editor(screen, set_content_visible)
 	end
 	React.useLayoutEffect(mount, {})
 	local green = Color3.new(0, 222 / 255, 33 / 255)
@@ -23,6 +24,7 @@ local function editor()
 		DisplayOrder = 100,
 	}, {
 		instructions = create_element("TextLabel", {
+			Visible = content_visible,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(0.7, 0.18),
@@ -34,10 +36,12 @@ local function editor()
 			Text = 'Welcome to the HUD editor!\n<font size="24">Try dragging around some HUD elements.</font>\n<font size="24">The white border represents the bounds of the screen.</font>',
 		}),
 		new_button = create_element("TextButton", {
+			Visible = content_visible,
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.fromScale(0.5, 0.99),
 			Size = UDim2.fromOffset(200, 50),
-			BackgroundColor3 = Color3.new(54 / 255, 54 / 255, 54 / 255),
+			BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 			Text = "⊕ New",
 			TextSize = 36,
@@ -48,6 +52,7 @@ local function editor()
 			stroke = create_element(gradient_stroke, { colour = green, rotation = -90 }),
 		}),
 		Bounds = create_element("Frame", {
+			Visible = content_visible,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(0.8, 0.8),

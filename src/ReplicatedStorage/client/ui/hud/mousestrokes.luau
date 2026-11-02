@@ -66,6 +66,7 @@ local function mousestrokes()
 			ZIndex = 2,
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),
+			shadow = create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			stroke = create_element(
 				gradient_stroke,
 				{

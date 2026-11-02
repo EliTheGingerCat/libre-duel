@@ -375,6 +375,7 @@ local function hotbar(props: use_editable_hud.props)
 				Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 1, -10),
 				Size = UDim2.fromOffset(680, 80),
 			},
+			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0.45, 0),
 			}),

@@ -22,6 +22,7 @@ local function check_box(props: props)
 			BackgroundColor3 = if props.active == true then COLOURS.active else COLOURS.not_active,
 			Size = UDim2.fromOffset(40, 40),
 		},
+		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		create_element("UICorner", {
 			CornerRadius = if props.round == true then UDim.new(1, 0) else UDim.new(0, 5),
 		}),

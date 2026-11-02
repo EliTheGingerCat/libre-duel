@@ -2,6 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 
+local use_glass_motion = require(script.Parent.use_glass_motion)
+
 local create_element = React.createElement
 
 const COLOURS = {
@@ -14,12 +16,17 @@ type props = {
 }
 
 local function switch(props: props)
+	local motion = use_glass_motion(if props.active then 1 else 0)
+	local function thumb_position(value: number): UDim2
+		return UDim2.new(value, 15 - 30 * value, 0.5, 0)
+	end
 	return create_element(
 		"Frame",
 		{ --track
 			BackgroundColor3 = Color3.fromRGB(54, 54, 54),
 			Size = UDim2.fromOffset(64, 32),
 		},
+		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),
@@ -39,11 +46,12 @@ local function switch(props: props)
 		create_element(
 			"Frame",
 			{ --thumb
-				AnchorPoint = if props.active == true then Vector2.new(1, 0.5) else Vector2.new(0, 0.5),
+				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-				Position = if props.active == true then UDim2.fromScale(1, 0.5) else UDim2.fromScale(0, 0.5),
+				Position = motion:map(thumb_position),
 				Size = UDim2.fromOffset(30, 30),
 			},
+			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(1, 0),
 			}),

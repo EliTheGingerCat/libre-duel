@@ -1,7 +1,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
+local animated_button = require(script.Parent.animated_button)
+local button_motion = require(script.Parent.button_motion)
 local gradient_stroke = require(script.Parent.gradient_stroke)
+local use_glass_motion = require(script.Parent.use_glass_motion)
 local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
 local create_element = React.createElement
@@ -18,6 +21,14 @@ export type props = {
 
 local function menu_window(props: props)
 	local size = props.size or Vector2.new(1200, 720)
+	local motion = use_glass_motion(if props.enabled then 1 else 0, 0)
+	local viewport_scale = math.min(1, use_viewport_scale())
+	local function window_scale(value: number): number
+		return viewport_scale * (0.96 + 0.04 * value)
+	end
+	local function window_position(value: number): UDim2
+		return UDim2.new(0.5, 0, 0.5, 12 * (1 - value))
+	end
 	return create_element("ScreenGui", {
 		Name = props.name,
 		Enabled = props.enabled,
@@ -35,18 +46,23 @@ local function menu_window(props: props)
 		}),
 		window = create_element("Frame", {
 			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(0.5, 0.5),
+			Position = motion:map(window_position),
 			Size = UDim2.fromOffset(size.X, size.Y),
-			BackgroundColor3 = Color3.new(35 / 255, 35 / 255, 35 / 255),
+			BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 			Active = true,
 		}, {
-			scale = create_element("UIScale", { Scale = math.min(1, use_viewport_scale()) }),
-			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 65) }),
+			scale = create_element("UIScale", { Scale = motion:map(window_scale) }),
+			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 60) }),
+			shadow = create_element(
+				"UIShadow",
+				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
+			),
 			stroke = create_element(gradient_stroke),
 			title = create_element("TextLabel", {
 				AnchorPoint = Vector2.new(0.5, 0),
-				Position = UDim2.fromScale(0.5, 0),
+				Position = UDim2.new(0.5, 0, 0, 13),
 				Size = UDim2.new(1, -100, 0, 48),
 				BackgroundTransparency = 1,
 				FontFace = Font.fromId(11702779409, Enum.FontWeight.Bold),
@@ -55,25 +71,16 @@ local function menu_window(props: props)
 				TextColor3 = Color3.new(1, 1, 1),
 				ZIndex = 2,
 			}),
-			close_button = create_element("ImageButton", {
-				Position = UDim2.new(1, -80, 0, 5),
+			close_button = create_element(animated_button, {
+				class_name = "ImageButton",
+				Position = UDim2.new(1, -80, 0, 16),
 				Size = UDim2.fromOffset(42, 42),
 				BackgroundTransparency = 1,
 				Image = "rbxassetid://72160170469319",
 				ZIndex = 2,
 				[React.Event.Activated] = props.on_close,
-			}),
-			body = create_element("Frame", {
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.fromScale(0.5, 0.5),
-				Size = UDim2.new(1, -10, 1, -10),
-				BackgroundColor3 = Color3.new(47 / 255, 47 / 255, 47 / 255),
-				BorderSizePixel = 0,
-			}, {
-				corner = create_element("UICorner", { CornerRadius = UDim.new(0, 60) }),
-				stroke = create_element(gradient_stroke),
-				content = create_element(React.Fragment, {}, props.children),
-			}),
+			}, { feedback = create_element(button_motion) }),
+			content = create_element(React.Fragment, {}, props.children),
 		}),
 	})
 end

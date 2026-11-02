@@ -16,6 +16,7 @@ local function colour_preview()
 			TextSize = 40,
 			Text = 'Really red\n<font size="20">rgb(255, 0, 0)\nhex(FF0000)</font>',
 		},
+		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(0, 60),
 		}),

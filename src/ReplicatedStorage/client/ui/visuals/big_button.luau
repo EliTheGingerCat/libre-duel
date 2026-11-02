@@ -2,14 +2,18 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 
+local animated_button = require(script.Parent.animated_button)
+local button_motion = require(script.Parent.button_motion)
+
 local create_element = React.createElement
 
 local function big_button()
 	return create_element(
-		"TextButton",
+		animated_button,
 		{
 			AutomaticSize = "X",
-			BackgroundColor3 = Color3.fromRGB(54, 54, 54),
+			BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+			BackgroundTransparency = 0.5,
 			Size = UDim2.new(1, 0, 0, 128),
 			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 			TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -17,6 +21,8 @@ local function big_button()
 			Text = 'Big button\n<font color="rgb(180,180,180)"><font size="18">Gear icon included!</font></font>',
 			TextSize = 36,
 		},
+		create_element(button_motion),
+		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(0, 60),
 		}),

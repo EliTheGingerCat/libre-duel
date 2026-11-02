@@ -2,6 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
+local animated_button = require(script.Parent.Parent.visuals.animated_button)
+local button_motion = require(script.Parent.Parent.visuals.button_motion)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local notification_management = require(script.Parent.Parent.notification_management)
@@ -61,6 +63,10 @@ local function queue_status(props: use_editable_hud.props)
 			BorderSizePixel = 0,
 		}, {
 			scale = create_element("UIScale", { Scale = factor }),
+			shadow = create_element(
+				"UIShadow",
+				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
+			),
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 50) }),
 			stroke = create_element(gradient_stroke),
 			mode_icon = create_element("ImageLabel", {
@@ -81,7 +87,7 @@ local function queue_status(props: use_editable_hud.props)
 				TextColor3 = Color3.new(1, 1, 1),
 				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 			}),
-			cancel_button = create_element("TextButton", {
+			cancel_button = create_element(animated_button, {
 				AnchorPoint = Vector2.new(1, 0.5),
 				Position = UDim2.new(1, -20, 0.5, 0),
 				Size = UDim2.fromOffset(180, 60),
@@ -95,6 +101,7 @@ local function queue_status(props: use_editable_hud.props)
 				Interactable = not busy and not state.teleporting and not editor_enabled and not props.preview,
 				[React.Event.Activated] = cancel,
 			}, {
+				feedback = create_element(button_motion),
 				corner = create_element("UICorner", { CornerRadius = UDim.new(1, 0) }),
 				stroke = create_element(gradient_stroke, { colour = red }),
 			}),

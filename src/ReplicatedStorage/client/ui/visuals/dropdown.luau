@@ -9,7 +9,8 @@ local function dropdown()
 		"Frame",
 		{
 			AutomaticSize = "XY",
-			BackgroundColor3 = Color3.fromRGB(54, 54, 54),
+			BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+			BackgroundTransparency = 0.5,
 			Size = UDim2.fromOffset(200, 40),
 		},
 		create_element("TextButton", { --title/currently selected option
@@ -28,6 +29,7 @@ local function dropdown()
 			Image = "rbxassetid://85332232207991",
 			Rotation = 180, --set to 0 when collapsed, and 180 when expanded
 		}),
+		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(0, 20),
 		}),

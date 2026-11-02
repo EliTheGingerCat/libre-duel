@@ -19,6 +19,7 @@ local function hue_slider()
 				BackgroundColor3 = Color3.fromRGB(54, 54, 54),
 				Size = UDim2.new(1, 0, 0, 10),
 			},
+			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(1, 0),
 			}),
@@ -48,6 +49,7 @@ local function hue_slider()
 					BackgroundColor3 = Color3.fromRGB(54, 54, 54),
 					Size = UDim2.fromOffset(25, 25),
 				},
+				create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 				create_element("UICorner", {
 					CornerRadius = UDim.new(1, 0),
 				}),

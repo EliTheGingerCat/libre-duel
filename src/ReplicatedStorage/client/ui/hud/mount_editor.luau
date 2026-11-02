@@ -21,7 +21,7 @@ type drag_state = {
 	handle: Vector2?,
 }
 
-local function mount_editor(screen: ScreenGui)
+local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) -> ())
 	local preview = screen:FindFirstChild("Bounds")
 	local new_button = screen:FindFirstChild("new_button")
 	assert(preview and preview:IsA("Frame"))
@@ -34,7 +34,10 @@ local function mount_editor(screen: ScreenGui)
 	local drag: drag_state? = nil
 	local saved_mouse_behavior = user_input_service.MouseBehavior
 	local saved_mouse_icon = user_input_service.MouseIconEnabled
-	local menus = mount_menus(player_gui, screen.DisplayOrder + 1)
+	local function on_menu_changed(open: boolean): ()
+		set_content_visible(not open)
+	end
+	local menus = mount_menus(player_gui, screen.DisplayOrder + 1, on_menu_changed)
 
 	local function get_pointer(): Vector2
 		local inset = gui_service:GetGuiInset()

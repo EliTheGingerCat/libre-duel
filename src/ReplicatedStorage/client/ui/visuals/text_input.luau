@@ -19,6 +19,7 @@ local function text_input()
 			Text = "",
 			TextXAlignment = "Left",
 		},
+		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),

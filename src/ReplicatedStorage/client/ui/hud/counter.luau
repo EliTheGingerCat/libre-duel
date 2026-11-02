@@ -20,6 +20,7 @@ local function counter(props: { name: string })
 		TextColor3 = Color3.new(1, 1, 1),
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 	}, {
+		shadow = create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),
 		stroke = create_element(
 			gradient_stroke,

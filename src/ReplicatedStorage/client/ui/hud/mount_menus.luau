@@ -2,10 +2,17 @@ local mount_selector = require(script.Parent.mount_selector)
 local mount_settings = require(script.Parent.mount_settings)
 local registry = require(script.Parent.registry)
 
-local function mount_menus(player_gui: PlayerGui, display_order: number)
+local function mount_menus(player_gui: PlayerGui, display_order: number, on_changed: (boolean) -> ())
 	local enabled = false
+	local function set_open(open: boolean): ()
+		if enabled == open then
+			return
+		end
+		enabled = open
+		on_changed(open)
+	end
 	local function on_close(): ()
-		enabled = false
+		set_open(false)
 	end
 	local selector = mount_selector(player_gui, display_order, on_close)
 	local settings = mount_settings(player_gui, display_order, on_close)
@@ -13,18 +20,18 @@ local function mount_menus(player_gui: PlayerGui, display_order: number)
 	local function close(): ()
 		selector.set_enabled(false)
 		settings.close()
-		enabled = false
+		set_open(false)
 	end
 
 	local function open_selector(): ()
 		close()
-		enabled = true
+		set_open(true)
 		selector.set_enabled(true)
 	end
 
 	local function open_settings(item: registry.entry): ()
 		close()
-		enabled = true
+		set_open(true)
 		settings.open(item)
 	end
 

@@ -2,12 +2,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 
-local create_element = React.createElement
+local animated_button = require(script.Parent.animated_button)
+local button_motion = require(script.Parent.button_motion)
 
-const COLOURS = {
-	not_active = Color3.fromRGB(54, 54, 54),
-	active = Color3.fromRGB(71, 71, 71),
-}
+local create_element = React.createElement
 
 type props = {
 	is_pressed: boolean?,
@@ -15,16 +13,19 @@ type props = {
 
 local function button(props: props)
 	return create_element(
-		"TextButton",
+		animated_button,
 		{
 			AutomaticSize = "X",
-			BackgroundColor3 = if props.is_pressed == true then COLOURS.active else COLOURS.not_active,
+			BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+			BackgroundTransparency = 0.5,
 			Size = UDim2.fromOffset(200, 50),
 			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 			TextColor3 = Color3.fromRGB(198, 198, 198),
 			Text = "Button",
 			TextSize = 36,
 		},
+		create_element(button_motion),
+		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),

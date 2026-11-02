@@ -299,6 +299,7 @@ local function infoboard(props: use_editable_hud.props)
 				PaddingRight = UDim.new(0, 15),
 				PaddingTop = UDim.new(0, 15),
 			}),
+			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0.3, 0),
 			}),

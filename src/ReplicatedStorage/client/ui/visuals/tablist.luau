@@ -227,6 +227,7 @@ local function tablist(props: use_editable_hud.props)
 				BackgroundColor3 = COLOURS.black,
 				BackgroundTransparency = 0.5,
 			},
+			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0, 39),
 			}),
