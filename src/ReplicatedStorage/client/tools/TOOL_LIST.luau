@@ -5,8 +5,6 @@ const TOOLS: { [number]: string } = {
 	[3] = "dissolver",
 	[4] = "bow",
 	[5] = "cake",
-	[6] = "sphere_cube",
-	[7] = "brown_cube",
 	[9] = "mode_selector",
 }
 
