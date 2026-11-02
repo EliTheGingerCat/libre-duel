@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
 local gradient_stroke = require(script.Parent.gradient_stroke)
-local use_glass_motion = require(script.Parent.use_glass_motion)
+local use_ui_motion = require(script.Parent.use_ui_motion)
 local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
 local create_element = React.createElement
@@ -21,7 +21,7 @@ export type props = {
 
 local function menu_window(props: props)
 	local size = props.size or Vector2.new(1200, 720)
-	local motion = use_glass_motion(if props.enabled then 1 else 0, 0)
+	local motion = use_ui_motion(if props.enabled then 1 else 0, 0)
 	local viewport_scale = math.min(1, use_viewport_scale())
 	local function window_scale(value: number): number
 		return viewport_scale * (0.96 + 0.04 * value)

@@ -5,7 +5,7 @@ local TweenService = game:GetService("TweenService")
 local React = require(ReplicatedStorage.Packages.react)
 
 -- Bindings update the native properties without rendering React on every frame.
-local function use_glass_motion(target: number, initial: number?)
+local function use_ui_motion(target: number, initial: number?)
 	local value = React.useRef(nil :: NumberValue?)
 	local binding, update = React.useBinding(initial or target)
 
@@ -51,4 +51,4 @@ local function use_glass_motion(target: number, initial: number?)
 	return binding
 end
 
-return use_glass_motion
+return use_ui_motion

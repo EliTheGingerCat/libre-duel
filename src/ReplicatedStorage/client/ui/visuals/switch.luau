@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 
-local use_glass_motion = require(script.Parent.use_glass_motion)
+local use_ui_motion = require(script.Parent.use_ui_motion)
 
 local create_element = React.createElement
 
@@ -16,7 +16,7 @@ type props = {
 }
 
 local function switch(props: props)
-	local motion = use_glass_motion(if props.active then 1 else 0)
+	local motion = use_ui_motion(if props.active then 1 else 0)
 	local function thumb_position(value: number): UDim2
 		return UDim2.new(value, 15 - 30 * value, 0.5, 0)
 	end
