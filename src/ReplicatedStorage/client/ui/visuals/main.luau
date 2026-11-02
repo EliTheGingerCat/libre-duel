@@ -9,6 +9,7 @@ local infoboard = require(script.Parent.infoboard)
 local matchmaking = require(script.Parent.matchmaking)
 local notification_container = require(script.Parent.notification_container)
 local tablist = require(script.Parent.tablist)
+local title = require(script.Parent.title)
 local version = require(script.Parent.version)
 
 local create_element = React.createElement
@@ -25,6 +26,7 @@ local function main()
 		create_element(matchmaking),
 		create_element(notification_container),
 		create_element(tablist),
+		create_element(title),
 		create_element(version)
 	)
 end

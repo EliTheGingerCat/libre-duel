@@ -2,8 +2,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
-local notification_management = require(script.Parent.Parent.notification_management)
+local fade = require(script.Parent.Parent.effects.fade)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local notification_management = require(script.Parent.Parent.notification_management)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_editor_enabled = require(script.Parent.Parent.hud.use_editor_enabled)
 
@@ -32,18 +33,7 @@ local function use_fade_out(created_at: number, preview: boolean): number
 				task.wait(time_until_fade)
 			end
 
-			local time_since_start_fading = 0
-
-			while true do
-				local new_transparency = math.min(1, time_since_start_fading / FADE_DURATION)
-				set_transparency(new_transparency)
-				if new_transparency == 1 then
-					return
-				end
-
-				local time_waited = task.wait()
-				time_since_start_fading += time_waited
-			end
+			fade(0, 1, FADE_DURATION, set_transparency)
 		end
 
 		local task_fade = task.spawn(thread_fade)
