@@ -1,26 +1,30 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
+const ServerStorage = game:GetService("ServerStorage")
 const Teams = game:GetService("Teams")
 const Workspace = game:GetService("Workspace")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
-const debug_print = require(script.Parent.util.debug_print)
-const match_session = require(script.Parent.queue.match_session)
+const debug_print = require(script.Parent.Parent.util.debug_print)
+const map_data = require(ReplicatedStorage.shared.maps.map_data)
+const match_session = require(script.Parent.Parent.queue.match_session)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
 type team = {
-	cage: Model,
+	cage: Instance,
 	index: number,
-	goal: Part,
+	goal: BasePart,
 	name: string,
 	entities: { registry.entity },
 	points: number,
-	spawn_part: Part,
+	spawn_part: BasePart,
 	Roblox_team: Team,
 }
 
 type state = {
+	map: Instance,
+	map_name: string,
 	cages_are_closed: boolean,
 	connections: { RBXScriptConnection },
 	character_connection: registry.connection?,
@@ -30,6 +34,7 @@ type state = {
 local active = false
 const CAGE_TIME = 3
 local current_state: state? = nil
+local loaded_map: Instance? = nil
 const WIN_POINTS = 5
 
 const TEAM_COLOURS = {
@@ -82,7 +87,7 @@ local function close_cages(state: state): ()
 	state.cages_are_closed = true
 
 	for _, team in state.teams do
-		team.cage.Parent = workspace
+		team.cage.Parent = state.map
 
 		const spawn_location = team.spawn_part.Position
 
@@ -128,8 +133,6 @@ local function game_stop(state: state): ()
 		end
 
 		team.cage:Destroy()
-		team.goal:Destroy()
-		team.spawn_part:Destroy()
 		team.Roblox_team:Destroy()
 	end
 	match_session.finish()
@@ -155,132 +158,52 @@ local function process_goal(state: state, entity: registry.entity, team: team): 
 	close_then_open_cages(state)
 end
 
-type spawn_part_properties = {
-	colour: Color3,
-	position: Vector3,
-	name: string,
-}
-local function create_spawn_part(properties: spawn_part_properties): Part
-	const spawn_part = Instance.new("Part")
-	spawn_part.Anchored = true
-	spawn_part.CanCollide = false
-	spawn_part.Color = properties.colour
-	spawn_part.Position = properties.position
-	spawn_part.Name = properties.name
-	spawn_part.Size = Vector3.new(1, 1, 1)
-	spawn_part.Transparency = 1
-	return spawn_part
-end
-
-type cage_properties = {
-	colour: Color3,
-	position: Vector3,
-	name: string,
-}
-local function create_cage(properties: cage_properties): Model
-	const cage_model = Instance.new("Model")
-	cage_model.Name = properties.name
-
-	const cage_part = Instance.new("Part")
-	cage_part.Anchored = true
-	cage_part.Color = properties.colour
-	cage_part.Position = properties.position
-	cage_part.Size = Vector3.new(9, 3, 9)
-	cage_part.Parent = cage_model
-
-	return cage_model
-end
-
-type goal_part_properties = {
-	colour: Color3,
-	position: Vector3,
-	name: string,
-}
-local function create_goal_part(properties: goal_part_properties): Part
-	const goal_part = Instance.new("Part")
-	goal_part.Anchored = true
-	goal_part.Color = properties.colour
-	goal_part.Position = properties.position
-	goal_part.Name = properties.name
-	goal_part.Size = Vector3.new(9, 9, 9)
-	return goal_part
-end
-
-type Roblox_team_properties = {
-	colour: BrickColor,
-	name: string,
-}
-local function create_Roblox_team(properties: Roblox_team_properties): Team
-	const Roblox_team = Instance.new("Team")
-	Roblox_team.TeamColor = properties.colour
-	Roblox_team.Name = properties.name
-	return Roblox_team
-end
-
-local function create_map(number_teams: number): state
+local function create_map(): state
+	const maps = ServerStorage.maps.bridge:GetChildren()
+	assert(#maps > 0, "No Bridge maps available")
+	const map = maps[math.random(1, #maps)]:Clone()
+	const info_module = map:FindFirstChild("MAP_INFO")
+	assert(info_module and info_module:IsA("ModuleScript"), "Map is missing MAP_INFO")
+	const load_info: (ModuleScript) -> map_data.map_data = require
+	const info = load_info(info_module)
 	const teams: { team } = {}
 
-	for iteration = 1, number_teams do
-		const colour_index = (iteration - 1) % #TEAM_COLOURS + 1
-		const colour = TEAM_COLOURS[colour_index]
-
-		const c_1 = (iteration - 1) * 12
-		const c_3 = 0
-
-		const cage_position = Vector3.new(c_1, 15, c_3)
-		const spawn_position = cage_position + Vector3.new(0, 6, 0)
-
-		const spawn_part = create_spawn_part({
-			colour = colour,
-			position = spawn_position,
-			name = `team #{iteration}'s spawn`,
-		})
-		spawn_part.Parent = workspace
-
-		const cage = create_cage({
-			colour = colour,
-			position = cage_position,
-			name = `team #{iteration}'s cage`,
-		})
-		cage.Parent = workspace
-
-		const goal = create_goal_part({
-			colour = colour,
-			position = Vector3.new(c_1, 6, c_3),
-			name = `team #{iteration}'s goal`,
-		})
-		goal.Parent = workspace
-
-		const colour_brick = COLOUR3_TO_BRICKCOLOUR[colour]
-		const Roblox_team = create_Roblox_team({
-			colour = colour_brick,
-			name = `team #{iteration}`,
-		})
+	for index, data in { info.TEAM1, info.TEAM2 } do
+		const colour = TEAM_COLOURS[index]
+		const Roblox_team = Instance.new("Team")
+		Roblox_team.TeamColor = COLOUR3_TO_BRICKCOLOUR[colour]
+		Roblox_team.Name = `team #{index}`
 		Roblox_team.Parent = Teams
 
-		const index = #teams + 1
+		data.SPAWN.Transparency = 1
+		data.SPAWN.CanCollide = false
+		data.GOAL.CanCollide = false
 
-		const team: team = {
-			cage = cage,
+		teams[index] = {
+			cage = data.CAGE,
 			index = index,
-			goal = goal,
-			name = `team #{iteration}`,
+			goal = data.GOAL,
+			name = `team #{index}`,
 			entities = {},
 			points = 0,
-			spawn_part = spawn_part,
+			spawn_part = data.SPAWN,
 			Roblox_team = Roblox_team,
 		}
-
-		teams[index] = team
 	end
 
-	const state: state = {
+	if loaded_map then
+		loaded_map:Destroy()
+	end
+	loaded_map = map
+	map.Parent = Workspace
+
+	return {
+		map = map,
+		map_name = info.MAP_NAME,
 		cages_are_closed = false,
 		connections = {},
 		teams = teams,
 	}
-
-	return state
 end
 
 -- Maybe this should be merged into `create_map`.
@@ -368,17 +291,10 @@ local function game_start(entities: { registry.entity }, roster: match_session.r
 		return
 	end
 
+	const state = create_map()
 	ReplicatedStorage.remotes.game_is_active:FireAllClients(true)
-	ReplicatedStorage.remotes.map_name:FireAllClients("test")
+	ReplicatedStorage.remotes.map_name:FireAllClients(state.map_name)
 
-	local team_count = 2
-	if roster then
-		team_count = 0
-		for _ in roster do
-			team_count += 1
-		end
-	end
-	const state = create_map(team_count)
 	active = true
 	current_state = state
 	setup_map(state)
@@ -417,9 +333,18 @@ local function on_match_ready(): ()
 end
 
 local start_pending = false
+local enabled = false
+local start_thread: thread? = nil
+local added_connection: registry.connection? = nil
+local removed_connection: registry.connection? = nil
+local ready_connection: RBXScriptConnection? = nil
 
 local function start_studio_match(): ()
+	start_thread = nil
 	start_pending = false
+	if not enabled then
+		return
+	end
 	const entities = registry.get_all()
 	if not active and #entities > 0 then
 		game_start(entities, nil)
@@ -433,7 +358,7 @@ local function on_entities_changed(): ()
 	if #registry.get_all() > 0 then
 		if not active and not start_pending then
 			start_pending = true
-			task.delay(5, start_studio_match)
+			start_thread = task.delay(5, start_studio_match)
 		end
 	elseif current_state then
 		game_stop(current_state)
@@ -462,12 +387,49 @@ local function on_entity_removed(entity: registry.entity): ()
 	on_entities_changed()
 end
 
-registry.added:Connect(on_entity_added)
-registry.removed:Connect(on_entity_removed)
+local function start(): ()
+	if enabled then
+		return
+	end
+	enabled = true
+	added_connection = registry.added:Connect(on_entity_added)
+	removed_connection = registry.removed:Connect(on_entity_removed)
 
-if RunService:IsStudio() then
-	on_entities_changed()
-else
-	match_session.ready:Connect(on_match_ready)
-	on_match_ready()
+	if RunService:IsStudio() then
+		on_entities_changed()
+	else
+		ready_connection = match_session.ready:Connect(on_match_ready)
+		on_match_ready()
+	end
 end
+
+local function stop(): ()
+	enabled = false
+	if start_thread then
+		task.cancel(start_thread)
+		start_thread = nil
+	end
+	start_pending = false
+	if added_connection then
+		added_connection:Disconnect()
+		added_connection = nil
+	end
+	if removed_connection then
+		removed_connection:Disconnect()
+		removed_connection = nil
+	end
+	if ready_connection then
+		ready_connection:Disconnect()
+		ready_connection = nil
+	end
+	if current_state then
+		game_stop(current_state)
+	end
+end
+
+return {
+	reserved_server_types = { "solo", "duo" },
+	studio = true,
+	start = start,
+	stop = stop,
+}

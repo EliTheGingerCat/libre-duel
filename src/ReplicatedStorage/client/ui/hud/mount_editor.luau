@@ -34,8 +34,6 @@ local function mount_editor(screen: ScreenGui)
 	local drag: drag_state? = nil
 	local saved_mouse_behavior = user_input_service.MouseBehavior
 	local saved_mouse_icon = user_input_service.MouseIconEnabled
-	local saved_camera: Camera? = nil
-	local saved_camera_type = Enum.CameraType.Custom
 	local menus = mount_menus(player_gui, screen.DisplayOrder + 1)
 
 	local function get_pointer(): Vector2
@@ -194,11 +192,6 @@ local function mount_editor(screen: ScreenGui)
 		if enabled then
 			saved_mouse_behavior = user_input_service.MouseBehavior
 			saved_mouse_icon = user_input_service.MouseIconEnabled
-			saved_camera = workspace.CurrentCamera
-			if saved_camera then
-				saved_camera_type = saved_camera.CameraType
-				saved_camera.CameraType = Enum.CameraType.Scriptable
-			end
 			context_action_service:BindActionAtPriority(
 				"hud_editor_controls",
 				sink_controls,
@@ -220,10 +213,6 @@ local function mount_editor(screen: ScreenGui)
 		else
 			run_service:UnbindFromRenderStep("hud_editor_cursor")
 			context_action_service:UnbindAction("hud_editor_controls")
-			if saved_camera then
-				saved_camera.CameraType = saved_camera_type
-				saved_camera = nil
-			end
 			user_input_service.MouseBehavior = saved_mouse_behavior
 			user_input_service.MouseIconEnabled = saved_mouse_icon
 		end
