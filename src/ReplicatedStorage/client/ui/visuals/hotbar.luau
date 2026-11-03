@@ -5,6 +5,7 @@ local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local scale = require(script.Parent.scale)
+local shadow = require(script.Parent.shadow)
 local tool_state = require(ReplicatedStorage.client.tools.tool_state)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
@@ -375,7 +376,7 @@ local function hotbar(props: use_editable_hud.props)
 				Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 1, -10),
 				Size = UDim2.fromOffset(680, 80),
 			},
-			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
+			create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0.45, 0),
 			}),

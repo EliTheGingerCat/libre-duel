@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local fade = require(script.Parent.Parent.effects.fade)
+local shadow = require(script.Parent.shadow)
 
 local create_element = React.createElement
 
@@ -54,7 +55,7 @@ local function title_label(props: {
 			PaddingRight = UDim.new(0, padding),
 			PaddingTop = UDim.new(0, 5),
 		}),
-		shadow = create_element("UIShadow", {
+		shadow = create_element(shadow, {
 			BlurRadius = UDim.new(0, 8),
 			ShowBehindParent = false,
 			Transparency = props.transparency:map(background_transparency),

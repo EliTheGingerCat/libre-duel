@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
+local shadow = require(script.Parent.shadow)
 
 local create_element = React.createElement
 
@@ -45,7 +46,7 @@ local function nametag(props: {
 				TextXAlignment = "Center",
 				TextYAlignment = "Center",
 			},
-			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
+			create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(1, 0),
 			}),

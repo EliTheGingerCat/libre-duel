@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
+local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
@@ -18,7 +19,7 @@ local function key(props: { name: string, position: Vector2 })
 		TextColor3 = Color3.new(1, 1, 1),
 		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 	}, {
-		shadow = create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
+		shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		corner = create_element("UICorner", {
 			TopLeftRadius = UDim.new(0, if props.name == "W" or props.name == "A" then 16 else 0),
 			TopRightRadius = UDim.new(0, if props.name == "W" or props.name == "D" then 16 else 0),
@@ -50,7 +51,7 @@ local function keystrokes()
 			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 		}, {
-			shadow = create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
+			shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			corner = create_element("UICorner", {
 				TopLeftRadius = UDim.new(0, 0),
 				TopRightRadius = UDim.new(0, 0),

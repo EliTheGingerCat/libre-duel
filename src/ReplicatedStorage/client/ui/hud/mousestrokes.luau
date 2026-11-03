@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
+local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
@@ -66,7 +67,7 @@ local function mousestrokes()
 			ZIndex = 2,
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),
-			shadow = create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
+			shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			stroke = create_element(
 				gradient_stroke,
 				{

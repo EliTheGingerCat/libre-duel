@@ -5,6 +5,7 @@ local MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
+local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
@@ -27,7 +28,7 @@ local function mode_option(props: { mode: MODE_OPTIONS.mode, busy: boolean, on_a
 	}, {
 		feedback = create_element(button_motion),
 		shadow = create_element(
-			"UIShadow",
+			shadow,
 			{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
 		),
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0, 60) }),

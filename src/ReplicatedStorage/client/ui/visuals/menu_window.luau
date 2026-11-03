@@ -4,6 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
 local gradient_stroke = require(script.Parent.gradient_stroke)
+local shadow = require(script.Parent.shadow)
 local use_ui_motion = require(script.Parent.use_ui_motion)
 local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
@@ -59,7 +60,7 @@ local function menu_window(props: props)
 			scale = create_element("UIScale", { Scale = motion:map(window_scale) }),
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 60) }),
 			shadow = create_element(
-				"UIShadow",
+				shadow,
 				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
 			),
 			stroke = create_element(gradient_stroke),

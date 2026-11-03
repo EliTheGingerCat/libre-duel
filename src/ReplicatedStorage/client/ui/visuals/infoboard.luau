@@ -3,6 +3,7 @@ local RunService = game:GetService("RunService")
 
 local React = require(ReplicatedStorage.Packages.react)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -298,7 +299,7 @@ local function infoboard(props: use_editable_hud.props)
 				PaddingRight = UDim.new(0, 15),
 				PaddingTop = UDim.new(0, 15),
 			}),
-			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
+			create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0.3, 0),
 			}),

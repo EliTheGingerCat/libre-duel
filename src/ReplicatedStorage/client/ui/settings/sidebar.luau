@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local category_button = require(script.Parent.category_button)
 local settings_registry = require(script.Parent.settings_registry)
+local shadow = require(script.Parent.Parent.visuals.shadow)
 local text_input = require(script.Parent.Parent.visuals.text_input)
 
 local function sidebar(
@@ -42,7 +43,7 @@ local function sidebar(
 	}, {
 		corner = React.createElement("UICorner", { CornerRadius = UDim.new(0, 40) }),
 		shadow = React.createElement(
-			"UIShadow",
+			shadow,
 			{ BlurRadius = UDim.new(0, 8), Transparency = 0.3, ShowBehindParent = false }
 		),
 		search = React.createElement("Frame", {

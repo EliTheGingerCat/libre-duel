@@ -5,6 +5,7 @@ const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local fade = require(script.Parent.Parent.effects.fade)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local notification_management = require(script.Parent.Parent.notification_management)
+local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_editor_enabled = require(script.Parent.Parent.hud.use_editor_enabled)
 
@@ -82,7 +83,7 @@ local function notification_component(props: {
 			BackgroundTransparency = 0.5 + (transparency * 0.5),
 			ZIndex = 2,
 		},
-		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 + (transparency * 0.7) }),
+		create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 + (transparency * 0.7) }),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),
