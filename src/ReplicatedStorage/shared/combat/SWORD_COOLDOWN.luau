@@ -1,3 +1,0 @@
-const SWORD_COOLDOWN = 0.35
-
-return SWORD_COOLDOWN

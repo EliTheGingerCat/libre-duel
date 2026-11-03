@@ -1,3 +1,0 @@
-const SWORD_DAMAGE = 10
-
-return SWORD_DAMAGE
