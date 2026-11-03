@@ -1,5 +1,5 @@
-local run_service = game:GetService("RunService")
-local user_input_service = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 type mouse_button = {
 	label: TextLabel,
@@ -71,7 +71,7 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 
 	local function on_input_began(input: InputObject, processed: boolean): ()
 		local key = keys[input.KeyCode]
-		if key and not processed and user_input_service:GetFocusedTextBox() == nil then
+		if key and not processed and UserInputService:GetFocusedTextBox() == nil then
 			key.BackgroundColor3 = PRESSED_KEY_COLOUR
 		end
 		local button = buttons[input.UserInputType]
@@ -133,12 +133,12 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 
 	reset_input()
 	local connections = {
-		user_input_service.InputBegan:Connect(on_input_began),
-		user_input_service.InputEnded:Connect(on_input_ended),
-		user_input_service.InputChanged:Connect(on_input_changed),
-		user_input_service.WindowFocusReleased:Connect(reset_input),
-		user_input_service.TextBoxFocused:Connect(reset_input),
-		run_service.RenderStepped:Connect(on_render),
+		UserInputService.InputBegan:Connect(on_input_began),
+		UserInputService.InputEnded:Connect(on_input_ended),
+		UserInputService.InputChanged:Connect(on_input_changed),
+		UserInputService.WindowFocusReleased:Connect(reset_input),
+		UserInputService.TextBoxFocused:Connect(reset_input),
+		RunService.RenderStepped:Connect(on_render),
 	}
 
 	local function disconnect(): ()

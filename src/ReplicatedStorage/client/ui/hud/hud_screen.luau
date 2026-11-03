@@ -11,7 +11,6 @@ local function hud_screen(props: {
 	Enabled: boolean?,
 	ResetOnSpawn: boolean?,
 	ClipToDeviceSafeArea: boolean?,
-	ScreenInsets: string?,
 })
 	local ref = React.useRef(nil :: Frame?)
 	local factor, set_factor = React.useBinding(1)

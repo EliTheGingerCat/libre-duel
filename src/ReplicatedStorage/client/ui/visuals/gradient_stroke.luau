@@ -16,7 +16,7 @@ local function gradient_stroke(props: {
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			BorderStrokePosition = props.border_position or Enum.BorderStrokePosition.Outer,
 			Color = Color3.new(1, 1, 1),
-			Thickness = 2,
+			Thickness = 1,
 		},
 		create_element("UIGradient", {
 			Color = ColorSequence.new(

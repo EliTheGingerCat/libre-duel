@@ -63,7 +63,7 @@ local function title_label(props: {
 			Name = "BorderStroke",
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Color = Color3.new(1, 1, 1),
-			Thickness = 2,
+			Thickness = 1,
 			Transparency = props.transparency,
 		}, {
 			gradient = create_element(stroke_gradient),

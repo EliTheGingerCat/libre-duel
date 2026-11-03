@@ -35,7 +35,7 @@ local function big_button()
 			{
 				ApplyStrokeMode = "Border",
 				Color = Color3.fromRGB(255, 255, 255),
-				Thickness = 2,
+				Thickness = 1,
 			},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({

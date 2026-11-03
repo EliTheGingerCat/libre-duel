@@ -1,9 +1,9 @@
-local players = game:GetService("Players")
-local replicated_storage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local hit_feedback = require(replicated_storage.client.combat.hit_feedback)
+local hit_feedback = require(ReplicatedStorage.client.combat.hit_feedback)
 
-local local_player = players.LocalPlayer
+local local_player = Players.LocalPlayer
 
 local combo = 0
 local reach = 0

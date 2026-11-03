@@ -1,7 +1,7 @@
-local replicated_storage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local react = require(replicated_storage.Packages.react)
-local react_roblox = require(replicated_storage.Packages["react-roblox"])
+local react = require(ReplicatedStorage.Packages.react)
+local react_roblox = require(ReplicatedStorage.Packages["react-roblox"])
 local registry = require(script.Parent.registry)
 
 type content_ref = { current: GuiObject? }

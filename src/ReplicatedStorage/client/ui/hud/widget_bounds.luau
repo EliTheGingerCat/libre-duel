@@ -69,7 +69,7 @@ local function widget_bounds(props: {
 		Visible = false,
 		ZIndex = 20,
 	}, {
-		stroke = create_element("UIStroke", { Color = Color3.new(1, 1, 1), Thickness = 2 }),
+		stroke = create_element("UIStroke", { Color = Color3.new(1, 1, 1), Thickness = 1 }),
 		handles = create_element(React.Fragment, {}, handles),
 		Delete = create_element(action_button, {
 			button_ref = props.delete_ref,

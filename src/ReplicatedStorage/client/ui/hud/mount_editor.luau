@@ -1,8 +1,8 @@
-local context_action_service = game:GetService("ContextActionService")
-local gui_service = game:GetService("GuiService")
-local players = game:GetService("Players")
-local run_service = game:GetService("RunService")
-local user_input_service = game:GetService("UserInputService")
+local ContextActionService = game:GetService("ContextActionService")
+local GuiService = game:GetService("GuiService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 local create_widget = require(script.Parent.editor_widget)
 local editor_state = require(script.Parent.editor_state)
@@ -26,22 +26,22 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	local new_button = screen:FindFirstChild("new_button")
 	assert(preview and preview:IsA("Frame"))
 	assert(new_button and new_button:IsA("TextButton"))
-	local player_gui = players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
+	local player_gui = Players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
 	assert(player_gui)
 	screen.Parent = player_gui
 	local views: { create_widget.view } = {}
 	local hovered: create_widget.view? = nil
 	local drag: drag_state? = nil
-	local saved_mouse_behavior = user_input_service.MouseBehavior
-	local saved_mouse_icon = user_input_service.MouseIconEnabled
+	local saved_mouse_behavior = UserInputService.MouseBehavior
+	local saved_mouse_icon = UserInputService.MouseIconEnabled
 	local function on_menu_changed(open: boolean): ()
 		set_content_visible(not open)
 	end
 	local menus = mount_menus(player_gui, screen.DisplayOrder + 1, on_menu_changed)
 
 	local function get_pointer(): Vector2
-		local inset = gui_service:GetGuiInset()
-		return user_input_service:GetMouseLocation() - inset - preview.AbsolutePosition
+		local inset = GuiService:GetGuiInset()
+		return UserInputService:GetMouseLocation() - inset - preview.AbsolutePosition
 	end
 
 	local function preview_factor(): number
@@ -122,8 +122,8 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	end
 
 	local function update_editor(): ()
-		user_input_service.MouseBehavior = Enum.MouseBehavior.Default
-		user_input_service.MouseIconEnabled = true
+		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+		UserInputService.MouseIconEnabled = true
 		if menus.is_open() then
 			return
 		end
@@ -193,9 +193,9 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		editor_state.set_enabled(enabled)
 		screen.Enabled = enabled
 		if enabled then
-			saved_mouse_behavior = user_input_service.MouseBehavior
-			saved_mouse_icon = user_input_service.MouseIconEnabled
-			context_action_service:BindActionAtPriority(
+			saved_mouse_behavior = UserInputService.MouseBehavior
+			saved_mouse_icon = UserInputService.MouseIconEnabled
+			ContextActionService:BindActionAtPriority(
 				"hud_editor_controls",
 				sink_controls,
 				false,
@@ -212,18 +212,18 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 				Enum.KeyCode.Thumbstick1,
 				Enum.KeyCode.ButtonA
 			)
-			run_service:BindToRenderStep("hud_editor_cursor", Enum.RenderPriority.Last.Value, update_editor)
+			RunService:BindToRenderStep("hud_editor_cursor", Enum.RenderPriority.Last.Value, update_editor)
 		else
-			run_service:UnbindFromRenderStep("hud_editor_cursor")
-			context_action_service:UnbindAction("hud_editor_controls")
-			user_input_service.MouseBehavior = saved_mouse_behavior
-			user_input_service.MouseIconEnabled = saved_mouse_icon
+			RunService:UnbindFromRenderStep("hud_editor_cursor")
+			ContextActionService:UnbindAction("hud_editor_controls")
+			UserInputService.MouseBehavior = saved_mouse_behavior
+			UserInputService.MouseIconEnabled = saved_mouse_icon
 		end
 		sync_widgets()
 	end
 
 	local function toggle_editor(_action_name: string, input_state: Enum.UserInputState): Enum.ContextActionResult
-		if user_input_service:GetFocusedTextBox() ~= nil then
+		if UserInputService:GetFocusedTextBox() ~= nil then
 			return Enum.ContextActionResult.Pass
 		end
 		if input_state == Enum.UserInputState.Begin then
@@ -289,12 +289,12 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 
 	local connections = {
 		new_button.Activated:Connect(open_selector),
-		user_input_service.InputBegan:Connect(on_input_began),
-		user_input_service.InputEnded:Connect(on_input_ended),
-		user_input_service.WindowFocusReleased:Connect(finish_drag),
+		UserInputService.InputBegan:Connect(on_input_began),
+		UserInputService.InputEnded:Connect(on_input_ended),
+		UserInputService.WindowFocusReleased:Connect(finish_drag),
 		preview:GetPropertyChangedSignal("AbsoluteSize"):Connect(on_size_changed),
 	}
-	context_action_service:BindActionAtPriority(
+	ContextActionService:BindActionAtPriority(
 		"hud_editor_toggle",
 		toggle_editor,
 		false,
@@ -305,7 +305,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 
 	local function disconnect(): ()
 		set_enabled(false)
-		context_action_service:UnbindAction("hud_editor_toggle")
+		ContextActionService:UnbindAction("hud_editor_toggle")
 		menus.disconnect()
 		unsubscribe()
 		for _, connection in connections do

@@ -1,6 +1,6 @@
-local replicated_storage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local react = require(replicated_storage.Packages.react)
+local react = require(ReplicatedStorage.Packages.react)
 local editor_state = require(script.Parent.editor_state)
 
 local function use_editor_enabled(): boolean

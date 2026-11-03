@@ -1,4 +1,4 @@
-local run_service = game:GetService("RunService")
+local RunService = game:GetService("RunService")
 
 local fps = 0
 local frames = 0
@@ -14,7 +14,7 @@ local function on_render(delta_time: number): ()
 	end
 end
 
-run_service.RenderStepped:Connect(on_render)
+RunService.RenderStepped:Connect(on_render)
 
 local function get_fps(): number
 	return fps

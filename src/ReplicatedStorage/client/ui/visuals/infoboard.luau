@@ -274,7 +274,6 @@ local function infoboard(props: use_editable_hud.props)
 			Name = "infoboard",
 			preview = props.preview,
 			ResetOnSpawn = false,
-			ScreenInsets = "None",
 		},
 		create_element(
 			"Frame",
@@ -306,7 +305,7 @@ local function infoboard(props: use_editable_hud.props)
 			create_element(
 				"UIStroke",
 				{
-					Thickness = 2,
+					Thickness = 1,
 					Color = Color3.fromRGB(255, 255, 255),
 				},
 				create_element("UIGradient", {

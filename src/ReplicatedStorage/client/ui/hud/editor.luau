@@ -59,7 +59,7 @@ local function editor()
 			BackgroundTransparency = 1,
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 8) }),
-			stroke = create_element("UIStroke", { Color = Color3.new(1, 1, 1), Thickness = 2 }),
+			stroke = create_element("UIStroke", { Color = Color3.new(1, 1, 1), Thickness = 1 }),
 		}),
 	})
 end

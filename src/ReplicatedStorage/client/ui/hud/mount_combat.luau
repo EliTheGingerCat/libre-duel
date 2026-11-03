@@ -1,7 +1,7 @@
-local replicated_storage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local combat_counters = require(script.Parent.combat_counters)
-const CUBE_SIZE = require(replicated_storage.shared.cube.CUBE_SIZE)
+const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
 
 local function mount_combat(reach_label: TextLabel?, combo_label: TextLabel?)
 	local function update(combo: number, reach: number): ()

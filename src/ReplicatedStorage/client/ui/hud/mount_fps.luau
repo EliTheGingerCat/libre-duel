@@ -1,7 +1,7 @@
-local replicated_storage = game:GetService("ReplicatedStorage")
-local run_service = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
-local get_fps = require(replicated_storage.client.util.get_fps)
+local get_fps = require(ReplicatedStorage.client.util.get_fps)
 
 local function mount_fps(label: TextLabel)
 	local icon = label:FindFirstChild("Icon")
@@ -16,7 +16,7 @@ local function mount_fps(label: TextLabel)
 	end
 
 	update()
-	local connection = run_service.RenderStepped:Connect(update)
+	local connection = RunService.RenderStepped:Connect(update)
 	local function disconnect(): ()
 		connection:Disconnect()
 	end

@@ -49,7 +49,7 @@ local function entity_card(props: {
 			{
 				Color = COLOURS.white,
 				ApplyStrokeMode = "Border",
-				Thickness = 2,
+				Thickness = 1,
 			},
 			create_element("UIGradient", {
 				Color = ColorSequence.new({
@@ -240,7 +240,7 @@ local function tablist(props: use_editable_hud.props)
 			create_element(
 				"UIStroke",
 				{
-					Thickness = 2,
+					Thickness = 1,
 					Color = COLOURS.white,
 					ApplyStrokeMode = "Border",
 				},

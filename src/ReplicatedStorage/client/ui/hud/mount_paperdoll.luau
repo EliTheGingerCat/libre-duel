@@ -1,7 +1,7 @@
-local players = game:GetService("Players")
-local run_service = game:GetService("RunService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
-local local_player = players.LocalPlayer
+local local_player = Players.LocalPlayer
 
 type part_pair = {
 	source: BasePart,
@@ -141,7 +141,7 @@ local function mount_paperdoll(viewport: ViewportFrame)
 	local added_connection = local_player.CharacterAdded:Connect(on_character_added)
 	local removing_connection = local_player.CharacterRemoving:Connect(detach_character)
 	local appearance_connection = local_player.CharacterAppearanceLoaded:Connect(schedule_rebuild)
-	local render_connection = run_service.RenderStepped:Connect(update_pose)
+	local render_connection = RunService.RenderStepped:Connect(update_pose)
 	if local_player.Character then
 		on_character_added(local_player.Character)
 	end

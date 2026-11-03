@@ -37,7 +37,7 @@ local function slider_display(props: {
 			CornerRadius = UDim.new(0.45, 0),
 		}),
 		create_element("UIStroke", {
-			Thickness = 2,
+			Thickness = 1,
 			Color = props.colour_stroke,
 			ApplyStrokeMode = "Border",
 		}),
@@ -258,7 +258,7 @@ local function active_slot_addendum()
 		"UIStroke",
 		{
 			Color = COLOURS.white,
-			Thickness = 2,
+			Thickness = 1,
 		},
 		create_element("UIGradient", {
 			Color = ColorSequence.new({
@@ -383,7 +383,7 @@ local function hotbar(props: use_editable_hud.props)
 				"UIStroke",
 				{
 					Color = COLOURS.white,
-					Thickness = 2,
+					Thickness = 1,
 				},
 				create_element("UIGradient", {
 					Color = ColorSequence.new({
