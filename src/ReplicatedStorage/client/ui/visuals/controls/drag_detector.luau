@@ -12,6 +12,7 @@ local function drag_detector(props: { axis: Vector2?, on_changed: (Vector2) -> (
 		props.on_changed(Vector2.new(offset.X / math.max(1, size.X), offset.Y / math.max(1, size.Y)))
 	end
 	return React.createElement("UIDragDetector", {
+		CursorIcon = "rbxasset://textures/Cursors/KeyboardMouse/ArrowCursor.png",
 		DragStyle = if props.axis
 			then Enum.UIDragDetectorDragStyle.TranslateLine
 			else Enum.UIDragDetectorDragStyle.TranslatePlane,

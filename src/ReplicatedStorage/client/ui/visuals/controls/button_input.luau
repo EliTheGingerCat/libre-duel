@@ -63,6 +63,7 @@ local function button_input(props: props)
 		end
 	end
 	return React.createElement("UIDragDetector", {
+		CursorIcon = "rbxasset://textures/Cursors/KeyboardMouse/ArrowCursor.png",
 		Name = "drag_detector",
 		ref = ref,
 		ResponseStyle = Enum.UIDragDetectorResponseStyle.CustomOffset,

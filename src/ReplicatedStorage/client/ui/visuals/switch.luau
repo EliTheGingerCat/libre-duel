@@ -96,6 +96,7 @@ local function switch(props: { active: boolean?, on_changed: ((boolean) -> ())? 
 		}, {
 			corner = React.createElement("UICorner", { CornerRadius = UDim.new(1, 0) }),
 			drag = React.createElement("UIDragDetector", {
+				CursorIcon = "rbxasset://textures/Cursors/KeyboardMouse/ArrowCursor.png",
 				DragStyle = Enum.UIDragDetectorDragStyle.TranslateLine,
 				DragAxis = Vector2.new(1, 0),
 				ResponseStyle = Enum.UIDragDetectorResponseStyle.CustomOffset,
