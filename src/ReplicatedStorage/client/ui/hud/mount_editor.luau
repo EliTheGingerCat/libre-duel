@@ -5,21 +5,13 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local create_widget = require(script.Parent.editor_widget)
+local editor_drag = require(script.Parent.editor_drag)
 local editor_state = require(script.Parent.editor_state)
+local get_drag_offset = require(script.Parent.Parent.visuals.controls.get_drag_offset)
 local geometry = require(script.Parent.editor_geometry)
 local mount_menus = require(script.Parent.mount_menus)
 const KEYBINDS = require(script.Parent.Parent.Parent.util.KEYBINDS)
 local registry = require(script.Parent.registry)
-
-type drag_state = {
-	view: create_widget.view,
-	pointer: Vector2,
-	start: geometry.rectangle,
-	rect: geometry.rectangle,
-	multiplier: number,
-	anchor: Vector2,
-	handle: Vector2?,
-}
 
 local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) -> ())
 	local preview = screen:FindFirstChild("Bounds")
@@ -31,7 +23,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	screen.Parent = player_gui
 	local views: { create_widget.view } = {}
 	local hovered: create_widget.view? = nil
-	local drag: drag_state? = nil
+	local drag = editor_drag(preview, screen, views)
 	local saved_mouse_behavior = UserInputService.MouseBehavior
 	local saved_mouse_icon = UserInputService.MouseIconEnabled
 	local function on_menu_changed(open: boolean): ()
@@ -42,10 +34,6 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	local function get_pointer(): Vector2
 		local inset = GuiService:GetGuiInset()
 		return UserInputService:GetMouseLocation() - inset - preview.AbsolutePosition
-	end
-
-	local function preview_factor(): number
-		return preview.AbsoluteSize.X / math.max(1, screen.AbsoluteSize.X)
 	end
 
 	local function button_contains(button: ImageButton?, pointer: Vector2): boolean
@@ -77,48 +65,19 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		return nil
 	end
 
-	local function finish_drag(): ()
-		local current = drag
-		drag = nil
-		if
-			current
-			and preview.AbsoluteSize.X > 0
-			and preview.AbsoluteSize.Y > 0
-			and table.find(registry.entries, current.view.item)
-		then
-			current.view.item.layout =
-				geometry.get_layout(current.rect, preview.AbsoluteSize, preview_factor())
-			current.view.item.refresh()
-		end
-	end
-
-	local function update_drag(pointer: Vector2): ()
-		local current = drag
-		if not current or preview.AbsoluteSize.X <= 0 or preview.AbsoluteSize.Y <= 0 then
+	local function begin_drag(view: create_widget.view, source: UIDragDetector, position: Vector2, handle: Vector2?): ()
+		if not editor_state.enabled or menus.is_open() then
 			return
 		end
-		local others: { geometry.rectangle } = {}
-		for _, view in views do
-			if view ~= current.view and not view.item.hidden then
-				table.insert(others, view.get_rectangle())
-			end
+		if drag.begin(view, source, get_drag_offset(preview, position), handle) then
+			hovered = view
 		end
-		local delta = pointer - current.pointer
-		local rect: geometry.rectangle
-		if current.handle then
-			rect =
-				geometry.resize(current.start, delta, current.handle, others, preview.AbsoluteSize, current.multiplier)
-			current.view.item.multiplier = current.multiplier * rect.size.X / current.start.size.X
-		else
-			rect = geometry.move(current.start, delta, others, preview.AbsoluteSize)
-		end
-		current.rect = rect
-		current.view.item.layout = {
-			anchor = current.anchor,
-			offset = (rect.position + rect.size * current.anchor - preview.AbsoluteSize * current.anchor)
-				/ preview_factor(),
-		}
-		current.view.item.refresh()
+	end
+	local function update_drag(source: UIDragDetector, position: Vector2): ()
+		drag.update(source, get_drag_offset(preview, position))
+	end
+	local function finish_drag_input(source: UIDragDetector, position: Vector2): ()
+		drag.finish_input(source, get_drag_offset(preview, position))
 	end
 
 	local function update_editor(): ()
@@ -127,19 +86,21 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		if menus.is_open() then
 			return
 		end
-		local pointer = get_pointer()
-		update_drag(pointer)
+		local active_view = drag.get_view()
+		local input_pointer = drag.get_pointer()
+		local touch = UserInputService:GetLastInputType() == Enum.UserInputType.Touch
+		local pointer = if (active_view or touch) and input_pointer then input_pointer else get_pointer()
 		for _, view in views do
 			view.refresh()
 		end
-		hovered = find_hovered(pointer)
+		hovered = active_view or find_hovered(pointer)
 		for _, view in views do
 			view.hover(view == hovered, pointer)
 		end
 	end
 
 	local function prepare_menu(): ()
-		finish_drag()
+		drag.finish()
 		hovered = nil
 		for _, view in views do
 			view.hover(false, Vector2.zero)
@@ -163,7 +124,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	end
 
 	local function sync_widgets(): ()
-		finish_drag()
+		drag.finish()
 		hovered = nil
 		for _, view in views do
 			view.destroy()
@@ -179,7 +140,16 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		for _, item in registry.entries do
 			item.preview = preview
 			item.refresh()
-			table.insert(views, create_widget(item, preview, delete_widget, open_settings))
+			table.insert(
+				views,
+				create_widget(item, preview, {
+					delete = delete_widget,
+					settings = open_settings,
+					drag_start = begin_drag,
+					drag_move = update_drag,
+					drag_finish = finish_drag_input,
+				})
+			)
 		end
 	end
 
@@ -188,7 +158,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	end
 
 	local function set_enabled(enabled: boolean): ()
-		finish_drag()
+		drag.finish()
 		menus.close()
 		editor_state.set_enabled(enabled)
 		screen.Enabled = enabled
@@ -232,48 +202,8 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		return Enum.ContextActionResult.Sink
 	end
 
-	local function on_input_began(input: InputObject): ()
-		if not editor_state.enabled or menus.is_open() or input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-			return
-		end
-		local pointer = get_pointer()
-		hovered = find_hovered(pointer)
-		local view = hovered
-		if not view then
-			return
-		end
-		if
-			view.bounds.current and view.bounds.current.Visible
-			and (button_contains(view.delete_button.current, pointer) or button_contains(view.settings_button.current, pointer))
-		then
-			return
-		end
-		local rect = view.get_rectangle()
-		if rect.size.X <= 0 or rect.size.Y <= 0 then
-			return
-		end
-		drag = {
-			view = view,
-			pointer = pointer,
-			start = rect,
-			rect = rect,
-			multiplier = view.item.multiplier,
-			anchor = view.item.container.AnchorPoint,
-			handle = geometry.get_handle(rect, pointer),
-		}
-	end
-
-	local function on_input_ended(input: InputObject): ()
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			if drag then
-				update_drag(get_pointer())
-			end
-			finish_drag()
-		end
-	end
-
 	local function on_size_changed(): ()
-		finish_drag()
+		drag.finish()
 		for _, view in views do
 			view.item.refresh()
 		end
@@ -289,9 +219,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 
 	local connections = {
 		new_button.Activated:Connect(open_selector),
-		UserInputService.InputBegan:Connect(on_input_began),
-		UserInputService.InputEnded:Connect(on_input_ended),
-		UserInputService.WindowFocusReleased:Connect(finish_drag),
+		UserInputService.WindowFocusReleased:Connect(drag.finish),
 		preview:GetPropertyChangedSignal("AbsoluteSize"):Connect(on_size_changed),
 	}
 	ContextActionService:BindActionAtPriority(
