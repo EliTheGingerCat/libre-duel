@@ -1,10 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local signal = require(ReplicatedStorage.Packages.signal)
+local Signal = require(ReplicatedStorage.Packages.signal)
+local cursor_state = require(script.Parent.Parent.cursor_state)
 
 local mode_selector_state = {
 	enabled = false,
-	on_change = signal.new(),
+	on_change = Signal.new(),
 }
 
 local function set_enabled(enabled: boolean): ()
@@ -12,6 +13,7 @@ local function set_enabled(enabled: boolean): ()
 		return
 	end
 	mode_selector_state.enabled = enabled
+	cursor_state.set_free("mode_selector", enabled)
 	mode_selector_state.on_change:Fire()
 end
 

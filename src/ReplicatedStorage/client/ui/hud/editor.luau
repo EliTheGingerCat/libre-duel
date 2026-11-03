@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local mount_editor = require(script.Parent.mount_editor)
@@ -32,7 +34,7 @@ local function editor()
 			RichText = true,
 			TextSize = 48,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			FontFace = FONTS.regular,
 			Text = 'Welcome to the HUD editor!\n<font size="24">Try dragging around some HUD elements.</font>\n<font size="24">The white border represents the bounds of the screen.</font>',
 		}),
 		new_button = create_element("TextButton", {
@@ -40,13 +42,13 @@ local function editor()
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.fromScale(0.5, 0.99),
 			Size = UDim2.fromOffset(200, 50),
-			BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+			BackgroundColor3 = COLOURS.surface,
 			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 			Text = "⊕ New",
 			TextSize = 36,
 			TextColor3 = green,
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			FontFace = FONTS.regular,
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(1, 0) }),
 			stroke = create_element(gradient_stroke, { colour = green, rotation = -90 }),

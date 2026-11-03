@@ -18,7 +18,7 @@ local function notification_add(message: string): ()
 	local new_notification: notification = {
 		id = current_id,
 		message = message,
-		created_at = tick(),
+		created_at = os.clock(),
 	}
 
 	table.insert(existing_notifications, new_notification)
@@ -43,10 +43,15 @@ local function notification_remove(id: number): ()
 	on_change:Fire()
 end
 
+-- A copy, so callers cannot change the notifications without firing on_change.
+local function notification_get_all(): { notification }
+	return table.clone(existing_notifications)
+end
+
 local notification_management = {
 	add = notification_add,
+	get_all = notification_get_all,
 	on_change = on_change,
-	existing = existing_notifications,
 	remove = notification_remove,
 }
 

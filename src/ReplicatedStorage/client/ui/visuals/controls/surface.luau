@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.gradient_stroke)
 local shadow = require(script.Parent.Parent.shadow)
@@ -13,7 +14,7 @@ local function surface(props: { radius: number?, danger: boolean? })
 			Transparency = 0.3,
 		}),
 		stroke = React.createElement(gradient_stroke, {
-			colour = if props.danger then Color3.new(177 / 255, 76 / 255, 78 / 255) else nil,
+			colour = if props.danger then COLOURS.danger else nil,
 		}),
 	})
 end

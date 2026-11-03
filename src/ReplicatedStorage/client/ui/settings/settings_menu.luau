@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local about = require(script.Parent.about)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
@@ -59,7 +60,7 @@ local function settings_menu(props: { enabled: boolean, on_close: () -> () })
 			Text = if search ~= "" then "No settings found." else "No settings here yet.",
 			TextSize = 30,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 		})
 	end
 	return React.createElement(menu_window, {

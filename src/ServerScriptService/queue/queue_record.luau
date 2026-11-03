@@ -1,6 +1,10 @@
-const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-export type mode = "solo" | "duo"
+const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
+const QUEUE_MODES = require(ReplicatedStorage.shared.queue.QUEUE_MODES)
+const parse_queue_mode = require(ReplicatedStorage.shared.queue.parse_queue_mode)
+
+export type mode = QUEUE_MODES.mode
 export type status = "waiting" | "ready" | "started" | "cancelled"
 export type member = {
 	user_id: number,
@@ -17,15 +21,6 @@ export type record = {
 	arrival_deadline: number,
 	destination_job_id: string,
 }
-
-local function parse_mode(value: unknown): mode?
-	if value == "solo" then
-		return "solo"
-	elseif value == "duo" then
-		return "duo"
-	end
-	return nil
-end
 
 local function as_dictionary(value: unknown): { [string]: unknown }?
 	if typeof(value) ~= "table" then
@@ -65,7 +60,7 @@ local function decode(value: unknown): record?
 	if fields == nil then
 		return nil
 	end
-	const mode: mode? = parse_mode(fields.mode)
+	const mode: mode? = parse_queue_mode(fields.mode)
 	const status = fields.status
 	const id = fields.id
 	const matchmaking_type = fields.matchmaking_type
@@ -246,7 +241,7 @@ return {
 	create = create,
 	decode = decode,
 	find_member = find_member,
-	parse_mode = parse_mode,
+	parse_mode = parse_queue_mode,
 	prune = prune,
 	release = release,
 	renew = renew,

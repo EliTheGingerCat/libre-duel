@@ -30,7 +30,7 @@ local function check_eating_finished(player: Player): boolean
 	return false
 end
 
-set_cake_state.OnServerInvoke = function(player, new_state: boolean)
+local function on_set_cake_state(player: Player, new_state: unknown): boolean
 	local eating_state = eating_timestamps[player]
 	if eating_state ~= nil then
 		local thread = eating_state.thread
@@ -51,9 +51,10 @@ set_cake_state.OnServerInvoke = function(player, new_state: boolean)
 
 		local thread_returned: boolean
 
-		local thread = task.spawn(function()
+		local function wait_for_eating(): ()
 			thread_returned = check_eating_finished(player)
-		end)
+		end
+		local thread = task.spawn(wait_for_eating)
 
 		eating_timestamps[player]["thread"] = thread
 		while coroutine.status(thread) ~= "dead" do
@@ -67,3 +68,5 @@ set_cake_state.OnServerInvoke = function(player, new_state: boolean)
 		return false
 	end
 end
+
+set_cake_state.OnServerInvoke = on_set_cake_state

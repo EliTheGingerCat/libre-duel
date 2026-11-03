@@ -5,7 +5,7 @@ const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
 const match_session = require(script.Parent.match_session)
 const queue_lobby = require(script.Parent.queue_lobby)
 const queue_record = require(script.Parent.queue_record)
-local queue_status = require(script.Parent.queue_status)
+const queue_status = require(script.Parent.queue_status)
 const queue_store = require(script.Parent.queue_store)
 
 type record = queue_record.record
@@ -99,11 +99,11 @@ local function accept(player: Player): ()
 		return entry
 	end
 	local result = queue_store.update(mode, id, confirm_arrival)
-	for attempt = 1, 2 do
+	for attempt = 1, QUEUE_CONFIG.arrival_retries do
 		if result.ok or player.Parent ~= Players then
 			break
 		end
-		task.wait(2 ^ attempt)
+		task.wait(QUEUE_CONFIG.retry_backoff_base ^ attempt)
 		result = queue_store.update(mode, id, confirm_arrival)
 	end
 	validating[player] = nil
@@ -142,71 +142,78 @@ local function accept(player: Player): ()
 	context.next_poll = 0
 end
 
-local function refresh(context: context): ()
-	local result = queue_store.get(context.mode, context.id)
-	if result.ok and result.entry and os.time() - context.last_heartbeat >= QUEUE_CONFIG.heartbeat_interval then
-		const tokens: { [string]: string } = {}
-		for player, token in context.players do
-			if player.Parent == Players then
-				tokens[tostring(player.UserId)] = token
-			end
-		end
-		local function renew_arrivals(entry: record?): record?
-			if entry and entry.destination_job_id == game.JobId then
-				queue_record.renew(entry, tokens, os.time())
-				return entry
-			end
-			return nil
-		end
-		result = queue_store.update(context.mode, context.id, renew_arrivals)
-		if result.ok then
-			context.last_heartbeat = os.time()
+local function collect_tokens(context: context): { [string]: string }
+	const tokens: { [string]: string } = {}
+	for player, token in context.players do
+		if player.Parent == Players then
+			tokens[tostring(player.UserId)] = token
 		end
 	end
+	return tokens
+end
+
+local function collect_roster(entry: record): match_session.roster
+	const roster: match_session.roster = {}
+	for team_name, members in entry.teams do
+		const user_ids: { number } = {}
+		for _, member in members do
+			table.insert(user_ids, member.user_id)
+		end
+		roster[team_name] = user_ids
+	end
+	return roster
+end
+
+local function try_start(context: context): ()
+	local function start_match(latest: record?): record?
+		if latest == nil or current ~= context then
+			return nil
+		end
+		queue_record.prune(latest, os.time())
+		if
+			(latest.status ~= "ready" and latest.status ~= "started")
+			or latest.destination_job_id ~= game.JobId
+			or not all_present(context, latest)
+		then
+			return nil
+		end
+		latest.status = "started"
+		return latest
+	end
+	const started = queue_store.update(context.mode, context.id, start_match)
+	const entry = started.entry
+	if not started.ok or entry == nil or current ~= context then
+		return
+	end
+	if not all_present(context, entry) then
+		requeue(context)
+		return
+	end
+	context.started = true
+	for player in context.players do
+		queue_status.clear(player)
+	end
+	match_session.start(collect_roster(entry))
+end
+
+local function refresh(context: context): ()
+	const now = os.time()
+	const heartbeat_due = now - context.last_heartbeat >= QUEUE_CONFIG.heartbeat_interval
+	const result = if heartbeat_due
+		then queue_store.renew(context.mode, context.id, collect_tokens(context), true)
+		else queue_store.get(context.mode, context.id)
+	if heartbeat_due and result.ok then
+		context.last_heartbeat = now
+	end
+	const entry = result.entry
 	if result.ok and current == context then
-		const entry = result.entry
 		if entry then
-			queue_record.prune(entry, os.time())
+			queue_record.prune(entry, now)
 		end
 		if entry == nil or (entry.status ~= "ready" and entry.status ~= "started") then
 			requeue(context)
 		elseif all_present(context, entry) then
-			local function start_match(latest: record?): record?
-				if latest == nil or current ~= context then
-					return nil
-				end
-				queue_record.prune(latest, os.time())
-				if
-					(latest.status ~= "ready" and latest.status ~= "started")
-					or latest.destination_job_id ~= game.JobId
-					or not all_present(context, latest)
-				then
-					return nil
-				end
-				latest.status = "started"
-				return latest
-			end
-			const started = queue_store.update(context.mode, context.id, start_match)
-			const started_entry = started.entry
-			if started.ok and started_entry and current == context then
-				if all_present(context, started_entry) then
-					const roster: match_session.roster = {}
-					for team_name, members in started_entry.teams do
-						const user_ids: { number } = {}
-						for _, member in members do
-							table.insert(user_ids, member.user_id)
-						end
-						roster[team_name] = user_ids
-					end
-					context.started = true
-					for player in context.players do
-						queue_status.clear(player)
-					end
-					match_session.start(roster)
-				else
-					requeue(context)
-				end
-			end
+			try_start(context)
 		elseif entry.status == "started" then
 			-- Recover a committed start whose response was lost, without starting a partial roster.
 			requeue(context)

@@ -1,3 +1,6 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Signal = require(ReplicatedStorage.Packages.signal)
 local geometry = require(script.Parent.editor_geometry)
 local widget_copies = require(script.Parent.widget_copies)
 local widget_corners = require(script.Parent.widget_corners)
@@ -21,23 +24,23 @@ export type entry = {
 }
 
 local entries: { entry } = {}
-local listeners: { () -> () } = {}
+local changed = Signal.new()
 
 local function notify(): ()
-	for _, callback in table.clone(listeners) do
-		callback()
-	end
+	changed:Fire()
 end
 
 local function subscribe(callback: () -> ())
-	table.insert(listeners, callback)
+	local connection = changed:Connect(callback)
 	local function disconnect(): ()
-		local index = table.find(listeners, callback)
-		if index then
-			table.remove(listeners, index)
-		end
+		connection:Disconnect()
 	end
 	return disconnect
+end
+
+-- A copy, so callers cannot change the registry without notifying subscribers.
+local function get_entries(): { entry }
+	return table.clone(entries)
 end
 
 local function register(
@@ -161,7 +164,7 @@ return {
 	add = add,
 	remove = remove,
 	clear_duplicates = widget_copies.clear,
-	entries = entries,
+	get_entries = get_entries,
 	register = register,
 	subscribe = subscribe,
 }

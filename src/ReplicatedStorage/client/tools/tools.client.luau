@@ -1,19 +1,19 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
+const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+const TOOLS = require(script.Parent.TOOL_LIST)
 local attack_melee = require(script.Parent.sword.attack_melee)
 local dissolve_cube = require(script.Parent.dissolver.dissolve_cube)
 local eat_cake = require(script.Parent.cake.eat_cake)
 local editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
 local get_slot_tool = require(script.Parent.get_slot_tool)
-const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 local mode_selector_state = require(ReplicatedStorage.client.ui.matchmaking.mode_selector_state)
 local open_mode_selector = require(script.Parent.mode_selector.open_mode_selector)
 local place_cube = require(script.Parent.cube.place_cube)
 local pull_bow = require(script.Parent.bow.pull_bow)
 local table_flip = require(ReplicatedStorage.client.util.table_flip)
 local tool_registry = require(ReplicatedStorage.shared.tools.registry)
-const TOOLS = require(script.Parent.TOOL_LIST)
 local tool_state = require(script.Parent.tool_state)
 
 -- Variants share their base tool's behaviour, so each handler receives the selected tool to read its appearance.

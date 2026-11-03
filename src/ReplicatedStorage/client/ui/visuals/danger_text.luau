@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
@@ -20,7 +21,7 @@ local function danger_text(props: { text: string? })
 				AutomaticSize = "Y",
 				BackgroundTransparency = 1,
 				Size = UDim2.new(1, 0, 0, 32),
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+				FontFace = FONTS.regular,
 				TextSize = 30,
 				TextXAlignment = "Left",
 				Text = props.text or "You did the cat. This will have big consequences.",

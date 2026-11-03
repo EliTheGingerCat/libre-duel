@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local drag_detector = require(script.Parent.controls.drag_detector)
 local surface = require(script.Parent.controls.surface)
@@ -52,7 +54,7 @@ local function slider(props: {
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextSize = 32,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 		}),
 		value = React.createElement("TextLabel", {
 			BackgroundTransparency = 1,
@@ -62,7 +64,7 @@ local function slider(props: {
 			TextXAlignment = Enum.TextXAlignment.Right,
 			TextSize = 32,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 		}),
 		input = React.createElement("TextButton", {
 			Name = "slider",
@@ -80,7 +82,7 @@ local function slider(props: {
 				BorderSizePixel = 0,
 				BackgroundColor3 = if props.gradient
 					then Color3.new(1, 1, 1)
-					else Color3.new(17 / 255, 17 / 255, 17 / 255),
+					else COLOURS.surface,
 				BackgroundTransparency = if props.gradient then 0 else 0.5,
 			}, {
 				surface = React.createElement(surface),

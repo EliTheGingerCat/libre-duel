@@ -1,13 +1,15 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
 local surface = require(script.Parent.controls.surface)
 local use_ui_motion = require(script.Parent.use_ui_motion)
 
-local DEFAULT_OPTIONS: { { text: string, colour: Color3? } } = {
-	{ text = "Red", colour = Color3.new(177 / 255, 76 / 255, 78 / 255) },
+const DEFAULT_OPTIONS: { { text: string, colour: Color3? } } = {
+	{ text = "Red", colour = COLOURS.danger },
 	{ text = "Blue", colour = Color3.new(13 / 255, 162 / 255, 221 / 255) },
 	{ text = "Spectator", colour = Color3.new(1, 1, 1) },
 }
@@ -57,7 +59,7 @@ local function dropdown(props: {
 			Text = option.text,
 			TextColor3 = option.colour or Color3.new(1, 1, 1),
 			TextSize = 32,
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 			[React.Event.Activated] = choose,
 		}, { motion = React.createElement(button_motion) })
 	end
@@ -67,7 +69,7 @@ local function dropdown(props: {
 		Text = value or "",
 		TextColor3 = selected_colour,
 		TextSize = 32,
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Bold),
+		FontFace = FONTS.bold,
 	})
 	children.arrow = React.createElement("ImageLabel", {
 		AnchorPoint = Vector2.new(1, 0),
@@ -80,7 +82,7 @@ local function dropdown(props: {
 	return React.createElement(animated_button, {
 		Name = "dropdown",
 		Size = motion:map(size),
-		BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,
 		Text = "",
 		[React.Event.Activated] = toggle,

@@ -1,14 +1,23 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local react = require(ReplicatedStorage.Packages.react)
-local react_roblox = require(ReplicatedStorage.Packages["react-roblox"])
+local React = require(ReplicatedStorage.Packages.react)
+local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local registry = require(script.Parent.registry)
 
 type content_ref = { current: GuiObject? }
 export type props = { on_remove: (() -> ())?, preview: boolean? }
 
 local function use_editable_hud(component: (props) -> unknown, props: props): content_ref
-	local ref: content_ref = react.useRef(nil)
+	local ref: content_ref = React.useRef(nil)
+	-- Registration happens once, so read on_remove through a ref to always call the latest one.
+	local on_remove_ref = React.useRef(props.on_remove)
+	on_remove_ref.current = props.on_remove
+	local function call_on_remove(): ()
+		local on_remove = on_remove_ref.current
+		if on_remove then
+			on_remove()
+		end
+	end
 	local function register_content()
 		if props.preview then
 			return
@@ -23,7 +32,7 @@ local function use_editable_hud(component: (props) -> unknown, props: props): co
 		assert(player_gui and player_gui:IsA("PlayerGui"))
 		local function create(on_remove: () -> ())
 			local container = Instance.new("Folder")
-			local tree = react_roblox.createRoot(container)
+			local tree = ReactRoblox.createRoot(container)
 			local active = true
 			local function disconnect(): ()
 				if not active then
@@ -34,17 +43,17 @@ local function use_editable_hud(component: (props) -> unknown, props: props): co
 				container:Destroy()
 			end
 			tree:render(
-				react_roblox.createPortal(react.createElement(component, { on_remove = on_remove }), player_gui)
+				ReactRoblox.createPortal(React.createElement(component, { on_remove = on_remove }), player_gui)
 			)
 			return disconnect
 		end
 		local function render_preview()
-			return react.createElement(component, { preview = true })
+			return React.createElement(component, { preview = true })
 		end
-		return registry.register(content, screen, create, props.on_remove, render_preview)
+		return registry.register(content, screen, create, if props.on_remove then call_on_remove else nil, render_preview)
 	end
 	-- Restore the native parent before React removes its host instances.
-	react.useLayoutEffect(register_content, {})
+	React.useLayoutEffect(register_content, {})
 	return ref
 end
 

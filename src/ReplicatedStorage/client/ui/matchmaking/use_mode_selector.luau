@@ -2,9 +2,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
+const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
 local React = require(ReplicatedStorage.Packages.react)
 local editor_state = require(script.Parent.Parent.hud.editor_state)
-local MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
 local mode_selector_state = require(script.Parent.mode_selector_state)
 local notification_management = require(script.Parent.Parent.notification_management)
 

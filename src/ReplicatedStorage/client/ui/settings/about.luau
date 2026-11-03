@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 
 local git_info = ReplicatedStorage:WaitForChild("git_info")
@@ -37,7 +38,7 @@ local function about()
 				Size = UDim2.new(1, 0, 0, 0),
 				AutomaticSize = Enum.AutomaticSize.Y,
 				BackgroundTransparency = 1,
-				FontFace = Font.fromId(11702779409),
+				FontFace = FONTS.regular,
 				TextColor3 = Color3.new(1, 1, 1),
 				TextSize = 36,
 				TextWrapped = true,
@@ -48,7 +49,7 @@ local function about()
 				Size = UDim2.new(1, 0, 0, 0),
 				AutomaticSize = Enum.AutomaticSize.Y,
 				BackgroundTransparency = 1,
-				FontFace = Font.fromId(11702779409),
+				FontFace = FONTS.regular,
 				TextColor3 = Color3.new(1, 1, 1),
 				TextSize = 20,
 				TextWrapped = true,

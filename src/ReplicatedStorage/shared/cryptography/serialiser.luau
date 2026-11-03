@@ -1,7 +1,7 @@
 local serialiser = {}
 
 -- encrypted data is Goofy with roblox types so serialisation and deserialisation is needed
-function serialiser.serialise(data)
+function serialiser.serialise(data: any): any
 	local t = typeof(data)
 
 	if t == "Vector3" then
@@ -23,7 +23,7 @@ function serialiser.serialise(data)
 	return data
 end
 
-function serialiser.deserialise(data)
+function serialiser.deserialise(data: any): any
 	if typeof(data) == "table" then
 		if data.__type then
 			if data.__type == "Vector3" then

@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local React = require(ReplicatedStorage.Packages.react)
 local alpha_grid = require(script.Parent.Parent.controls.alpha_grid)
 local colour_math = require(script.Parent.colour_math)
@@ -39,7 +40,7 @@ local function picker(props: { colour: Color3, alpha: number, on_changed: (Color
 	return React.createElement("Frame", {
 		Name = "picker",
 		Size = UDim2.fromOffset(300, 425),
-		BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.2,
 		Active = true,
 	}, {

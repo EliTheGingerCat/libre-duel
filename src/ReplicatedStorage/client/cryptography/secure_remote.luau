@@ -1,19 +1,19 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local cryptography = require(ReplicatedStorage.Packages.cryptography)
-local keys = require(script.Parent.keys)
 local get_shared_key = require(ReplicatedStorage.shared.cryptography.get_shared_key)
+local keys = require(script.Parent.keys)
 local serialiser = require(ReplicatedStorage.shared.cryptography.serialiser)
 
-local Blake3 = cryptography.Hashing.Blake3
 const CSPRNG = cryptography.Utilities.CSPRNG
-const X25519 = cryptography.Verification.EdDSA.X25519
 const AEAD = cryptography.Encryption.AEAD
+
+type packet = { public: buffer, nonce: buffer, ciphertext: buffer, tag: buffer }
 
 local secure_remote = {}
 
-local function encrypt_payload(raw_data)
+local function encrypt_payload(raw_data: unknown): packet
 	while typeof(keys["server_public"]) ~= "buffer" do
 		task.wait()
 	end
@@ -33,15 +33,14 @@ local function encrypt_payload(raw_data)
 	}
 end
 
-local function decrypt_payload(packet)
-	if typeof(keys["masked"]) ~= "buffer" or typeof(packet.public) ~= "buffer" then
+local function decrypt_payload(packet: any): unknown
+	if typeof(keys["masked"]) ~= "buffer" or typeof(packet) ~= "table" or typeof(packet.public) ~= "buffer" then
 		return nil
 	end
 
 	local derived_key = get_shared_key(packet.public, keys["masked"])
-	local success, decrypted_buffer = pcall(function()
-		return AEAD.Decrypt(packet.ciphertext, derived_key, packet.nonce, packet.tag, nil, nil, true)
-	end)
+	local success, decrypted_buffer =
+		pcall(AEAD.Decrypt, packet.ciphertext, derived_key, packet.nonce, packet.tag, nil, nil, true)
 
 	if success and decrypted_buffer then
 		local json_string = buffer.tostring(decrypted_buffer)
@@ -52,21 +51,22 @@ local function decrypt_payload(packet)
 	return nil
 end
 
-function secure_remote.fire_server_encrypted(remote_event, data)
+function secure_remote.fire_server_encrypted(remote_event: RemoteEvent, data: unknown): ()
 	remote_event:FireServer(encrypt_payload(data))
 end
 
-function secure_remote.invoke_server_encrypted(remote_function, data)
+function secure_remote.invoke_server_encrypted(remote_function: RemoteFunction, data: unknown): unknown
 	return remote_function:InvokeServer(encrypt_payload(data))
 end
 
-function secure_remote.on_client_event_encrypted(remote_event, callback)
-	remote_event.OnClientEvent:Connect(function(packet)
+function secure_remote.on_client_event_encrypted(remote_event: RemoteEvent, callback: (unknown) -> ()): RBXScriptConnection
+	local function on_client_event(packet: unknown): ()
 		local decrypted_data = decrypt_payload(packet)
 		if decrypted_data then
 			callback(decrypted_data)
 		end
-	end)
+	end
+	return remote_event.OnClientEvent:Connect(on_client_event)
 end
 
 return secure_remote

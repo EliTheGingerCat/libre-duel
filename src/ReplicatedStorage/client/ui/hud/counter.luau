@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local shadow = require(script.Parent.Parent.visuals.shadow)
@@ -10,7 +12,7 @@ local function counter(props: { name: string })
 	return create_element("TextLabel", {
 		Name = "Main",
 		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.4,
 		BorderSizePixel = 0,
 		Text = if props.name == "ReachCounter"
@@ -19,7 +21,7 @@ local function counter(props: { name: string })
 			else "Combo: 0",
 		TextSize = 28,
 		TextColor3 = Color3.new(1, 1, 1),
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+		FontFace = FONTS.regular,
 	}, {
 		shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),

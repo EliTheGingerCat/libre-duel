@@ -47,7 +47,7 @@ local function placeholders(): ()
 			category = "interface",
 			id = "colour",
 			kind = "colour",
-			text = "AtOmOsphere color",
+			text = "AtOmOsphere colour",
 			default = { colour = Color3.new(1, 0, 0), alpha = 1 },
 		},
 		{ category = "interface", id = "button", kind = "button", text = "Button" },

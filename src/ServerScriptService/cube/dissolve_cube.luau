@@ -112,7 +112,7 @@ local function deactivate_heartbeat(): ()
 end
 
 local function on_heartbeat(): ()
-	const now = tick()
+	const now = os.clock()
 	const finished: { dissolving } = {}
 	const failed: { dissolving } = {}
 
@@ -170,8 +170,8 @@ local function start_dissolving(entity: registry.entity, id: number, cube: Part)
 		cube_destroying = connection_destroying,
 		id = id,
 		entity = entity,
-		time_start = tick(), -- Can be bad for laggy players.
-		time_end = tick() + CUBE_DISSOLVE_TIME,
+		time_start = os.clock(), -- Can be bad for laggy players.
+		time_end = os.clock() + CUBE_DISSOLVE_TIME,
 	}
 	const entries = dissolvings[entity] or {}
 	dissolvings[entity] = entries

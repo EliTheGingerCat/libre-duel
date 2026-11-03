@@ -37,13 +37,13 @@ type caster_api = {
 const MAX_ORIGIN_DISTANCE = 8
 const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
-const behavior = FastCast2.newBehavior()
-behavior.MaxDistance = BEHAVIOUR.MAX_PROJ_DISTANCE
-behavior.HighFidelityBehavior = BEHAVIOUR.HD_BEHAVIOUR
-behavior.HighFidelitySegmentSize = BEHAVIOUR.HD_SEGMENT_SIZE
-behavior.Acceleration = BEHAVIOUR.ACCELERATION
-behavior.CosmeticBulletContainer = BEHAVIOUR.BULLET_CONTAINER
-behavior.CosmeticBulletTemplate = BEHAVIOUR.BULLET_TEMPLATE
+const behaviour = FastCast2.newBehavior()
+behaviour.MaxDistance = BEHAVIOUR.MAX_PROJ_DISTANCE
+behaviour.HighFidelityBehavior = BEHAVIOUR.HD_BEHAVIOUR
+behaviour.HighFidelitySegmentSize = BEHAVIOUR.HD_SEGMENT_SIZE
+behaviour.Acceleration = BEHAVIOUR.ACCELERATION
+behaviour.CosmeticBulletContainer = BEHAVIOUR.BULLET_CONTAINER
+behaviour.CosmeticBulletTemplate = BEHAVIOUR.BULLET_TEMPLATE
 
 const caster = (FastCast2.new() :: unknown) :: caster_api
 FastCast2.Init("BulkMoveTo")
@@ -137,16 +137,16 @@ local function on_invoke(player: Player, origin: unknown, direction: unknown, dt
 	cast_params.FilterType = Enum.RaycastFilterType.Exclude
 	cast_params.IgnoreWater = true
 
-	const shot_behavior = table.clone(behavior)
-	shot_behavior.RaycastParams = cast_params
-	shot_behavior.UserData = {
+	const shot_behaviour = table.clone(behaviour)
+	shot_behaviour.RaycastParams = cast_params
+	shot_behaviour.UserData = {
 		shooter = player,
 		character = character,
 		dt = dt,
 	}
 
 	add_cooldown(player, "attack_bow", BOW_COOLDOWN_SERVER)
-	caster:RaycastFire(head.Position, direction.Unit, dt * BEHAVIOUR.SPEED, shot_behavior)
+	caster:RaycastFire(head.Position, direction.Unit, dt * BEHAVIOUR.SPEED, shot_behaviour)
 	return true
 end
 

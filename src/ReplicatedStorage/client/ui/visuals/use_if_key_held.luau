@@ -10,7 +10,7 @@ local use_state = React.useState
 local function use_if_key_held(key: Enum.KeyCode): boolean
 	local held, set_held = use_state(UserInputService:IsKeyDown(key))
 
-	use_effect(function()
+	local function track_key()
 		local function on_input_began(input: InputObject): ()
 			if input.KeyCode == key then
 				set_held(true)
@@ -33,7 +33,8 @@ local function use_if_key_held(key: Enum.KeyCode): boolean
 		end
 
 		return destroy
-	end, {}) -- Zero dependencies since `key` is constant.
+	end
+	use_effect(track_key, {}) -- Zero dependencies since `key` is constant.
 
 	return held
 end

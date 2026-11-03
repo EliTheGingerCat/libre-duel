@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
@@ -17,11 +19,11 @@ local function button(props: {
 	return React.createElement(animated_button, {
 		Name = "button",
 		AutomaticSize = if large then Enum.AutomaticSize.None else Enum.AutomaticSize.X,
-		BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,
 		Size = props.size or (if large then UDim2.new(1, 0, 0, 128) else UDim2.fromOffset(200, 50)),
-		FontFace = Font.fromId(11702779409),
-		TextColor3 = if props.danger then Color3.new(177 / 255, 76 / 255, 78 / 255) else Color3.new(1, 1, 1),
+		FontFace = FONTS.regular,
+		TextColor3 = if props.danger then COLOURS.danger else Color3.new(1, 1, 1),
 		Text = props.text or "Button",
 		RichText = true,
 		TextSize = 36,

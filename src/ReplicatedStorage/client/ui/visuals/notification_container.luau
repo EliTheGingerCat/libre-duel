@@ -1,7 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+local React = require(ReplicatedStorage.Packages.react)
 local fade = require(script.Parent.Parent.effects.fade)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local notification_management = require(script.Parent.Parent.notification_management)
@@ -18,6 +19,8 @@ const LIFETIME_UNTIL_FADE = 3
 const FADE_DURATION = 0.5
 const EXAMPLE_NOTIFICATION: notification = { id = 0, message = "Example notification", created_at = 0 }
 
+local function do_nothing(): () end
+
 local function use_fade_out(created_at: number, preview: boolean): number
 	local transparency, set_transparency = use_state(0)
 
@@ -26,7 +29,7 @@ local function use_fade_out(created_at: number, preview: boolean): number
 			set_transparency(0)
 			return
 		end
-		local time_since_creation = tick() - created_at
+		local time_since_creation = os.clock() - created_at
 		local time_until_fade = LIFETIME_UNTIL_FADE - time_since_creation
 
 		local function thread_fade(): ()
@@ -113,7 +116,7 @@ local function notification_component(props: {
 			AutomaticSize = "XY",
 			Size = UDim2.new(0, 0, 0, 0),
 			BackgroundTransparency = 1,
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			FontFace = FONTS.regular,
 			TextSize = 24, -- Slightly bigger from 14 to 15
 			Text = notification.message,
 			TextColor3 = COLOURS.white,
@@ -128,11 +131,11 @@ local function notification_component(props: {
 end
 
 local function use_notifications(): { notification }
-	local notifications, set_notifications = use_state(notification_management.existing)
+	local notifications, set_notifications = use_state(notification_management.get_all)
 
 	local function effect_notifications()
 		local function on_fire(): ()
-			set_notifications(table.clone(notification_management.existing))
+			set_notifications(notification_management.get_all())
 		end
 
 		local connection = notification_management.on_change:Connect(on_fire)
@@ -164,7 +167,7 @@ local function notifications_container(props: use_editable_hud.props)
 				notification = EXAMPLE_NOTIFICATION,
 				index = 1,
 				preview = true,
-				on_destroy = function() end,
+				on_destroy = do_nothing,
 			})
 		)
 	end

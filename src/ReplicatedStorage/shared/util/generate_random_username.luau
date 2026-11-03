@@ -1,8 +1,8 @@
 local MatchmakingService = game:GetService("MatchmakingService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local ADJECTIVES = require(ReplicatedStorage.shared.common_words.ADJECTIVES)
-local ANIMALS = require(ReplicatedStorage.shared.common_words.ANIMALS)
+const ADJECTIVES = require(ReplicatedStorage.shared.common_words.ADJECTIVES)
+const ANIMALS = require(ReplicatedStorage.shared.common_words.ANIMALS)
 
 local function generate_random_username(): string
 	local adjective = ADJECTIVES[math.random(1, #ADJECTIVES)]

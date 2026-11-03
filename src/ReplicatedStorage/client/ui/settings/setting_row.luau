@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local big_button = require(script.Parent.Parent.visuals.big_button)
 local button = require(script.Parent.Parent.visuals.button)
@@ -16,8 +17,8 @@ local text_input = require(script.Parent.Parent.visuals.text_input)
 local warning_text = require(script.Parent.Parent.visuals.warning_text)
 
 local create_element = React.createElement
-local BUTTONS = { button = button, big_button = big_button, dangerous_button = dangerous_button }
-local MESSAGES = { information = information_text, warning = warning_text, danger = danger_text }
+const BUTTONS = { button = button, big_button = big_button, dangerous_button = dangerous_button }
+const MESSAGES = { information = information_text, warning = warning_text, danger = danger_text }
 
 local function setting_row(props: { entry: settings_registry.entry, order: number })
 	local entry = props.entry
@@ -87,7 +88,7 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 			Text = entry.text,
 			TextSize = 32,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 			TextXAlignment = Enum.TextXAlignment.Left,
 		}),
 		control = create_element("Frame", {

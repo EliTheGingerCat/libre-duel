@@ -1,7 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
 local React = require(ReplicatedStorage.Packages.react)
-local MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
@@ -44,7 +46,7 @@ local function queue_status(props: use_editable_hud.props)
 		math.floor(state.elapsed / 60),
 		state.elapsed % 60
 	)
-	local red = Color3.new(177 / 255, 76 / 255, 78 / 255)
+	local red = COLOURS.danger
 	return create_element(
 		hud_screen,
 		{
@@ -59,7 +61,7 @@ local function queue_status(props: use_editable_hud.props)
 			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 1),
 			Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 1, -10 - 130 * factor),
 			Size = UDim2.fromOffset(660, 100),
-			BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+			BackgroundColor3 = COLOURS.surface,
 			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 		}, {
@@ -86,19 +88,19 @@ local function queue_status(props: use_editable_hud.props)
 				TextXAlignment = Enum.TextXAlignment.Left,
 				TextSize = 36,
 				TextColor3 = Color3.new(1, 1, 1),
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+				FontFace = FONTS.regular,
 			}),
 			cancel_button = create_element(animated_button, {
 				AnchorPoint = Vector2.new(1, 0.5),
 				Position = UDim2.new(1, -20, 0.5, 0),
 				Size = UDim2.fromOffset(180, 60),
-				BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+				BackgroundColor3 = COLOURS.surface,
 				BackgroundTransparency = 0.5,
 				BorderSizePixel = 0,
 				Text = if busy then "Cancelling..." else "Cancel",
 				TextColor3 = red,
 				TextSize = 36,
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+				FontFace = FONTS.regular,
 				Interactable = not busy and not state.teleporting and not editor_enabled and not props.preview,
 				[React.Event.Activated] = cancel,
 			}, {

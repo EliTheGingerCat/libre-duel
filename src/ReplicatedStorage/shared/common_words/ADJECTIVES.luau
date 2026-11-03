@@ -1,7 +1,7 @@
 -- Source: https://www.enchantedlearning.com/wordlist/adjectives.shtml
 -- I removed inappropriate entries.
 
-local ADJECTIVES = {
+const ADJECTIVES = {
     "Abandoned",
     "Able",
     "Absolute",

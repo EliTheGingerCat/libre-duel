@@ -1,4 +1,14 @@
-export type mode = "solo" | "duo"
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+const QUEUE_MODES = require(ReplicatedStorage.shared.queue.QUEUE_MODES)
+
+export type mode = QUEUE_MODES.mode
+export type option = {
+	name: string,
+	description: string,
+	icon: string,
+	colour: Color3,
+}
 
 const MODE_OPTIONS = {
 	solo = {

@@ -35,7 +35,7 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 			previous
 			and preview.AbsoluteSize.X > 0
 			and preview.AbsoluteSize.Y > 0
-			and table.find(registry.entries, previous.view.item)
+			and table.find(registry.get_entries(), previous.view.item)
 		then
 			previous.view.item.layout = geometry.get_layout(previous.rect, preview.AbsoluteSize, preview_factor())
 			previous.view.item.refresh()

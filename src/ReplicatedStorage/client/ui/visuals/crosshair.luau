@@ -1,31 +1,33 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 local React = require(ReplicatedStorage.Packages.react)
-local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-local editor_state = require(script.Parent.Parent.hud.editor_state)
-local mode_selector_state = require(script.Parent.Parent.matchmaking.mode_selector_state)
+local cursor_state = require(script.Parent.Parent.cursor_state)
 
 local create_element = React.createElement
-local useState = React.useState
-local useEffect = React.useEffect
 
 local function crosshair()
-	local locked, setLocked = useState(false)
+	local locked, set_locked = React.useState(false)
 
-	useEffect(function()
-		local conn = RunService.RenderStepped:Connect(function()
-			local isLocked = not editor_state.enabled
-				and not mode_selector_state.enabled
-				and UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter
-			setLocked(isLocked)
-			UserInputService.MouseIconEnabled = not isLocked
-		end)
-		return function()
-			conn:Disconnect()
+	local function bind_cursor()
+		-- Runs last so it overrides the camera scripts, which lock the mouse every frame in first person.
+		local function update_cursor(): ()
+			local free = cursor_state.is_free()
+			if free then
+				UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+			end
+			local is_locked = not free and UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter
+			UserInputService.MouseIconEnabled = not is_locked
+			set_locked(is_locked)
 		end
-	end, {})
+		RunService:BindToRenderStep("cursor", Enum.RenderPriority.Last.Value, update_cursor)
+		local function unbind(): ()
+			RunService:UnbindFromRenderStep("cursor")
+		end
+		return unbind
+	end
+	React.useEffect(bind_cursor, {})
 
 	return create_element(
 		"ScreenGui",

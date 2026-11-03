@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local fade = require(script.Parent.Parent.effects.fade)
 local shadow = require(script.Parent.shadow)
@@ -33,10 +35,10 @@ local function title_label(props: {
 		Name = if props.top then "TopText" else "BottomText",
 		AnchorPoint = Vector2.new(0.5, if props.top then 1 else 0),
 		AutomaticSize = Enum.AutomaticSize.XY,
-		BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = props.transparency:map(background_transparency),
 		BorderSizePixel = 0,
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.SemiBold),
+		FontFace = FONTS.semi_bold,
 		Position = UDim2.new(0.5, 0, 0.5, if props.top then 0 else 10),
 		RichText = true,
 		Size = UDim2.fromOffset(0, 0),

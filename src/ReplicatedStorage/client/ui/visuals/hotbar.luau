@@ -1,13 +1,14 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local React = require(ReplicatedStorage.Packages.react)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+local React = require(ReplicatedStorage.Packages.react)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
+local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local scale = require(script.Parent.scale)
 local shadow = require(script.Parent.shadow)
 local tool_state = require(ReplicatedStorage.client.tools.tool_state)
-local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
 local create_element = React.createElement
@@ -45,7 +46,7 @@ local function slider_display(props: {
 		create_element("TextLabel", {
 			BackgroundTransparency = 1,
 			Size = UDim2.fromScale(1, 1),
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			FontFace = FONTS.regular,
 			ZIndex = 3,
 			Text = tostring(math.ceil(props.fill_value)),
 			TextScaled = true,
@@ -102,9 +103,10 @@ local function use_character(): Model?
 		local connection_character_destroying: RBXScriptConnection?
 		if character ~= nil then
 			local function on_character_destroying(): ()
-				set_character(function(current)
+				local function clear_if_current(current: Model?): Model?
 					return if current == character then nil else current
-				end)
+				end
+				set_character(clear_if_current)
 			end
 
 			connection_character_destroying = character.Destroying:Connect(on_character_destroying)

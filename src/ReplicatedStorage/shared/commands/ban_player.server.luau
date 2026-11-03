@@ -1,25 +1,29 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 local conch = require(ReplicatedStorage.Packages.conch)
+
+-- Conch infers the callback's argument types from the inline arguments function, so these stay anonymous.
 conch.register("ban", {
-    description = "Bans the given player from the game",
+	description = "Bans the given player from the game",
 	permissions = { "administrator" },
 	arguments = function()
-            return conch.args.player("player", "The player that should be banned from the game"),
-            conch.args.string("reason", "The reason why the player has been banned from the user."),
-            conch.args.number("duration", "The duration of the ban in seconds.")
+		return conch.args.player("player", "The player that should be banned from the game"),
+			conch.args.string("reason", "The reason why the player has been banned from the user."),
+			conch.args.number("duration", "The duration of the ban in seconds.")
 	end,
-    callback = function(player, reason, duration) -- typechecked!
-        local context = conch.get_command_context()
-        local executing_player = context.executor.player.UserId or "an unknown user"
+	callback = function(player, reason, duration) -- typechecked!
+		local context = conch.get_command_context()
+		local executor = context.executor.player
+		local executing_player = if executor then executor.UserId else "an unknown user"
 
-        Players:BanAsync({
-                UserIds = player.UserId,
-                Duration = duration,
-                DisplayReason = reason,
-                PrivateReason = `Banned by {executing_player}`,
-                ExcludeAltAccounts = false,
-                ApplyToUniverse = true,
-        })
-end,
+		Players:BanAsync({
+			UserIds = { player.UserId },
+			Duration = duration,
+			DisplayReason = reason,
+			PrivateReason = `Banned by {executing_player}`,
+			ExcludeAltAccounts = false,
+			ApplyToUniverse = true,
+		})
+	end,
 })

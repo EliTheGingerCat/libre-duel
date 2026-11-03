@@ -4,7 +4,9 @@ local React = require(ReplicatedStorage.Packages.react)
 local mount_portal = require(script.Parent.mount_portal)
 local selector = require(script.Parent.selector)
 
-local function mount_selector(player_gui: PlayerGui, display_order: number, on_close: () -> ())
+export type controller = { set_enabled: (boolean) -> (), disconnect: () -> () }
+
+local function mount_selector(player_gui: PlayerGui, display_order: number, on_close: () -> ()): controller
 	local portal = mount_portal(player_gui)
 	local function close(): ()
 		portal.render(nil)

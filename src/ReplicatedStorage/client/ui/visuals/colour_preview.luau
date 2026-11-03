@@ -3,6 +3,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local alpha_grid = require(script.Parent.controls.alpha_grid)
@@ -99,7 +100,7 @@ local function colour_preview(props: { colour: Color3?, alpha: number?, on_chang
 					Text = text,
 					RichText = true,
 					TextSize = 40,
-					FontFace = Font.fromId(11702779409),
+					FontFace = FONTS.regular,
 					TextColor3 = if lightness > 0.5 then Color3.new(0, 0, 0) else Color3.new(1, 1, 1),
 				}),
 			}),

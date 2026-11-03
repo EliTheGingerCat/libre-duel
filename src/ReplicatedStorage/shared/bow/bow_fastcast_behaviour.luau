@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local FastCast2 = require(ReplicatedStorage.Packages.FastCast2)
 
-local BOW_FASTCAST_BEHAVIOUR = {
+const BOW_FASTCAST_BEHAVIOUR = {
     SPEED = 150,
 
     MAX_PROJ_DISTANCE = 5000,

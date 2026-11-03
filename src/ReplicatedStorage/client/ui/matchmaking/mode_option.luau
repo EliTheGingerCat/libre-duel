@@ -1,7 +1,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
+const QUEUE_MODES = require(ReplicatedStorage.shared.queue.QUEUE_MODES)
 local React = require(ReplicatedStorage.Packages.react)
-local MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
@@ -9,22 +12,25 @@ local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
-local function mode_option(props: { mode: MODE_OPTIONS.mode, busy: boolean, on_activate: () -> () })
+local function mode_option(props: { mode: MODE_OPTIONS.mode, busy: boolean, on_join: (MODE_OPTIONS.mode) -> () })
 	local option = MODE_OPTIONS[props.mode]
+	local function activate(): ()
+		props.on_join(props.mode)
+	end
 	return create_element(animated_button, {
 		Name = `{props.mode}_button`,
-		LayoutOrder = if props.mode == "solo" then 1 else 2,
+		LayoutOrder = table.find(QUEUE_MODES, props.mode),
 		Size = UDim2.new(1, 0, 0, 192),
-		BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,
 		BorderSizePixel = 0,
 		Text = `{option.name}\n<font color="rgb(180,180,180)"><font size="28">{option.description}</font></font>`,
 		RichText = true,
 		TextSize = 56,
 		TextColor3 = Color3.new(1, 1, 1),
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+		FontFace = FONTS.regular,
 		Interactable = not props.busy,
-		[React.Event.Activated] = props.on_activate,
+		[React.Event.Activated] = activate,
 	}, {
 		feedback = create_element(button_motion),
 		shadow = create_element(

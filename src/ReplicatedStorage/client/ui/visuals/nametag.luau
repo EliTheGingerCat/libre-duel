@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local shadow = require(script.Parent.shadow)
 
@@ -34,7 +35,7 @@ local function nametag(props: {
 				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				BackgroundTransparency = 0.5,
 				BorderSizePixel = 0,
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+				FontFace = FONTS.regular,
 				Name = "Name",
 				Position = UDim2.fromScale(0.5, 1),
 				Size = UDim2.fromScale(0, 0.6),
@@ -75,7 +76,7 @@ local function nametag(props: {
 			AnchorPoint = Vector2.new(0.5, 0),
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			FontFace = FONTS.regular,
 			Name = "ExtraText",
 			Position = UDim2.fromScale(0.5, 0),
 			Size = UDim2.fromScale(1, 0.4),

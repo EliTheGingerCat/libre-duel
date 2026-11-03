@@ -2,7 +2,15 @@ local mount_selector = require(script.Parent.mount_selector)
 local mount_settings = require(script.Parent.mount_settings)
 local registry = require(script.Parent.registry)
 
-local function mount_menus(player_gui: PlayerGui, display_order: number, on_changed: (boolean) -> ())
+export type controller = {
+	close: () -> (),
+	open_selector: () -> (),
+	open_settings: (registry.entry) -> (),
+	is_open: () -> boolean,
+	disconnect: () -> (),
+}
+
+local function mount_menus(player_gui: PlayerGui, display_order: number, on_changed: (boolean) -> ()): controller
 	local enabled = false
 	local function set_open(open: boolean): ()
 		if enabled == open then

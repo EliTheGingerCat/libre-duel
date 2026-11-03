@@ -20,3 +20,14 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Knockback.
 - Tool registry with variants.
 - Sphere and brown cube variants.
+
+### Changed
+
+- Queue modes are defined once in `shared/queue/QUEUE_MODES.luau`.
+- The crosshair is now the only code that changes the mouse cursor; menus request a free cursor through `cursor_state`.
+- Shared UI fonts and colours live in `FONTS.luau` and `COLOURS.luau`.
+
+### Fixed
+
+- The ban command now passes a list of user IDs to `BanAsync`.
+- The server now rejects public keys that are not buffers.

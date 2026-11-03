@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local alpha_grid = require(script.Parent.Parent.controls.alpha_grid)
 local drag_detector = require(script.Parent.Parent.controls.drag_detector)
@@ -29,7 +30,7 @@ local function vertical_slider(props: { value: number, colour: Color3, alpha: bo
 			Text = tostring(math.round(props.value * 100)),
 			TextSize = 24,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 		}),
 		track = React.createElement("ImageLabel", {
 			Position = UDim2.fromOffset(0, 30),

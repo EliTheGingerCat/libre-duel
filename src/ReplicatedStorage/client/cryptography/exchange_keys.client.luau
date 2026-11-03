@@ -2,8 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local debug_print = require(script.Parent.Parent.util.debug_print)
 
-local keys = require(script.Parent.keys)
 local generate_keys = require(script.Parent.generate_keys)
+local keys = require(script.Parent.keys)
 
 generate_keys()
 

@@ -1,9 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local knockback_multiplier = require(ServerScriptService.combat.knockback_multiplier)
-
 local conch = require(ReplicatedStorage.Packages.conch)
+local knockback_multiplier = require(ServerScriptService.combat.knockback_multiplier)
 
 conch.register("tweak_knockback", {
 	description = "Mess around with the knockback values",

@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local cps_dictionary = require(script.Parent.cps_dictionary)
 
-local function add_and_remove(player: Player)
+local function add_and_remove(player: Player): ()
 	cps_dictionary[player] = cps_dictionary[player] or 0
 
 	cps_dictionary[player] += 1
@@ -14,6 +14,4 @@ local function add_and_remove(player: Player)
 	end
 end
 
-ReplicatedStorage.remotes.mouse_click.OnServerEvent:Connect(function(player)
-	add_and_remove(player)
-end)
+ReplicatedStorage.remotes.mouse_click.OnServerEvent:Connect(add_and_remove)

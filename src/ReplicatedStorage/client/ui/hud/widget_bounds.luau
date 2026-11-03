@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local React = require(ReplicatedStorage.Packages.react)
 local editor_drag_detector = require(script.Parent.editor_drag_detector)
 
@@ -22,7 +23,7 @@ local function action_button(props: {
 			AnchorPoint = Vector2.new(props.anchor, 0.5),
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromOffset(36, 36),
-			BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+			BackgroundColor3 = COLOURS.surface,
 			BackgroundTransparency = 0.5,
 			Image = props.image,
 			ImageColor3 = props.colour,

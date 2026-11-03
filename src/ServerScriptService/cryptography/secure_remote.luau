@@ -1,20 +1,21 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local keys = require(script.Parent.keys)
 local client_keys = require(script.Parent.client_keys)
 local cryptography = require(ReplicatedStorage.Packages.cryptography)
 local get_shared_key = require(ReplicatedStorage.shared.cryptography.get_shared_key)
+local keys = require(script.Parent.keys)
 local serialiser = require(ReplicatedStorage.shared.cryptography.serialiser)
 
-local Blake3 = cryptography.Hashing.Blake3
 const CSPRNG = cryptography.Utilities.CSPRNG
-const X25519 = cryptography.Verification.EdDSA.X25519
 const AEAD = cryptography.Encryption.AEAD
+
+type packet = { public: buffer, nonce: buffer, ciphertext: buffer, tag: buffer }
 
 local secure_remote = {}
 
-local function encrypt_for_player(player, data_table)
+local function encrypt_for_player(player: Player, data_table: unknown): packet?
 	local target_public = client_keys[player]
 	if not target_public then
 		return nil
@@ -35,15 +36,15 @@ local function encrypt_for_player(player, data_table)
 	}
 end
 
-local function decrypt_from_player(packet)
+-- The packet comes from the client, so it is checked before use.
+local function decrypt_from_player(packet: any): unknown
 	if typeof(packet) ~= "table" or typeof(packet.public) ~= "buffer" then
 		return nil
 	end
 
 	local derived_key = get_shared_key(packet.public, keys["masked"])
-	local success, decrypted_buffer = pcall(function()
-		return AEAD.Decrypt(packet.ciphertext, derived_key, packet.nonce, packet.tag, nil, nil, true)
-	end)
+	local success, decrypted_buffer =
+		pcall(AEAD.Decrypt, packet.ciphertext, derived_key, packet.nonce, packet.tag, nil, nil, true)
 
 	if success and decrypted_buffer then
 		local json_string = buffer.tostring(decrypted_buffer)
@@ -54,15 +55,15 @@ local function decrypt_from_player(packet)
 	return nil
 end
 
-function secure_remote.fire_client_encrypted(remote_event, player, data_table)
+function secure_remote.fire_client_encrypted(remote_event: RemoteEvent, player: Player, data_table: unknown): ()
 	local packet = encrypt_for_player(player, data_table)
 	if packet then
 		remote_event:FireClient(player, packet)
 	end
 end
 
-function secure_remote.fire_all_clients_encrypted(remote_event, data_table)
-	for _, player in ipairs(game.Players:GetPlayers()) do
+function secure_remote.fire_all_clients_encrypted(remote_event: RemoteEvent, data_table: unknown): ()
+	for _, player in Players:GetPlayers() do
 		local packet = encrypt_for_player(player, data_table)
 		if packet then
 			remote_event:FireClient(player, packet)
@@ -70,24 +71,28 @@ function secure_remote.fire_all_clients_encrypted(remote_event, data_table)
 	end
 end
 
-function secure_remote.on_server_event_encrypted(remote_event, callback)
-	remote_event.OnServerEvent:Connect(function(player, packet)
+function secure_remote.on_server_event_encrypted(
+	remote_event: RemoteEvent,
+	callback: (Player, unknown) -> ()
+): RBXScriptConnection
+	local function on_server_event(player: Player, packet: unknown): ()
 		local data_table = decrypt_from_player(packet)
 		if data_table then
 			callback(player, data_table)
 		end
-	end)
+	end
+	return remote_event.OnServerEvent:Connect(on_server_event)
 end
 
-function secure_remote.on_server_invoke_encrypted(remote_function, callback)
-	remote_function.OnServerInvoke = function(player, packet)
+function secure_remote.on_server_invoke_encrypted(remote_function: RemoteFunction, callback: (Player, unknown) -> unknown): ()
+	local function on_server_invoke(player: Player, packet: unknown): unknown
 		local data_table = decrypt_from_player(packet)
 		if data_table then
 			return callback(player, data_table)
-		else
-			return false
 		end
+		return false
 	end
+	remote_function.OnServerInvoke = on_server_invoke
 end
 
 return secure_remote

@@ -4,13 +4,13 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
+const KEYBINDS = require(script.Parent.Parent.Parent.util.KEYBINDS)
 local create_widget = require(script.Parent.editor_widget)
 local editor_drag = require(script.Parent.editor_drag)
 local editor_state = require(script.Parent.editor_state)
-local get_drag_offset = require(script.Parent.Parent.visuals.controls.get_drag_offset)
 local geometry = require(script.Parent.editor_geometry)
+local get_drag_offset = require(script.Parent.Parent.visuals.controls.get_drag_offset)
 local mount_menus = require(script.Parent.mount_menus)
-const KEYBINDS = require(script.Parent.Parent.Parent.util.KEYBINDS)
 local registry = require(script.Parent.registry)
 
 local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) -> ())
@@ -24,8 +24,6 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	local views: { create_widget.view } = {}
 	local hovered: create_widget.view? = nil
 	local drag = editor_drag(preview, screen, views)
-	local saved_mouse_behavior = UserInputService.MouseBehavior
-	local saved_mouse_icon = UserInputService.MouseIconEnabled
 	local function on_menu_changed(open: boolean): ()
 		set_content_visible(not open)
 	end
@@ -81,8 +79,6 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	end
 
 	local function update_editor(): ()
-		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-		UserInputService.MouseIconEnabled = true
 		if menus.is_open() then
 			return
 		end
@@ -129,7 +125,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		for _, view in views do
 			view.destroy()
 			view.item.preview = nil
-			if table.find(registry.entries, view.item) then
+			if table.find(registry.get_entries(), view.item) then
 				view.item.refresh()
 			end
 		end
@@ -137,7 +133,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		if not editor_state.enabled then
 			return
 		end
-		for _, item in registry.entries do
+		for _, item in registry.get_entries() do
 			item.preview = preview
 			item.refresh()
 			table.insert(
@@ -163,8 +159,6 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		editor_state.set_enabled(enabled)
 		screen.Enabled = enabled
 		if enabled then
-			saved_mouse_behavior = UserInputService.MouseBehavior
-			saved_mouse_icon = UserInputService.MouseIconEnabled
 			ContextActionService:BindActionAtPriority(
 				"hud_editor_controls",
 				sink_controls,
@@ -182,12 +176,10 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 				Enum.KeyCode.Thumbstick1,
 				Enum.KeyCode.ButtonA
 			)
-			RunService:BindToRenderStep("hud_editor_cursor", Enum.RenderPriority.Last.Value, update_editor)
+			RunService:BindToRenderStep("hud_editor_hover", Enum.RenderPriority.Last.Value, update_editor)
 		else
-			RunService:UnbindFromRenderStep("hud_editor_cursor")
+			RunService:UnbindFromRenderStep("hud_editor_hover")
 			ContextActionService:UnbindAction("hud_editor_controls")
-			UserInputService.MouseBehavior = saved_mouse_behavior
-			UserInputService.MouseIconEnabled = saved_mouse_icon
 		end
 		sync_widgets()
 	end

@@ -3,13 +3,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
-local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 local React = require(ReplicatedStorage.Packages.react)
+local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
+local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 local scale = require(script.Parent.scale)
-local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_if_key_held = require(script.Parent.use_if_key_held)
@@ -30,7 +31,7 @@ local function entity_card(props: {
 		{
 			BackgroundColor3 = COLOURS.black,
 			BackgroundTransparency = 0.7,
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			FontFace = FONTS.regular,
 			LayoutOrder = props.order,
 			TextColor3 = props.colour,
 			TextScaled = true,
@@ -127,8 +128,8 @@ end
 local function use_ping(): number
 	local ping, set_ping = use_state(0)
 
-	use_effect(function()
-		local function on_heartbeat()
+	local function track_ping()
+		local function on_heartbeat(): ()
 			set_ping(local_player:GetNetworkPing())
 		end
 
@@ -139,7 +140,8 @@ local function use_ping(): number
 		end
 
 		return destroy
-	end, {})
+	end
+	use_effect(track_ping, {})
 
 	return ping
 end
@@ -158,7 +160,7 @@ local function ping_display()
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0.5, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+		FontFace = FONTS.regular,
 		TextColor3 = COLOURS.light_grey,
 		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),
@@ -171,13 +173,14 @@ local location_saved = LOCATION_DEFAULT
 local function use_location(): LOCATION_DEFAULT.location
 	local location, set_location = use_state(location_saved)
 
-	use_effect(function()
+	local function load_location()
 		if location_saved.status == "loading" then
 			-- I know this is a side effect but Womp womp.
 			location_saved = ReplicatedStorage.remotes.server_location:InvokeServer()
 			set_location(location_saved)
 		end
-	end)
+	end
+	use_effect(load_location, {})
 
 	return location
 end
@@ -197,7 +200,7 @@ local function location_display()
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0, 0, 1, 2), --extra 2 offset because the text feels too high up otherwise..
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+		FontFace = FONTS.regular,
 		TextColor3 = COLOURS.light_grey,
 		TextSize = 36,
 		Size = UDim2.new(0.5, 0, 0, 40),

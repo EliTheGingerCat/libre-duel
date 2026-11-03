@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
@@ -52,7 +54,7 @@ local function menu_window(props: props)
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = motion:map(window_position),
 			Size = UDim2.fromOffset(size.X, size.Y),
-			BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+			BackgroundColor3 = COLOURS.surface,
 			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 			Active = true,
@@ -69,7 +71,7 @@ local function menu_window(props: props)
 				Position = UDim2.new(0.5, 0, 0, 13),
 				Size = UDim2.new(1, -100, 0, 48),
 				BackgroundTransparency = 1,
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Bold),
+				FontFace = FONTS.bold,
 				Text = props.title,
 				TextSize = 30,
 				TextColor3 = Color3.new(1, 1, 1),

@@ -59,13 +59,13 @@ local function on_ready(message: { Data: unknown }): ()
 end
 
 local function subscribe(): ()
-	for attempt = 1, 3 do
+	for attempt = 1, QUEUE_CONFIG.subscribe_attempts do
 		const ok, result = pcall(MessagingService.SubscribeAsync, MessagingService, QUEUE_CONFIG.ready_topic, on_ready)
 		if ok then
 			return
 		end
 		warn(result)
-		task.wait(2 ^ attempt)
+		task.wait(QUEUE_CONFIG.retry_backoff_base ^ attempt)
 	end
 end
 

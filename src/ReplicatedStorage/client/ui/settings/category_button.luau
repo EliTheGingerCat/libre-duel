@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
@@ -63,7 +64,7 @@ local function category_button(props: {
 			TextSize = 32,
 			TextScaled = true,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 			TextXAlignment = Enum.TextXAlignment.Left,
 		}),
 	})

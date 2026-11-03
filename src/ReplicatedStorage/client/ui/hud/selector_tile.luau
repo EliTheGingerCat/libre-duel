@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
@@ -18,14 +20,14 @@ local function selector_tile(props: { item: registry.entry, title: string, order
 		Name = props.item.screen.Name,
 		LayoutOrder = props.order,
 		Size = UDim2.fromOffset(256, 256),
-		BackgroundColor3 = Color3.fromRGB(17, 17, 17),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,
 		BorderSizePixel = 0,
 		Text = props.title,
 		TextSize = 36,
 		TextColor3 = Color3.new(1, 1, 1),
 		TextYAlignment = Enum.TextYAlignment.Bottom,
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+		FontFace = FONTS.regular,
 		[React.Event.Activated] = select_widget,
 	}, {
 		feedback = create_element(button_motion),

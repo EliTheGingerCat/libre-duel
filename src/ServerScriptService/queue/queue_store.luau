@@ -49,6 +49,18 @@ local function update(mode: mode, id: string, transform: transform): result
 	return { ok = ok, entry = queue_record.decode(value) }
 end
 
+-- Renews this server's claims. With destination_only, only entries routed to this server are touched.
+local function renew(mode: mode, id: string, tokens: { [string]: string }, destination_only: boolean): result
+	local function renew_claims(entry: record?): record?
+		if entry == nil or (destination_only and entry.destination_job_id ~= game.JobId) then
+			return nil
+		end
+		queue_record.renew(entry, tokens, os.time())
+		return entry
+	end
+	return update(mode, id, renew_claims)
+end
+
 local function fuller_first(left: record, right: record): boolean
 	return queue_record.count_members(left) > queue_record.count_members(right)
 end
@@ -106,5 +118,6 @@ return {
 	find = find,
 	get = get,
 	release = release,
+	renew = renew,
 	update = update,
 }

@@ -1,5 +1,8 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 
 type mouse_button = {
 	label: TextLabel,
@@ -8,7 +11,7 @@ type mouse_button = {
 	clicks: { number },
 }
 
-const RELEASED_COLOUR = Color3.new(17 / 255, 17 / 255, 17 / 255)
+const RELEASED_COLOUR = COLOURS.surface
 const PRESSED_KEY_COLOUR = Color3.new(80 / 255, 80 / 255, 80 / 255)
 const PRESSED_MOUSE_COLOUR = Color3.new(40 / 255, 40 / 255, 40 / 255)
 

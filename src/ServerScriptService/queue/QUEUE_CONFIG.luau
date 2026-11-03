@@ -9,7 +9,10 @@ const QUEUE_CONFIG = {
 	heartbeat_interval = 10,
 	poll_interval = 2,
 	arrival_timeout = 90,
+	arrival_retries = 2,
 	teleport_attempts = 3,
+	subscribe_attempts = 3,
+	retry_backoff_base = 2,
 	join_interval = 2,
 	modes = {
 		solo = { teams = 2, entities_per_team = 1 },

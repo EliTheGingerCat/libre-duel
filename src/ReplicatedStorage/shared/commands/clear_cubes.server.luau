@@ -1,5 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Debris = game:GetService("Debris")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local conch = require(ReplicatedStorage.Packages.conch)
 
@@ -19,5 +19,3 @@ conch.register("clear_cubes", {
 		return `Cleared {cleared} blocks`
 	end,
 })
-
-print("registered!1")

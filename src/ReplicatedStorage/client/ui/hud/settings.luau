@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
@@ -34,7 +35,7 @@ local function settings(props: { selected: registry.entry?, display_order: numbe
 				TextSize = 30,
 				TextYAlignment = "Center",
 				TextColor3 = Color3.new(1, 1, 1),
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Bold),
+				FontFace = FONTS.bold,
 			}),
 		})
 	)

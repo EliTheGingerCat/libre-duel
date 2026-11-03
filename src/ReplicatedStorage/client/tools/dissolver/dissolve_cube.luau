@@ -151,7 +151,7 @@ local function on_input_ended(input: InputObject): ()
 	end
 end
 
-activate_input_ended = function(): ()
+function activate_input_ended(): ()
 	if connection_input ~= nil then
 		debug_print("`input_ended` is already connected.")
 		return
@@ -226,7 +226,7 @@ local function on_heartbeat_active(): ()
 		return
 	end
 
-	local time_elapsed = tick() - state.time_start
+	local time_elapsed = os.clock() - state.time_start
 	local time_fraction = math.min(1, time_elapsed / CUBE_DISSOLVE_TIME)
 	-- See `TRANSPARENCY_MAXIMUM.luau` for an explanation of this operation.
 	local transparency_fraction = time_fraction * TRANSPARENCY_MAXIMUM
@@ -237,7 +237,7 @@ local function on_heartbeat_active(): ()
 	end
 end
 
-dissolve_start = function(cube: BasePart): ()
+function dissolve_start(cube: BasePart): ()
 	local fail_message = can_dissolve(cube)
 	local failed = fail_message ~= nil
 	if failed == true then
@@ -260,7 +260,7 @@ dissolve_start = function(cube: BasePart): ()
 
 	local cube_target: Part = cube :: any
 	local connection_heartbeat = RunService.Heartbeat:Connect(on_heartbeat_active)
-	local time_start = tick()
+	local time_start = os.clock()
 
 	debug_print("Activated active heartbeat.")
 

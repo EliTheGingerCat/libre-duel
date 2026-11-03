@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local colour_math = require(script.Parent.colour_math)
 
@@ -33,7 +35,7 @@ local function fields(props: { colour: Color3, on_changed: (Color3) -> () })
 			Text = row.name,
 			TextSize = 28,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 		})
 		for index, initial in row.values do
 			local function commit(box: TextBox): ()
@@ -72,13 +74,13 @@ local function fields(props: { colour: Color3, on_changed: (Color3) -> () })
 				Name = row.name .. index,
 				Position = UDim2.fromOffset(60 + (index - 1) * width, (row_index - 1) * 48),
 				Size = UDim2.fromOffset(width - 4, 42),
-				BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+				BackgroundColor3 = COLOURS.surface,
 				BackgroundTransparency = 0.5,
 				ClearTextOnFocus = false,
 				Text = tostring(initial),
 				TextSize = 28,
 				TextColor3 = Color3.new(1, 1, 1),
-				FontFace = Font.fromId(11702779409),
+				FontFace = FONTS.regular,
 				[React.Event.FocusLost] = commit,
 			}, { corner = React.createElement("UICorner", { CornerRadius = UDim.new(0, 12) }) })
 		end

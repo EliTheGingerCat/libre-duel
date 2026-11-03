@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
 
 const SNEAKING_CONSTANTS = require(script.Parent.SNEAKING_CONSTANTS)
 
@@ -50,6 +50,11 @@ local function update_character_cache()
 	end
 end
 
+-- PlayerModule only exists at runtime, so it cannot be required with the others.
+local function require_controls(player_module: Instance): any
+	return (require :: any)(player_module):GetControls()
+end
+
 local function get_controls()
 	if controls_module then
 		return controls_module
@@ -59,9 +64,7 @@ local function get_controls()
 	if player_scripts then
 		local player_module = player_scripts:WaitForChild("PlayerModule", 5)
 		if player_module then
-			local success, result = pcall(function()
-				return require(player_module):GetControls()
-			end)
+			local success, result = pcall(require_controls, player_module)
 			if success then
 				controls_module = result
 			end
@@ -71,8 +74,114 @@ local function get_controls()
 	return controls_module
 end
 
-local function is_direction_safe(pos, offset, drop_vec)
+local function is_direction_safe(pos: Vector3, offset: Vector3, drop_vec: Vector3): boolean
 	return Workspace:Raycast(pos + offset, drop_vec, move_ray_check) ~= nil
+end
+
+local function is_on_overhang(): boolean
+	if not (cached_root and cached_hum and cached_hum.Health > 0) then
+		return false
+	end
+	local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
+	local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
+	return ray ~= nil and ray.Instance == overhang_part
+end
+
+local function on_camera_changed(): ()
+	cached_camera = Workspace.CurrentCamera
+	if cached_char then
+		move_ray_check.FilterDescendantsInstances = { cached_char, cached_camera }
+	end
+end
+
+local function update_overhang(): ()
+	update_character_cache()
+
+	if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then
+		return
+	end
+
+	local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
+	local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
+
+	if ray and ray.Instance then
+		local hit_inst = ray.Instance
+
+		if hit_inst == overhang_part then
+			return
+		elseif hit_inst:IsA("BasePart") and not hit_inst:IsA("Terrain") then
+			if hit_inst ~= last_floor_part then
+				last_floor_part = hit_inst
+				local floor_size = hit_inst.Size
+
+				overhang_part.Size = Vector3.new(
+					floor_size.X + (OVERHANG_OFFSET * 2),
+					OVERHANG_THICKNESS,
+					floor_size.Z + (OVERHANG_OFFSET * 2)
+				)
+
+				overhang_part.CFrame = hit_inst.CFrame
+					* CFrame.new(0, (floor_size.Y * 0.5) - (OVERHANG_THICKNESS * 0.5), 0)
+			end
+		end
+	end
+end
+
+local function get_safe_direction(vec: Vector3): Vector3
+	if not (cached_root and cached_hum and cached_hum.Health > 0) or vec.Magnitude == 0 then
+		return vec
+	end
+
+	local is_airborne = (cached_hum.FloorMaterial == Enum.Material.Air)
+		or (cached_hum:GetState() == Enum.HumanoidStateType.Freefall)
+		or (cached_hum:GetState() == Enum.HumanoidStateType.Jumping)
+
+	if is_airborne then
+		return vec
+	end
+
+	local look_ahead = (cached_hum.WalkSpeed / 60) * 1.5
+	local test_vec = vec.Unit * look_ahead
+	local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
+	local root_pos = cached_root.Position
+
+	if is_direction_safe(root_pos, test_vec, drop_vec) then
+		return vec
+	end
+
+	local v_x, v_z = vec.X, vec.Z
+	local abs_x, abs_z = math.abs(v_x), math.abs(v_z)
+
+	local safe_x = abs_x > 0.01 and is_direction_safe(root_pos, Vector3.new(test_vec.X, 0, 0), drop_vec)
+	local safe_z = abs_z > 0.01 and is_direction_safe(root_pos, Vector3.new(0, 0, test_vec.Z), drop_vec)
+
+	if safe_x and not safe_z then
+		return Vector3.new(v_x, 0, 0)
+	elseif safe_z and not safe_x then
+		return Vector3.new(0, 0, v_z)
+	elseif safe_x and safe_z then
+		return if abs_x > abs_z then Vector3.new(v_x, 0, 0) else Vector3.new(0, 0, v_z)
+	end
+	return Vector3.zero
+end
+
+local function move_with_edge_check(self: any, vec: Vector3, face: boolean): ()
+	old_move_function(self, get_safe_direction(vec), face)
+end
+
+local function wait_until_off_overhang(): ()
+	update_character_cache()
+	if is_on_overhang() then
+		return
+	end
+	if cleanup_connection then
+		cleanup_connection:Disconnect()
+		cleanup_connection = nil
+	end
+	if overhang_part then
+		overhang_part:Destroy()
+		overhang_part = nil
+	end
 end
 
 function edge_fall_prevention.enable()
@@ -102,88 +211,11 @@ function edge_fall_prevention.enable()
 		overhang_part.Parent = Workspace
 	end
 
-	camera_connection = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
-		cached_camera = Workspace.CurrentCamera
-		if cached_char then
-			move_ray_check.FilterDescendantsInstances = { cached_char, cached_camera }
-		end
-	end)
-
-	update_connection = RunService.Heartbeat:Connect(function()
-		update_character_cache()
-
-		if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then
-			return
-		end
-
-		local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-		local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
-
-		if ray and ray.Instance then
-			local hit_inst = ray.Instance
-
-			if hit_inst == overhang_part then
-				return
-			elseif hit_inst:IsA("BasePart") and not hit_inst:IsA("Terrain") then
-				if hit_inst ~= last_floor_part then
-					last_floor_part = hit_inst
-					local floor_size = hit_inst.Size
-
-					overhang_part.Size = Vector3.new(
-						floor_size.X + (OVERHANG_OFFSET * 2),
-						OVERHANG_THICKNESS,
-						floor_size.Z + (OVERHANG_OFFSET * 2)
-					)
-
-					overhang_part.CFrame = hit_inst.CFrame
-						* CFrame.new(0, (floor_size.Y * 0.5) - (OVERHANG_THICKNESS * 0.5), 0)
-				end
-			end
-		end
-	end)
+	camera_connection = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(on_camera_changed)
+	update_connection = RunService.Heartbeat:Connect(update_overhang)
 
 	old_move_function = controls.moveFunction
-
-	controls.moveFunction = function(self, vec, face)
-		if not (cached_root and cached_hum and cached_hum.Health > 0) or vec.Magnitude == 0 then
-			return old_move_function(self, vec, face)
-		end
-
-		local is_airborne = (cached_hum.FloorMaterial == Enum.Material.Air)
-			or (cached_hum:GetState() == Enum.HumanoidStateType.Freefall)
-			or (cached_hum:GetState() == Enum.HumanoidStateType.Jumping)
-
-		if not is_airborne then
-			local look_ahead = (cached_hum.WalkSpeed / 60) * 1.5
-			local test_vec = vec.Unit * look_ahead
-			local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-			local root_pos = cached_root.Position
-
-			if not is_direction_safe(root_pos, test_vec, drop_vec) then
-				local v_x, v_z = vec.X, vec.Z
-				local abs_x, abs_z = math.abs(v_x), math.abs(v_z)
-
-				local safe_x = abs_x > 0.01 and is_direction_safe(root_pos, Vector3.new(test_vec.X, 0, 0), drop_vec)
-				local safe_z = abs_z > 0.01 and is_direction_safe(root_pos, Vector3.new(0, 0, test_vec.Z), drop_vec)
-
-				if safe_x and not safe_z then
-					vec = Vector3.new(v_x, 0, 0)
-				elseif safe_z and not safe_x then
-					vec = Vector3.new(0, 0, v_z)
-				elseif safe_x and safe_z then
-					if abs_x > abs_z then
-						vec = Vector3.new(v_x, 0, 0)
-					else
-						vec = Vector3.new(0, 0, v_z)
-					end
-				else
-					vec = Vector3.zero
-				end
-			end
-		end
-
-		return old_move_function(self, vec, face)
-	end
+	controls.moveFunction = move_with_edge_check
 end
 
 function edge_fall_prevention.disable()
@@ -212,38 +244,8 @@ function edge_fall_prevention.disable()
 
 	if overhang_part then
 		update_character_cache()
-		local standing_on_overhang = false
-
-		if cached_root and cached_hum and cached_hum.Health > 0 then
-			local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-			local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
-			if ray and ray.Instance == overhang_part then
-				standing_on_overhang = true
-			end
-		end
-
-		if standing_on_overhang then
-			cleanup_connection = RunService.Heartbeat:Connect(function()
-				update_character_cache()
-				local still_on = false
-
-				if cached_root and cached_hum and cached_hum.Health > 0 then
-					local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-					local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
-					if ray and ray.Instance == overhang_part then
-						still_on = true
-					end
-				end
-
-				if not still_on then
-					cleanup_connection:Disconnect()
-					cleanup_connection = nil
-					if overhang_part then
-						overhang_part:Destroy()
-						overhang_part = nil
-					end
-				end
-			end)
+		if is_on_overhang() then
+			cleanup_connection = RunService.Heartbeat:Connect(wait_until_off_overhang)
 		else
 			overhang_part:Destroy()
 			overhang_part = nil

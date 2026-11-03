@@ -19,9 +19,10 @@ local function widget_corners(content: GuiObject): controller
 
 	local function watch(descendant: Instance): ()
 		if descendant:IsA("UICorner") then
-			connections[descendant] = descendant:GetPropertyChangedSignal("CornerRadius"):Connect(function()
+			local function on_radius_changed(): ()
 				apply(descendant)
-			end)
+			end
+			connections[descendant] = descendant:GetPropertyChangedSignal("CornerRadius"):Connect(on_radius_changed)
 			apply(descendant)
 		end
 	end

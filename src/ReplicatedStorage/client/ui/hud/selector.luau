@@ -38,7 +38,7 @@ local function selector(props: { enabled: boolean, display_order: number, on_clo
 	local tiles = {}
 	if props.enabled then
 		for index, widget in WIDGETS do
-			for _, item in registry.entries do
+			for _, item in registry.get_entries() do
 				if item.screen.Name == widget[1] then
 					tiles[widget[1]] = create_element(
 						selector_tile,

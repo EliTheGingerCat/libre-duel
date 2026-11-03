@@ -5,7 +5,7 @@ const TeleportService = game:GetService("TeleportService")
 
 const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
 const queue_record = require(script.Parent.queue_record)
-local queue_status = require(script.Parent.queue_status)
+const queue_status = require(script.Parent.queue_status)
 const queue_store = require(script.Parent.queue_store)
 
 type mode = queue_record.mode
@@ -147,12 +147,13 @@ local function enqueue(player: Player, mode: mode): boolean
 	return true
 end
 
+-- The caller marks the ticket as teleporting before scheduling this, so two refreshes cannot both send it.
 local function teleport_player(ticket: ticket): ()
-	if pending[ticket.player] ~= ticket or ticket.player.Parent ~= Players or ticket.teleporting then
+	if pending[ticket.player] ~= ticket or ticket.player.Parent ~= Players then
+		ticket.teleporting = false
 		return
 	end
-	ticket.teleporting = true
-	ticket.player:SetAttribute("QueueTeleporting", true)
+	ticket.player:SetAttribute("queue_teleporting", true)
 	ticket.attempts += 1
 	const options = Instance.new("TeleportOptions")
 	options.ReservedServerId = ticket.id
@@ -165,32 +166,30 @@ local function teleport_player(ticket: ticket): ()
 	const ok, failure = pcall(TeleportService.TeleportAsync, TeleportService, game.PlaceId, { ticket.player }, options)
 	if not ok and pending[ticket.player] == ticket then
 		ticket.teleporting = false
-		ticket.player:SetAttribute("QueueTeleporting", false)
-		ticket.retry_at = os.time() + 2 ^ ticket.attempts
+		ticket.player:SetAttribute("queue_teleporting", false)
+		ticket.retry_at = os.time() + QUEUE_CONFIG.retry_backoff_base ^ ticket.attempts
 		warn(failure)
 	end
 end
 
+local function collect_tokens(group: group): { [string]: string }
+	const tokens: { [string]: string } = {}
+	for player, ticket in group.tickets do
+		if player.Parent == Players then
+			tokens[tostring(player.UserId)] = ticket.token
+		end
+	end
+	return tokens
+end
+
 local function refresh_group(group: group): ()
-	local result = queue_store.get(group.mode, group.id)
 	const now = os.time()
-	if result.ok and result.entry and now - group.last_heartbeat >= QUEUE_CONFIG.heartbeat_interval then
-		const tokens: { [string]: string } = {}
-		for player, ticket in group.tickets do
-			if player.Parent == Players then
-				tokens[tostring(player.UserId)] = ticket.token
-			end
-		end
-		local function renew_slots(entry: record?): record?
-			if entry then
-				queue_record.renew(entry, tokens, os.time())
-			end
-			return entry
-		end
-		result = queue_store.update(group.mode, group.id, renew_slots)
-		if result.ok then
-			group.last_heartbeat = now
-		end
+	const heartbeat_due = now - group.last_heartbeat >= QUEUE_CONFIG.heartbeat_interval
+	const result = if heartbeat_due
+		then queue_store.renew(group.mode, group.id, collect_tokens(group), false)
+		else queue_store.get(group.mode, group.id)
+	if heartbeat_due and result.ok then
+		group.last_heartbeat = now
 	end
 	if result.ok then
 		const entry = result.entry
@@ -214,11 +213,7 @@ local function refresh_group(group: group): ()
 				else
 					-- Mark synchronously before scheduling to prevent two notifications teleporting twice.
 					ticket.teleporting = true
-					local function send_player(): ()
-						ticket.teleporting = false
-						teleport_player(ticket)
-					end
-					task.spawn(send_player)
+					task.spawn(teleport_player, ticket)
 				end
 			end
 		end
@@ -288,8 +283,8 @@ local function on_teleport_failed(
 		return
 	end
 	ticket.teleporting = false
-	player:SetAttribute("QueueTeleporting", false)
-	ticket.retry_at = os.time() + 2 ^ ticket.attempts
+	player:SetAttribute("queue_teleporting", false)
+	ticket.retry_at = os.time() + QUEUE_CONFIG.retry_backoff_base ^ ticket.attempts
 	warn(failure)
 end
 

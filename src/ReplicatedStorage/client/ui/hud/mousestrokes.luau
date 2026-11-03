@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local shadow = require(script.Parent.Parent.visuals.shadow)
@@ -12,13 +14,13 @@ local function mouse_button(props: { name: string, x: number })
 		{
 			Position = UDim2.fromOffset(props.x, 122),
 			Size = UDim2.fromOffset(112, 36),
-			BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+			BackgroundColor3 = COLOURS.surface,
 			BackgroundTransparency = 0.4,
 			BorderSizePixel = 0,
 			Text = props.name,
 			TextSize = 32,
 			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+			FontFace = FONTS.regular,
 		},
 		create_element("UICorner", {
 			TopLeftRadius = UDim.new(0, 0),
@@ -33,7 +35,7 @@ local function mousestrokes()
 	return create_element(React.Fragment, {}, {
 		Top = create_element("ImageLabel", {
 			Size = UDim2.fromOffset(224, 122),
-			BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+			BackgroundColor3 = COLOURS.surface,
 			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 			Image = "rbxassetid://121854981390576",

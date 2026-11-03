@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local shadow = require(script.Parent.shadow)
@@ -22,7 +23,7 @@ type props_text_label = {
 local function text_label(props: props_text_label)
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
-		FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+		FontFace = FONTS.regular,
 		LayoutOrder = props.layout_order,
 		Name = props.name,
 		RichText = true,

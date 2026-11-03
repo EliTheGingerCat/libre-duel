@@ -1,5 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
@@ -20,12 +22,12 @@ local function check_box(props: { active: boolean?, round: boolean?, text: strin
 		Size = UDim2.fromOffset(40, 40),
 		BackgroundColor3 = if active
 			then Color3.new(140 / 255, 140 / 255, 140 / 255)
-			else Color3.new(17 / 255, 17 / 255, 17 / 255),
+			else COLOURS.surface,
 		BackgroundTransparency = 0.5,
 		Text = if active then "✓" else "",
 		TextSize = 32,
 		TextColor3 = Color3.new(1, 1, 1),
-		FontFace = Font.fromId(11702779409),
+		FontFace = FONTS.regular,
 		[React.Event.Activated] = activate,
 	}, {
 		surface = React.createElement(surface, { radius = if props.round then 25 else 8 }),
@@ -39,7 +41,7 @@ local function check_box(props: { active: boolean?, round: boolean?, text: strin
 			Size = UDim2.new(1, -60, 1, 0),
 			BackgroundTransparency = 1,
 			Text = props.text,
-			FontFace = Font.fromId(11702779409),
+			FontFace = FONTS.regular,
 			TextSize = 32,
 			TextColor3 = Color3.new(1, 1, 1),
 			TextXAlignment = Enum.TextXAlignment.Left,

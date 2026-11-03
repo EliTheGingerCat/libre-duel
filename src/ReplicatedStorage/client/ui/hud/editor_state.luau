@@ -1,4 +1,9 @@
-local listeners: { () -> () } = {}
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Signal = require(ReplicatedStorage.Packages.signal)
+local cursor_state = require(script.Parent.Parent.cursor_state)
+
+local changed = Signal.new()
 
 local editor_state = {
 	enabled = false,
@@ -9,18 +14,14 @@ local function set_enabled(enabled: boolean): ()
 		return
 	end
 	editor_state.enabled = enabled
-	for _, callback in table.clone(listeners) do
-		callback()
-	end
+	cursor_state.set_free("hud_editor", enabled)
+	changed:Fire()
 end
 
 local function subscribe(callback: () -> ())
-	table.insert(listeners, callback)
+	local connection = changed:Connect(callback)
 	local function disconnect(): ()
-		local index = table.find(listeners, callback)
-		if index then
-			table.remove(listeners, index)
-		end
+		connection:Disconnect()
 	end
 	return disconnect
 end

@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local React = require(ReplicatedStorage.Packages.react)
 local category_button = require(script.Parent.category_button)
 local settings_registry = require(script.Parent.settings_registry)
@@ -38,7 +39,7 @@ local function sidebar(
 	return React.createElement("Frame", {
 		Position = UDim2.fromOffset(20, 20),
 		Size = UDim2.new(0.25, -20, 1, -40),
-		BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,
 	}, {
 		corner = React.createElement("UICorner", { CornerRadius = UDim.new(0, 40) }),

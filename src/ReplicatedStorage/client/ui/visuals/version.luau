@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 
@@ -18,7 +19,7 @@ local function version()
 			{
 				AnchorPoint = Vector2.new(0, 1),
 				BackgroundTransparency = 1,
-				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
+				FontFace = FONTS.regular,
 				Position = UDim2.new(0, 10, 1, 0),
 				Size = UDim2.fromOffset(320, 50),
 				Text = "Libre Duel — Pre-release",
