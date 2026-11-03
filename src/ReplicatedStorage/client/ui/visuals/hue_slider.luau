@@ -1,83 +1,25 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
+local slider = require(script.Parent.slider)
 
-local create_element = React.createElement
-
-local function hue_slider()
-	return create_element(
-		"Frame",
-		{
-			BackgroundTransparency = 1,
-			Size = UDim2.new(1, -60, 0, 32),
-		},
-		create_element(
-			"Frame",
-			{ --track
-				AnchorPoint = Vector2.new(0, 0.5),
-				Position = UDim2.new(0, 10, 0.5, 0),
-				BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-				Size = UDim2.new(1, 0, 0, 10),
-			},
-			create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
-			create_element("UICorner", {
-				CornerRadius = UDim.new(1, 0),
-			}),
-			create_element(
-				"UIStroke",
-				{
-					Color = Color3.fromRGB(255, 255, 255),
-					Thickness = 1,
-				},
-				create_element("UIGradient", {
-					Color = ColorSequence.new({
-						ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
-						ColorSequenceKeypoint.new(0.167, Color3.fromRGB(255, 255, 0)),
-						ColorSequenceKeypoint.new(0.333, Color3.fromRGB(0, 255, 0)),
-						ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
-						ColorSequenceKeypoint.new(0.666666, Color3.fromRGB(0, 0, 255)),
-						ColorSequenceKeypoint.new(0.833333, Color3.fromRGB(255, 0, 255)),
-						ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
-					}),
-				})
-			),
-			create_element(
-				"Frame",
-				{ --thumb
-					AnchorPoint = Vector2.new(0.5, 0.5),
-					Position = UDim2.fromScale(0, 0.5),
-					BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-					Size = UDim2.fromOffset(25, 25),
-				},
-				create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
-				create_element("UICorner", {
-					CornerRadius = UDim.new(1, 0),
-				}),
-				create_element(
-					"UIStroke",
-					{
-						Color = Color3.fromRGB(255, 255, 255),
-						Thickness = 1,
-					},
-					create_element("UIGradient", {
-						Color = ColorSequence.new({
-							ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-							ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-						}),
-					})
-				)
-			)
-		),
-		create_element("TextLabel", {
-			BackgroundTransparency = 1,
-			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(1, 50, 0.5, 0),
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-			TextSize = 25,
-			Text = "0", --range 0-360
-			TextColor3 = Color3.fromRGB(255, 255, 255),
-		})
-	)
+local function hue_slider(props: { value: number?, colour: Color3?, on_changed: ((number) -> ())? })
+	return React.createElement(slider, {
+		text = "Hue",
+		value = props.value or 0,
+		maximum = 360,
+		suffix = "°",
+		on_changed = props.on_changed,
+		gradient = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Color3.new(1, 0, 0)),
+			ColorSequenceKeypoint.new(1 / 6, Color3.new(1, 1, 0)),
+			ColorSequenceKeypoint.new(2 / 6, Color3.new(0, 1, 0)),
+			ColorSequenceKeypoint.new(3 / 6, Color3.new(0, 1, 1)),
+			ColorSequenceKeypoint.new(4 / 6, Color3.new(0, 0, 1)),
+			ColorSequenceKeypoint.new(5 / 6, Color3.new(1, 0, 1)),
+			ColorSequenceKeypoint.new(1, Color3.new(1, 0, 0)),
+		}),
+	})
 end
 
 return hue_slider

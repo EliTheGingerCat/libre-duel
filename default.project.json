@@ -34,6 +34,9 @@
 
     "ReplicatedStorage": {
       "$path": "./src/ReplicatedStorage",
+      "git_info": {
+        "$path": "./git_info.project.json"
+      },
       "Packages": {
         "$path": "Packages"
       }

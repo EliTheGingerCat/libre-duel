@@ -8,6 +8,7 @@ local hotbar = require(script.Parent.hotbar)
 local infoboard = require(script.Parent.infoboard)
 local matchmaking = require(script.Parent.matchmaking)
 local notification_container = require(script.Parent.notification_container)
+local settings = require(script.Parent.Parent.settings.settings)
 local tablist = require(script.Parent.tablist)
 local title = require(script.Parent.title)
 local version = require(script.Parent.version)
@@ -25,6 +26,7 @@ local function main()
 		create_element(infoboard),
 		create_element(matchmaking),
 		create_element(notification_container),
+		create_element(settings),
 		create_element(tablist),
 		create_element(title),
 		create_element(version)

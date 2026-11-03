@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
+local button_input = require(script.Parent.controls.button_input)
 
 local function animated_button(props: { [any]: any })
 	local ref = React.useRef(nil :: GuiButton?)
@@ -79,7 +80,10 @@ local function animated_button(props: { [any]: any })
 		BackgroundTransparency = 1,
 	}, {
 		minimum = (auto_x or auto_y) and React.createElement("UISizeConstraint", { MinSize = minimum }),
-		button = React.createElement(props.class_name or "TextButton", button_props, props.children),
+		button = React.createElement(props.class_name or "TextButton", button_props, {
+			input = React.createElement(button_input, { on_activated = props[React.Event.Activated] }),
+			content = React.createElement(React.Fragment, {}, props.children),
+		}),
 	})
 end
 

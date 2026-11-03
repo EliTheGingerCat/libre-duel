@@ -1,48 +1,48 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
+local surface = require(script.Parent.controls.surface)
 
-local create_element = React.createElement
-
-local function text_input()
-	return create_element(
-		"TextBox",
-		{
+local function text_input(props: {
+	text: string?,
+	placeholder: string?,
+	icon: string?,
+	on_changed: ((string) -> ())?,
+})
+	local function changed(box: TextBox): ()
+		if props.on_changed then
+			props.on_changed(box.Text)
+		end
+	end
+	local inset = if props.icon then 54 else 20
+	return React.createElement("Frame", {
+		Size = UDim2.new(1, 0, 0, 50),
+		BackgroundColor3 = Color3.new(17 / 255, 17 / 255, 17 / 255),
+		BackgroundTransparency = 0.5,
+	}, {
+		surface = React.createElement(surface),
+		icon = props.icon and React.createElement("ImageLabel", {
+			BackgroundTransparency = 1,
+			Position = UDim2.fromOffset(14, 10),
+			Size = UDim2.fromOffset(30, 30),
+			Image = props.icon,
+		}),
+		input = React.createElement("TextBox", {
+			Name = "input",
+			BackgroundTransparency = 1,
+			Position = UDim2.fromOffset(inset, 0),
+			Size = UDim2.new(1, -inset - 14, 1, 0),
 			ClearTextOnFocus = false,
-			BackgroundColor3 = Color3.fromRGB(54, 54, 54),
-			Size = UDim2.new(1, 0, 0, 50),
-			FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
-			PlaceholderColor3 = Color3.fromRGB(129, 129, 129),
-			PlaceholderText = "Enter text...",
-			TextColor3 = Color3.fromRGB(255, 255, 255),
-			TextSize = 50,
-			Text = "",
-			TextXAlignment = "Left",
-		},
-		create_element("UIShadow", { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
-		create_element("UICorner", {
-			CornerRadius = UDim.new(1, 0),
+			FontFace = Font.fromId(11702779409),
+			PlaceholderColor3 = Color3.new(129 / 255, 129 / 255, 129 / 255),
+			PlaceholderText = props.placeholder or "Enter text...",
+			TextColor3 = Color3.new(1, 1, 1),
+			TextSize = 36,
+			Text = props.text or "",
+			TextXAlignment = Enum.TextXAlignment.Left,
+			[React.Change.Text] = changed,
 		}),
-		create_element("UIPadding", {
-			PaddingLeft = UDim.new(0, 10),
-			PaddingRight = UDim.new(0, 10),
-		}),
-		create_element(
-			"UIStroke",
-			{
-				ApplyStrokeMode = "Border",
-				Color = Color3.fromRGB(255, 255, 255),
-				Thickness = 1,
-			},
-			create_element("UIGradient", {
-				Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, Color3.fromRGB(134, 134, 134)),
-					ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70)),
-				}),
-				Rotation = -90,
-			})
-		)
-	)
+	})
 end
 
 return text_input

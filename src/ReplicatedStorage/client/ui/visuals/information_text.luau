@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local function information_text()
+local function information_text(props: { text: string? })
 	return create_element(
 		"Frame",
 		{
@@ -23,15 +23,15 @@ local function information_text()
 				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 				TextSize = 30,
 				TextXAlignment = "Left",
-				Text = "Please do not the cat.",
-				TextColor3 = Color3.fromRGB(255, 255, 255),
+				Text = props.text or "Please do not the cat.",
+				TextColor3 = Color3.new(255 / 255, 255 / 255, 255 / 255),
 			},
 			create_element("ImageLabel", {
 				Position = UDim2.fromOffset(-30, 0),
 				Size = UDim2.fromOffset(30, 30),
 				BackgroundTransparency = 1,
 				Image = "rbxassetid://123784732468200",
-				ImageColor3 = Color3.fromRGB(255, 255, 255), -- this isn't needed, i just want to keep it consistent
+				ImageColor3 = Color3.new(255 / 255, 255 / 255, 255 / 255),
 			})
 		)
 	)

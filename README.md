@@ -71,6 +71,7 @@ Consider this diagram:
 10. Install [Rokit](https://github.com/rojo-rbx/rokit).
 11. Run `rokit install`.
 12. Run `wally install`.
+13. Run `lune run git_info` to generate the Git metadata used by Rojo.
 
 You now have [Lune](https://lune-org.github.io/docs/) and [Rojo](https://rojo.space/).
 
@@ -86,11 +87,14 @@ Run `lune list` for an explanation of what each command does. Output:
 - `build_no_map` - Build the Place without the massive map.
 - `crlf` - Replace LF with CRLF in text files.
 - `generate_no_map` - Generate a project file without the massive map.
+- `git_info` - Generate `git_info.project.json` with the HEAD commit.
 - `run-context` - Remove all meta files that only set RunContext.
 - `serve` - Serve information from the filesystem to the Roblox Studio plugin.
 - `serve_no_map` - Serve without the massive map.
 - `sourcemap` - Create a mapping of the filesystem into Roblox objects.
 - `syncback` - Sync instances from the built Place into the filesystem.
+
+The build, serve, and sourcemap scripts refresh `git_info.project.json` automatically. When using Rojo directly, run `lune run git_info` after new commits to refresh the About tab metadata, then use commands such as `rojo serve no_map.project.json` normally. The generated file is ignored by Git; the licence is read directly from `LICENSE.txt`.
 
 Sourcemapping and serving are the main utilities. However, `sourcemap` and `serve` are both simple Rojo commands that do not depend on the name of the game, so there is not really any strong reason to use them. I use `sourcemap` anyway.
 

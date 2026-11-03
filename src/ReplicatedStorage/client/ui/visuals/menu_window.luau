@@ -44,7 +44,10 @@ local function menu_window(props: props)
 			ZIndex = 0,
 			[React.Event.Activated] = props.on_close,
 		}),
-		window = create_element("Frame", {
+		window = create_element("TextButton", {
+			Text = "",
+			AutoButtonColor = false,
+			Selectable = false,
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Position = motion:map(window_position),
 			Size = UDim2.fromOffset(size.X, size.Y),

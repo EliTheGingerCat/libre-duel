@@ -3,6 +3,11 @@
 registry = "test"
 
 [[package]]
+name = "1foreverhd/topbarplus"
+version = "3.4.0"
+dependencies = []
+
+[[package]]
 name = "alicesaidhi/conch"
 version = "0.4.0"
 dependencies = [
@@ -46,6 +51,7 @@ dependencies = [
 	["react-roblox", "jsdotlua/react-roblox@17.2.1"],
 	["signal", "sleitnick/signal@2.0.3"],
 	["table-util", "sleitnick/table-util@1.2.1"],
+	["topbarplus", "1foreverhd/topbarplus@3.4.0"],
 	["drop", "jackdotink/drop@1.0.2"],
 ]
 

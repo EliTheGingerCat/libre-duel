@@ -20,6 +20,8 @@ signal = "sleitnick/signal@2.0.3"
 
 table-util = "sleitnick/table-util@1.2.1"
 
+topbarplus = "1foreverhd/topbarplus@=3.4.0"
+
 FastCast2 = "weenachuangkud/fastcast2@0.1.4"
 
 [server-dependencies]

@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
 local registry = require(script.Parent.registry)
+local scrolling_content = require(script.Parent.Parent.visuals.scrolling_content)
 local selector_tile = require(script.Parent.selector_tile)
 
 local create_element = React.createElement
@@ -27,10 +28,6 @@ end
 
 local function selector(props: { enabled: boolean, display_order: number, on_close: () -> () })
 	local _, set_revision = React.useState(0)
-	local top_fade, set_top_fade = React.useBinding(0)
-	local function update_fade(list: ScrollingFrame): ()
-		set_top_fade(math.clamp(list.CanvasPosition.Y / 32, 0, 1))
-	end
 	local function subscribe()
 		local function update(): ()
 			set_revision(increment)
@@ -61,49 +58,24 @@ local function selector(props: { enabled: boolean, display_order: number, on_clo
 			display_order = props.display_order,
 			on_close = props.on_close,
 		},
-		create_element("CanvasGroup", {
-			Name = "list_viewport",
-			AnchorPoint = Vector2.new(0.5, 1),
-			Position = UDim2.new(0.5, 0, 1, -20),
-			Size = UDim2.new(0.8, 0, 1, -76),
-			BackgroundTransparency = 1,
+		create_element(scrolling_content, {
+			anchor = Vector2.new(0.5, 1),
+			position = UDim2.new(0.5, 0, 1, -20),
+			size = UDim2.new(0.8, 0, 1, -76),
 		}, {
-			fade = create_element("UIGradient", {
-				Rotation = 90,
-				Transparency = top_fade:map(function(value: number)
-					return NumberSequence.new({
-						NumberSequenceKeypoint.new(0, value),
-						NumberSequenceKeypoint.new(0.05, 0),
-						NumberSequenceKeypoint.new(0.95, 0),
-						NumberSequenceKeypoint.new(1, 1),
-					})
-				end),
+			padding = create_element("UIPadding", {
+				PaddingLeft = UDim.new(0, 40),
+				PaddingRight = UDim.new(0, 40),
+				PaddingTop = UDim.new(0, 20),
+				PaddingBottom = UDim.new(0, 40),
 			}),
-			list = create_element("ScrollingFrame", {
-				Name = "list",
-				Size = UDim2.fromScale(1, 1),
-				BackgroundTransparency = 1,
-				BorderSizePixel = 0,
-				ScrollBarThickness = 6,
-				CanvasSize = UDim2.fromOffset(0, 0),
-				AutomaticCanvasSize = Enum.AutomaticSize.Y,
-				ScrollingDirection = Enum.ScrollingDirection.Y,
-				[React.Change.CanvasPosition] = update_fade,
-			}, {
-				padding = create_element("UIPadding", {
-					PaddingLeft = UDim.new(0, 40),
-					PaddingRight = UDim.new(0, 40),
-					PaddingTop = UDim.new(0, 20),
-					PaddingBottom = UDim.new(0, 40),
-				}),
-				layout = create_element("UIGridLayout", {
-					CellSize = UDim2.fromOffset(256, 256),
-					CellPadding = UDim2.fromOffset(20, 20),
-					SortOrder = Enum.SortOrder.LayoutOrder,
-					HorizontalAlignment = Enum.HorizontalAlignment.Center,
-				}),
-				tiles = create_element(React.Fragment, {}, tiles),
+			layout = create_element("UIGridLayout", {
+				CellSize = UDim2.fromOffset(256, 256),
+				CellPadding = UDim2.fromOffset(20, 20),
+				SortOrder = Enum.SortOrder.LayoutOrder,
+				HorizontalAlignment = Enum.HorizontalAlignment.Center,
 			}),
+			tiles = create_element(React.Fragment, {}, tiles),
 		})
 	)
 end

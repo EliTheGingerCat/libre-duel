@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local function warning_text()
+local function warning_text(props: { text: string? })
 	return create_element(
 		"Frame",
 		{ --Warning component
@@ -23,15 +23,15 @@ local function warning_text()
 				FontFace = Font.fromId(11702779409, Enum.FontWeight.Regular),
 				TextSize = 30,
 				TextXAlignment = "Left",
-				Text = "Please do not the cat. Final warning.",
-				TextColor3 = Color3.fromRGB(255, 213, 0),
+				Text = props.text or "Please do not the cat. Final warning.",
+				TextColor3 = Color3.new(255 / 255, 213 / 255, 0 / 255),
 			},
 			create_element("ImageLabel", {
 				Position = UDim2.fromOffset(-30, 0),
 				Size = UDim2.fromOffset(30, 30),
 				BackgroundTransparency = 1,
 				Image = "rbxassetid://97154438768583",
-				ImageColor3 = Color3.fromRGB(255, 213, 0),
+				ImageColor3 = Color3.new(255 / 255, 213 / 255, 0 / 255),
 			})
 		)
 	)

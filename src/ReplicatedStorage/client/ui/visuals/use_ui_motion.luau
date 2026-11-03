@@ -5,7 +5,7 @@ local TweenService = game:GetService("TweenService")
 local React = require(ReplicatedStorage.Packages.react)
 
 -- Bindings update the native properties without rendering React on every frame.
-local function use_ui_motion(target: number, initial: number?)
+local function use_ui_motion(target: number, initial: number?, start: number?)
 	local value = React.useRef(nil :: NumberValue?)
 	local binding, update = React.useBinding(initial or target)
 
@@ -26,6 +26,9 @@ local function use_ui_motion(target: number, initial: number?)
 	local function animate()
 		local driver = value.current
 		assert(driver)
+		if start then
+			driver.Value = start
+		end
 		local tween =
 			TweenService:Create(driver, TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
 				Value = target,
@@ -47,7 +50,7 @@ local function use_ui_motion(target: number, initial: number?)
 		end
 		return disconnect
 	end
-	React.useLayoutEffect(animate, { target })
+	React.useLayoutEffect(animate, { target, start or target })
 	return binding
 end
 
