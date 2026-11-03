@@ -3,10 +3,13 @@ local RunService = game:GetService("RunService")
 
 local get_fps = require(ReplicatedStorage.client.util.get_fps)
 
-local function mount_fps(label: TextLabel)
-	local icon = label:FindFirstChild("Icon")
+local function mount_fps(counter: Frame)
+	local icon = counter:FindFirstChild("Icon")
 	assert(icon and icon:IsA("ImageLabel"))
 	icon.Image = "rbxassetid://113292629307398"
+
+	local label = counter:FindFirstChild("Text")
+	assert(label and label:IsA("TextLabel"))
 
 	local function update(): ()
 		local text = `{get_fps()} FPS`

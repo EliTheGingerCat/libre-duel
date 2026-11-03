@@ -14,11 +14,13 @@ local function mount_builtin(name: string, content: Frame): () -> ()
 		assert(main and main:IsA("ViewportFrame"))
 		return mount_paperdoll(main)
 	end
-	assert(main and main:IsA("TextLabel"))
+	assert(main and main:IsA("Frame"))
 	if name == "FpsCounter" then
 		return mount_fps(main)
 	end
-	return mount_combat(if name == "ReachCounter" then main else nil, if name == "ComboCounter" then main else nil)
+	local text = main:FindFirstChild("Text")
+	assert(text and text:IsA("TextLabel"))
+	return mount_combat(if name == "ReachCounter" then text else nil, if name == "ComboCounter" then text else nil)
 end
 
 return mount_builtin

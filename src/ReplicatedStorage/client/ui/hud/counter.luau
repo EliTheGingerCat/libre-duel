@@ -9,19 +9,12 @@ local shadow = require(script.Parent.Parent.visuals.shadow)
 local create_element = React.createElement
 
 local function counter(props: { name: string })
-	return create_element("TextLabel", {
+	return create_element("Frame", {
 		Name = "Main",
 		Size = UDim2.fromScale(1, 1),
 		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.4,
 		BorderSizePixel = 0,
-		Text = if props.name == "ReachCounter"
-			then "0.00 cubes"
-			elseif props.name == "FpsCounter" then "0 FPS"
-			else "Combo: 0",
-		TextSize = 28,
-		TextColor3 = Color3.new(1, 1, 1),
-		FontFace = FONTS.regular,
 	}, {
 		shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),
@@ -34,16 +27,36 @@ local function counter(props: { name: string })
 				border_position = Enum.BorderStrokePosition.Inner,
 			}
 		),
-		padding = create_element("UIPadding", { PaddingLeft = UDim.new(0, 40) }),
+		padding = create_element("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12) }),
+		layout = create_element("UIListLayout", {
+			Padding = UDim.new(0, 8),
+			FillDirection = "Horizontal",
+			HorizontalAlignment = "Left",
+			VerticalAlignment = "Center",
+			SortOrder = "LayoutOrder",
+		}),
 		icon = create_element("ImageLabel", {
 			Name = "Icon",
-			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, -30, 0.5, 0),
+			LayoutOrder = 1,
 			Size = UDim2.fromOffset(22, 22),
 			BackgroundTransparency = 1,
 			Image = if props.name == "ReachCounter"
 				then "rbxassetid://112495278464625"
 				else "rbxassetid://127844573570900",
+		}),
+		text = create_element("TextLabel", {
+			Name = "Text",
+			LayoutOrder = 2,
+			AutomaticSize = "X",
+			Size = UDim2.new(0, 0, 1, 0),
+			BackgroundTransparency = 1,
+			Text = if props.name == "ReachCounter"
+				then "0.00 cubes"
+				elseif props.name == "FpsCounter" then "0 FPS"
+				else "Combo: 0",
+			TextSize = 28,
+			TextColor3 = Color3.new(1, 1, 1),
+			FontFace = FONTS.regular,
 		}),
 	})
 end
