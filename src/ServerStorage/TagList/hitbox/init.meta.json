@@ -1,0 +1,17 @@
+{
+  "attributes": {
+    "AlwaysOnTop": false,
+    "Color": {
+      "Color3": [
+        0.16205978,
+        0.25565055,
+        0.47568628
+      ]
+    },
+    "DrawType": "Box",
+    "Group": "",
+    "Icon": "rbxasset://textures/TagEditor/Tag.png",
+    "Visible": true
+  },
+  "className": "Configuration"
+}
