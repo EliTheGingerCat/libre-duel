@@ -1,10 +1,24 @@
 const MarketplaceService = game:GetService("MarketplaceService")
 const GroupService = game:GetService("GroupService")
 const Players = game:GetService("Players")
+const RunService = game:GetService("RunService")
 
-const place_info = MarketplaceService:GetProductInfo(game.PlaceId)
 
 const function get_owner(return_type: "username" | "userid"): number | string
+    if game.PlaceId == 0 then
+        if not RunService:IsStudio() then
+            print("?????")
+        end
+        if return_type == "userid" then
+            return -1
+        end
+        if return_type == "username" and RunService:IsStudio() then
+            return Players:GetPlayers()[1]
+        end
+    end
+
+    const place_info = MarketplaceService:GetProductInfo(game.PlaceId)
+
     if game.CreatorType == Enum.CreatorType.Group then
         local group_info = GroupService:GetGroupInfoAsync(place_info.Creator.CreatorTargetId)
         local group_owner_id = group_info.Owner.Id
