@@ -1,3 +1,4 @@
+local ContextActionService = game:GetService("ContextActionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
@@ -8,8 +9,14 @@ local editor_state = require(script.Parent.Parent.hud.editor_state)
 local inventory_state = require(script.Parent.inventory_state)
 local mode_selector_state = require(script.Parent.Parent.matchmaking.mode_selector_state)
 
+const BLOCK_CAMERA_ACTION = "inventory_block_camera"
+
 local function close(): ()
 	inventory_state.set_enabled(false)
+end
+
+local function sink(): Enum.ContextActionResult
+	return Enum.ContextActionResult.Sink
 end
 
 -- Opens and closes the inventory with its keybind. It closes on escape, on death, and when another menu opens.
@@ -56,6 +63,28 @@ local function use_inventory_toggle(): boolean
 	end
 
 	React.useEffect(subscribe, {})
+
+	-- The cursor is freed every frame, but holding right click still lets the camera turn a little in between.
+	local function block_camera()
+		if not enabled then
+			return
+		end
+		ContextActionService:BindActionAtPriority(
+			BLOCK_CAMERA_ACTION,
+			sink,
+			false,
+			Enum.ContextActionPriority.High.Value,
+			Enum.UserInputType.MouseButton2
+		)
+
+		local function unbind(): ()
+			ContextActionService:UnbindAction(BLOCK_CAMERA_ACTION)
+		end
+
+		return unbind
+	end
+
+	React.useEffect(block_camera, { enabled })
 
 	return enabled
 end
