@@ -3,6 +3,7 @@ const KEYBINDS = {
 	debug_local = Enum.KeyCode.P,
 	debug_server = Enum.KeyCode.M,
 	hud_editor = Enum.KeyCode.RightShift,
+	inventory = Enum.KeyCode.E,
 	slot = {
 		[1] = Enum.KeyCode.One,
 		[2] = Enum.KeyCode.Two,

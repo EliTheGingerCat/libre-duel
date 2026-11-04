@@ -103,7 +103,12 @@ local function mount_paperdoll(viewport: ViewportFrame)
 		local bounds, size = new_copy:GetBoundingBox()
 		local centre = bounds.Position
 		local half_fov = math.rad(camera.FieldOfView / 2)
-		local aspect = viewport.Size.X.Offset / viewport.Size.Y.Offset
+		-- AbsoluteSize also works for viewports sized by scale, such as the one in the inventory
+		local absolute_size = viewport.AbsoluteSize
+		local aspect = if absolute_size.Y > 0
+			then absolute_size.X / absolute_size.Y
+			elseif viewport.Size.Y.Offset > 0 then viewport.Size.X.Offset / viewport.Size.Y.Offset
+			else 1
 		local distance = math.max(size.Y, size.X / aspect) / (2 * math.tan(half_fov)) + size.Z / 2
 		camera.CFrame = CFrame.new(centre + Vector3.new(0, 0, -distance * 1.1)) * CFrame.Angles(0, math.pi, 0)
 	end

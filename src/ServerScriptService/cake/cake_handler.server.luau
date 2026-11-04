@@ -1,6 +1,8 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const CAKE_EATING_DURATION = require(script.Parent.CAKE_EATING_DURATION)
+const inventory_util = require(ServerScriptService.inventory.inventory_util)
 
 const set_cake_state = ReplicatedStorage.remotes.set_cake_state
 
@@ -42,6 +44,9 @@ local function on_set_cake_state(player: Player, new_state: unknown): boolean
 	end
 
 	if new_state == true then
+		if not inventory_util.has_behaviour(player, "cake") then
+			return false
+		end
 		print(`{player} started eating`)
 		eating_timestamps[player] = {
 			time = 0,

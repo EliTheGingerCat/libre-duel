@@ -9,6 +9,7 @@ const BOW_COOLDOWN_SERVER = require(script.Parent.BOW_COOLDOWN_SERVER)
 const BOW_DAMAGE = require(script.Parent.BOW_DAMAGE)
 const debug_print = require(ServerScriptService.util.debug_print)
 const FastCast2 = require(ReplicatedStorage.Packages.FastCast2)
+const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
@@ -113,6 +114,9 @@ local function on_invoke(player: Player, origin: unknown, direction: unknown, dt
 	end
 	if (origin - head.Position).Magnitude > MAX_ORIGIN_DISTANCE then
 		debug_print("Bow origin is too far from the shooter.")
+		return false
+	end
+	if not inventory_util.has_behaviour(player, "bow") then
 		return false
 	end
 	if is_on_cooldown(player, "attack_bow") then
