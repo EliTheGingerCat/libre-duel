@@ -1,7 +1,7 @@
 --!nocheck
 -- Objectual UI Blur by Tavikron: https://devforum.roblox.com/t/objectual-ui-blur-12-revision-2/3626057
 -- Local changes: exposes DepthOfField, checks ancestor visibility, supports offset corner radii,
--- and keeps a constant depth across the screen.
+-- keeps a constant depth across the screen, and only hides the main plane when it has no area.
 -- Only the Normal meshes are included, so the Fragmented argument does not work.
 
 -- Thanks to SomeFedoraGuy (me) for spending time to make this bloatware
@@ -231,7 +231,7 @@ function UIBlur._Update(self:Utilities.UIBlurInternal)
 			}
 
 			self._MainPlane.CFrame = CFrame.new(Center,Center - Camera.CFrame.LookVector) * CFrame.Angles(0,0,math.rad(self._GuiObject.AbsoluteRotation))
-			if MainPlaneSizes.X <= 0.01 or MainPlaneSizes.Y <= 0.01 then
+			if MainPlaneSizes.X <= 0.0001 or MainPlaneSizes.Y <= 0.0001 then
 				self._MainPlane.Transparency = 1
 			else
 				self._MainPlane.Size = Vector3.new(MainPlaneSizes.X,MainPlaneSizes.Y)
