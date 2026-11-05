@@ -63,6 +63,7 @@ local function notification_component(props: {
 	index: number,
 	on_destroy: () -> (),
 	preview: boolean?,
+	blur: boolean?,
 })
 	local notification = props.notification
 	local index = props.index
@@ -91,7 +92,7 @@ local function notification_component(props: {
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),
-		not props.preview and create_element(ui_blur),
+		props.blur and create_element(ui_blur),
 		create_element(
 			"UIStroke",
 			{
@@ -169,6 +170,7 @@ local function notifications_container(props: use_editable_hud.props)
 				notification = EXAMPLE_NOTIFICATION,
 				index = 1,
 				preview = true,
+				blur = not props.preview,
 				on_destroy = do_nothing,
 			})
 		)
@@ -187,6 +189,7 @@ local function notifications_container(props: use_editable_hud.props)
 				key = notification.id,
 				notification = notification,
 				index = display_order,
+				blur = true,
 				on_destroy = on_destroy,
 			})
 		)

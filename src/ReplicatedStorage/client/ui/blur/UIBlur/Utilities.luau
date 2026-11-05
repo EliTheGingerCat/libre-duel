@@ -2,8 +2,18 @@
 local Utilities = {}
 
 function Utilities:ProjectIn3D(Camera:Camera,Vector:Vector2,Offset:number) : Vector3
+	local Position = Camera.CFrame.Position
+	local Look = Camera.CFrame.LookVector
+
 	local Ray = Camera:ScreenPointToRay(Vector.X,Vector.Y,Offset)
-	return Ray.Origin + Ray.Direction * Offset
+	local ToPoint = Ray.Origin + Ray.Direction * Offset - Position
+
+	-- Keep the same depth across the screen, otherwise blurs away from the centre render too large.
+	local Center = Camera.ViewportSize / 2
+	local CenterRay = Camera:ScreenPointToRay(Center.X,Center.Y,Offset)
+	local Depth = (CenterRay.Origin + CenterRay.Direction * Offset - Position):Dot(Look)
+
+	return Position + ToPoint * (Depth / ToPoint:Dot(Look))
 end
 function Utilities:MapStrokeSize(Stroke:number) : number
 	return Stroke * 0.2

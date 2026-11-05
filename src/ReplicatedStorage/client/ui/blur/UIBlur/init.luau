@@ -1,6 +1,7 @@
 --!nocheck
 -- Objectual UI Blur by Tavikron: https://devforum.roblox.com/t/objectual-ui-blur-12-revision-2/3626057
--- Local changes: exposes DepthOfField, checks ancestor visibility, and supports offset corner radii.
+-- Local changes: exposes DepthOfField, checks ancestor visibility, supports offset corner radii,
+-- and keeps a constant depth across the screen.
 -- Only the Normal meshes are included, so the Fragmented argument does not work.
 
 -- Thanks to SomeFedoraGuy (me) for spending time to make this bloatware
