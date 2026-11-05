@@ -3,7 +3,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
-const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 local alpha_grid = require(script.Parent.controls.alpha_grid)
@@ -13,6 +12,8 @@ local picker = require(script.Parent.colour_picker.picker)
 local surface = require(script.Parent.controls.surface)
 local use_ui_motion = require(script.Parent.use_ui_motion)
 local use_viewport_scale = require(script.Parent.use_viewport_scale)
+
+const RADIUS = 19
 
 local function colour_preview(props: { colour: Color3?, alpha: number?, on_changed: ((Color3, number) -> ())? })
 	local stored, set_stored = React.useState(props.colour or Color3.new(1, 0, 0))
@@ -67,42 +68,23 @@ local function colour_preview(props: { colour: Color3?, alpha: number?, on_chang
 		math.clamp(point.X, 8, math.max(8, viewport.X - 300 * scale - 8)),
 		math.clamp(point.Y, 8, math.max(8, viewport.Y - 425 * scale - 8))
 	)
-	local lightness = colour.R * 0.299 + colour.G * 0.587 + colour.B * 0.114
-	local text = string.format(
-		'%s\n<font size="20">rgb(%d, %d, %d)\nhex(%s)</font>',
-		BrickColor.new(colour).Name,
-		math.round(colour.R * 255),
-		math.round(colour.G * 255),
-		math.round(colour.B * 255),
-		colour:ToHex()
-	)
 	return React.createElement(React.Fragment, {}, {
 		preview = React.createElement(animated_button, {
 			Name = "colour_preview",
-			Size = UDim2.new(1, 0, 0, 128),
+			Size = UDim2.fromOffset(78, 38),
 			BackgroundTransparency = 1,
 			Text = "",
 			[React.Event.Activated] = open,
 		}, {
 			motion = React.createElement(button_motion, { animate_colour = false }),
-			surface = React.createElement(surface, { radius = 60 }),
-			grid = React.createElement(alpha_grid, { radius = 60 }, {
+			surface = React.createElement(surface, { radius = RADIUS }),
+			grid = React.createElement(alpha_grid, { radius = RADIUS }, {
 				colour = React.createElement("Frame", {
 					Size = UDim2.fromScale(1, 1),
 					BackgroundColor3 = colour,
 					BackgroundTransparency = 1 - alpha,
 					BorderSizePixel = 0,
-				}, { corner = React.createElement("UICorner", { CornerRadius = UDim.new(0, 60) }) }),
-				label = React.createElement("TextLabel", {
-					ZIndex = 2,
-					Size = UDim2.fromScale(1, 1),
-					BackgroundTransparency = 1,
-					Text = text,
-					RichText = true,
-					TextSize = 40,
-					FontFace = FONTS.regular,
-					TextColor3 = if lightness > 0.5 then Color3.new(0, 0, 0) else Color3.new(1, 1, 1),
-				}),
+				}, { corner = React.createElement("UICorner", { CornerRadius = UDim.new(0, RADIUS) }) }),
 			}),
 		}),
 		popup = position and ReactRoblox.createPortal(

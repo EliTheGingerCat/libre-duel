@@ -53,6 +53,7 @@ local function settings_definitions(): ()
 			kind = "warning",
 			text = "This setting has known performance issues.",
 			visible = ui_blur_enabled,
+			parent = "ui_blur",
 		},
 		{
 			category = "interface",
@@ -60,6 +61,7 @@ local function settings_definitions(): ()
 			kind = "danger",
 			text = "Your graphics level must be 8 or higher for this to work!",
 			visible = ui_blur_unsupported,
+			parent = "ui_blur",
 		},
 	}
 	for _, entry in entries do

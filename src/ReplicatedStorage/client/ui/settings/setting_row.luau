@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local big_button = require(script.Parent.Parent.visuals.big_button)
@@ -19,8 +20,10 @@ local warning_text = require(script.Parent.Parent.visuals.warning_text)
 local create_element = React.createElement
 const BUTTONS = { button = button, big_button = big_button, dangerous_button = dangerous_button }
 const MESSAGES = { information = information_text, warning = warning_text, danger = danger_text }
+const BOX_PADDING_X = 20
+const BOX_PADDING_Y = 10
 
-local function setting_row(props: { entry: settings_registry.entry, order: number })
+local function setting_row(props: { entry: settings_registry.entry, order: number, children: unknown? })
 	local entry = props.entry
 	local value = settings_registry.get(entry.id)
 	local function changed(next_value: settings_registry.value): ()
@@ -58,7 +61,7 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 			{ text = value :: string, placeholder = entry.text, icon = entry.icon, on_changed = changed }
 		)
 	elseif entry.kind == "colour" then
-		height = 180
+		height = 40
 		label = true
 		local colour = value :: { colour: Color3, alpha: number }
 		control = create_element(
@@ -74,35 +77,52 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 			on_changed = changed,
 		})
 	end
-	local toggle = entry.kind == "switch" or entry.kind == "checkbox"
+	local inline = entry.kind == "switch" or entry.kind == "checkbox" or entry.kind == "colour"
+	local boxed = inline or entry.kind == "slider" or props.children ~= nil
 	return create_element("Frame", {
 		Name = entry.id,
 		LayoutOrder = props.order,
-		BackgroundTransparency = 1,
-		Size = UDim2.new(1, 0, 0, height),
-		AutomaticSize = if height == 0 then Enum.AutomaticSize.Y else Enum.AutomaticSize.None,
+		BackgroundColor3 = COLOURS.surface,
+		BackgroundTransparency = if boxed then 0.5 else 1,
+		Size = UDim2.new(1, 0, 0, if boxed then 0 else height),
+		AutomaticSize = if boxed or height == 0 then Enum.AutomaticSize.Y else Enum.AutomaticSize.None,
 	}, {
-		label = label and create_element("TextLabel", {
-			Size = UDim2.new(1, if toggle then -100 else 0, 0, 40),
-			BackgroundTransparency = 1,
-			Text = entry.text,
-			TextSize = 32,
-			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = FONTS.regular,
-			TextXAlignment = Enum.TextXAlignment.Left,
+		corner = boxed and create_element("UICorner", { CornerRadius = UDim.new(0, 25) }),
+		padding = boxed and create_element("UIPadding", {
+			PaddingLeft = UDim.new(0, BOX_PADDING_X),
+			PaddingRight = UDim.new(0, BOX_PADDING_X),
+			PaddingTop = UDim.new(0, BOX_PADDING_Y),
+			PaddingBottom = UDim.new(0, BOX_PADDING_Y),
 		}),
-		control = create_element("Frame", {
+		layout = create_element("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
+		main = create_element("Frame", {
 			BackgroundTransparency = 1,
-			AnchorPoint = if toggle then Vector2.new(1, 0) else Vector2.zero,
-			Position = if toggle
-				then UDim2.fromScale(1, 0)
-				elseif label then UDim2.fromOffset(0, 52)
-				else UDim2.fromOffset(0, 0),
-			Size = if toggle
-				then UDim2.fromOffset(if entry.kind == "switch" then 78 else 40, 40)
-				else UDim2.new(1, 0, 0, 0),
-			AutomaticSize = Enum.AutomaticSize.Y,
-		}, control),
+			Size = UDim2.new(1, 0, 0, height),
+			AutomaticSize = if height == 0 then Enum.AutomaticSize.Y else Enum.AutomaticSize.None,
+		}, {
+			label = label and create_element("TextLabel", {
+				Size = UDim2.new(1, if inline then -100 else 0, 0, 40),
+				BackgroundTransparency = 1,
+				Text = entry.text,
+				TextSize = 32,
+				TextColor3 = Color3.new(1, 1, 1),
+				FontFace = FONTS.regular,
+				TextXAlignment = Enum.TextXAlignment.Left,
+			}),
+			control = create_element("Frame", {
+				BackgroundTransparency = 1,
+				AnchorPoint = if inline then Vector2.new(1, 0) else Vector2.zero,
+				Position = if inline
+					then UDim2.fromScale(1, 0)
+					elseif label then UDim2.fromOffset(0, 52)
+					else UDim2.fromOffset(0, 0),
+				Size = if inline
+					then UDim2.fromOffset(if entry.kind == "checkbox" then 40 else 78, 40)
+					else UDim2.new(1, 0, 0, 0),
+				AutomaticSize = Enum.AutomaticSize.Y,
+			}, control),
+		}),
+		nested = props.children and create_element(React.Fragment, {}, props.children),
 	})
 end
 

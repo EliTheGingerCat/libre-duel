@@ -13,6 +13,18 @@ local function increment(value: number): number
 	return value + 1
 end
 
+local function matches_search(entry: settings_registry.entry, search: string): boolean
+	if string.find(entry.text:lower(), search, 1, true) then
+		return true
+	end
+	for _, child in settings_registry.get_children(entry.id) do
+		if settings_registry.is_visible(child) and string.find(child.text:lower(), search, 1, true) then
+			return true
+		end
+	end
+	return false
+end
+
 local function settings_menu(props: { enabled: boolean, on_close: () -> () })
 	local selected, set_selected = React.useState("interface")
 	local query, set_query = React.useState("")
@@ -41,8 +53,8 @@ local function settings_menu(props: { enabled: boolean, on_close: () -> () })
 	local search = query:lower()
 	for index, entry in settings_registry.entries do
 		if
-			(search == "" and entry.category == selected)
-			or (search ~= "" and string.find(entry.text:lower(), search, 1, true))
+			(entry.parent :: string?) == nil
+			and ((search == "" and entry.category == selected) or (search ~= "" and matches_search(entry, search)))
 		then
 			-- Hidden rows stay mounted so they can animate in and out.
 			local shown = settings_registry.is_visible(entry)

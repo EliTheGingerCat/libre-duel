@@ -33,6 +33,8 @@ local function register(entry: entry)
 		end
 	end
 	assert(found, "Unknown settings category: " .. entry.category)
+	local parent = entry.parent :: string?
+	assert(parent == nil or by_id[parent], "Unknown parent setting for: " .. entry.id)
 	local default = settings_value.default(entry)
 	if default ~= nil then
 		settings_value.validate(entry, default)
@@ -75,6 +77,16 @@ local function is_visible(entry: entry): boolean
 	return visible == nil or visible()
 end
 
+local function get_children(id: string): { entry }
+	local children = {}
+	for _, entry in entries do
+		if (entry.parent :: string?) == id then
+			table.insert(children, entry)
+		end
+	end
+	return children
+end
+
 -- For settings whose visibility depends on something outside the registry.
 local function refresh(): ()
 	changed:Fire()
@@ -92,6 +104,7 @@ return {
 	categories = categories,
 	entries = entries,
 	get = get,
+	get_children = get_children,
 	is_visible = is_visible,
 	refresh = refresh,
 	register = register,
