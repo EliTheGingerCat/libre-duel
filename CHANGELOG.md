@@ -31,5 +31,6 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Fixed
 
+- The infoboard now scales on small displays.
 - The ban command now passes a list of user IDs to `BanAsync`.
 - The server now rejects public keys that are not buffers.
