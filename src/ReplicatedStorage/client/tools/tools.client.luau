@@ -16,12 +16,12 @@ local place_cube = require(script.Parent.cube.place_cube)
 local pull_bow = require(script.Parent.bow.pull_bow)
 local table_flip = require(ReplicatedStorage.client.util.table_flip)
 local tool_registry = require(ReplicatedStorage.shared.tools.registry)
+local tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 local tool_state = require(script.Parent.tool_state)
 
 const select_slot = ReplicatedStorage.remotes.select_slot
 
--- Variants share their base tool's behaviour, so each handler receives the selected tool to read its appearance.
-const HANDLERS: { [tool_registry.behaviour]: (tool: tool_registry.tool) -> () } = {
+const HANDLERS: { [tool_types.behaviour]: (tool: tool_types.tool) -> () } = {
 	bow = pull_bow,
 	cake = eat_cake,
 	cube = place_cube,
@@ -30,7 +30,7 @@ const HANDLERS: { [tool_registry.behaviour]: (tool: tool_registry.tool) -> () } 
 	sword = attack_melee,
 }
 
-local tool_selected: tool_registry.tool? = nil
+local tool_selected: tool_types.tool? = nil
 local slot_sent: number? = nil
 
 local function set_tool(slot: number): ()
@@ -75,7 +75,11 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 	end
 
 	if input.UserInputType == KEYBINDS.tool_use and tool_selected ~= nil then
-		HANDLERS[tool_selected.behaviour](tool_selected)
+		for behaviour: tool_types.behaviour, handler in HANDLERS do
+			if tool_registry.has_behaviour(tool_selected, behaviour) then
+				handler(tool_selected)
+			end
+		end
 	end
 end
 

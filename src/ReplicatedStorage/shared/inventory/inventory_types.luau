@@ -1,5 +1,10 @@
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
+
 export type item_id = string
-export type slot_data = { item_id: item_id, amount: number }
+-- replace `data` instead of mutating it, resolved tools are cached per table
+export type slot_data = { item_id: item_id, amount: number, data: tool_types.overrides? }
 export type slot = slot_data | false -- false instead of nil because ipairs stops at a nil
 export type inventory = { [number]: slot }
 export type player_inventories = { [string]: inventory } -- keyed by tostring(UserId)

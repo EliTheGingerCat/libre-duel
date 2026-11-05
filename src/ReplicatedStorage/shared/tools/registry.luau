@@ -1,74 +1,95 @@
--- Every tool is registered here. A variant shares its base tool's behaviour and overrides its appearance.
+-- loads every tool in `definitions`, `inherits` copies the base tool then applies its own fields
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-export type behaviour = "sword" | "cube" | "dissolver" | "bow" | "cake" | "mode_selector"
-
--- Properties applied to whatever the tool produces, such as a placed cube. Unset fields keep the default.
-export type appearance = {
-	colour: Color3?,
-	material: Enum.Material?,
-	shape: Enum.PartType?,
-}
-
-export type tool = {
-	id: string,
-	name: string,
-	behaviour: behaviour,
-	-- icon shown in the hotbar and inventory
-	image: string,
-	appearance: appearance,
-}
+const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 -- TODO: replace with real icons
 const PLACEHOLDER_IMAGE = "rbxasset://textures/ui/GuiImagePlaceholder.png"
 
-const tools: { [string]: tool } = {}
+const definitions = script.Parent.definitions
 
-local function add(item: tool): ()
-	assert(tools[item.id] == nil, `Tool "{item.id}" is already registered.`)
-	tools[item.id] = table.freeze(item)
+const tools: { [string]: tool_types.tool } = {}
+const loading: { [string]: true } = {}
+const overridden: { [tool_types.overrides]: tool_types.tool } = setmetatable({}, { __mode = "k" }) :: any
+
+local function merge(base: { [any]: any }, overrides: { [any]: any }): { [any]: any }
+	local merged = {}
+	for key, value in base do
+		merged[key] = value
+	end
+	for key, value in overrides do
+		const base_value = merged[key]
+		merged[key] = if type(value) == "table" and type(base_value) == "table" then merge(base_value, value) else value
+	end
+	return merged
 end
 
-local function define(id: string, name: string, behaviour: behaviour, image: string, appearance: appearance?): ()
-	add({
-		id = id,
-		name = name,
-		behaviour = behaviour,
-		image = image,
-		appearance = table.freeze(appearance or {}),
+local function deep_freeze<T>(value: T): T
+	if type(value) == "table" and not table.isfrozen(value) then
+		for _, child in value do
+			deep_freeze(child)
+		end
+		table.freeze(value)
+	end
+	return value
+end
+
+local function load(id: string): tool_types.tool
+	const existing = tools[id]
+	if existing ~= nil then
+		return existing
+	end
+	assert(loading[id] == nil, `Tool "{id}" inherits from itself.`)
+
+	const module = definitions:FindFirstChild(id)
+	assert(module ~= nil and module:IsA("ModuleScript"), `Tool "{id}" is not defined.`)
+	loading[id] = true
+
+	const definition: tool_types.definition = (require :: any)(module)
+	const base: { [any]: any } = if definition.inherits ~= nil
+		then load(definition.inherits)
+		else { image = PLACEHOLDER_IMAGE, behaviours = {} }
+	const merged = merge(base, {
+		name = definition.name,
+		image = definition.image,
+		behaviours = definition.behaviours,
 	})
+	merged.id = id
+	assert(type(merged.name) == "string", `Tool "{id}" has no name.`)
+
+	const tool: tool_types.tool = deep_freeze(merged) :: any
+	tools[id] = tool
+	loading[id] = nil
+	return tool
 end
 
--- `image` defaults to the base tool's image
-local function define_variant(id: string, base_id: string, name: string, overrides: appearance, image: string?): ()
-	const base = tools[base_id]
-	assert(base ~= nil, `Base tool "{base_id}" of variant "{id}" is not registered.`)
-
-	add({
-		id = id,
-		name = name,
-		behaviour = base.behaviour,
-		image = image or base.image,
-		appearance = table.freeze({
-			colour = overrides.colour or base.appearance.colour,
-			material = overrides.material or base.appearance.material,
-			shape = overrides.shape or base.appearance.shape,
-		}),
-	})
+for _, module in definitions:GetChildren() do
+	load(module.Name)
 end
 
-define("sword", "Sword", "sword", PLACEHOLDER_IMAGE)
-define("cube", "Cube", "cube", PLACEHOLDER_IMAGE, {
-	material = Enum.Material.Brick,
-})
-define("dissolver", "Dissolver", "dissolver", PLACEHOLDER_IMAGE)
-define("bow", "Bow", "bow", PLACEHOLDER_IMAGE)
-define("cake", "Cake", "cake", PLACEHOLDER_IMAGE)
-define("mode_selector", "Modes", "mode_selector", PLACEHOLDER_IMAGE)
-
-local function get(id: string): tool?
+local function get(id: string): tool_types.tool?
 	return tools[id]
+end
+
+local function resolve(id: string, overrides: tool_types.overrides?): tool_types.tool?
+	const tool = tools[id]
+	if tool == nil or overrides == nil then
+		return tool
+	end
+	local resolved = overridden[overrides]
+	if resolved == nil then
+		resolved = deep_freeze(merge(tool, overrides)) :: any
+		overridden[overrides] = resolved
+	end
+	return resolved
+end
+
+local function has_behaviour(tool: tool_types.tool, behaviour: tool_types.behaviour): boolean
+	return (tool.behaviours :: any)[behaviour] ~= nil
 end
 
 return {
 	get = get,
+	resolve = resolve,
+	has_behaviour = has_behaviour,
 }

@@ -6,6 +6,7 @@ const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_typ
 const player_inventories = require(script.Parent.player_inventories)
 const player_selected_slots = require(script.Parent.player_selected_slots)
 const tool_registry = require(ReplicatedStorage.shared.tools.registry)
+const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 local inventory_util = {}
 
@@ -84,7 +85,7 @@ function inventory_util.clear_selected_slot(player: Player): ()
 end
 
 -- the tool in the slot the client says is selected, nil if empty or dead
-function inventory_util.get_selected_tool(player: Player): tool_registry.tool?
+function inventory_util.get_selected_tool(player: Player): tool_types.tool?
 	const inventory = inventory_util.get_inventory_from_player(player)
 	if inventory == nil then
 		return nil
@@ -93,17 +94,12 @@ function inventory_util.get_selected_tool(player: Player): tool_registry.tool?
 	if type(item) ~= "table" then
 		return nil
 	end
-	return tool_registry.get(item.item_id)
+	return tool_registry.resolve(item.item_id, item.data)
 end
 
-function inventory_util.has_tool(player: Player, tool_id: string): boolean
+function inventory_util.has_behaviour(player: Player, behaviour: tool_types.behaviour): boolean
 	const tool = inventory_util.get_selected_tool(player)
-	return tool ~= nil and tool.id == tool_id
-end
-
-function inventory_util.has_behaviour(player: Player, behaviour: tool_registry.behaviour): boolean
-	const tool = inventory_util.get_selected_tool(player)
-	return tool ~= nil and tool.behaviour == behaviour
+	return tool ~= nil and tool_registry.has_behaviour(tool, behaviour)
 end
 
 inventory_util.is_hotbar_slot = inventory_logic.is_hotbar_slot

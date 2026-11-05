@@ -10,7 +10,7 @@ local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
-local tool_registry = require(ReplicatedStorage.shared.tools.registry)
+local tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
@@ -26,7 +26,7 @@ local function snap_position(position: Vector3): Vector3
 	return Vector3.new(snap_coordinate(position.X), snap_coordinate(position.Y), snap_coordinate(position.Z))
 end
 
-local function place_cube(tool: tool_registry.tool): ()
+local function place_cube(tool: tool_types.tool): ()
 	local ignore_list = { local_player.Character }
 	local overhang = workspace:FindFirstChild("sneak_overhang")
 	if overhang then
@@ -71,11 +71,11 @@ local function place_cube(tool: tool_registry.tool): ()
 		return
 	end
 
-	local cube_temporary = create_cube(tool.appearance)
+	local cube_temporary = create_cube(tool.behaviours.cube or {})
 	cube_temporary.Position = snapped
 	cube_temporary.Parent = workspace.runtime_instances.cubes
 
-	local success: boolean = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped, tool.id)
+	local success: boolean = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
 
 	cube_temporary:Destroy()
 

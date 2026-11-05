@@ -14,7 +14,7 @@ const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONF
 const play_sound = require(ServerScriptService.util.play_sound)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 const snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
-const tool_registry = require(ReplicatedStorage.shared.tools.registry)
+const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 local function verify_coordinate(coordinate: number): boolean
 	return coordinate == snap_coordinate(coordinate)
@@ -24,13 +24,7 @@ local function verify_position(position: Vector3): boolean
 	return (verify_coordinate(position.X) and verify_coordinate(position.Y) and verify_coordinate(position.Z))
 end
 
-local function place_cube(entity: registry.entity, cube_position: Vector3, tool_id: string?): boolean
-	const tool = tool_registry.get(tool_id or "cube")
-	if tool == nil or tool.behaviour ~= "cube" then
-		debug_print("Invalid cube tool.")
-		return false
-	end
-
+local function place_cube(entity: registry.entity, cube_position: Vector3, appearance: tool_types.cube_params): boolean
 	const entity_position = get_entity_position(entity)
 	if entity_position == nil then
 		debug_print("Entity has no position.")
@@ -76,7 +70,7 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, tool_
 
 	cube_cache[cube_position] = true
 
-	const clone = create_cube(tool.appearance)
+	const clone = create_cube(appearance)
 	clone.Position = cube_position
 	clone.Parent = workspace.runtime_instances.cubes
 	play_sound("cube_place", cube_position)
