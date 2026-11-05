@@ -5,7 +5,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local about = require(script.Parent.about)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
 local scrolling_content = require(script.Parent.Parent.visuals.scrolling_content)
-local setting_row = require(script.Parent.setting_row)
+local setting_reveal = require(script.Parent.setting_reveal)
 local settings_registry = require(script.Parent.settings_registry)
 local sidebar = require(script.Parent.sidebar)
 
@@ -29,13 +29,10 @@ local function settings_menu(props: { enabled: boolean, on_close: () -> () })
 		set_query("")
 	end
 	local children = {
-		layout = React.createElement(
-			"UIListLayout",
-			{ Padding = UDim.new(0, 20), SortOrder = Enum.SortOrder.LayoutOrder }
-		),
+		layout = React.createElement("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
 		padding = React.createElement("UIPadding", {
 			PaddingTop = UDim.new(0, 12),
-			PaddingBottom = UDim.new(0, 32),
+			PaddingBottom = UDim.new(0, 12),
 			PaddingLeft = UDim.new(0, 48),
 			PaddingRight = UDim.new(0, 48),
 		}),
@@ -44,14 +41,15 @@ local function settings_menu(props: { enabled: boolean, on_close: () -> () })
 	local search = query:lower()
 	for index, entry in settings_registry.entries do
 		if
-			settings_registry.is_visible(entry)
-			and (
-				(search == "" and entry.category == selected)
-				or (search ~= "" and string.find(entry.text:lower(), search, 1, true))
-			)
+			(search == "" and entry.category == selected)
+			or (search ~= "" and string.find(entry.text:lower(), search, 1, true))
 		then
-			count += 1
-			children[entry.id] = React.createElement(setting_row, { entry = entry, order = index })
+			-- Hidden rows stay mounted so they can animate in and out.
+			local shown = settings_registry.is_visible(entry)
+			if shown then
+				count += 1
+			end
+			children[entry.id] = React.createElement(setting_reveal, { entry = entry, order = index, shown = shown })
 		end
 	end
 	if selected == "about" and search == "" then
