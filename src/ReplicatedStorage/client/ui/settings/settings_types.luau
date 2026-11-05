@@ -8,6 +8,7 @@ type message = {
 	category: string,
 	text: string,
 	kind: "information" | "warning" | "danger",
+	visible: (() -> boolean)?,
 }
 
 type action = {
@@ -15,6 +16,7 @@ type action = {
 	category: string,
 	text: string,
 	kind: "button" | "big_button" | "dangerous_button",
+	visible: (() -> boolean)?,
 	on_activated: (() -> ())?,
 }
 
@@ -23,6 +25,7 @@ type toggle = {
 	category: string,
 	text: string,
 	kind: "switch" | "checkbox",
+	visible: (() -> boolean)?,
 	default: boolean,
 	on_changed: ((boolean) -> ())?,
 	round: boolean?,
@@ -33,6 +36,7 @@ type text = {
 	category: string,
 	text: string,
 	kind: "text" | "dropdown",
+	visible: (() -> boolean)?,
 	default: string,
 	on_changed: ((string) -> ())?,
 	icon: string?,
@@ -44,6 +48,7 @@ type slider = {
 	category: string,
 	text: string,
 	kind: "slider",
+	visible: (() -> boolean)?,
 	default: number,
 	on_changed: ((number) -> ())?,
 	minimum: number?,
@@ -57,6 +62,7 @@ type colour = {
 	category: string,
 	text: string,
 	kind: "colour",
+	visible: (() -> boolean)?,
 	default: colour_value,
 	on_changed: ((colour_value) -> ())?,
 }

@@ -70,6 +70,11 @@ local function set(id: string, value: value): ()
 	changed:Fire()
 end
 
+local function is_visible(entry: entry): boolean
+	local visible = entry.visible :: (() -> boolean)?
+	return visible == nil or visible()
+end
+
 local function subscribe(callback: () -> ())
 	local connection = changed:Connect(callback)
 	local function disconnect(): ()
@@ -82,6 +87,7 @@ return {
 	categories = categories,
 	entries = entries,
 	get = get,
+	is_visible = is_visible,
 	register = register,
 	register_category = register_category,
 	set = set,

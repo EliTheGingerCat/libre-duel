@@ -2,11 +2,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
 local React = require(ReplicatedStorage.Packages.react)
-local placeholders = require(script.Parent.placeholders)
+local editor_state = require(script.Parent.Parent.hud.editor_state)
+local settings_definitions = require(script.Parent.settings_definitions)
 local settings_menu = require(script.Parent.settings_menu)
 local topbarplus = require(ReplicatedStorage.Packages.topbarplus)
 
-placeholders()
+settings_definitions()
 
 type icon_handle = { deselect: (icon_handle) -> icon_handle }
 
@@ -32,9 +33,14 @@ local function settings()
 				icon:deselect()
 			end
 		end
+		local function editor_requested(): ()
+			icon:deselect()
+		end
+		local unsubscribe_editor = editor_state.on_requested(editor_requested)
 		local connections =
 			{ icon.selected:Connect(open), icon.deselected:Connect(close), UserInputService.InputBegan:Connect(key) }
 		local function disconnect(): ()
+			unsubscribe_editor()
 			for _, connection in connections do
 				connection:Disconnect()
 			end

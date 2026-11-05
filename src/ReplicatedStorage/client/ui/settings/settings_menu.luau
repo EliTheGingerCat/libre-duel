@@ -44,8 +44,11 @@ local function settings_menu(props: { enabled: boolean, on_close: () -> () })
 	local search = query:lower()
 	for index, entry in settings_registry.entries do
 		if
-			(search == "" and entry.category == selected)
-			or (search ~= "" and string.find(entry.text:lower(), search, 1, true))
+			settings_registry.is_visible(entry)
+			and (
+				(search == "" and entry.category == selected)
+				or (search ~= "" and string.find(entry.text:lower(), search, 1, true))
+			)
 		then
 			count += 1
 			children[entry.id] = React.createElement(setting_row, { entry = entry, order = index })

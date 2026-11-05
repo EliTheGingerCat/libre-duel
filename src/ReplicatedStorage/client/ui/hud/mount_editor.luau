@@ -194,6 +194,12 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		return Enum.ContextActionResult.Sink
 	end
 
+	local function on_requested(enabled: boolean): ()
+		if enabled ~= editor_state.enabled then
+			set_enabled(enabled)
+		end
+	end
+
 	local function on_size_changed(): ()
 		drag.finish()
 		for _, view in views do
@@ -222,12 +228,14 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		KEYBINDS.hud_editor
 	)
 	local unsubscribe = registry.subscribe(sync_widgets)
+	local unsubscribe_requests = editor_state.on_requested(on_requested)
 
 	local function disconnect(): ()
 		set_enabled(false)
 		ContextActionService:UnbindAction("hud_editor_toggle")
 		menus.disconnect()
 		unsubscribe()
+		unsubscribe_requests()
 		for _, connection in connections do
 			connection:Disconnect()
 		end

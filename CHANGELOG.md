@@ -20,6 +20,7 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Knockback.
 - Tool registry with variants.
 - Sphere and brown cube variants.
+- Settings menu backed by real settings, with a button to open the HUD editor.
 
 ### Changed
 
