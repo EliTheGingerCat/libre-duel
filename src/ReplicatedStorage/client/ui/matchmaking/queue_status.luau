@@ -8,6 +8,7 @@ local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local notification_management = require(script.Parent.Parent.notification_management)
 local shadow = require(script.Parent.Parent.visuals.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
@@ -72,6 +73,7 @@ local function queue_status(props: use_editable_hud.props)
 			),
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 50) }),
 			stroke = create_element(gradient_stroke),
+			blur = not props.preview and create_element(ui_blur),
 			mode_icon = create_element("ImageLabel", {
 				AnchorPoint = Vector2.new(0, 0.5),
 				Position = UDim2.new(0, 24, 0.5, 0),

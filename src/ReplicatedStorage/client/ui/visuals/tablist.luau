@@ -9,6 +9,7 @@ const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 local React = require(ReplicatedStorage.Packages.react)
 local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 local scale = require(script.Parent.scale)
 local shadow = require(script.Parent.shadow)
@@ -235,6 +236,7 @@ local function tablist(props: use_editable_hud.props)
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0, 39),
 			}),
+			not props.preview and create_element(ui_blur),
 			create_element("UIPadding", {
 				PaddingBottom = UDim.new(0, 45),
 				PaddingLeft = UDim.new(0, 20),

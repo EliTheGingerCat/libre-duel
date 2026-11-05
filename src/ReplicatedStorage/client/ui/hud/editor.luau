@@ -5,6 +5,7 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local mount_editor = require(script.Parent.mount_editor)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 
 local create_element = React.createElement
 
@@ -52,6 +53,7 @@ local function editor()
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(1, 0) }),
 			stroke = create_element(gradient_stroke, { colour = green, rotation = -90 }),
+			blur = create_element(ui_blur),
 		}),
 		Bounds = create_element("Frame", {
 			Visible = content_visible,

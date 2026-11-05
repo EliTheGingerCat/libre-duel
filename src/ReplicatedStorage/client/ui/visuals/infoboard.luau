@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
@@ -287,6 +288,7 @@ local function infoboard(props: use_editable_hud.props)
 				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				BackgroundTransparency = 0.5,
 			},
+			not props.preview and create_element(ui_blur),
 			create_element("UIGridLayout", {
 				CellSize = UDim2.fromOffset(175, 32),
 				FillDirection = "Horizontal",

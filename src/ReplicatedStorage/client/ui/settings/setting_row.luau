@@ -33,7 +33,7 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 	local label = false
 	local height = 50
 	if entry.kind == "information" or entry.kind == "warning" or entry.kind == "danger" then
-		height = 32
+		height = 0
 		control = create_element(MESSAGES[entry.kind], { text = entry.text })
 	elseif entry.kind == "button" or entry.kind == "big_button" or entry.kind == "dangerous_button" then
 		height = if entry.kind == "big_button" then 128 else 50

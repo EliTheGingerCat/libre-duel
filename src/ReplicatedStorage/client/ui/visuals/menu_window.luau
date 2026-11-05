@@ -7,6 +7,7 @@ local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
 local gradient_stroke = require(script.Parent.gradient_stroke)
 local shadow = require(script.Parent.shadow)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local use_ui_motion = require(script.Parent.use_ui_motion)
 local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
@@ -66,6 +67,7 @@ local function menu_window(props: props)
 				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
 			),
 			stroke = create_element(gradient_stroke),
+			blur = props.enabled and create_element(ui_blur),
 			title = create_element("TextLabel", {
 				AnchorPoint = Vector2.new(0.5, 0),
 				Position = UDim2.new(0.5, 0, 0, 13),

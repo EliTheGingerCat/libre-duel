@@ -71,13 +71,13 @@ local function builtin(props: props)
 		return defaults.position
 	end
 	local child = if props.name == "Keystrokes"
-		then create_element(keystrokes)
-		elseif props.name == "Mousestrokes" then create_element(mousestrokes)
+		then create_element(keystrokes, { preview = props.preview })
+		elseif props.name == "Mousestrokes" then create_element(mousestrokes, { preview = props.preview })
 		elseif props.name == "Paperdoll" then create_element(
 			"ViewportFrame",
 			{ Name = "Main", Size = UDim2.fromOffset(defaults.size.X, defaults.size.Y), BackgroundTransparency = 1 }
 		)
-		else create_element(counter, { name = props.name })
+		else create_element(counter, { name = props.name, preview = props.preview })
 	return create_element(
 		hud_screen,
 		{ Name = props.name, ResetOnSpawn = false, preview = props.preview },

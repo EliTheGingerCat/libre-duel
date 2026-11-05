@@ -9,6 +9,7 @@ local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local item_slot = require(script.Parent.item_slot)
 local mount_paperdoll = require(script.Parent.Parent.hud.mount_paperdoll)
 local scale = require(script.Parent.Parent.visuals.scale)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local shadow = require(script.Parent.Parent.visuals.shadow)
 local slot_box = require(script.Parent.slot_box)
 local use_inventory_input = require(script.Parent.use_inventory_input)
@@ -263,6 +264,7 @@ local function inventory()
 				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
 			),
 			stroke = create_element(gradient_stroke),
+			blur = enabled and create_element(ui_blur),
 			top = create_element("Frame", {
 				BackgroundTransparency = 1,
 				LayoutOrder = 0,

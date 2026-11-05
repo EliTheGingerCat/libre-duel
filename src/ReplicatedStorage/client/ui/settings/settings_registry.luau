@@ -75,6 +75,11 @@ local function is_visible(entry: entry): boolean
 	return visible == nil or visible()
 end
 
+-- For settings whose visibility depends on something outside the registry.
+local function refresh(): ()
+	changed:Fire()
+end
+
 local function subscribe(callback: () -> ())
 	local connection = changed:Connect(callback)
 	local function disconnect(): ()
@@ -88,6 +93,7 @@ return {
 	entries = entries,
 	get = get,
 	is_visible = is_visible,
+	refresh = refresh,
 	register = register,
 	register_category = register_category,
 	set = set,

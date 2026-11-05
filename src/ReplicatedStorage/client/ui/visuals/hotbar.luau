@@ -9,6 +9,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local gradient_stroke = require(script.Parent.gradient_stroke)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local inventory_state = require(script.Parent.Parent.inventory.inventory_state)
 local item_slot = require(script.Parent.Parent.inventory.item_slot)
 local scale = require(script.Parent.scale)
@@ -352,6 +353,7 @@ local function slots_container(props: { preview: boolean? })
 		Size = UDim2.fromOffset(SLOTS_WIDTH, SLOTS_HEIGHT),
 	}, {
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0.45, 0) }),
+		blur = not props.preview and create_element(ui_blur),
 		grid = create_element("UIGridLayout", {
 			CellPadding = UDim2.fromOffset(INVENTORY_LAYOUT.HOTBAR_SLOT_GAP, INVENTORY_LAYOUT.HOTBAR_SLOT_GAP),
 			CellSize = UDim2.fromOffset(INVENTORY_LAYOUT.SLOT_SIZE, INVENTORY_LAYOUT.SLOT_SIZE),

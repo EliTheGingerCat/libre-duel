@@ -9,6 +9,7 @@ local function danger_text(props: { text: string? })
 	return create_element(
 		"Frame",
 		{
+			AutomaticSize = "Y",
 			BackgroundTransparency = 1,
 			Size = UDim2.new(1, 0, 0, 32),
 		},
@@ -23,6 +24,7 @@ local function danger_text(props: { text: string? })
 				Size = UDim2.new(1, 0, 0, 32),
 				FontFace = FONTS.regular,
 				TextSize = 30,
+				TextWrapped = true,
 				TextXAlignment = "Left",
 				Text = props.text or "You did the cat. This will have big consequences.",
 				TextColor3 = Color3.new(1, 65 / 255, 65 / 255),

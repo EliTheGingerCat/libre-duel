@@ -5,6 +5,7 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local fade = require(script.Parent.Parent.effects.fade)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local notification_management = require(script.Parent.Parent.notification_management)
 local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
@@ -90,6 +91,7 @@ local function notification_component(props: {
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),
+		not props.preview and create_element(ui_blur),
 		create_element(
 			"UIStroke",
 			{
