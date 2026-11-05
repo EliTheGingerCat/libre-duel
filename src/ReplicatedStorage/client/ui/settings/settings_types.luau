@@ -20,6 +20,7 @@ type action = {
 	visible: (() -> boolean)?,
 	parent: string?,
 	on_activated: (() -> ())?,
+	icon: string?,
 }
 
 type toggle = {

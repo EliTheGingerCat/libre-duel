@@ -40,7 +40,10 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 		control = create_element(MESSAGES[entry.kind], { text = entry.text })
 	elseif entry.kind == "button" or entry.kind == "big_button" or entry.kind == "dangerous_button" then
 		height = if entry.kind == "big_button" then 128 else 50
-		control = create_element(BUTTONS[entry.kind], { text = entry.text, on_activated = entry.on_activated })
+		control = create_element(
+			BUTTONS[entry.kind],
+			{ text = entry.text, icon = entry.icon, on_activated = entry.on_activated }
+		)
 	elseif entry.kind == "dropdown" then
 		height = 0
 		control = create_element(dropdown, { value = value :: string, options = entry.options, on_changed = changed })
@@ -79,6 +82,8 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 	end
 	local inline = entry.kind == "switch" or entry.kind == "checkbox" or entry.kind == "colour"
 	local boxed = inline or entry.kind == "slider" or props.children ~= nil
+	-- Switches and swatches are 38 tall in a 40 tall slot, so centre them and match the gap on the right.
+	local control_inset = if entry.kind == "switch" or entry.kind == "colour" then 1 else 0
 	return create_element("Frame", {
 		Name = entry.id,
 		LayoutOrder = props.order,
@@ -90,7 +95,7 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 		corner = boxed and create_element("UICorner", { CornerRadius = UDim.new(0, 25) }),
 		padding = boxed and create_element("UIPadding", {
 			PaddingLeft = UDim.new(0, BOX_PADDING_X),
-			PaddingRight = UDim.new(0, BOX_PADDING_X),
+			PaddingRight = UDim.new(0, if inline then BOX_PADDING_Y + control_inset else BOX_PADDING_X),
 			PaddingTop = UDim.new(0, BOX_PADDING_Y),
 			PaddingBottom = UDim.new(0, BOX_PADDING_Y),
 		}),
@@ -113,7 +118,7 @@ local function setting_row(props: { entry: settings_registry.entry, order: numbe
 				BackgroundTransparency = 1,
 				AnchorPoint = if inline then Vector2.new(1, 0) else Vector2.zero,
 				Position = if inline
-					then UDim2.fromScale(1, 0)
+					then UDim2.new(1, 0, 0, control_inset)
 					elseif label then UDim2.fromOffset(0, 52)
 					else UDim2.fromOffset(0, 0),
 				Size = if inline

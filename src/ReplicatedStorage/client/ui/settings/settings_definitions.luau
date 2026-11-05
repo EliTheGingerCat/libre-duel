@@ -43,6 +43,7 @@ local function settings_definitions(): ()
 			category = "interface",
 			id = "hud_editor",
 			kind = "big_button",
+			icon = "rbxassetid://102678033205241",
 			text = 'Enter HUD editor\n<font color="rgb(180,180,180)" size="18">Rearrange or insert HUD elements</font>',
 			on_activated = open_hud_editor,
 		},
