@@ -21,6 +21,7 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Tool registry with variants.
 - Sphere and brown cube variants.
 - Settings menu backed by real settings, with a button to open the HUD editor.
+- Back button in the HUD editor, which also closes when clicking outside its bounds.
 - UI blur setting, using [Objectual UI Blur](https://devforum.roblox.com/t/objectual-ui-blur-12-revision-2/3626057).
 
 ### Changed

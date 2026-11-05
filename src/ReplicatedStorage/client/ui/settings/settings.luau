@@ -22,10 +22,14 @@ local function settings()
 			:setCaption("Settings")
 			:align("Left")
 		icon_ref.current = icon
+		local menu_open = false
+		local return_to_menu = false
 		local function open(): ()
+			menu_open = true
 			set_enabled(true)
 		end
 		local function close(): ()
+			menu_open = false
 			set_enabled(false)
 		end
 		local function key(input: InputObject, processed: boolean): ()
@@ -33,10 +37,21 @@ local function settings()
 				icon:deselect()
 			end
 		end
-		local function editor_requested(): ()
-			icon:deselect()
+		-- The menu and the HUD editor never show together. Leaving the editor returns to the menu if it was open.
+		local function editor_changed(): ()
+			if editor_state.enabled then
+				return_to_menu = menu_open
+				icon:deselect()
+				icon:setEnabled(false)
+			else
+				icon:setEnabled(true)
+				if return_to_menu then
+					return_to_menu = false
+					icon:select()
+				end
+			end
 		end
-		local unsubscribe_editor = editor_state.on_requested(editor_requested)
+		local unsubscribe_editor = editor_state.subscribe(editor_changed)
 		local connections =
 			{ icon.selected:Connect(open), icon.deselected:Connect(close), UserInputService.InputBegan:Connect(key) }
 		local function disconnect(): ()

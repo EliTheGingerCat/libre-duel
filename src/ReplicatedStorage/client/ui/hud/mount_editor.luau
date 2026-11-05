@@ -215,8 +215,30 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		menus.open_selector()
 	end
 
+	local function is_click(input: InputObject): boolean
+		return input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
+	end
+
+	-- Exits on release, so the click that closes the editor cannot also reach the tools.
+	local pressed_outside = false
+	local function on_input_began(input: InputObject, processed: boolean): ()
+		if processed or not is_click(input) or not editor_state.enabled or menus.is_open() then
+			return
+		end
+		local pointer = Vector2.new(input.Position.X, input.Position.Y) - preview.AbsolutePosition
+		pressed_outside = not geometry.contains({ position = Vector2.zero, size = preview.AbsoluteSize }, pointer)
+	end
+	local function on_input_ended(input: InputObject): ()
+		if pressed_outside and is_click(input) then
+			pressed_outside = false
+			set_enabled(false)
+		end
+	end
+
 	local connections = {
 		new_button.Activated:Connect(open_selector),
+		UserInputService.InputBegan:Connect(on_input_began),
+		UserInputService.InputEnded:Connect(on_input_ended),
 		UserInputService.WindowFocusReleased:Connect(drag.finish),
 		preview:GetPropertyChangedSignal("AbsoluteSize"):Connect(on_size_changed),
 	}
