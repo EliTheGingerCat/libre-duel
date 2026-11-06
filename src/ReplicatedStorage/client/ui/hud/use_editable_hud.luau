@@ -7,7 +7,7 @@ local registry = require(script.Parent.registry)
 type content_ref = { current: GuiObject? }
 export type props = { on_remove: (() -> ())?, preview: boolean? }
 
-local function use_editable_hud(component: (props) -> unknown, props: props): content_ref
+local function use_editable_hud(component: (props) -> unknown, props: props, default_hidden: boolean?): content_ref
 	local ref: content_ref = React.useRef(nil)
 	-- Registration happens once, so read on_remove through a ref to always call the latest one.
 	local on_remove_ref = React.useRef(props.on_remove)
@@ -50,7 +50,14 @@ local function use_editable_hud(component: (props) -> unknown, props: props): co
 		local function render_preview()
 			return React.createElement(component, { preview = true })
 		end
-		return registry.register(content, screen, create, if props.on_remove then call_on_remove else nil, render_preview)
+		return registry.register(
+			content,
+			screen,
+			create,
+			if props.on_remove then call_on_remove else nil,
+			render_preview,
+			default_hidden
+		)
 	end
 	-- Restore the native parent before React removes its host instances.
 	React.useLayoutEffect(register_content, {})

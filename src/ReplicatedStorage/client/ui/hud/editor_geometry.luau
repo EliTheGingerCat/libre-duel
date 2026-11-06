@@ -9,6 +9,14 @@ export type layout = {
 }
 
 const SNAP_DISTANCE = 9
+const GUIDE_TOLERANCE = 0.5
+-- The first targets are the screen's own: its edges and centre.
+const SCREEN_TARGETS = 3
+
+export type guide = {
+	position: number,
+	on_screen: boolean,
+}
 
 local function anchor_axis(value: number): number
 	return if value < 1 / 3 then 0 elseif value > 2 / 3 then 1 else 0.5
@@ -82,6 +90,25 @@ local function move(rect: rectangle, delta: Vector2, others: { rectangle }, boun
 	return { position = position + Vector2.new(offset_x, offset_y), size = rect.size }
 end
 
+-- The lines a rectangle lines up with, one per axis, to show why it snapped.
+local function get_guides(rect: rectangle, others: { rectangle }, bounds: Vector2): (guide?, guide?)
+	local guide_x: guide? = nil
+	local guide_y: guide? = nil
+	for index, target in targets(others, bounds) do
+		local on_screen = index <= SCREEN_TARGETS
+		for _, fraction in { 0, 0.5, 1 } do
+			local offset = target - (rect.position + rect.size * fraction)
+			if guide_x == nil and math.abs(offset.X) < GUIDE_TOLERANCE then
+				guide_x = { position = target.X, on_screen = on_screen }
+			end
+			if guide_y == nil and math.abs(offset.Y) < GUIDE_TOLERANCE then
+				guide_y = { position = target.Y, on_screen = on_screen }
+			end
+		end
+	end
+	return guide_x, guide_y
+end
+
 local function resize(
 	rect: rectangle,
 	delta: Vector2,
@@ -130,6 +157,7 @@ end
 
 return {
 	contains = contains,
+	get_guides = get_guides,
 	get_handle = get_handle,
 	get_layout = get_layout,
 	move = move,

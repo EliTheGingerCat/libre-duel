@@ -15,6 +15,7 @@ export type entry = {
 	layout: geometry.layout?,
 	multiplier: number,
 	hidden: boolean,
+	default_hidden: boolean,
 	preview: Frame?,
 	corners: widget_corners.controller,
 	create: factory?,
@@ -48,7 +49,8 @@ local function register(
 	screen: ScreenGui,
 	create: factory?,
 	on_remove: (() -> ())?,
-	render_preview: (() -> unknown)?
+	render_preview: (() -> unknown)?,
+	default_hidden: boolean?
 )
 	local default_position = content.Position
 	local default_anchor = content.AnchorPoint
@@ -59,6 +61,9 @@ local function register(
 	assert(scale)
 	content.AnchorPoint = Vector2.zero
 	content.Position = UDim2.fromOffset(0, 0)
+
+	-- Copies are added on purpose, so they always start visible.
+	local starts_hidden = default_hidden == true and not on_remove
 
 	local item: entry
 	local function refresh(): ()
@@ -91,7 +96,8 @@ local function register(
 		scale = scale,
 		layout = if on_remove then { anchor = Vector2.new(0.5, 0.5), offset = Vector2.zero } else nil,
 		multiplier = 1,
-		hidden = false,
+		hidden = starts_hidden,
+		default_hidden = starts_hidden,
 		preview = nil,
 		corners = widget_corners(content),
 		create = create,
@@ -160,9 +166,24 @@ local function remove(item: entry): ()
 	end
 end
 
+-- Removes every copy and puts the built-in widgets back where they started.
+local function reset(): ()
+	widget_copies.clear()
+	for _, item in entries do
+		if not item.on_remove then
+			item.layout = nil
+			item.multiplier = 1
+			item.hidden = item.default_hidden
+			item.refresh()
+		end
+	end
+	notify()
+end
+
 return {
 	add = add,
 	remove = remove,
+	reset = reset,
 	clear_duplicates = widget_copies.clear,
 	get_entries = get_entries,
 	register = register,

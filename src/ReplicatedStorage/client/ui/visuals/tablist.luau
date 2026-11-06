@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 local React = require(ReplicatedStorage.Packages.react)
@@ -225,8 +226,8 @@ local function tablist(props: use_editable_hud.props)
 			"Frame",
 			{
 				ref = content_ref,
-				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 0),
-				Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 0, 147),
+				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else HUD_DEFAULTS.Tablist.anchor,
+				Position = if props.preview then UDim2.fromOffset(0, 0) else HUD_DEFAULTS.Tablist.position,
 				Size = UDim2.fromOffset(720, 0),
 				AutomaticSize = "Y",
 				BackgroundColor3 = COLOURS.black,

@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const HUD_DEFAULTS = require(script.Parent.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
 local counter = require(script.Parent.counter)
 local hud_screen = require(script.Parent.hud_screen)
@@ -10,15 +11,6 @@ local use_editable_hud = require(script.Parent.use_editable_hud)
 
 local create_element = React.createElement
 
-const DEFAULTS = {
-	Keystrokes = { size = Vector2.new(152, 137), anchor = Vector2.one, position = UDim2.new(1, -12, 1, -178) },
-	Mousestrokes = { size = Vector2.new(224, 158), anchor = Vector2.one, position = UDim2.new(1, -12, 1, -12) },
-	ReachCounter = { size = Vector2.new(168, 42), anchor = Vector2.new(1, 0), position = UDim2.new(1, -12, 0, 63) },
-	ComboCounter = { size = Vector2.new(168, 42), anchor = Vector2.new(1, 0), position = UDim2.new(1, -12, 0, 12) },
-	FpsCounter = { size = Vector2.new(168, 42), anchor = Vector2.new(1, 0), position = UDim2.new(1, -12, 0, 114) },
-	Paperdoll = { size = Vector2.new(128, 210), anchor = Vector2.new(0, 1), position = UDim2.new(0, 12, 1, -12) },
-}
-
 type props = use_editable_hud.props & { name: string }
 
 local function builtin(props: props)
@@ -28,9 +20,9 @@ local function builtin(props: props)
 			{ name = props.name, on_remove = copy_props.on_remove, preview = copy_props.preview }
 		)
 	end
-	local ref = use_editable_hud(copy, props)
-	local defaults = DEFAULTS[props.name]
+	local defaults = HUD_DEFAULTS[props.name]
 	assert(defaults)
+	local ref = use_editable_hud(copy, props, defaults.hidden)
 	local factor, set_factor = React.useBinding(1)
 
 	local function mount_content(): (() -> ())?
@@ -61,14 +53,7 @@ local function builtin(props: props)
 	React.useLayoutEffect(mount_content, {})
 
 	local function position(value: number): UDim2
-		if props.name == "Keystrokes" then
-			return UDim2.new(1, -12, 1, -12 - 166 * value)
-		elseif props.name == "ReachCounter" then
-			return UDim2.new(1, -12, 0, 12 + 51 * value)
-		elseif props.name == "FpsCounter" then
-			return UDim2.new(1, -12, 0, 12 + 102 * value)
-		end
-		return defaults.position
+		return defaults.position + UDim2.fromOffset(0, (defaults.stack_offset or 0) * value)
 	end
 	local child = if props.name == "Keystrokes"
 		then create_element(keystrokes, { preview = props.preview })

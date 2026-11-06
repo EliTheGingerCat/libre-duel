@@ -113,7 +113,7 @@ local function widget_bounds(props: {
 			Selectable = true,
 			ZIndex = 20,
 		}, {
-			stroke = create_element("UIStroke", { Color = Color3.new(1, 1, 1), Thickness = 1, Enabled = false }),
+			stroke = create_element("UIStroke", { Color = Color3.new(1, 1, 1), Thickness = 1, Transparency = 0.6 }),
 			drag = create_element(editor_drag_detector, {
 				on_start = props.on_drag_start,
 				on_move = props.on_drag_move,

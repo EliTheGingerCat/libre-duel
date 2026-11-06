@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 const INVENTORY_CONSTANTS = require(ReplicatedStorage.shared.inventory.INVENTORY_CONSTANTS)
 const INVENTORY_LAYOUT = require(script.Parent.Parent.inventory.INVENTORY_LAYOUT)
 local React = require(ReplicatedStorage.Packages.react)
@@ -391,10 +392,10 @@ local function hotbar(props: use_editable_hud.props)
 		},
 		create_element("Frame", {
 			ref = content_ref,
-			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 1),
+			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else HUD_DEFAULTS.Hotbar.anchor,
 			AutomaticSize = Enum.AutomaticSize.XY,
 			BackgroundTransparency = 1,
-			Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 1, -20),
+			Position = if props.preview then UDim2.fromOffset(0, 0) else HUD_DEFAULTS.Hotbar.position,
 			Size = UDim2.fromOffset(0, 0),
 		}, {
 			layout = create_element("UIListLayout", {

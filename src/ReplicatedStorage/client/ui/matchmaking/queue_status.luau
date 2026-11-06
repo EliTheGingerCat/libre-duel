@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
@@ -17,6 +18,8 @@ local use_queue_status = require(script.Parent.use_queue_status)
 local use_viewport_scale = require(script.Parent.Parent.visuals.use_viewport_scale)
 
 local create_element = React.createElement
+
+const DEFAULTS = HUD_DEFAULTS.QueueStatus
 
 local function queue_status(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(queue_status, props)
@@ -59,8 +62,10 @@ local function queue_status(props: use_editable_hud.props)
 		create_element("Frame", {
 			ref = content_ref,
 			Name = "content",
-			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 1),
-			Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 1, -10 - 130 * factor),
+			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else DEFAULTS.anchor,
+			Position = if props.preview
+				then UDim2.fromOffset(0, 0)
+				else DEFAULTS.position + UDim2.fromOffset(0, DEFAULTS.stack_offset * factor),
 			Size = UDim2.fromOffset(660, 100),
 			BackgroundColor3 = COLOURS.surface,
 			BackgroundTransparency = 0.5,

@@ -16,6 +16,7 @@ const WIDGETS = {
 	{ "ComboCounter", "Combo Counter" },
 	{ "Paperdoll", "Paperdoll" },
 	{ "Hotbar", "Hotbar" },
+	{ "PlayButton", "Play Button" },
 	{ "QueueStatus", "Queue Status" },
 	{ "infoboard", "Infoboard" },
 	{ "Notifications", "Notifications" },

@@ -11,6 +11,8 @@ type drag_state = {
 	multiplier: number,
 	anchor: Vector2,
 	handle: Vector2?,
+	guide_x: geometry.guide?,
+	guide_y: geometry.guide?,
 }
 
 type controller = {
@@ -20,6 +22,7 @@ type controller = {
 	finish_input: (UIDragDetector, Vector2) -> (),
 	get_view: () -> create_widget.view?,
 	get_pointer: () -> Vector2?,
+	get_guides: () -> (geometry.guide?, geometry.guide?),
 }
 
 local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_widget.view }): controller
@@ -83,6 +86,7 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 			rect = geometry.move(drag.start, delta, others, preview.AbsoluteSize)
 		end
 		drag.rect = rect
+		drag.guide_x, drag.guide_y = geometry.get_guides(rect, others, preview.AbsoluteSize)
 		drag.view.item.layout = {
 			anchor = drag.anchor,
 			offset = (rect.position + rect.size * drag.anchor - preview.AbsoluteSize * drag.anchor) / preview_factor(),
@@ -102,6 +106,12 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 	local function get_pointer(): Vector2?
 		return pointer
 	end
+	local function get_guides(): (geometry.guide?, geometry.guide?)
+		if current then
+			return current.guide_x, current.guide_y
+		end
+		return nil, nil
+	end
 	return {
 		begin = begin,
 		update = update,
@@ -109,6 +119,7 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 		finish_input = finish_input,
 		get_view = get_view,
 		get_pointer = get_pointer,
+		get_guides = get_guides,
 	}
 end
 

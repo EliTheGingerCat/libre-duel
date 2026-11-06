@@ -1,9 +1,11 @@
 local ContextActionService = game:GetService("ContextActionService")
 local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const KEYBINDS = require(script.Parent.Parent.Parent.util.KEYBINDS)
 local create_widget = require(script.Parent.editor_widget)
 local editor_drag = require(script.Parent.editor_drag)
@@ -13,11 +15,16 @@ local get_drag_offset = require(script.Parent.Parent.visuals.controls.get_drag_o
 local mount_menus = require(script.Parent.mount_menus)
 local registry = require(script.Parent.registry)
 
+const SCREEN_GUIDE_COLOUR = COLOURS.sky_400
+const WIDGET_GUIDE_COLOUR = COLOURS.fuchsia_400
+
 local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) -> ())
 	local preview = screen:FindFirstChild("Bounds")
-	local new_button = screen:FindFirstChild("new_button")
 	assert(preview and preview:IsA("Frame"))
-	assert(new_button and new_button:IsA("TextButton"))
+	local guide_line_x = preview:FindFirstChild("guide_x")
+	local guide_line_y = preview:FindFirstChild("guide_y")
+	assert(guide_line_x and guide_line_x:IsA("Frame"))
+	assert(guide_line_y and guide_line_y:IsA("Frame"))
 	local player_gui = Players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
 	assert(player_gui)
 	screen.Parent = player_gui
@@ -60,6 +67,9 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 				return view
 			end
 		end
+		if hovered and not hovered.item.hidden and hovered.in_hover_margin(pointer) then
+			return hovered
+		end
 		return nil
 	end
 
@@ -91,7 +101,18 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		end
 		hovered = active_view or find_hovered(pointer)
 		for _, view in views do
-			view.hover(view == hovered, pointer)
+			view.hover(view == hovered, pointer, view == active_view)
+		end
+		local guide_x, guide_y = drag.get_guides()
+		guide_line_x.Visible = guide_x ~= nil
+		guide_line_y.Visible = guide_y ~= nil
+		if guide_x then
+			guide_line_x.Position = UDim2.fromOffset(guide_x.position, 0)
+			guide_line_x.BackgroundColor3 = if guide_x.on_screen then SCREEN_GUIDE_COLOUR else WIDGET_GUIDE_COLOUR
+		end
+		if guide_y then
+			guide_line_y.Position = UDim2.fromOffset(0, guide_y.position)
+			guide_line_y.BackgroundColor3 = if guide_y.on_screen then SCREEN_GUIDE_COLOUR else WIDGET_GUIDE_COLOUR
 		end
 	end
 
@@ -99,7 +120,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		drag.finish()
 		hovered = nil
 		for _, view in views do
-			view.hover(false, Vector2.zero)
+			view.hover(false, Vector2.zero, false)
 		end
 	end
 
@@ -236,7 +257,6 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	end
 
 	local connections = {
-		new_button.Activated:Connect(open_selector),
 		UserInputService.InputBegan:Connect(on_input_began),
 		UserInputService.InputEnded:Connect(on_input_ended),
 		UserInputService.WindowFocusReleased:Connect(drag.finish),
@@ -251,6 +271,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	)
 	local unsubscribe = registry.subscribe(sync_widgets)
 	local unsubscribe_requests = editor_state.on_requested(on_requested)
+	local unsubscribe_selector = editor_state.on_selector_requested(open_selector)
 
 	local function disconnect(): ()
 		set_enabled(false)
@@ -258,6 +279,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		menus.disconnect()
 		unsubscribe()
 		unsubscribe_requests()
+		unsubscribe_selector()
 		for _, connection in connections do
 			connection:Disconnect()
 		end

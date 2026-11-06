@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local scale = require(script.Parent.scale)
@@ -283,8 +284,8 @@ local function infoboard(props: use_editable_hud.props)
 			"Frame",
 			{
 				ref = content_ref,
-				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0.5, 0),
-				Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0.5, 0, 0, 10),
+				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else HUD_DEFAULTS.Infoboard.anchor,
+				Position = if props.preview then UDim2.fromOffset(0, 0) else HUD_DEFAULTS.Infoboard.position,
 				Size = UDim2.fromOffset(401, 127),
 				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				BackgroundTransparency = 0.5,

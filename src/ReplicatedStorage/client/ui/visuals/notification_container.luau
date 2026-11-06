@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
 local fade = require(script.Parent.Parent.effects.fade)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
@@ -202,8 +203,8 @@ local function notifications_container(props: use_editable_hud.props)
 	}, {
 		create_element("Frame", {
 			ref = content_ref,
-			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else Vector2.new(0, 1),
-			Position = if props.preview then UDim2.fromOffset(0, 0) else UDim2.new(0, 15, 1, -15),
+			AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else HUD_DEFAULTS.Notifications.anchor,
+			Position = if props.preview then UDim2.fromOffset(0, 0) else HUD_DEFAULTS.Notifications.position,
 			Size = UDim2.new(0, 240, 0, 180),
 			BackgroundTransparency = 1,
 		}, notification_elements),
