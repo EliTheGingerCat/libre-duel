@@ -276,23 +276,6 @@ local function health_bar(props: {
 	}))
 end
 
-local function active_slot_addendum()
-	return create_element(
-		"UIStroke",
-		{
-			Color = COLOURS.white,
-			Thickness = 1,
-		},
-		create_element("UIGradient", {
-			Color = ColorSequence.new({
-				ColorSequenceKeypoint.new(0, COLOURS.light_grey),
-				ColorSequenceKeypoint.new(1, COLOURS.dark_grey),
-			}),
-			Rotation = -90,
-		})
-	)
-end
-
 local function use_active_slot(): number
 	local active_slot, set_active_slot = use_state(tool_state.current)
 
@@ -339,7 +322,7 @@ local function slots_container(props: { preview: boolean? })
 			name = `slot_{id}`,
 			image = if tool ~= nil then tool.image else nil,
 			layout_order = id,
-			addendum = id == active_slot and active_slot_addendum(),
+			selected = id == active_slot,
 			on_click = if props.preview then nil else on_clicks[id],
 		})
 	end
