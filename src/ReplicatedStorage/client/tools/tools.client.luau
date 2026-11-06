@@ -5,7 +5,7 @@ const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const STARTING_LOADOUT = require(ReplicatedStorage.shared.inventory.STARTING_LOADOUT)
 local attack_melee = require(script.Parent.sword.attack_melee)
 local client_inventory_util = require(ReplicatedStorage.client.inventory.client_inventory_util)
-local dissolve_cube = require(script.Parent.dissolver.dissolve_cube)
+local mine_cube = require(script.Parent.pickaxe.mine_cube)
 local eat_cake = require(script.Parent.cake.eat_cake)
 local editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
 local get_slot_tool = require(script.Parent.get_slot_tool)
@@ -25,7 +25,7 @@ const HANDLERS: { [tool_types.behaviour]: (tool: tool_types.tool) -> () } = {
 	bow = pull_bow,
 	cake = eat_cake,
 	cube = place_cube,
-	dissolver = dissolve_cube,
+	pickaxe = mine_cube,
 	mode_selector = open_mode_selector,
 	sword = attack_melee,
 }

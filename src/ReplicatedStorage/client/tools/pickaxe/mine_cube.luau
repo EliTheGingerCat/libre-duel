@@ -4,7 +4,7 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
-const CUBE_DISSOLVE_TIME = require(ReplicatedStorage.shared.cube.CUBE_DISSOLVE_TIME)
+const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
@@ -27,7 +27,7 @@ type state_pending = {
 	id: number,
 }
 
--- While the cube is not dissolved on the client.
+-- While the cube is not mined on the client.
 type state_local = {
 	connection_destroying: RBXScriptConnection,
 	connection_heartbeat: RBXScriptConnection,
@@ -39,11 +39,11 @@ type state_local = {
 
 type state_any = state_local | state_pending
 
-local dissolvings: { state_any } = {}
-local local_dissolving: state_local?
+local minings: { state_any } = {}
+local local_mining: state_local?
 
 local function find_by_id(id: number): state_any?
-	for _, state in dissolvings do
+	for _, state in minings do
 		if state.id == id then
 			return state
 		end
@@ -54,9 +54,9 @@ local function find_by_id(id: number): state_any?
 end
 
 local function remove_by_id(id: number): ()
-	for index, state in dissolvings do
+	for index, state in minings do
 		if state.id == id then
-			dissolvings[index] = nil
+			minings[index] = nil
 			return
 		end
 	end
@@ -66,7 +66,7 @@ end
 
 -- The state_local `state` must not be used after this point.
 local function cleanup_local(state: state_local): state_pending
-	local_dissolving = nil
+	local_mining = nil
 
 	state.connection_heartbeat:Disconnect()
 
@@ -91,29 +91,29 @@ local function cleanup_all(state: state_local): ()
 	cleanup_pending(state_pending)
 end
 
-local function set_dissolution_display(state: state_any, fraction: number): ()
+local function set_mining_display(state: state_any, fraction: number): ()
 	state.cube_target.Transparency = fraction
 end
 
-local function dissolve_pause(state: state_local): ()
-	set_dissolution_display(state, 0)
-	ReplicatedStorage.remotes.dissolve_stop:FireServer(state.id)
+local function mine_pause(state: state_local): ()
+	set_mining_display(state, 0)
+	ReplicatedStorage.remotes.mine_stop:FireServer(state.id)
 end
 
-local function dissolve_stop(state: state_local): ()
-	dissolve_pause(state) -- Must pause before cleaning up the cube pointer.
+local function mine_stop(state: state_local): ()
+	mine_pause(state) -- Must pause before cleaning up the cube pointer.
 	cleanup_all(state)
 end
 
-local dissolve_start
-local function dissolve_new_cube(state: state_local, cube: BasePart): ()
-	dissolve_stop(state)
-	dissolve_start(cube)
+local mine_start
+local function mine_new_cube(state: state_local, cube: BasePart): ()
+	mine_stop(state)
+	mine_start(cube)
 end
 
 local function on_heartbeat_passive(): ()
 	local cube = local_mouse.Target
-	dissolve_start(cube)
+	mine_start(cube)
 end
 
 local activate_input_ended
@@ -130,7 +130,7 @@ local function disable_heartbeat_passive(): ()
 	end
 end
 
-local function local_dissolving_finished(state: state_local): ()
+local function local_mining_finished(state: state_local): ()
 	state.cube_target.Parent = nil
 	cleanup_local(state)
 
@@ -139,8 +139,8 @@ end
 
 local function on_input_ended(input: InputObject): ()
 	if input.UserInputType == KEYBINDS.tool_use then
-		if local_dissolving ~= nil then
-			dissolve_stop(local_dissolving)
+		if local_mining ~= nil then
+			mine_stop(local_mining)
 		end
 
 		disable_heartbeat_passive()
@@ -160,8 +160,8 @@ function activate_input_ended(): ()
 	connection_input = UserInputService.InputEnded:Connect(on_input_ended)
 end
 
--- If the return value is false, the client will stop dissolving.
-local function can_dissolve(cube: Instance?): string?
+-- If the return value is false, the client will stop mining.
+local function can_mine(cube: Instance?): string?
 	if cube == nil then
 		return "Mouse is not pointing at anything."
 	end
@@ -188,65 +188,65 @@ local function can_dissolve(cube: Instance?): string?
 end
 
 local function on_heartbeat_active(): ()
-	local state = local_dissolving
+	local state = local_mining
 	if state == nil then
-		debug_print("Error: Local dissolving is missing.")
+		debug_print("Error: Local mining is missing.")
 		return
 	end
 
 	local cube_now = local_mouse.Target
-	local fail_message = can_dissolve(cube_now)
+	local fail_message = can_mine(cube_now)
 	local fail = fail_message ~= nil
 	if fail == true then
 		-- As this runs every Heartbeat, do not spam the fail message nor the pausing.
 		if fail_message ~= state.last_fail then
 			if state.last_fail == nil then
-				-- This is the first time the dissolving has failed since it started or since it last resumed (if it paused).
-				dissolve_pause(state)
+				-- This is the first time the mining has failed since it started or since it last resumed (if it paused).
+				mine_pause(state)
 			end
 			state.last_fail = fail_message
 			debug_print(fail_message)
 		end
 
-		-- Maybe whatever is preventing dissolution will cease. Do not stop dissolving --- keep checking. Only releasing of the keybind should stop all operations.
+		-- Maybe whatever is preventing mining will cease. Do not stop mining --- keep checking. Only releasing of the keybind should stop all operations.
 		-- Technically, some more connections could be added to reduce the amount of work every frame. For example, if `local_mouse.Target` has not changed since last frame, and it was problematic in the last frame, then it is certainly problematic in this frame, though that seems overly complicated for not much benefit and in an already complicated system.
 		return
 	end
 
-	-- An example of when this would be `true` is if the player starts dissolving a cube, moves their mouse away from it, and then moves it back on. During the time that the mouse was away, `can_dissolve` reported a specific fail message and the dissolving was paused.
+	-- An example of when this would be `true` is if the player starts mining a cube, moves their mouse away from it, and then moves it back on. During the time that the mouse was away, `can_mine` reported a specific fail message and the mining was paused.
 	local unpaused = state.last_fail ~= nil
 	if unpaused then
-		dissolve_new_cube(state, cube_now)
+		mine_new_cube(state, cube_now)
 		return
 	end
 	state.last_fail = nil
 
 	if cube_now ~= state.cube_target then
-		dissolve_new_cube(state, cube_now)
+		mine_new_cube(state, cube_now)
 		return
 	end
 
 	local time_elapsed = os.clock() - state.time_start
-	local time_fraction = math.min(1, time_elapsed / CUBE_DISSOLVE_TIME)
+	local time_fraction = math.min(1, time_elapsed / CUBE_MINE_TIME)
 	-- See `TRANSPARENCY_MAXIMUM.luau` for an explanation of this operation.
 	local transparency_fraction = time_fraction * TRANSPARENCY_MAXIMUM
-	set_dissolution_display(state, transparency_fraction)
+	set_mining_display(state, transparency_fraction)
 
 	if time_fraction >= 1 then
-		local_dissolving_finished(state)
+		local_mining_finished(state)
 	end
 end
 
-function dissolve_start(cube: BasePart): ()
-	local fail_message = can_dissolve(cube)
+function mine_start(cube: BasePart): ()
+	local fail_message = can_mine(cube)
 	local failed = fail_message ~= nil
 	if failed == true then
-		debug_print(`Failed to start dissolving: {fail_message}`)
+		debug_print(`Failed to start mining: {fail_message}`)
 		return
 	end
 
-	if local_dissolving ~= nil then
-		debug_print("Error: A local dissolving is already active.")
+	if local_mining ~= nil then
+		debug_print("Error: A local mining is already active.")
 		return
 	end
 
@@ -279,38 +279,38 @@ function dissolve_start(cube: BasePart): ()
 		time_start = time_start,
 	}
 
-	table.insert(dissolvings, state)
+	table.insert(minings, state)
 
-	local_dissolving = state
+	local_mining = state
 
-	ReplicatedStorage.remotes.dissolve_cube:FireServer(id, cube)
+	ReplicatedStorage.remotes.mine_cube:FireServer(id, cube)
 end
 
-local function on_dissolve_suceeded(id: number): ()
+local function on_mine_suceeded(id: number): ()
 	local state: state_pending? = find_by_id(id)
 	if state == nil then
 		return
 	end
 
 	local position = state.cube_target.Position
-	-- Players can only place a cube in a previously occupied position after the cube is dissolved on the server.
+	-- Players can only place a cube in a previously occupied position after the cube is mined on the server.
 	cube_cache[position] = nil
 	cleanup_pending(state)
 end
 
-local function on_dissolve_failed(id: number): ()
+local function on_mine_failed(id: number): ()
 	local state: state_pending? = find_by_id(id)
 	if state == nil then
 		return
 	end
 
-	set_dissolution_display(state, 0)
+	set_mining_display(state, 0)
 	state.cube_target.Parent = workspace
 	debug_print("Server reported failure. Local cube was returned.")
 	cleanup_pending(state)
 end
 
-ReplicatedStorage.remotes.dissolve_finished.OnClientEvent:Connect(on_dissolve_suceeded)
-ReplicatedStorage.remotes.dissolve_failed.OnClientEvent:Connect(on_dissolve_failed)
+ReplicatedStorage.remotes.mine_finished.OnClientEvent:Connect(on_mine_suceeded)
+ReplicatedStorage.remotes.mine_failed.OnClientEvent:Connect(on_mine_failed)
 
 return activate_heartbeat_passive

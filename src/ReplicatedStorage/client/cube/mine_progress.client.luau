@@ -8,4 +8,4 @@ local function on_fire(cube: Part, time_fraction: number): ()
 	cube.Transparency = transparency_fraction
 end
 
-ReplicatedStorage.remotes.dissolve_progress.OnClientEvent:Connect(on_fire)
+ReplicatedStorage.remotes.mine_progress.OnClientEvent:Connect(on_fire)

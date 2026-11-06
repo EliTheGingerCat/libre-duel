@@ -27,7 +27,7 @@ Server bot code can call the same gameplay modules as player remote handlers:
 - `ServerScriptService/cube/place_cube(entity, position, tool_id?)` returns
   whether a block was placed. `tool_id` selects a cube variant and defaults to
   `"cube"`.
-- `ServerScriptService/cube/dissolve_cube.start(entity, id, cube)` starts dissolving
+- `ServerScriptService/cube/mine_cube.start(entity, id, cube)` starts mining
   and returns whether the request was accepted. Use `.stop(entity, id)` to cancel.
 
 Player remote handlers supply the authenticated sender as the acting entity.
@@ -42,7 +42,7 @@ Bot tab-list entries have no Roblox account thumbnail.
 
 Call `registry.unregister_bot(bot_id)` to retire a bot without destroying its
 model. Destroying its model also unregisters it. Membership removal clears its
-cooldowns and pending dissolving operations and frees its Bridge team slot.
+cooldowns and pending mining operations and frees its Bridge team slot.
 Unregistering does not destroy the character or its hitboxes. Bot AI, spawning,
 and respawning remain the caller's responsibility; register each replacement
 character after unregistering the previous one.
@@ -53,6 +53,6 @@ Start a playtest with a player and a registered humanoid bot. Check that both
 appear in the tab list, receive nametags, and join Bridge teams. Verify that each
 can score against the opposing goal and that cages move both characters. Check
 player-to-bot, bot-to-player, and bot-to-bot attacks, including friendly fire,
-range, death, and cooldown rejection. Test bot block placement and dissolving,
-then remove a bot during dissolving and confirm that its progress clears. Finally,
+range, death, and cooldown rejection. Test bot block placement and mining,
+then remove a bot during mining and confirm that its progress clears. Finally,
 respawn a player and register a replacement bot to check character setup again.

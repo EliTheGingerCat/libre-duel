@@ -4,13 +4,13 @@ const RunService = game:GetService("RunService")
 const ServerScriptService = game:GetService("ServerScriptService")
 
 const cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
-const CUBE_DISSOLVE_TIME = require(ReplicatedStorage.shared.cube.CUBE_DISSOLVE_TIME)
+const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
-type dissolving = {
+type mining = {
 	cube: Part,
 	cube_destroying: RBXScriptConnection,
 	id: number, -- Unique only to this entity. Ids may overlap among entities.
@@ -19,49 +19,49 @@ type dissolving = {
 	time_end: number,
 }
 
-type dissolvings = {
-	[registry.entity]: { dissolving }?,
+type minings = {
+	[registry.entity]: { mining }?,
 }
 
 local connection_heartbeat: RBXScriptConnection?
-const dissolvings: dissolvings = {}
-local total_dissolvings = 0
+const minings: minings = {}
+local total_minings = 0
 
-local function find_dissolving(entity: registry.entity, id: number): dissolving?
-	const entries = dissolvings[entity]
+local function find_mining(entity: registry.entity, id: number): mining?
+	const entries = minings[entity]
 	if entries == nil then
 		return nil
 	end
-	for _, dissolving in entries do
-		if dissolving.id == id then
-			return dissolving
+	for _, mining in entries do
+		if mining.id == id then
+			return mining
 		end
 	end
 
 	return nil
 end
 
-local function dissolve_ceased(dissolving: dissolving): boolean
-	const entries = dissolvings[dissolving.entity]
-	const index = if entries then table.find(entries, dissolving) else nil
+local function mine_ceased(mining: mining): boolean
+	const entries = minings[mining.entity]
+	const index = if entries then table.find(entries, mining) else nil
 	if entries == nil or index == nil then
 		return false
 	end
 	table.remove(entries, index)
-	total_dissolvings -= 1
-	dissolving.cube_destroying:Disconnect()
+	total_minings -= 1
+	mining.cube_destroying:Disconnect()
 	return true
 end
 
-local function dissolve_finished(dissolving: dissolving): ()
-	if not dissolve_ceased(dissolving) then
+local function mine_finished(mining: mining): ()
+	if not mine_ceased(mining) then
 		return
 	end
-	const cube = dissolving.cube
+	const cube = mining.cube
 	cube:Destroy()
 	cube_cache[cube.Position] = nil
-	if type(dissolving.entity) ~= "string" then
-		ReplicatedStorage.remotes.dissolve_finished:FireClient(dissolving.entity, dissolving.id)
+	if type(mining.entity) ~= "string" then
+		ReplicatedStorage.remotes.mine_finished:FireClient(mining.entity, mining.id)
 	end
 end
 
@@ -73,29 +73,29 @@ local function fire_excluding(remote: RemoteEvent, entity: registry.entity, cube
 	end
 end
 
-local function dissolve_progress(dissolving: dissolving, time_fraction: number): ()
-	fire_excluding(ReplicatedStorage.remotes.dissolve_progress, dissolving.entity, dissolving.cube, time_fraction)
+local function mine_progress(mining: mining, time_fraction: number): ()
+	fire_excluding(ReplicatedStorage.remotes.mine_progress, mining.entity, mining.cube, time_fraction)
 end
 
-local function dissolve_fail(dissolving: dissolving): ()
-	debug_print("Failed to dissolve. Cube:", dissolving.cube)
-	if not dissolve_ceased(dissolving) then
+local function mine_fail(mining: mining): ()
+	debug_print("Failed to mine. Cube:", mining.cube)
+	if not mine_ceased(mining) then
 		return
 	end
-	if type(dissolving.entity) ~= "string" then
-		ReplicatedStorage.remotes.dissolve_failed:FireClient(dissolving.entity, dissolving.id)
+	if type(mining.entity) ~= "string" then
+		ReplicatedStorage.remotes.mine_failed:FireClient(mining.entity, mining.id)
 	end
-	dissolve_progress(dissolving, 0)
+	mine_progress(mining, 0)
 end
 
-local function should_fail(dissolving: dissolving): boolean
-	const entity_position = get_entity_position(dissolving.entity)
+local function should_fail(mining: mining): boolean
+	const entity_position = get_entity_position(mining.entity)
 	if entity_position == nil then
 		debug_print("Entity has no position.")
 		return true
 	end
 
-	const distance = (dissolving.cube.Position - entity_position).Magnitude
+	const distance = (mining.cube.Position - entity_position).Magnitude
 	if distance > ENTITY_RANGE_SERVER then
 		debug_print("Entity moved too far away.")
 		return true
@@ -113,40 +113,40 @@ end
 
 local function on_heartbeat(): ()
 	const now = os.clock()
-	const finished: { dissolving } = {}
-	const failed: { dissolving } = {}
+	const finished: { mining } = {}
+	const failed: { mining } = {}
 
-	for _, entity_dissolvings in dissolvings do
-		if entity_dissolvings == nil then
+	for _, entity_minings in minings do
+		if entity_minings == nil then
 			continue
 		end
-		for _, dissolving in entity_dissolvings do
-			if dissolving.time_end <= now then
-				table.insert(finished, dissolving)
+		for _, mining in entity_minings do
+			if mining.time_end <= now then
+				table.insert(finished, mining)
 				continue
 			end
 
-			if should_fail(dissolving) == true then
-				table.insert(failed, dissolving)
+			if should_fail(mining) == true then
+				table.insert(failed, mining)
 				continue
 			end
 
-			const time_elapsed = now - dissolving.time_start
-			const time_fraction = time_elapsed / CUBE_DISSOLVE_TIME
-			dissolve_progress(dissolving, time_fraction)
+			const time_elapsed = now - mining.time_start
+			const time_fraction = time_elapsed / CUBE_MINE_TIME
+			mine_progress(mining, time_fraction)
 		end
 	end
 
 	-- I read somewhere that it is bad to alter a table while iterating through it.
-	for _, dissolving in finished do
-		dissolve_finished(dissolving)
+	for _, mining in finished do
+		mine_finished(mining)
 	end
 
-	for _, dissolving in failed do
-		dissolve_fail(dissolving)
+	for _, mining in failed do
+		mine_fail(mining)
 	end
 
-	if total_dissolvings == 0 then
+	if total_minings == 0 then
 		deactivate_heartbeat()
 	end
 end
@@ -157,32 +157,32 @@ local function activate_heartbeat(): ()
 	end
 end
 
-local function start_dissolving(entity: registry.entity, id: number, cube: Part): ()
-	local dissolving: dissolving
+local function start_mining(entity: registry.entity, id: number, cube: Part): ()
+	local mining: mining
 
 	local function on_destroying(): ()
-		dissolve_fail(dissolving)
+		mine_fail(mining)
 	end
 	const connection_destroying = cube.Destroying:Connect(on_destroying)
 
-	dissolving = {
+	mining = {
 		cube = cube,
 		cube_destroying = connection_destroying,
 		id = id,
 		entity = entity,
 		time_start = os.clock(), -- Can be bad for laggy players.
-		time_end = os.clock() + CUBE_DISSOLVE_TIME,
+		time_end = os.clock() + CUBE_MINE_TIME,
 	}
-	const entries = dissolvings[entity] or {}
-	dissolvings[entity] = entries
-	table.insert(entries, dissolving)
-	total_dissolvings += 1
+	const entries = minings[entity] or {}
+	minings[entity] = entries
+	table.insert(entries, mining)
+	total_minings += 1
 
 	activate_heartbeat()
 end
 
 local function try_start(entity: registry.entity, id: unknown, cube: unknown): boolean
-	-- When dealing with high lag, this can happen if the player places a cube and then immediately begins to dissolve it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
+	-- When dealing with high lag, this can happen if the player places a cube and then immediately begins to mine it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
 	if cube == nil then
 		debug_print("Not enough arguments. This is likely because the cube does does not exist on the server yet.")
 		return false
@@ -220,31 +220,31 @@ local function try_start(entity: registry.entity, id: unknown, cube: unknown): b
 		return false
 	end
 
-	if find_dissolving(entity, id) ~= nil then
+	if find_mining(entity, id) ~= nil then
 		return false
 	end
-	start_dissolving(entity, id, cube)
+	start_mining(entity, id, cube)
 	return true
 end
 
 local function stop(entity: registry.entity, id: number): ()
-	const dissolving = find_dissolving(entity, id)
-	if dissolving and dissolve_ceased(dissolving) then
-		dissolve_progress(dissolving, 0)
+	const mining = find_mining(entity, id)
+	if mining and mine_ceased(mining) then
+		mine_progress(mining, 0)
 	end
 end
 
 local function on_entity_removed(entity: registry.entity): ()
-	const entries = dissolvings[entity]
+	const entries = minings[entity]
 	if entries == nil then
 		return
 	end
-	for _, dissolving in entries do
-		dissolving.cube_destroying:Disconnect()
-		dissolve_progress(dissolving, 0)
-		total_dissolvings -= 1
+	for _, mining in entries do
+		mining.cube_destroying:Disconnect()
+		mine_progress(mining, 0)
+		total_minings -= 1
 	end
-	dissolvings[entity] = nil
+	minings[entity] = nil
 end
 
 registry.removed:Connect(on_entity_removed)

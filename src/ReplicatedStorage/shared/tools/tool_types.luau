@@ -11,12 +11,12 @@ export type no_params = {}
 export type behaviours = {
 	sword: sword_params?,
 	cube: cube_params?,
-	dissolver: no_params?,
+	pickaxe: no_params?,
 	bow: no_params?,
 	cake: no_params?,
 	mode_selector: no_params?,
 }
-export type behaviour = "sword" | "cube" | "dissolver" | "bow" | "cake" | "mode_selector"
+export type behaviour = "sword" | "cube" | "pickaxe" | "bow" | "cake" | "mode_selector"
 
 export type overrides = {
 	name: string?,
