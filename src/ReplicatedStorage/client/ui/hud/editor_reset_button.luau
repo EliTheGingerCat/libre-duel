@@ -49,7 +49,7 @@ local function editor_reset_button(props: { LayoutOrder: number? })
 		LayoutOrder = props.LayoutOrder,
 		Size = UDim2.fromOffset(130, 44),
 		BackgroundColor3 = COLOURS.surface,
-		BackgroundTransparency = 0.2,
+		BackgroundTransparency = 0.5,
 		BorderSizePixel = 0,
 		Text = if armed then "Sure?" else "Reset",
 		TextSize = 24,
