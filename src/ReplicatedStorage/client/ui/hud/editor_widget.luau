@@ -6,13 +6,17 @@ local mount_portal = require(script.Parent.mount_portal)
 local registry = require(script.Parent.registry)
 local widget_bounds = require(script.Parent.widget_bounds)
 
--- Below this size the actions and handles would cover the widget, so they move outside it.
+-- Below this size the actions would cover the widget, so they move outside it.
 const COMPACT_SIZE = Vector2.new(108, 72)
 const ACTION_WIDTH = 72
 const ACTION_DISTANCE = 38
 const ACTION_HALF_HEIGHT = 18
 const HANDLE_OUTSET = 9
--- Covers the outset handles and the gap up to the actions, so hover survives the trip between them.
+-- Below this size the handles would cover the whole widget, leaving nothing to drag it by.
+const HANDLE_ROOM = 36
+-- Below this length a side dot would run into the corner dots next to it.
+const SIDE_DOT_ROOM = 30
+-- Covers the handles and the gap up to the actions, so hover survives the trip between them.
 const HOVER_MARGIN = 20
 
 export type view = {
@@ -107,17 +111,22 @@ local function create_widget(item: registry.entry, preview: Frame, actions: acti
 			end
 		end
 		local rect = get_rectangle()
-		local compact = is_compact(rect)
+		local tiny = rect.size.X < HANDLE_ROOM or rect.size.Y < HANDLE_ROOM
 		local action_position = get_action_position(rect)
 		local direction = if visible then geometry.get_handle(rect, pointer) else nil
 		for _, child in bounds:GetChildren() do
 			if child:IsA("Frame") and child.Name:match("^handle_") then
 				local handle = Vector2.new(child.Position.X.Scale * 2 - 1, child.Position.Y.Scale * 2 - 1)
-				local outset = if compact then handle * HANDLE_OUTSET else Vector2.zero
-				-- Only the corners fit around a small widget, and they sit outside so its middle can still be dragged.
-				child.Visible = visible and not (compact and (handle.X == 0 or handle.Y == 0))
+				local crowded = (handle.X == 0 and rect.size.X < SIDE_DOT_ROOM)
+					or (handle.Y == 0 and rect.size.Y < SIDE_DOT_ROOM)
+				-- The grab area moves outside a tiny widget, while its dot stays on the outline.
+				local outset = if tiny then handle * HANDLE_OUTSET else Vector2.zero
+				child.Visible = visible and not crowded
 				child.Position = UDim2.new(child.Position.X.Scale, outset.X, child.Position.Y.Scale, outset.Y)
 				local marker = child:FindFirstChild("marker")
+				if marker and marker:IsA("Frame") then
+					marker.Position = UDim2.new(0.5, -outset.X, 0.5, -outset.Y)
+				end
 				local stroke = if marker then marker:FindFirstChildOfClass("UIStroke") else nil
 				if stroke then
 					stroke.Thickness = if direction == handle then 6 else 5
