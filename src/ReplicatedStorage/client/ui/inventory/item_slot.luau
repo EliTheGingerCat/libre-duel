@@ -30,12 +30,13 @@ local function item_slot(props: {
 		aspect = create_element("UIAspectRatioConstraint"),
 		corner = create_element("UICorner", { CornerRadius = CORNER_RADIUS }),
 		icon = props.image ~= nil and create_element("ImageLabel", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
 			BackgroundTransparency = 1,
 			Image = props.image,
 			Name = "icon",
-			Size = UDim2.fromScale(1, 1),
-		}, {
-			corner = create_element("UICorner", { CornerRadius = CORNER_RADIUS }),
+			Position = UDim2.fromScale(0.5, 0.5),
+			ScaleType = Enum.ScaleType.Fit,
+			Size = UDim2.fromScale(INVENTORY_LAYOUT.ICON_SCALE, INVENTORY_LAYOUT.ICON_SCALE),
 		}),
 		addendum = props.addendum,
 	})

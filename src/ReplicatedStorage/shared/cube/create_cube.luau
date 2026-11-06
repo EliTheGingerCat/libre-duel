@@ -21,6 +21,16 @@ local function create_cube(appearance: tool_types.cube_params): Part
 	if appearance.shape ~= nil then
 		cube.Shape = appearance.shape
 	end
+	if appearance.texture_id ~= nil then
+		for _, face in Enum.NormalId:GetEnumItems() do
+			local texture = Instance.new("Texture")
+			texture.Face = face
+			texture.StudsPerTileU = CUBE_SIZE
+			texture.StudsPerTileV = CUBE_SIZE
+			texture.Texture = appearance.texture_id
+			texture.Parent = cube
+		end
+	end
 	return cube
 end
 

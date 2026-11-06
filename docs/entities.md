@@ -29,6 +29,11 @@ Server bot code can call the same gameplay modules as player remote handlers:
   `"cube"`.
 - `ServerScriptService/cube/mine_cube.start(entity, id, cube)` starts mining
   and returns whether the request was accepted. Use `.stop(entity, id)` to cancel.
+- `ServerScriptService/inventory/inventory_util` keys inventories and selected
+  slots by entity. Every character spawn creates an inventory and death deletes it.
+  Use `set_selected_slot(entity, slot)` to choose a bot's tool. `created` fires with
+  `(entity, inventory)` on each new inventory, and `replicate(entity)` pushes to the
+  entity's client, doing nothing for bots.
 
 Player remote handlers supply the authenticated sender as the acting entity.
 Clients cannot select a bot as their attacker or block placer. Click-rate
@@ -42,7 +47,8 @@ Bot tab-list entries have no Roblox account thumbnail.
 
 Call `registry.unregister_bot(bot_id)` to retire a bot without destroying its
 model. Destroying its model also unregisters it. Membership removal clears its
-cooldowns and pending mining operations and frees its Bridge team slot.
+cooldowns, inventory, selected slot and pending mining operations and frees its
+Bridge team slot.
 Unregistering does not destroy the character or its hitboxes. Bot AI, spawning,
 and respawning remain the caller's responsibility; register each replacement
 character after unregistering the previous one.

@@ -11,7 +11,7 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 ### Added
 
 - Melee attacking.
-- Cube placing and dissolving.
+- Cube placing and mining.
 - Version text in the bottom left.
 - Local and server debug printing.
 - Development guides.
@@ -19,7 +19,7 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Colour guide.
 - Knockback.
 - Tool registry with variants.
-- Sphere and brown cube variants.
+- Cube textures, with red and blue clay variants.
 - Settings menu backed by real settings, with a button to open the HUD editor.
 - Back button in the HUD editor, which also closes when clicking outside its bounds.
 - UI blur setting, using [Objectual UI Blur](https://devforum.roblox.com/t/objectual-ui-blur-12-revision-2/3626057).

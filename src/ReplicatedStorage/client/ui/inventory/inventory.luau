@@ -176,23 +176,23 @@ local function held_item(props: { held_slot: number?, cursor: unknown })
 		return UDim2.fromOffset(position.X, position.Y)
 	end
 
-	const size = INVENTORY_LAYOUT.SLOT_SIZE * viewport_scale
+	const size = INVENTORY_LAYOUT.SLOT_SIZE * INVENTORY_LAYOUT.ICON_SCALE * viewport_scale
 	return create_element("ImageLabel", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
 		Image = tool.image,
 		Name = "held_item",
 		Position = (props.cursor :: any):map(to_position),
+		ScaleType = Enum.ScaleType.Fit,
 		Size = UDim2.fromOffset(size, size),
 		ZIndex = 10,
-	}, {
-		corner = create_element("UICorner", { CornerRadius = UDim.new(0.45, 0) }),
 	})
 end
 
 local function flying_item(props: { flight: use_inventory_input.flight })
 	local progress = use_ui_motion(1, 0, 0)
 	const flight = props.flight
+	const size = flight.size * INVENTORY_LAYOUT.ICON_SCALE
 
 	local function to_position(value: number): UDim2
 		const position = flight.from:Lerp(flight.to, value)
@@ -205,10 +205,9 @@ local function flying_item(props: { flight: use_inventory_input.flight })
 		Image = flight.image,
 		Name = "flying_item",
 		Position = progress:map(to_position),
-		Size = UDim2.fromOffset(flight.size, flight.size),
+		ScaleType = Enum.ScaleType.Fit,
+		Size = UDim2.fromOffset(size, size),
 		ZIndex = 10,
-	}, {
-		corner = create_element("UICorner", { CornerRadius = UDim.new(0.45, 0) }),
 	})
 end
 

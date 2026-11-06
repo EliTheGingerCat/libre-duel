@@ -1,21 +1,21 @@
-const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const inventory_util = require(script.Parent.inventory_util)
+const registry = require(ReplicatedStorage.shared.entity.registry)
 
-const update_inventory = ReplicatedStorage.remotes.update_inventory
-
-local function character_added(player: Player, character: Model): ()
-	const inventory = inventory_util.generate_inventory(player)
+local function on_character_added(character: Model, entity: registry.entity): ()
+	const inventory = inventory_util.generate_inventory(entity)
 	if type(inventory) == "table" then
 		inventory_util.give_loadout(inventory)
+		inventory_util.created:Fire(entity, inventory)
 		-- remote events queue until the client connects, so this arrives even if the client script loads late
-		update_inventory:FireClient(player, { inventory = inventory })
+		inventory_util.replicate(entity)
 	end
 
 	local function on_died(): ()
-		if inventory_util.delete_inventory(player) then
-			update_inventory:FireClient(player, { inventory = nil })
+		-- a replacement bot can reuse the ID while its old character is still around
+		if registry.get_character(entity) == character and inventory_util.delete_inventory(entity) then
+			inventory_util.replicate(entity)
 		end
 	end
 
@@ -24,25 +24,17 @@ local function character_added(player: Player, character: Model): ()
 	humanoid.Died:Once(on_died)
 end
 
-local function player_added(player: Player): ()
-	local function on_character_added(character: Model): ()
-		character_added(player, character)
-	end
-
-	player.CharacterAdded:Connect(on_character_added)
-	if player.Character then
-		character_added(player, player.Character)
-	end
+-- entities removed while alive never fire Died
+local function on_entity_removed(entity: registry.entity): ()
+	inventory_util.delete_inventory(entity)
 end
 
--- players leaving while alive never fire Died
-local function player_removing(player: Player): ()
-	inventory_util.delete_inventory(player)
-end
+registry.character_added:Connect(on_character_added)
+registry.removed:Connect(on_entity_removed)
 
-Players.PlayerAdded:Connect(player_added)
-Players.PlayerRemoving:Connect(player_removing)
-
-for _, player in Players:GetPlayers() do
-	player_added(player)
+for _, entity in registry.get_all() do
+	const character = registry.get_character(entity)
+	if character then
+		on_character_added(character, entity)
+	end
 end

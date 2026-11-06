@@ -27,7 +27,7 @@ local function on_request(player: Player, arguments: unknown): ()
 		return
 	end
 
-	const inventory = inventory_util.get_inventory_from_player(player)
+	const inventory = inventory_util.get_inventory(player)
 	if not inventory then
 		return
 	end

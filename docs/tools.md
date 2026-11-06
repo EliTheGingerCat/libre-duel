@@ -33,6 +33,9 @@ const definition: tool_types.definition = {
 }
 ```
 
+`image` is the icon in the hotbar and inventory. A cube's `texture_id` is drawn on
+every face of the placed block.
+
 ## Per-stack overrides
 
 A slot can carry `data` (`tool_types.overrides`), merged on top of its tool for
@@ -42,7 +45,7 @@ table.
 
 ## Inventory and hotbar
 
-Tools live in the player's inventory. The first row of the inventory (slots 1 to
+Tools live in the entity's inventory, players and bots alike. The first row of the inventory (slots 1 to
 `COLUMNS`) is the hotbar. `ReplicatedStorage/shared/inventory/STARTING_LOADOUT.luau`
 maps slots to tool ids, and the server gives this loadout on every spawn. Use
 `get_slot_tool(slot)` to resolve a slot to its tool. To check what a slot does,
@@ -60,4 +63,4 @@ reports slot switches through the `select_slot` remote.
 3. Add the handler to `HANDLERS` in `tools.client.luau`.
 4. Give a tool the behaviour in its definition.
 5. On the server, reject the action unless
-   `inventory_util.has_behaviour(player, behaviour)` is true.
+   `inventory_util.has_behaviour(entity, behaviour)` is true.

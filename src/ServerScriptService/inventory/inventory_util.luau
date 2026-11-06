@@ -1,33 +1,40 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const STARTING_LOADOUT = require(ReplicatedStorage.shared.inventory.STARTING_LOADOUT)
+const entity_inventories = require(script.Parent.entity_inventories)
+const entity_selected_slots = require(script.Parent.entity_selected_slots)
 const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
-const player_inventories = require(script.Parent.player_inventories)
-const player_selected_slots = require(script.Parent.player_selected_slots)
+const registry = require(ReplicatedStorage.shared.entity.registry)
+const signal = require(ReplicatedStorage.Packages.signal)
 const tool_registry = require(ReplicatedStorage.shared.tools.registry)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
-local inventory_util = {}
+const update_inventory = ReplicatedStorage.remotes.update_inventory
 
-local function inventory_key(player: Player): string
-	return tostring(player.UserId)
-end
+local inventory_util = {
+	created = signal.new(),
+}
 
-function inventory_util.generate_inventory(player: Player): inventory_types.inventory | false
-	const key = inventory_key(player)
-	if player_inventories[key] then
+function inventory_util.generate_inventory(entity: registry.entity): inventory_types.inventory | false
+	if entity_inventories[entity] then
 		return false
 	end
 
 	const inventory = inventory_logic.create_empty()
-	player_inventories[key] = inventory
+	entity_inventories[entity] = inventory
 
 	return inventory
 end
 
-function inventory_util.get_inventory_from_player(player: Player): inventory_types.inventory?
-	return player_inventories[inventory_key(player)]
+function inventory_util.get_inventory(entity: registry.entity): inventory_types.inventory?
+	return entity_inventories[entity]
+end
+
+function inventory_util.replicate(entity: registry.entity): ()
+	if type(entity) ~= "string" then
+		update_inventory:FireClient(entity, { inventory = entity_inventories[entity] })
+	end
 end
 
 -- breter98: This technically breaks the styling guidelines that functions should return a single value but this is much more convenient imo.
@@ -44,10 +51,9 @@ function inventory_util.clear_inventory(inventory: inventory_types.inventory): i
 	return inventory
 end
 
-function inventory_util.delete_inventory(player: Player): boolean
-	const key = inventory_key(player)
-	if player_inventories[key] then
-		player_inventories[key] = nil
+function inventory_util.delete_inventory(entity: registry.entity): boolean
+	if entity_inventories[entity] then
+		entity_inventories[entity] = nil
 		return true
 	end
 	return false
@@ -64,41 +70,43 @@ function inventory_util.give_item(inventory: inventory_types.inventory, item: in
 	return true
 end
 
-function inventory_util.give_loadout(inventory: inventory_types.inventory): inventory_types.inventory
-	for slot, item in STARTING_LOADOUT do
+function inventory_util.give_loadout(
+	inventory: inventory_types.inventory,
+	loadout: { [number]: inventory_types.item_id }?
+): inventory_types.inventory
+	for slot, item in loadout or STARTING_LOADOUT do
 		inventory[slot] = { item_id = item, amount = 1 }
 	end
 
 	return inventory
 end
 
-function inventory_util.get_selected_slot(player: Player): number
-	return player_selected_slots[inventory_key(player)] or 1
+function inventory_util.get_selected_slot(entity: registry.entity): number
+	return entity_selected_slots[entity] or 1
 end
 
-function inventory_util.set_selected_slot(player: Player, slot_index: number): ()
-	player_selected_slots[inventory_key(player)] = slot_index
+function inventory_util.set_selected_slot(entity: registry.entity, slot_index: number): ()
+	entity_selected_slots[entity] = slot_index
 end
 
-function inventory_util.clear_selected_slot(player: Player): ()
-	player_selected_slots[inventory_key(player)] = nil
+function inventory_util.clear_selected_slot(entity: registry.entity): ()
+	entity_selected_slots[entity] = nil
 end
 
--- the tool in the slot the client says is selected, nil if empty or dead
-function inventory_util.get_selected_tool(player: Player): tool_types.tool?
-	const inventory = inventory_util.get_inventory_from_player(player)
+function inventory_util.get_selected_tool(entity: registry.entity): tool_types.tool?
+	const inventory = inventory_util.get_inventory(entity)
 	if inventory == nil then
 		return nil
 	end
-	const item = inventory[inventory_util.get_selected_slot(player)]
+	const item = inventory[inventory_util.get_selected_slot(entity)]
 	if type(item) ~= "table" then
 		return nil
 	end
 	return tool_registry.resolve(item.item_id, item.data)
 end
 
-function inventory_util.has_behaviour(player: Player, behaviour: tool_types.behaviour): boolean
-	const tool = inventory_util.get_selected_tool(player)
+function inventory_util.has_behaviour(entity: registry.entity, behaviour: tool_types.behaviour): boolean
+	const tool = inventory_util.get_selected_tool(entity)
 	return tool ~= nil and tool_registry.has_behaviour(tool, behaviour)
 end
 

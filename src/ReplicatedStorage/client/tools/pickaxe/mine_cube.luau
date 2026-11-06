@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
+local set_cube_transparency = require(ReplicatedStorage.shared.cube.set_cube_transparency)
 const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
@@ -92,7 +93,7 @@ local function cleanup_all(state: state_local): ()
 end
 
 local function set_mining_display(state: state_any, fraction: number): ()
-	state.cube_target.Transparency = fraction
+	set_cube_transparency(state.cube_target, fraction)
 end
 
 local function mine_pause(state: state_local): ()

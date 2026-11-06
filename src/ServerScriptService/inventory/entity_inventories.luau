@@ -1,8 +1,8 @@
--- player -> slot -> item (1d array)
+-- entity -> slot -> item (1d array)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 
-local player_inventories: inventory_types.player_inventories = {}
+local entity_inventories: inventory_types.entity_inventories = {}
 
-return player_inventories
+return entity_inventories

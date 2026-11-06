@@ -7,9 +7,21 @@ const Workspace = game:GetService("Workspace")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const debug_print = require(script.Parent.Parent.util.debug_print)
+const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
+const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
 const map_data = require(ReplicatedStorage.shared.maps.map_data)
 const match_session = require(script.Parent.Parent.queue.match_session)
 const registry = require(ReplicatedStorage.shared.entity.registry)
+
+const LOADOUT: {[number]: inventory_types.item_id} = {
+	[1] = "sword",
+	[2] = "pickaxe",
+	-- where the team clay will go (i couldn't think of anything better :broken_heart:)
+	[4] = "bow",
+	[5] = "cake",
+}
+const CLAY_SLOT = 3
+const TEAM_CLAYS = {"red_clay", "blue_clay"} -- team1, team2
 
 type team = {
 	cage: Instance,
@@ -28,6 +40,7 @@ type state = {
 	cages_are_closed: boolean,
 	connections: { RBXScriptConnection },
 	character_connection: registry.connection?,
+	inventory_connection: registry.connection?,
 	teams: { team },
 }
 
@@ -120,6 +133,9 @@ local function game_stop(state: state): ()
 	current_state = nil
 	if state.character_connection then
 		state.character_connection:Disconnect()
+	end
+	if state.inventory_connection then
+		state.inventory_connection:Disconnect()
 	end
 	for _, connection in state.connections do
 		connection:Disconnect()
@@ -253,6 +269,17 @@ local function setup_map(state: state): ()
 	end
 end
 
+local function give_match_loadout(entity: registry.entity, team: team): ()
+	const inventory = inventory_util.get_inventory(entity)
+	if inventory then
+		inventory_util.clear_inventory(inventory)
+		inventory_util.give_loadout(inventory, LOADOUT)
+		--TODO: find a better approach for this. Even though the player *just* spawned, I don't know how I feel about directly overriding a slot.
+		inventory[CLAY_SLOT] = { item_id = TEAM_CLAYS[team.index], amount = 1 }
+		inventory_util.replicate(entity)
+	end
+end
+
 local function setup_entity(state: state, entity: registry.entity, team: team): ()
 	if find_team_by_entity(state, entity) ~= nil then
 		return
@@ -260,6 +287,7 @@ local function setup_entity(state: state, entity: registry.entity, team: team): 
 	table.insert(team.entities, entity)
 	registry.set_team(entity, team.Roblox_team)
 	move_entity(entity, team.spawn_part.Position)
+	give_match_loadout(entity, team)
 end
 
 local function setup_initial_entities(state: state, entities: { registry.entity }): ()
@@ -305,6 +333,14 @@ local function game_start(entities: { registry.entity }, roster: match_session.r
 		end
 	end
 	state.character_connection = registry.character_added:Connect(on_character_added)
+	-- not character_added, signals fire newest first so the inventory wouldn't exist yet
+	local function on_inventory_created(entity: registry.entity): ()
+		const team = find_team_by_entity(state, entity)
+		if team then
+			give_match_loadout(entity, team)
+		end
+	end
+	state.inventory_connection = inventory_util.created:Connect(on_inventory_created)
 	if roster then
 		for index, team in state.teams do
 			for _, user_id in roster[`team{index}`] do

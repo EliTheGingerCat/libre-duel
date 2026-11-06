@@ -1,7 +1,7 @@
-const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const inventory_util = require(script.Parent.inventory_util)
+const registry = require(ReplicatedStorage.shared.entity.registry)
 
 const select_slot = ReplicatedStorage.remotes.select_slot
 
@@ -12,9 +12,9 @@ local function on_select_slot(player: Player, slot: unknown): ()
 	inventory_util.set_selected_slot(player, slot)
 end
 
-local function on_player_removing(player: Player): ()
-	inventory_util.clear_selected_slot(player)
+local function on_entity_removed(entity: registry.entity): ()
+	inventory_util.clear_selected_slot(entity)
 end
 
 select_slot.OnServerEvent:Connect(on_select_slot)
-Players.PlayerRemoving:Connect(on_player_removing)
+registry.removed:Connect(on_entity_removed)

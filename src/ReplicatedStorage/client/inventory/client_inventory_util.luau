@@ -4,6 +4,7 @@ const Players = game:GetService("Players")
 const client_inventory = require(script.Parent.client_inventory)
 const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
+const registry = require(ReplicatedStorage.shared.entity.registry)
 const remote_id = require(script.Parent.remote_id)
 const signal = require(ReplicatedStorage.Packages.signal)
 
@@ -14,17 +15,17 @@ local inventory_util = {
 	on_change = signal.new(),
 }
 
-const PLAYER_KEY = tostring(Players.LocalPlayer.UserId)
+const LOCAL_ENTITY: registry.entity = Players.LocalPlayer
 
 function inventory_util.get_inventory(): inventory_types.inventory?
-	return client_inventory[PLAYER_KEY]
+	return client_inventory[LOCAL_ENTITY]
 end
 
 function inventory_util.set_inventory(inventory: inventory_types.inventory?): ()
 	if inventory then
-		client_inventory[PLAYER_KEY] = inventory
+		client_inventory[LOCAL_ENTITY] = inventory
 	else
-		client_inventory[PLAYER_KEY] = nil
+		client_inventory[LOCAL_ENTITY] = nil
 	end
 	inventory_util.on_change:Fire()
 end

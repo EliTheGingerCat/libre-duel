@@ -1,6 +1,7 @@
 -- Sizes shared by the inventory window and the hotbar, in pixels before UIScale.
 const INVENTORY_LAYOUT = {
 	SLOT_SIZE = 78,
+	ICON_SCALE = 0.75,
 	SLOT_GAP = 10,
 	BOX_PADDING = 16,
 	BOX_RADIUS = 44,

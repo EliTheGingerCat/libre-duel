@@ -2,6 +2,7 @@ export type cube_params = {
 	colour: Color3?,
 	material: Enum.Material?,
 	shape: Enum.PartType?,
+	texture_id: string?,
 }
 export type sword_params = {
 	damage: number?,
