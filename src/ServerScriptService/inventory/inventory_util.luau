@@ -72,10 +72,12 @@ end
 
 function inventory_util.give_loadout(
 	inventory: inventory_types.inventory,
-	loadout: { [number]: inventory_types.item_id }?
+	loadout: { [number]: inventory_types.item_id }?,
+	amounts: { [inventory_types.item_id]: number }?
 ): inventory_types.inventory
 	for slot, item in loadout or STARTING_LOADOUT do
-		inventory[slot] = { item_id = item, amount = 1 }
+		const amount = if amounts ~= nil then amounts[item] else nil
+		inventory[slot] = { item_id = item, amount = amount or 1 }
 	end
 
 	return inventory
@@ -108,6 +110,26 @@ end
 function inventory_util.has_behaviour(entity: registry.entity, behaviour: tool_types.behaviour): boolean
 	const tool = inventory_util.get_selected_tool(entity)
 	return tool ~= nil and tool_registry.has_behaviour(tool, behaviour)
+end
+
+-- takes one of the selected item, returns whether there was anything to take
+function inventory_util.consume_selected_item(entity: registry.entity): boolean
+	const inventory = inventory_util.get_inventory(entity)
+	if inventory == nil then
+		return false
+	end
+	const slot_index = inventory_util.get_selected_slot(entity)
+	const item = inventory[slot_index]
+	if type(item) ~= "table" then
+		return false
+	end
+
+	item.amount -= 1
+	if item.amount <= 0 then
+		inventory[slot_index] = false
+	end
+	inventory_util.replicate(entity)
+	return true
 end
 
 inventory_util.is_hotbar_slot = inventory_logic.is_hotbar_slot

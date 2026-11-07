@@ -2,6 +2,7 @@ const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const UserInputService = game:GetService("UserInputService")
 
+const bow_state = require(script.Parent.bow_state)
 const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const slot_has_behaviour = require(ReplicatedStorage.client.tools.slot_has_behaviour)
@@ -12,11 +13,10 @@ const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 const player = Players.LocalPlayer
 const Mouse = player:GetMouse()
 
-local draw_started: number? = nil
 local draw_character: Model? = nil
 
 local function cancel_draw(): ()
-	draw_started = nil
+	bow_state.draw_started = nil
 	draw_character = nil
 end
 
@@ -32,7 +32,7 @@ local function pull_bow(): ()
 	if humanoid == nil or humanoid.Health <= 0 then
 		return
 	end
-	draw_started = os.clock()
+	bow_state.draw_started = os.clock()
 	draw_character = character
 end
 
@@ -57,7 +57,7 @@ local function on_input_ended(input: InputObject, game_processed: boolean): ()
 		return
 	end
 
-	const started = draw_started
+	const started = bow_state.draw_started
 	const character = draw_character
 	cancel_draw()
 	if game_processed or editor_state.enabled or not slot_has_behaviour(tool_state.current, "bow") then

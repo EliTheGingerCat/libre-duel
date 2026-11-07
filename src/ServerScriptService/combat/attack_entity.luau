@@ -4,6 +4,8 @@ const ServerScriptService = game:GetService("ServerScriptService")
 const add_cooldown = require(ReplicatedStorage.shared.cooldown.add_cooldown)
 const apply_hit_highlight = require(script.Parent.apply_hit_highlight)
 const apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
+const BLOCKING_DAMAGE_MULTIPLIER = require(ServerScriptService.blocking.BLOCKING_DAMAGE_MULTIPLIER)
+const get_blocking_state = require(ServerScriptService.blocking.get_blocking_state)
 const BOW_DAMAGE = require(ServerScriptService.bow.BOW_DAMAGE)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(script.Parent.ENTITY_RANGE_SERVER)
@@ -116,7 +118,7 @@ local function attack_entity(attacker: registry.entity, target: registry.entity,
 	end
 	debug_print("Attack success.")
 
-	target_humanoid.Health -= damage
+	target_humanoid.Health -= damage * if get_blocking_state(target) then BLOCKING_DAMAGE_MULTIPLIER else 1
 
 	local hit_no_y: Vector3
 	if hit then

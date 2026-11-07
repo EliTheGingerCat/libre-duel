@@ -7,6 +7,7 @@ const cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 const cube_in_hitbox = require(ReplicatedStorage.shared.cube.cube_in_hitbox)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
+const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 const get_player_cps = require(ServerScriptService.mitigation.get_player_cps)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
@@ -73,6 +74,7 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, appea
 	const clone = create_cube(appearance)
 	clone.Position = cube_position
 	clone.Parent = workspace.runtime_instances.cubes
+	inventory_util.consume_selected_item(entity)
 	play_sound("cube_place", cube_position)
 
 	return true

@@ -52,6 +52,7 @@ local function load(id: string): tool_types.tool
 	const merged = merge(base, {
 		name = definition.name,
 		image = definition.image,
+		mesh = definition.mesh,
 		behaviours = definition.behaviours,
 	})
 	merged.id = id

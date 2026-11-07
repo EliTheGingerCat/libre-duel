@@ -74,10 +74,13 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 		return
 	end
 
-	if input.UserInputType == KEYBINDS.tool_use and tool_selected ~= nil then
+	-- handlers can yield, and using up the item changes tool_selected while they wait
+	const tool = tool_selected
+	if input.UserInputType == KEYBINDS.tool_use and tool ~= nil then
+		tool_state.on_use:Fire(tool)
 		for behaviour: tool_types.behaviour, handler in HANDLERS do
-			if tool_registry.has_behaviour(tool_selected, behaviour) then
-				handler(tool_selected)
+			if tool_registry.has_behaviour(tool, behaviour) then
+				handler(tool)
 			end
 		end
 	end

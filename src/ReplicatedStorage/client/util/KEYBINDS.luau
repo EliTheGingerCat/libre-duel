@@ -17,6 +17,7 @@ const KEYBINDS = {
 	},
 	tablist = Enum.KeyCode.Tab,
 	tool_switch = Enum.KeyCode.E,
+	tool_block = Enum.UserInputType.MouseButton2,
 	tool_use = Enum.UserInputType.MouseButton1,
 	player_sneak = Enum.KeyCode.LeftShift,
 }

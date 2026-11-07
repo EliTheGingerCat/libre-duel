@@ -7,6 +7,7 @@ const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 const INVENTORY_CONSTANTS = require(ReplicatedStorage.shared.inventory.INVENTORY_CONSTANTS)
 const INVENTORY_LAYOUT = require(script.Parent.Parent.inventory.INVENTORY_LAYOUT)
 local React = require(ReplicatedStorage.Packages.react)
+const get_slot_amount = require(ReplicatedStorage.client.tools.get_slot_amount)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local gradient_stroke = require(script.Parent.gradient_stroke)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
@@ -322,6 +323,7 @@ local function slots_container(props: { preview: boolean? })
 		slots[id] = create_element(item_slot, {
 			name = `slot_{id}`,
 			image = if tool ~= nil then tool.image else nil,
+			amount = get_slot_amount(id),
 			layout_order = id,
 			selected = id == active_slot,
 			on_click = if props.preview then nil else on_clicks[id],

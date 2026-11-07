@@ -20,6 +20,9 @@ const LOADOUT: {[number]: inventory_types.item_id} = {
 	[4] = "bow",
 	[5] = "cake",
 }
+const LOADOUT_AMOUNTS: {[inventory_types.item_id]: number} = {
+	cake = 8,
+}
 const CLAY_SLOT = 3
 const TEAM_CLAYS = {"red_clay", "blue_clay"} -- team1, team2
 
@@ -273,7 +276,7 @@ local function give_match_loadout(entity: registry.entity, team: team): ()
 	const inventory = inventory_util.get_inventory(entity)
 	if inventory then
 		inventory_util.clear_inventory(inventory)
-		inventory_util.give_loadout(inventory, LOADOUT)
+		inventory_util.give_loadout(inventory, LOADOUT, LOADOUT_AMOUNTS)
 		--TODO: find a better approach for this. Even though the player *just* spawned, I don't know how I feel about directly overriding a slot.
 		inventory[CLAY_SLOT] = { item_id = TEAM_CLAYS[team.index], amount = 1 }
 		inventory_util.replicate(entity)

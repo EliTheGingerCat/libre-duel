@@ -4,6 +4,7 @@ const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const INVENTORY_CONSTANTS = require(ReplicatedStorage.shared.inventory.INVENTORY_CONSTANTS)
 const INVENTORY_LAYOUT = require(script.Parent.INVENTORY_LAYOUT)
 local React = require(ReplicatedStorage.Packages.react)
+const get_slot_amount = require(ReplicatedStorage.client.tools.get_slot_amount)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local item_slot = require(script.Parent.item_slot)
@@ -64,6 +65,7 @@ local function inventory_slots(props: { first: number, last: number, hidden_slot
 		slots[slot] = create_element(item_slot, {
 			name = `slot_{slot}`,
 			image = get_slot_image(slot, props.hidden_slots),
+			amount = if props.hidden_slots[slot] then nil else get_slot_amount(slot),
 			layout_order = slot,
 		})
 	end
