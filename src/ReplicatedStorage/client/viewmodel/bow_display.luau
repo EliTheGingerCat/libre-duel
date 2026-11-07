@@ -30,7 +30,7 @@ local function get_draw_frame(
     draw_frames: { tool_types.bow_draw_frame },
     draw_started: number
 ): tool_types.bow_draw_frame
-    const progress = math.min((os.clock() - draw_started) / VIEWMODEL_CONSTANTS.bow_full_draw_seconds, 1)
+    const progress = math.min((os.clock() - draw_started) / VIEWMODEL_CONSTANTS.bow_full_draw_seconds + .3, 1)
     return draw_frames[math.floor(progress * (#draw_frames - 1)) + 1]
 end
 
