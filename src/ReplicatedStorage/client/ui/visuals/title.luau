@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
@@ -8,9 +9,16 @@ local shadow = require(script.Parent.shadow)
 
 local create_element = React.createElement
 
+const REFERENCE_HEIGHT = 1080
+
+local function get_scale(viewport_size: Vector2): number
+	return viewport_size.Y / REFERENCE_HEIGHT
+end
+
 type title_text = {
 	top_text: string,
 	bottom_text: string?,
+	colour: Color3?,
 }
 
 local function background_transparency(transparency: number): number
@@ -28,6 +36,7 @@ end
 local function title_label(props: {
 	text: string,
 	top: boolean,
+	colour: Color3?,
 	transparency: React.Binding<number>,
 })
 	local padding = if props.top then 30 else 20
@@ -43,10 +52,10 @@ local function title_label(props: {
 		RichText = true,
 		Size = UDim2.fromOffset(0, 0),
 		Text = props.text,
-		TextColor3 = Color3.new(1, 1, 1),
+		TextColor3 = props.colour or Color3.new(1, 1, 1),
 		TextSize = if props.top then 100 else 50,
 		TextTransparency = props.transparency,
-		TextWrapped = true,
+		TextWrapped = false,
 		Visible = props.text ~= "",
 	}, {
 		corner = create_element("UICorner", {
@@ -101,12 +110,13 @@ local function title()
 			stay: number,
 			fade_out: number,
 			top_text: string,
-			bottom_text: string?
+			bottom_text: string?,
+			colour: Color3?
 		): ()
 			local replacing = animation ~= nil and coroutine.status(animation) ~= "dead"
 			cancel_animation()
 			set_transparency(if replacing then 0 else 1)
-			set_current_title({ top_text = top_text, bottom_text = bottom_text })
+			set_current_title({ top_text = top_text, bottom_text = bottom_text, colour = colour })
 
 			local function animate(): ()
 				if not replacing then
@@ -134,6 +144,27 @@ local function title()
 
 	React.useEffect(effect_titles, {})
 
+	local scale, set_scale = React.useBinding(1)
+
+	local function effect_scale()
+		local camera = Workspace.CurrentCamera
+
+		local function update_scale(): ()
+			set_scale(get_scale(camera.ViewportSize))
+		end
+
+		update_scale()
+		local connection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(update_scale)
+
+		local function disconnect(): ()
+			connection:Disconnect()
+		end
+
+		return disconnect
+	end
+
+	React.useEffect(effect_scale, {})
+
 	if current_title == nil then
 		return nil
 	end
@@ -144,15 +175,20 @@ local function title()
 		ResetOnSpawn = false,
 		ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
 	}, {
-		top_text = create_element(title_label, {
+		scale = create_element("UIScale", {
+			Scale = scale,
+		}),
+		top_text =create_element(title_label, {
 			text = current_title.top_text,
 			top = true,
+			colour = current_title.colour,
 			transparency = transparency,
 		}),
 		bottom_text = if bottom_text ~= nil and bottom_text ~= ""
 			then create_element(title_label, {
 				text = bottom_text,
 				top = false,
+				colour = current_title.colour,
 				transparency = transparency,
 			})
 			else nil,

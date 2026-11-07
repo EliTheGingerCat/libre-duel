@@ -1,10 +1,12 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
+local ServerScriptService = game:GetService("ServerScriptService")
 const ServerStorage = game:GetService("ServerStorage")
 const Teams = game:GetService("Teams")
 const Workspace = game:GetService("Workspace")
 
+local show_title = require(ServerScriptService.util.show_title)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const debug_print = require(script.Parent.Parent.util.debug_print)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
@@ -13,18 +15,19 @@ const map_data = require(ReplicatedStorage.shared.maps.map_data)
 const match_session = require(script.Parent.Parent.queue.match_session)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
-const LOADOUT: {[number]: inventory_types.item_id} = {
+const LOADOUT: { [number]: inventory_types.item_id } = {
 	[1] = "sword",
 	[2] = "pickaxe",
 	-- where the team clay will go (i couldn't think of anything better :broken_heart:)
 	[4] = "bow",
 	[5] = "cake",
 }
-const LOADOUT_AMOUNTS: {[inventory_types.item_id]: number} = {
+const LOADOUT_AMOUNTS: { [inventory_types.item_id]: number } = {
 	cake = 8,
+	clay = math.huge,
 }
 const CLAY_SLOT = 3
-const TEAM_CLAYS = {"red_clay", "blue_clay"} -- team1, team2
+const TEAM_CLAYS = { "red_clay", "blue_clay" } -- team1, team2
 
 type team = {
 	cage: Instance,
@@ -72,6 +75,10 @@ local function find_team_by_entity(state: state, entity: registry.entity): team?
 	return nil
 end
 
+local function get_opposing_team(state: state, team: team): team
+	return state.teams[team.index % #state.teams + 1]
+end
+
 -- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`.
 local function CFrame_from_position(position: Vector3): CFrame
 	return CFrame.new(position)
@@ -113,17 +120,29 @@ local function close_cages(state: state): ()
 	end
 end
 
-local function close_then_open_cages(state: state): ()
+local function close_then_open_cages(state: state, scoring_team: team?): ()
 	if current_state ~= state then
 		return
 	end
 	close_cages(state)
 	local function open_current_cages(): ()
 		if current_state == state then
+			for i = CAGE_TIME, 1, -1 do
+				show_title(
+					"all",
+					0.5,
+					2,
+					0.5,
+					if scoring_team then `{scoring_team.name} SCORED!` else `Opening cages in {i}...`,
+					if scoring_team then `Opening cages in {i}...` else nil,
+					if scoring_team then TEAM_COLOURS[scoring_team.index] else Color3.fromRGB(255, 255, 255)
+				)
+				task.wait(1)
+			end
 			open_cages(state)
 		end
 	end
-	task.delay(CAGE_TIME, open_current_cages)
+	task.spawn(open_current_cages)
 end
 
 -- GameStop
@@ -165,6 +184,15 @@ local function process_goal(state: state, entity: registry.entity, team: team): 
 	end
 
 	if team.points >= WIN_POINTS then
+		show_title(
+					"all",
+					0.5,
+					2,
+					0.5,
+					`{team.name} WON!`,
+					`{team.points} - {get_opposing_team(state, team).points}`,
+					TEAM_COLOURS[team.index]
+				)
 		debug_print(`Team "{team.name}" wins.`)
 		game_stop(state)
 		return
@@ -174,7 +202,7 @@ local function process_goal(state: state, entity: registry.entity, team: team): 
 	end
 
 	-- ~ investigate: It might be too slow to only set `cages_are_closed` at this point, since `cages_are_closed` is also used to debounce scoring.
-	close_then_open_cages(state)
+	close_then_open_cages(state, team)
 end
 
 local function create_map(): state
@@ -278,7 +306,7 @@ local function give_match_loadout(entity: registry.entity, team: team): ()
 		inventory_util.clear_inventory(inventory)
 		inventory_util.give_loadout(inventory, LOADOUT, LOADOUT_AMOUNTS)
 		--TODO: find a better approach for this. Even though the player *just* spawned, I don't know how I feel about directly overriding a slot.
-		inventory[CLAY_SLOT] = { item_id = TEAM_CLAYS[team.index], amount = 1 }
+		inventory[CLAY_SLOT] = { item_id = TEAM_CLAYS[team.index], amount = LOADOUT_AMOUNTS.clay }
 		inventory_util.replicate(entity)
 	end
 end
