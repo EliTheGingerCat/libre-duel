@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 local set_cube_transparency = require(ReplicatedStorage.shared.cube.set_cube_transparency)
@@ -9,13 +8,11 @@ const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
-const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const TRANSPARENCY_MAXIMUM = require(ReplicatedStorage.client.cube.TRANSPARENCY_MAXIMUM)
 
 local local_player = Players.LocalPlayer
 local local_mouse = local_player:GetMouse()
 
-local connection_input: RBXScriptConnection?
 local connection_heartbeat_passive: RBXScriptConnection?
 
 -- This whole id system is probably not necessary since RemoteEvent communication travels in order and Luau is single-threaded, but this system is already so complicated that I want this as a safeguard against insanity.
@@ -117,10 +114,8 @@ local function on_heartbeat_passive(): ()
 	mine_start(cube)
 end
 
-local activate_input_ended
 local function activate_heartbeat_passive(): ()
 	connection_heartbeat_passive = RunService.Heartbeat:Connect(on_heartbeat_passive)
-	activate_input_ended()
 	debug_print("Activated passive heartbeat.")
 end
 
@@ -138,27 +133,12 @@ local function local_mining_finished(state: state_local): ()
 	activate_heartbeat_passive()
 end
 
-local function on_input_ended(input: InputObject): ()
-	if input.UserInputType == KEYBINDS.tool_use then
-		if local_mining ~= nil then
-			mine_stop(local_mining)
-		end
-
-		disable_heartbeat_passive()
-
-		assert(connection_input, "language analysis")
-		connection_input:Disconnect()
-		connection_input = nil
-	end
-end
-
-function activate_input_ended(): ()
-	if connection_input ~= nil then
-		debug_print("`input_ended` is already connected.")
-		return
+local function stop_mining(): ()
+	if local_mining ~= nil then
+		mine_stop(local_mining)
 	end
 
-	connection_input = UserInputService.InputEnded:Connect(on_input_ended)
+	disable_heartbeat_passive()
 end
 
 -- If the return value is false, the client will stop mining.
@@ -253,10 +233,6 @@ function mine_start(cube: BasePart): ()
 
 	disable_heartbeat_passive()
 
-	if connection_input == nil then
-		activate_input_ended()
-	end
-
 	id += 1
 
 	local cube_target: Part = cube :: any
@@ -314,4 +290,7 @@ end
 ReplicatedStorage.remotes.mine_finished.OnClientEvent:Connect(on_mine_suceeded)
 ReplicatedStorage.remotes.mine_failed.OnClientEvent:Connect(on_mine_failed)
 
-return activate_heartbeat_passive
+return {
+	start = activate_heartbeat_passive,
+	stop = stop_mining,
+}

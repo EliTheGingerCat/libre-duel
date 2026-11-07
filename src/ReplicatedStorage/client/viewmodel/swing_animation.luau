@@ -13,7 +13,7 @@ local function play(): ()
     tween:Play()
 end
 
-local function get_offset(_delta_time: number): CFrame
+local function get_offset(): CFrame
     return CFrame.identity:Lerp(VIEWMODEL_CONSTANTS.swing_pose, progress.Value)
 end
 

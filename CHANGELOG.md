@@ -28,6 +28,10 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Changed
 
+- Left click now attacks with any held item and mines with a pickaxe, and right click uses the held item: swords block, cakes are eaten, cubes are placed, bows draw, and the mode selector opens.
+- Items other than swords deal less damage. Tune this with `NON_SWORD_DAMAGE`.
+- Opening a menu now stops whatever tool is being used.
+- Click-rate mitigation now counts each mouse button separately.
 - Queue modes are defined once in `shared/queue/QUEUE_MODES.luau`.
 - The crosshair is now the only code that changes the mouse cursor; menus request a free cursor through `cursor_state`.
 - Shared UI fonts and colours live in `FONTS.luau` and `COLOURS.luau`.
@@ -37,6 +41,8 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 
 ### Fixed
 
+- Switching away from the pickaxe now stops mining.
+- Blocking no longer sticks after losing window focus.
 - The infoboard now scales on small displays.
 - The ban command now passes a list of user IDs to `BanAsync`.
 - The server now rejects public keys that are not buffers.

@@ -1,33 +1,42 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
+const Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const UserInputService = game:GetService("UserInputService")
 
+const attack_melee = require(ReplicatedStorage.client.combat.attack_melee)
+const block_sword = require(script.Parent.sword.block_sword)
+const client_inventory_util = require(ReplicatedStorage.client.inventory.client_inventory_util)
+const create_tool_button = require(script.Parent.create_tool_button)
+const eat_cake = require(script.Parent.cake.eat_cake)
+const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
+const get_slot_tool = require(script.Parent.get_slot_tool)
+const inventory_state = require(ReplicatedStorage.client.ui.inventory.inventory_state)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+const mine_cube = require(script.Parent.pickaxe.mine_cube)
+const mode_selector_state = require(ReplicatedStorage.client.ui.matchmaking.mode_selector_state)
+const open_mode_selector = require(script.Parent.mode_selector.open_mode_selector)
+const place_cube = require(script.Parent.cube.place_cube)
+const pull_bow = require(script.Parent.bow.pull_bow)
 const STARTING_LOADOUT = require(ReplicatedStorage.shared.inventory.STARTING_LOADOUT)
-local attack_melee = require(script.Parent.sword.attack_melee)
-local client_inventory_util = require(ReplicatedStorage.client.inventory.client_inventory_util)
-local mine_cube = require(script.Parent.pickaxe.mine_cube)
-local eat_cake = require(script.Parent.cake.eat_cake)
-local editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
-local get_slot_tool = require(script.Parent.get_slot_tool)
-local inventory_state = require(ReplicatedStorage.client.ui.inventory.inventory_state)
-local mode_selector_state = require(ReplicatedStorage.client.ui.matchmaking.mode_selector_state)
-local open_mode_selector = require(script.Parent.mode_selector.open_mode_selector)
-local place_cube = require(script.Parent.cube.place_cube)
-local pull_bow = require(script.Parent.bow.pull_bow)
-local table_flip = require(ReplicatedStorage.client.util.table_flip)
-local tool_registry = require(ReplicatedStorage.shared.tools.registry)
-local tool_types = require(ReplicatedStorage.shared.tools.tool_types)
-local tool_state = require(script.Parent.tool_state)
+const table_flip = require(ReplicatedStorage.client.util.table_flip)
+const tool_state = require(script.Parent.tool_state)
+const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 const select_slot = ReplicatedStorage.remotes.select_slot
 
-const HANDLERS: { [tool_types.behaviour]: (tool: tool_types.tool) -> () } = {
-	bow = pull_bow,
-	cake = eat_cake,
-	cube = place_cube,
-	pickaxe = mine_cube,
-	mode_selector = open_mode_selector,
-	sword = attack_melee,
+const local_player = Players.LocalPlayer
+
+const TOOL_BUTTONS = {
+	-- attacking isn't listed because every tool does it
+	[KEYBINDS.tool_attack] = create_tool_button({
+		pickaxe = mine_cube,
+	}),
+	[KEYBINDS.tool_use] = create_tool_button({
+		bow = pull_bow,
+		cake = eat_cake,
+		cube = { start = place_cube },
+		mode_selector = { start = open_mode_selector },
+		sword = block_sword,
+	}),
 }
 
 local tool_selected: tool_types.tool? = nil
@@ -42,6 +51,9 @@ local function set_tool(slot: number): ()
 	end
 	tool_state.current = slot
 	tool_state.on_change:Fire(slot)
+	for _, tool_button in TOOL_BUTTONS do
+		tool_button.on_tool_changed(tool_selected)
+	end
 end
 
 local tool_cube = table.find(STARTING_LOADOUT, "cube")
@@ -74,16 +86,55 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 		return
 	end
 
-	-- handlers can yield, and using up the item changes tool_selected while they wait
-	const tool = tool_selected
-	if input.UserInputType == KEYBINDS.tool_use and tool ~= nil then
-		tool_state.on_use:Fire(tool)
-		for behaviour: tool_types.behaviour, handler in HANDLERS do
-			if tool_registry.has_behaviour(tool, behaviour) then
-				handler(tool)
-			end
-		end
+	const tool_button = TOOL_BUTTONS[input.UserInputType]
+	if tool_button == nil then
+		return
+	end
+
+	-- an empty hand presses too, so that switching to a tool while still holding the button uses it
+	tool_button.press(tool_selected)
+
+	if tool_selected == nil then
+		return
+	end
+
+	if input.UserInputType == KEYBINDS.tool_attack then
+		tool_state.on_attack:Fire()
+		attack_melee()
+	elseif input.UserInputType == KEYBINDS.tool_use then
+		tool_state.on_use:Fire()
+	end
+end
+
+local function on_input_ended(input: InputObject, game_processed: boolean): ()
+	const tool_button = TOOL_BUTTONS[input.UserInputType]
+	if tool_button == nil then
+		return
+	end
+	-- letting go over UI cancels the handler instead of finishing it, otherwise it would shoot the bow
+	if game_processed then
+		tool_button.interrupt()
+	else
+		tool_button.release()
+	end
+end
+
+local function interrupt_tool_buttons(): ()
+	for _, tool_button in TOOL_BUTTONS do
+		tool_button.interrupt()
+	end
+end
+
+local function on_menu_change(): ()
+	if editor_state.enabled or inventory_state.enabled or mode_selector_state.enabled then
+		interrupt_tool_buttons()
 	end
 end
 
 UserInputService.InputBegan:Connect(on_input_began)
+UserInputService.InputEnded:Connect(on_input_ended)
+UserInputService.WindowFocusReleased:Connect(interrupt_tool_buttons)
+local_player.CharacterRemoving:Connect(interrupt_tool_buttons)
+inventory_state.on_change:Connect(on_menu_change)
+mode_selector_state.on_change:Connect(on_menu_change)
+editor_state.subscribe(on_menu_change)

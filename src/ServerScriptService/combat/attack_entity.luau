@@ -12,10 +12,10 @@ const ENTITY_RANGE_SERVER = require(script.Parent.ENTITY_RANGE_SERVER)
 const get_player_cps = require(ServerScriptService.mitigation.get_player_cps)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const knockback_multiplier = require(script.Parent.knockback_multiplier)
+const MELEE_COOLDOWN_SERVER = require(script.Parent.MELEE_COOLDOWN_SERVER)
 const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONFIG)
 const play_sound = require(ServerScriptService.util.play_sound)
 const registry = require(ReplicatedStorage.shared.entity.registry)
-const SWORD_COOLDOWN_SERVER = require(script.Parent.SWORD_COOLDOWN_SERVER)
 
 type projectile_hit = {
 	direction: Vector3,
@@ -109,7 +109,7 @@ local function attack_entity(attacker: registry.entity, target: registry.entity,
 	if
 		is_melee
 		and type(attacker) ~= "string"
-		and get_player_cps(attacker) >= MITIGATION_CONFIG.cps_treshold
+		and get_player_cps(attacker, "attack") >= MITIGATION_CONFIG.cps_treshold
 		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
 	then
 		add_cooldown(attacker, "attack_melee_mitigation", MITIGATION_CONFIG.duration)
@@ -133,7 +133,7 @@ local function attack_entity(attacker: registry.entity, target: registry.entity,
 	play_sound("player_damaged", target_position)
 
 	if is_melee then
-		add_cooldown(attacker, "attack_melee", SWORD_COOLDOWN_SERVER)
+		add_cooldown(attacker, "attack_melee", MELEE_COOLDOWN_SERVER)
 	end
 	return true
 end

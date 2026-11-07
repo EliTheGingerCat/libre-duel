@@ -6,10 +6,10 @@ const debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 const get_mouse_target = require(script.Parent.get_mouse_target)
-const hit_feedback = require(ReplicatedStorage.client.combat.hit_feedback)
+const hit_feedback = require(script.Parent.hit_feedback)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
+const MELEE_COOLDOWN = require(ReplicatedStorage.shared.combat.MELEE_COOLDOWN)
 const registry = require(ReplicatedStorage.shared.entity.registry)
-const SWORD_COOLDOWN = require(ReplicatedStorage.shared.combat.SWORD_COOLDOWN)
 
 const local_player = Players.LocalPlayer
 
@@ -65,7 +65,7 @@ local function attack_melee(): ()
 	end
 
 	ReplicatedStorage.remotes.attack_entity:FireServer(target)
-	add_cooldown(local_player, "attack_melee", SWORD_COOLDOWN)
+	add_cooldown(local_player, "attack_melee", MELEE_COOLDOWN)
 	hit_feedback.report(distance)
 end
 

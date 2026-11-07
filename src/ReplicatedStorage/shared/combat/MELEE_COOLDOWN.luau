@@ -1,0 +1,3 @@
+const MELEE_COOLDOWN = 0.35
+
+return MELEE_COOLDOWN

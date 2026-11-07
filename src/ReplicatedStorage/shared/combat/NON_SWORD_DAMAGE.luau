@@ -1,0 +1,3 @@
+const NON_SWORD_DAMAGE = 2
+
+return NON_SWORD_DAMAGE

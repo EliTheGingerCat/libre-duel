@@ -11,14 +11,14 @@ export type display = {
     update: ((tool: tool_types.tool) -> ())?,
 }
 
--- what the viewmodel does when an item is used
+-- how an item is posed while it is being used
 export type use_animation = {
-    play: (() -> ())?,
     get_offset: (delta_time: number) -> CFrame,
 }
 
 export type style = {
     display: display,
+    swings_on_use: boolean?,
     use_animation: use_animation?,
 }
 

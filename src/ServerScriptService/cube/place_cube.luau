@@ -62,7 +62,7 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, appea
 
 	if
 		type(entity) ~= "string"
-		and get_player_cps(entity) >= MITIGATION_CONFIG.cps_treshold
+		and get_player_cps(entity, "use") >= MITIGATION_CONFIG.cps_treshold
 		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
 	then
 		add_cooldown(entity, "place_cube_mitigation", MITIGATION_CONFIG.duration)

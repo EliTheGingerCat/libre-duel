@@ -2,10 +2,10 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
 const Workspace = game:GetService("Workspace")
 
-const block_animation = require(script.Parent.block_animation)
 const get_slot_tool = require(script.Parent.Parent.tools.get_slot_tool)
 const get_viewmodel_style = require(script.Parent.get_viewmodel_style)
 const get_zoom_transparency = require(script.Parent.get_zoom_transparency)
+const swing_animation = require(script.Parent.swing_animation)
 const tool_state = require(script.Parent.Parent.tools.tool_state)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 const update_bob = require(script.Parent.update_bob)
@@ -33,9 +33,8 @@ const function on_tool_change(slot: number): ()
 end
 
 const function on_tool_used(): ()
-    const use_animation = if current_style ~= nil then current_style.use_animation else nil
-    if use_animation ~= nil and use_animation.play ~= nil then
-        use_animation.play()
+    if current_style ~= nil and current_style.swings_on_use then
+        swing_animation.play()
     end
 end
 
@@ -62,14 +61,14 @@ const function on_render_stepped(delta_time: number): ()
     part.CFrame = CurrentCamera.CFrame
         * VIEWMODEL_CONSTANTS.offset
         * bob_offset
-        * block_animation.get_offset()
         * use_offset
+        * swing_animation.get_offset()
         * VIEWMODEL_CONSTANTS.item_rotation
 end
 
 tool_state.on_change:Connect(on_tool_change)
+tool_state.on_attack:Connect(swing_animation.play)
 tool_state.on_use:Connect(on_tool_used)
-tool_state.on_block_change:Connect(block_animation.set_blocking)
 RunService.RenderStepped:Connect(on_render_stepped)
 
 -- tools.client may have already selected the first slot before this connected
