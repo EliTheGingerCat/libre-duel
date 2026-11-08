@@ -14,6 +14,8 @@ const update_inventory = ReplicatedStorage.remotes.update_inventory
 
 local inventory_util = {
 	created = signal.new(),
+	-- fires with the entity whenever its selected tool might be different
+	changed = signal.new(),
 }
 
 function inventory_util.generate_inventory(entity: registry.entity): inventory_types.inventory | false
@@ -32,6 +34,7 @@ function inventory_util.get_inventory(entity: registry.entity): inventory_types.
 end
 
 function inventory_util.replicate(entity: registry.entity): ()
+	inventory_util.changed:Fire(entity)
 	if type(entity) ~= "string" then
 		update_inventory:FireClient(entity, { inventory = entity_inventories[entity] })
 	end
@@ -89,6 +92,7 @@ end
 
 function inventory_util.set_selected_slot(entity: registry.entity, slot_index: number): ()
 	entity_selected_slots[entity] = slot_index
+	inventory_util.changed:Fire(entity)
 end
 
 function inventory_util.clear_selected_slot(entity: registry.entity): ()

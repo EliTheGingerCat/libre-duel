@@ -38,6 +38,7 @@ local function on_request(player: Player, arguments: unknown): ()
 		last_request_times[player] = now
 		-- slot validation happens inside the action, on failure the unchanged inventory is resent
 		action(inventory, request.from :: number, request.to :: number)
+		inventory_util.changed:Fire(player)
 	end
 	update_inventory:FireClient(player, { inventory = inventory, id = id })
 end
