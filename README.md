@@ -209,10 +209,7 @@ return IPinfo_token
 - It is preferred to use British English spelling (such as "colour" instead of "color").
 
 ## Frameworks in use
-Right now, Libre Duel uses two frameworks:
-- [React Lua](<https://github.com/jsdotlua/react-lua>)
-- [Chrono](<https://github.com/parihsz/chrono>)
-- [RbxUtil/Signal](<https://sleitnick.github.io/RbxUtil/api/Signal/>)
+Right now, Libre Duel uses a couple of frameworks. Notably, it uses React for UI, Signal for events in pure Luau, Chrono for faster movement replication, and Drop for interacting with player data.
 
 ## Credits
 
