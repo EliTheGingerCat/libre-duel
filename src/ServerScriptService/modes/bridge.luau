@@ -1,12 +1,13 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
-local ServerScriptService = game:GetService("ServerScriptService")
+const ServerScriptService = game:GetService("ServerScriptService")
 const ServerStorage = game:GetService("ServerStorage")
 const Teams = game:GetService("Teams")
 const Workspace = game:GetService("Workspace")
 
-local show_title = require(ServerScriptService.util.show_title)
+const award_stat = require(ServerScriptService.player_data.award_stat)
+const show_title = require(ServerScriptService.util.show_title)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 const debug_print = require(script.Parent.Parent.util.debug_print)
@@ -15,6 +16,7 @@ const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
 const map_data = require(ReplicatedStorage.shared.maps.map_data)
 const match_session = require(script.Parent.Parent.queue.match_session)
 const registry = require(ReplicatedStorage.shared.entity.registry)
+const GAME_STATS = require(ReplicatedStorage.shared.modes.GAME_STATS)
 
 const LOADOUT: { [number]: inventory_types.item_id } = {
 	[1] = "sword",
@@ -196,6 +198,17 @@ local function process_goal(state: state, entity: registry.entity, team: team): 
 					TEAM_COLOURS[team.index]
 				)
 		debug_print(`Team "{team.name}" wins.`)
+		if current_definition then
+			-- Hand out the Dubs
+			for _, v in ipairs(team.entities) do
+				award_stat(v, current_definition.id, "wins")
+			end
+			-- then the Ls...
+			for _, v in ipairs(get_opposing_team(state, team).entities) do
+				award_stat(v, current_definition.id, "losses")
+			end
+		end
+
 		game_stop(state)
 		return
 	else
