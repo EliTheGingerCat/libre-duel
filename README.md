@@ -94,7 +94,7 @@ Run `lune list` for an explanation of what each command does. Output:
 - `sourcemap` - Create a mapping of the filesystem into Roblox objects.
 - `syncback` - Sync instances from the built Place into the filesystem.
 
-The build, serve, and sourcemap scripts refresh `git_info.project.json` automatically. When using Rojo directly, run `lune run git_info` after new commits to refresh the About tab metadata, then use commands such as `rojo serve no_map.project.json` normally. The generated file is ignored by Git; the licence is read directly from `LICENSE.txt`.
+The build, serve, and sourcemap scripts refresh `git_info.project.json` automatically. When using Rojo directly, run `lune run git_info` after new commits to refresh the About tab metadata (which is shown in the Settings menu), then use commands such as `rojo serve no_map.project.json` normally. The generated file is ignored by Git; the licence is read directly from `LICENSE.txt` to be put into the About tab.
 
 Sourcemapping and serving are the main utilities. However, `sourcemap` and `serve` are both simple Rojo commands that do not depend on the name of the game, so there is not really any strong reason to use them. I use `sourcemap` anyway.
 
