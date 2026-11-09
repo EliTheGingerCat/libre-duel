@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 
 local React = require(ReplicatedStorage.Packages.react)
+local scale_animation_time = require(script.Parent.Parent.effects.scale_animation_time)
 
 -- Bindings update the native properties without rendering React on every frame.
 local function use_ui_motion(target: number, initial: number?, start: number?)
@@ -29,10 +30,8 @@ local function use_ui_motion(target: number, initial: number?, start: number?)
 		if start then
 			driver.Value = start
 		end
-		local tween =
-			TweenService:Create(driver, TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-				Value = target,
-			})
+		local info = TweenInfo.new(scale_animation_time(0.28), Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+		local tween = TweenService:Create(driver, info, { Value = target })
 		local function apply_preference(): ()
 			if GuiService.ReducedMotionEnabled then
 				tween:Cancel()

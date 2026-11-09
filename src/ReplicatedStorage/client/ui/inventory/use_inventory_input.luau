@@ -8,6 +8,7 @@ local client_inventory_util = require(ReplicatedStorage.client.inventory.client_
 local get_slot_at_position = require(script.Parent.get_slot_at_position)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
+local scale_animation_time = require(script.Parent.Parent.effects.scale_animation_time)
 local table_flip = require(ReplicatedStorage.client.util.table_flip)
 
 -- Moving further than this between press and release counts as a drag instead of a click.
@@ -129,7 +130,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			end
 
 			set_flights(append)
-			task.delay(FLIGHT_DURATION, finish)
+			task.delay(scale_animation_time(FLIGHT_DURATION), finish)
 		end
 
 		-- must run before the move, since it reads where the item is about to go

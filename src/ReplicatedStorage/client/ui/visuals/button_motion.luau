@@ -5,6 +5,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local React = require(ReplicatedStorage.Packages.react)
 local button_tug = require(script.Parent.controls.button_tug)
+local scale_animation_time = require(script.Parent.Parent.effects.scale_animation_time)
 
 local function button_motion(props: { animate_colour: boolean? })
 	local ref = React.useRef(nil :: UIScale?)
@@ -46,9 +47,13 @@ local function button_motion(props: { animate_colour: boolean? })
 				end
 				return
 			end
-			local info = TweenInfo.new(if down then 0.09 else 0.24, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+			local info = TweenInfo.new(
+				scale_animation_time(if down then 0.09 else 0.24),
+				Enum.EasingStyle.Quint,
+				Enum.EasingDirection.Out
+			)
 			local scale_info = if released and active
-				then TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+				then TweenInfo.new(scale_animation_time(0.45), Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 				else info
 			local next_scale_tween = TweenService:Create(scale, scale_info, { Scale = factor })
 			scale_tween = next_scale_tween

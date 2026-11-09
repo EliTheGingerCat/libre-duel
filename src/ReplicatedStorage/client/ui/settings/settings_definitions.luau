@@ -64,6 +64,17 @@ local function settings_definitions(): ()
 			visible = ui_blur_unsupported,
 			parent = "ui_blur",
 		},
+		{
+			category = "interface",
+			id = "ui_animation_scale",
+			kind = "slider",
+			text = "UI animation scale",
+			default = 100,
+			minimum = 0,
+			maximum = 200,
+			step = 10,
+			suffix = "%",
+		},
 	}
 	for _, entry in entries do
 		settings_registry.register(entry)

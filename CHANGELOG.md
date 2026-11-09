@@ -26,6 +26,7 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - HUD editor snap guides, widget outlines, and a reset button.
 - Play button above the hotbar that opens the mode selector.
 - Selected tools are now visible in third person, held in the character's right hand.
+- UI animation scale setting.
 
 ### Changed
 

@@ -1,6 +1,8 @@
 local GuiService = game:GetService("GuiService")
 local TweenService = game:GetService("TweenService")
 
+local scale_animation_time = require(script.Parent.Parent.Parent.effects.scale_animation_time)
+
 type controller = {
 	begin: (Vector2) -> (),
 	drag: (Vector2) -> (),
@@ -63,7 +65,7 @@ local function button_tug(button: GuiButton): controller
 			local next_tween = TweenService:Create(
 				button,
 				TweenInfo.new(
-					if released then 0.4 else 0.2,
+					scale_animation_time(if released then 0.4 else 0.2),
 					if released then Enum.EasingStyle.Back else Enum.EasingStyle.Quint,
 					Enum.EasingDirection.Out
 				),
