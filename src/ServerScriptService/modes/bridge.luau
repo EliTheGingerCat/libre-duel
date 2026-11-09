@@ -8,7 +8,7 @@ const Workspace = game:GetService("Workspace")
 
 local show_title = require(ServerScriptService.util.show_title)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
-const GAME_MODES = require(ReplicatedStorage.shared.queue.GAME_MODES)
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 const debug_print = require(script.Parent.Parent.util.debug_print)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
@@ -53,6 +53,7 @@ type state = {
 
 local active = false
 const CAGE_TIME = 3
+local current_definition: MODE_DEFINITIONS.definition? = nil
 local current_state: state? = nil
 local loaded_map: Instance? = nil
 const WIN_POINTS = 5
@@ -455,11 +456,12 @@ local function on_entity_removed(entity: registry.entity): ()
 	on_entities_changed()
 end
 
-local function start(): ()
+local function start(definition: MODE_DEFINITIONS.definition): ()
 	if enabled then
 		return
 	end
 	enabled = true
+	current_definition = definition
 	added_connection = registry.added:Connect(on_entity_added)
 	removed_connection = registry.removed:Connect(on_entity_removed)
 
@@ -473,6 +475,7 @@ end
 
 local function stop(): ()
 	enabled = false
+	current_definition = nil
 	if start_thread then
 		task.cancel(start_thread)
 		start_thread = nil
@@ -496,7 +499,6 @@ local function stop(): ()
 end
 
 return {
-	reserved_server_types = GAME_MODES.bridge,
 	studio = true,
 	start = start,
 	stop = stop,

@@ -1,11 +1,11 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 local React = require(ReplicatedStorage.Packages.react)
 local parse_queue_mode = require(ReplicatedStorage.shared.queue.parse_queue_mode)
 
-export type status = { mode: MODE_OPTIONS.mode?, elapsed: number, teleporting: boolean }
+export type status = { mode: MODE_DEFINITIONS.mode_id?, elapsed: number, teleporting: boolean }
 
 local function use_queue_status(): status
 	local state, set_state = React.useState({ mode = nil, elapsed = 0, teleporting = false } :: status)
@@ -13,7 +13,7 @@ local function use_queue_status(): status
 		local player = Players.LocalPlayer
 		local timer: thread? = nil
 		local function update(): ()
-			local mode = parse_queue_mode(player:GetAttribute("queue_mode"))
+			local mode: MODE_DEFINITIONS.mode_id? = parse_queue_mode(player:GetAttribute("queue_mode"))
 			local started_at = player:GetAttribute("queue_started_at")
 			local valid = mode ~= nil and typeof(started_at) == "number"
 			set_state({

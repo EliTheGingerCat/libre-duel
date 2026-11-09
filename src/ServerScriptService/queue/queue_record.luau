@@ -1,10 +1,11 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
-const QUEUE_MODES = require(ReplicatedStorage.shared.queue.QUEUE_MODES)
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
+const get_mode_definition = require(ReplicatedStorage.shared.modes.get_mode_definition)
 const parse_queue_mode = require(ReplicatedStorage.shared.queue.parse_queue_mode)
 
-export type mode = QUEUE_MODES.mode
+export type mode = MODE_DEFINITIONS.mode_id
 export type status = "waiting" | "ready" | "started" | "cancelled"
 export type member = {
 	user_id: number,
@@ -80,7 +81,7 @@ local function decode(value: unknown): record?
 	end
 	const teams: { [string]: { [string]: member } } = {}
 	const seen: { [string]: boolean } = {}
-	const settings = QUEUE_CONFIG.modes[mode]
+	const settings = get_mode_definition(mode)
 	for team_index = 1, settings.teams do
 		const team_name = `team{team_index}`
 		const raw_members = as_dictionary(raw_teams[team_name])
@@ -116,7 +117,7 @@ end
 
 local function create(id: string, mode: mode, matchmaking_type: number): record
 	const teams: { [string]: { [string]: member } } = {}
-	for team_index = 1, QUEUE_CONFIG.modes[mode].teams do
+	for team_index = 1, get_mode_definition(mode).teams do
 		teams[`team{team_index}`] = {}
 	end
 	return {
@@ -175,7 +176,7 @@ local function claim(entry: record, user_id: number, token: string, source_job_i
 		return false
 	end
 	local smallest: { [string]: member }? = nil
-	local smallest_size = QUEUE_CONFIG.modes[entry.mode].entities_per_team
+	local smallest_size = get_mode_definition(entry.mode).entities_per_team
 	for _, members in entry.teams do
 		local size = 0
 		for _ in members do
@@ -195,7 +196,7 @@ local function claim(entry: record, user_id: number, token: string, source_job_i
 		source_job_id = source_job_id,
 		expires_at = now + QUEUE_CONFIG.slot_lifetime,
 	}
-	const settings = QUEUE_CONFIG.modes[entry.mode]
+	const settings = get_mode_definition(entry.mode)
 	if count_members(entry) == settings.teams * settings.entities_per_team then
 		entry.status = "ready"
 		entry.arrival_deadline = now + QUEUE_CONFIG.arrival_timeout

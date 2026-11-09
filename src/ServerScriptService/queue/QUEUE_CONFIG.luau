@@ -14,10 +14,6 @@ const QUEUE_CONFIG = {
 	subscribe_attempts = 3,
 	retry_backoff_base = 2,
 	join_interval = 2,
-	modes = {
-		solo = { teams = 2, entities_per_team = 1 },
-		duos = { teams = 2, entities_per_team = 2 },
-	},
 }
 
 return QUEUE_CONFIG

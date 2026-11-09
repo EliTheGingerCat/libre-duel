@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
-const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
+const get_mode_definition = require(ReplicatedStorage.shared.modes.get_mode_definition)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
@@ -28,7 +28,7 @@ local function queue_status(props: use_editable_hud.props)
 	local factor = use_viewport_scale()
 	local busy, set_busy = React.useState(false)
 	local pending = React.useRef(false)
-	local option = MODE_OPTIONS[state.mode or "solo"]
+	local option = get_mode_definition(state.mode or "bridge_solo")
 	local function cancel(): ()
 		if pending.current or editor_enabled or props.preview or state.teleporting then
 			return

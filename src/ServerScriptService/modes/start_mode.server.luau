@@ -1,12 +1,16 @@
 const Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
 
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
+const get_mode_definition = require(ReplicatedStorage.shared.modes.get_mode_definition)
 const get_server_type = require(script.Parent.Parent.util.get_server_type)
+const parse_queue_mode = require(ReplicatedStorage.shared.queue.parse_queue_mode)
 
+type definition = MODE_DEFINITIONS.definition
 type mode = {
-	reserved_server_types: { string },
 	studio: boolean?,
-	start: () -> (),
+	start: (definition) -> (),
 	stop: () -> (),
 }
 
@@ -20,22 +24,19 @@ for _, module in script.Parent:GetChildren() do
 		continue
 	end
 	const mode = load_mode(module)
-	for _, server_type in mode.reserved_server_types do
-		assert(modes[server_type] == nil, `Duplicate mode registration for {server_type}`)
-		modes[server_type] = mode
-	end
+	modes[module.Name] = mode
 	if mode.studio then
 		assert(studio_mode == nil, "Only one mode can be enabled in Studio")
 		studio_mode = mode
 	end
 end
 
-local function start_mode(mode: mode): ()
+local function start_mode(mode: mode, definition: definition): ()
 	if current_mode then
 		return
 	end
 	current_mode = mode
-	mode.start()
+	mode.start(definition)
 end
 
 local function stop_mode(): ()
@@ -48,8 +49,11 @@ end
 game:BindToClose(stop_mode)
 
 if RunService:IsStudio() then
-	if studio_mode then
-		start_mode(studio_mode)
+	for _, definition in MODE_DEFINITIONS do
+		if studio_mode and modes[definition.game] == studio_mode then
+			start_mode(studio_mode, definition)
+			break
+		end
 	end
 	return
 end
@@ -69,14 +73,15 @@ local function on_player_added(player: Player): ()
 	end
 
 	const fields = data :: { [string]: unknown }
-	const server_type = fields.queue_mode
-	if typeof(server_type) ~= "string" then
+	const mode_id: MODE_DEFINITIONS.mode_id? = parse_queue_mode(fields.queue_mode)
+	if mode_id == nil then
 		return
 	end
 
-	const mode = modes[server_type]
+	const definition = get_mode_definition(mode_id)
+	const mode = modes[definition.game]
 	if mode then
-		start_mode(mode)
+		start_mode(mode, definition)
 	end
 end
 

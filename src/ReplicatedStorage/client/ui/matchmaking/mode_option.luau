@@ -2,8 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
-const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
-const QUEUE_MODES = require(ReplicatedStorage.shared.queue.QUEUE_MODES)
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
+const get_mode_definition = require(ReplicatedStorage.shared.modes.get_mode_definition)
 local React = require(ReplicatedStorage.Packages.react)
 local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
@@ -12,14 +12,19 @@ local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
-local function mode_option(props: { mode: MODE_OPTIONS.mode, busy: boolean, on_join: (MODE_OPTIONS.mode) -> () })
-	local option = MODE_OPTIONS[props.mode]
+local function mode_option(props: {
+	mode: MODE_DEFINITIONS.mode_id,
+	layout_order: number,
+	busy: boolean,
+	on_join: (MODE_DEFINITIONS.mode_id) -> (),
+})
+	local option = get_mode_definition(props.mode)
 	local function activate(): ()
 		props.on_join(props.mode)
 	end
 	return create_element(animated_button, {
 		Name = `{props.mode}_button`,
-		LayoutOrder = table.find(QUEUE_MODES, props.mode),
+		LayoutOrder = props.layout_order,
 		Size = UDim2.new(1, 0, 0, 192),
 		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,

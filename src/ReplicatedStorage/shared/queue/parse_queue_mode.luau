@@ -1,9 +1,11 @@
-const QUEUE_MODES = require(script.Parent.QUEUE_MODES)
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local function parse_queue_mode(value: unknown): QUEUE_MODES.mode?
-	for _, mode in QUEUE_MODES do
-		if value == mode then
-			return mode
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
+
+local function parse_queue_mode(value: unknown): MODE_DEFINITIONS.mode_id?
+	for _, definition in MODE_DEFINITIONS do
+		if value == definition.id then
+			return definition.id
 		end
 	end
 	return nil

@@ -1,7 +1,9 @@
 const Players = game:GetService("Players")
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const TeleportService = game:GetService("TeleportService")
 
 const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
+const get_mode_definition = require(ReplicatedStorage.shared.modes.get_mode_definition)
 const match_session = require(script.Parent.match_session)
 const queue_lobby = require(script.Parent.queue_lobby)
 const queue_record = require(script.Parent.queue_record)
@@ -23,7 +25,7 @@ const validating: { [Player]: boolean } = {}
 local current: context? = nil
 
 local function all_present(context: context, entry: record): boolean
-	const settings = QUEUE_CONFIG.modes[entry.mode]
+	const settings = get_mode_definition(entry.mode)
 	if queue_record.count_members(entry) ~= settings.teams * settings.entities_per_team then
 		return false
 	end

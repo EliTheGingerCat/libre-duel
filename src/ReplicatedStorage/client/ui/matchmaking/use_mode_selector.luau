@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
-const MODE_OPTIONS = require(script.Parent.MODE_OPTIONS)
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 local React = require(ReplicatedStorage.Packages.react)
 local editor_state = require(script.Parent.Parent.hud.editor_state)
 local mode_selector_state = require(script.Parent.mode_selector_state)
@@ -12,7 +12,7 @@ local function close(): ()
 	mode_selector_state.set_enabled(false)
 end
 
-local function use_mode_selector(): { enabled: boolean, busy: boolean, close: () -> (), join: (MODE_OPTIONS.mode) -> () }
+local function use_mode_selector(): { enabled: boolean, busy: boolean, close: () -> (), join: (MODE_DEFINITIONS.mode_id) -> () }
 	local enabled, set_enabled = React.useState(mode_selector_state.enabled)
 	local busy, set_busy = React.useState(false)
 	local pending = React.useRef(false)
@@ -43,7 +43,7 @@ local function use_mode_selector(): { enabled: boolean, busy: boolean, close: ()
 	end
 	React.useEffect(subscribe, {})
 
-	local function join(mode: MODE_OPTIONS.mode): ()
+	local function join(mode: MODE_DEFINITIONS.mode_id): ()
 		if pending.current then
 			return
 		end

@@ -1,6 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const QUEUE_MODES = require(ReplicatedStorage.shared.queue.QUEUE_MODES)
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 local React = require(ReplicatedStorage.Packages.react)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
 local mode_option = require(script.Parent.mode_option)
@@ -13,8 +13,11 @@ local function mode_selector()
 	local children: { [string]: unknown } = {
 		layout = create_element("UIListLayout", { Padding = UDim.new(0, 20), SortOrder = Enum.SortOrder.LayoutOrder }),
 	}
-	for _, mode in QUEUE_MODES do
-		children[mode] = create_element(mode_option, { mode = mode, busy = state.busy, on_join = state.join })
+	for index, definition in MODE_DEFINITIONS do
+		children[definition.id] = create_element(
+			mode_option,
+			{ mode = definition.id, layout_order = index, busy = state.busy, on_join = state.join }
+		)
 	end
 	return create_element(
 		menu_window,
