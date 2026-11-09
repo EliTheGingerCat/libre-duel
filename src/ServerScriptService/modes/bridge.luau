@@ -8,6 +8,7 @@ const Workspace = game:GetService("Workspace")
 
 local show_title = require(ServerScriptService.util.show_title)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const GAME_MODES = require(ReplicatedStorage.shared.queue.GAME_MODES)
 const debug_print = require(script.Parent.Parent.util.debug_print)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
@@ -495,7 +496,7 @@ local function stop(): ()
 end
 
 return {
-	reserved_server_types = { "solo", "duo" },
+	reserved_server_types = GAME_MODES.bridge,
 	studio = true,
 	start = start,
 	stop = stop,

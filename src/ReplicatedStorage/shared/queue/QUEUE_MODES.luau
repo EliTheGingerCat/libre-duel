@@ -1,9 +1,7 @@
-export type mode = "solo" | "duo"
+const GAME_MODES = require(script.Parent.GAME_MODES)
 
--- The single source of truth for queue modes, in the order they are shown to players.
-const QUEUE_MODES: { mode } = {
-	"solo",
-	"duo",
-}
+export type mode = GAME_MODES.submode
+
+const QUEUE_MODES: { mode } = GAME_MODES.bridge
 
 return QUEUE_MODES

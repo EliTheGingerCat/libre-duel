@@ -17,7 +17,7 @@ const MODE_OPTIONS = {
 		icon = "rbxassetid://74540463397999",
 		colour = Color3.new(139 / 255, 1, 247 / 255),
 	},
-	duo = {
+	duos = {
 		name = "Duos",
 		description = "Play with a teammate!",
 		icon = "rbxassetid://100734044686485",

@@ -16,7 +16,7 @@ const QUEUE_CONFIG = {
 	join_interval = 2,
 	modes = {
 		solo = { teams = 2, entities_per_team = 1 },
-		duo = { teams = 2, entities_per_team = 2 },
+		duos = { teams = 2, entities_per_team = 2 },
 	},
 }
 
