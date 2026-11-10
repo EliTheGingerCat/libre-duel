@@ -87,9 +87,10 @@ local function attack_entity(attacker: registry.entity, target: registry.entity,
 
 	--i'm surprised this basic sanity check was not yet added
 	--credits to nothm for finding
+	const attacker_player = registry.get_player(attacker)
 	if is_melee and attacker_character == target_character then
-		if is_melee and type(attacker) ~= "string" then
-			attacker:Kick("Cheating")
+		if attacker_player then
+			attacker_player:Kick("Cheating")
 		end
 		return false
 	end
@@ -114,8 +115,8 @@ local function attack_entity(attacker: registry.entity, target: registry.entity,
 
 	if
 		is_melee
-		and type(attacker) ~= "string"
-		and get_player_cps(attacker, "attack") >= MITIGATION_CONFIG.cps_treshold
+		and attacker_player
+		and get_player_cps(attacker_player, "attack") >= MITIGATION_CONFIG.cps_treshold
 		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
 	then
 		add_cooldown(attacker, "attack_melee_mitigation", MITIGATION_CONFIG.duration)

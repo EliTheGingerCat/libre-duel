@@ -28,12 +28,14 @@ local function on_character_added(character: Model, entity: registry.entity): ()
 	const container = Instance.new("Folder")
 	const tree = ReactRoblox.createRoot(container)
 
+	const player = registry.get_player(entity)
+
 	local function render(): ()
 		local team = registry.get_team(entity)
 		tree:render(ReactRoblox.createPortal(
 			create_element(nametag, {
 				adornee = head,
-				name = if type(entity) == "string" then registry.get_name(entity) else entity.DisplayName,
+				name = if player then player.DisplayName else registry.get_name(entity),
 				colour = if team then team.TeamColor.Color else Color3.fromRGB(255, 255, 255),
 				extra_text = `♥ {math.round(humanoid.Health)}`,
 			}),
@@ -57,8 +59,8 @@ local function on_character_added(character: Model, entity: registry.entity): ()
 	const health_connection = humanoid.HealthChanged:Connect(render)
 	const identity_connection = registry.changed:Connect(on_identity_changed)
 	local display_name_connection: RBXScriptConnection? = nil
-	if type(entity) ~= "string" then
-		display_name_connection = entity:GetPropertyChangedSignal("DisplayName"):Connect(render)
+	if player then
+		display_name_connection = player:GetPropertyChangedSignal("DisplayName"):Connect(render)
 	end
 	local destroying_connection: RBXScriptConnection? = nil
 	local active = true

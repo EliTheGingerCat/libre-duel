@@ -4,7 +4,6 @@ const ServerStorage = game:GetService("ServerStorage")
 const Workspace = game:GetService("Workspace")
 
 const award_stat = require(ServerScriptService.player_data.award_stat)
-const cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
 const GAME_STATS = require(ReplicatedStorage.shared.modes.GAME_STATS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
@@ -58,9 +57,7 @@ end
 
 local function fire_all(match: match, remote: RemoteEvent, ...: unknown): ()
 	for _, entity in match.entities do
-		if type(entity) ~= "string" then
-			remote:FireClient(entity, ...)
-		end
+		registry.fire_client(entity, remote, ...)
 	end
 end
 
@@ -74,8 +71,9 @@ local function show_title(
 	colour: Color3?
 ): ()
 	for _, entity in match.entities do
-		if type(entity) ~= "string" then
-			show_title_to(entity, fade_in, stay, fade_out, top_text, bottom_text, colour)
+		const player = registry.get_player(entity)
+		if player then
+			show_title_to(player, fade_in, stay, fade_out, top_text, bottom_text, colour)
 		end
 	end
 end
@@ -103,9 +101,7 @@ end
 local function register(match: match, entity: registry.entity): ()
 	entity_matches[entity] = match
 	table.insert(match.entities, entity)
-	if type(entity) ~= "string" then
-		ReplicatedStorage.remotes.game_is_active:FireClient(entity, true)
-	end
+	registry.fire_client(entity, ReplicatedStorage.remotes.game_is_active, true)
 	const character = registry.get_character(entity)
 	if character then
 		task.spawn(watch_death, match, entity, character)
@@ -118,9 +114,7 @@ local function unregister(match: match, entity: registry.entity): ()
 	if index then
 		table.remove(match.entities, index)
 	end
-	if type(entity) ~= "string" then
-		ReplicatedStorage.remotes.game_is_active:FireClient(entity, false)
-	end
+	registry.fire_client(entity, ReplicatedStorage.remotes.game_is_active, false)
 end
 
 local function add_entity(match: match, entity: registry.entity): ()
@@ -156,7 +150,6 @@ local function clear_remains(slot: number): ()
 		old.map = nil
 	end
 	for cube in old.cubes do
-		cube_cache[cube.Position] = nil
 		cube:Destroy()
 	end
 end

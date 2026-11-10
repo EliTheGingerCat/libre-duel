@@ -3,7 +3,6 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
 const ServerScriptService = game:GetService("ServerScriptService")
 
-const cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
@@ -60,10 +59,7 @@ local function mine_finished(mining: mining): ()
 	end
 	const cube = mining.cube
 	cube:Destroy()
-	cube_cache[cube.Position] = nil
-	if type(mining.entity) ~= "string" then
-		ReplicatedStorage.remotes.mine_finished:FireClient(mining.entity, mining.id)
-	end
+	registry.fire_client(mining.entity, ReplicatedStorage.remotes.mine_finished, mining.id)
 end
 
 local function fire_excluding(remote: RemoteEvent, entity: registry.entity, cube: Part, time_fraction: number): ()
@@ -83,9 +79,7 @@ local function mine_fail(mining: mining): ()
 	if not mine_ceased(mining) then
 		return
 	end
-	if type(mining.entity) ~= "string" then
-		ReplicatedStorage.remotes.mine_failed:FireClient(mining.entity, mining.id)
-	end
+	registry.fire_client(mining.entity, ReplicatedStorage.remotes.mine_failed, mining.id)
 	mine_progress(mining, 0)
 end
 

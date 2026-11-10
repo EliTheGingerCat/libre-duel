@@ -9,17 +9,14 @@ export type stats = {
 	losses: number,
 	deaths: number,
 }
-export type modes = {
-	bridge_solo: stats,
-	bridge_duos: stats,
-}
+export type modes = { [mode]: stats }
 
 const DEFAULT_STATS: stats = { wins = 0, goals = 0, kills = 0, losses = 0, deaths = 0 }
 
--- The default stats for each mode, keyed by the id in MODE_DEFINITIONS.
-const GAME_STATS: modes = {
-	bridge_solo = table.clone(DEFAULT_STATS),
-	bridge_duos = table.clone(DEFAULT_STATS),
-}
+-- The default stats for each mode in MODE_DEFINITIONS.
+const GAME_STATS: modes = {}
+for _, definition in MODE_DEFINITIONS do
+	GAME_STATS[definition.id] = table.clone(DEFAULT_STATS)
+end
 
 return GAME_STATS

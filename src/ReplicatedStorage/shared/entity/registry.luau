@@ -46,6 +46,17 @@ local function get_character(entity: entity): Model?
 	return entity.Character
 end
 
+local function get_player(entity: entity): Player?
+	return if type(entity) == "string" then nil else entity
+end
+
+-- Bots have no client, so firing to one does nothing.
+local function fire_client(entity: entity, remote: RemoteEvent, ...: unknown): ()
+	if type(entity) ~= "string" then
+		remote:FireClient(entity, ...)
+	end
+end
+
 local function from_character(character: Model): entity?
 	return Players:GetPlayerFromCharacter(character) or bot_ids[character]
 end
@@ -232,10 +243,12 @@ return {
 	added = added,
 	changed = changed,
 	character_added = character_added,
+	fire_client = fire_client,
 	from_character = from_character,
 	get_all = get_all,
 	get_character = get_character,
 	get_name = get_name,
+	get_player = get_player,
 	get_team = get_team,
 	register_bot = register_bot,
 	removed = removed,

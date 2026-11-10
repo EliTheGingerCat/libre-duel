@@ -2,7 +2,6 @@ export type mode_id = "bridge_solo" | "bridge_duos"
 export type definition = {
 	id: mode_id,
 	game: "bridge",
-	submode: "solo" | "duos",
 	teams: number,
 	entities_per_team: number,
 	name: string,
@@ -12,12 +11,11 @@ export type definition = {
 }
 
 -- The single source of truth for modes, in the order they are shown to players.
--- game and submode match the keys in saved stats.
+-- id is the key in saved stats, and game names both the mode module and the maps folder.
 const MODE_DEFINITIONS: { definition } = {
 	{
 		id = "bridge_solo",
 		game = "bridge",
-		submode = "solo",
 		teams = 2,
 		entities_per_team = 1,
 		name = "Solo",
@@ -28,7 +26,6 @@ const MODE_DEFINITIONS: { definition } = {
 	{
 		id = "bridge_duos",
 		game = "bridge",
-		submode = "duos",
 		teams = 2,
 		entities_per_team = 2,
 		name = "Duos",

@@ -59,8 +59,7 @@ local function place_cube(tool: tool_types.tool): ()
 	local offset = ray_result.Normal * CUBE_SIZE_HALF_SOFT
 	local snapped = snap_position(hit_position + offset)
 
-	local occupied_cube = cube_cache[snapped]
-	if occupied_cube then
+	if cube_cache.is_occupied(snapped) then
 		debug_print("Occupied by cube.")
 		return
 	end
@@ -75,13 +74,9 @@ local function place_cube(tool: tool_types.tool): ()
 	cube_temporary.Position = snapped
 	cube_temporary.Parent = workspace.runtime_instances.cubes
 
-	local success: boolean = ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
+	ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
 
 	cube_temporary:Destroy()
-
-	if success then
-		cube_cache[snapped] = true
-	end
 end
 
 return place_cube

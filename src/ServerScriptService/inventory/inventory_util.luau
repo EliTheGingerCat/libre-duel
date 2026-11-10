@@ -35,9 +35,7 @@ end
 
 function inventory_util.replicate(entity: registry.entity): ()
 	inventory_util.changed:Fire(entity)
-	if type(entity) ~= "string" then
-		update_inventory:FireClient(entity, { inventory = entity_inventories[entity] })
-	end
+	registry.fire_client(entity, update_inventory, { inventory = entity_inventories[entity] })
 end
 
 -- breter98: This technically breaks the styling guidelines that functions should return a single value but this is much more convenient imo.

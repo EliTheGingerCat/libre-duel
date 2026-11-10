@@ -203,9 +203,7 @@ local function new(this_match: match.match): match.hooks
 		team.points += 1
 		match.award(this_match, entity, "goals")
 
-		if type(entity) ~= "string" then
-			ReplicatedStorage.remotes.score_self:FireClient(entity)
-		end
+		registry.fire_client(entity, ReplicatedStorage.remotes.score_self)
 
 		if team.points >= WIN_POINTS then
 			const opposing_team = get_opposing_team(team)
@@ -291,9 +289,7 @@ local function new(this_match: match.match): match.hooks
 		registry.set_team(entity, team.Roblox_team)
 		move_entity(entity, team.spawn_part.Position)
 		give_match_loadout(entity, team)
-		if type(entity) ~= "string" then
-			ReplicatedStorage.remotes.map_name:FireClient(entity, info.MAP_NAME)
-		end
+		registry.fire_client(entity, ReplicatedStorage.remotes.map_name, info.MAP_NAME)
 	end
 
 	local function on_character_added(_character: Model, entity: registry.entity): ()

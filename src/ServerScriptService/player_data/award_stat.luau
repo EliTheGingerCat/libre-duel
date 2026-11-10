@@ -7,16 +7,18 @@ const player_store = require(script.Parent.player_store)
 
 const GAME_STATS = require(ReplicatedStorage.shared.modes.GAME_STATS)
 
---actually doesn't accept an entity, i just didn't want to cause issues with the type checker
+-- Bots have no saved data, so awarding one does nothing.
 const function award_stat(entity: registry.entity, mode: GAME_STATS.mode, stat: GAME_STATS.stat, increment: number?)
-	if type(entity) == "string" then
+	const player = registry.get_player(entity)
+	if player == nil then
 		return
 	end
 	const amount = increment or 1
-	drop.update(player_store, tostring(entity.UserId), function(data)
+	drop.update(player_store, tostring(player.UserId), function(data)
 		const new = table.clone(data)
 		const new_stats = table.clone(new.stats)
-		const mode_stats: GAME_STATS.stats = table.clone(new_stats[mode])
+		-- Data saved before a mode existed has no entry for it.
+		const mode_stats: GAME_STATS.stats = table.clone(new_stats[mode] or GAME_STATS[mode])
 		mode_stats[stat] += amount
 		new_stats[mode] = mode_stats
 		new.stats = new_stats

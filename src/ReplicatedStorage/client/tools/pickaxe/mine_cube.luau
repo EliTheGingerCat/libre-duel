@@ -2,7 +2,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
-local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 local set_cube_transparency = require(ReplicatedStorage.shared.cube.set_cube_transparency)
 const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
@@ -269,9 +268,6 @@ local function on_mine_suceeded(id: number): ()
 		return
 	end
 
-	local position = state.cube_target.Position
-	-- Players can only place a cube in a previously occupied position after the cube is mined on the server.
-	cube_cache[position] = nil
 	cleanup_pending(state)
 end
 

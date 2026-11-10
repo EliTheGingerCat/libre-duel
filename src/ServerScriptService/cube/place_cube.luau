@@ -44,8 +44,7 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, appea
 		return false
 	end
 
-	const occupied_cube = cube_cache[cube_position]
-	if occupied_cube then
+	if cube_cache.is_occupied(cube_position) then
 		debug_print("Occupied by cube.")
 		return false
 	end
@@ -61,20 +60,21 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, appea
 		return false
 	end
 
+	const player = registry.get_player(entity)
 	if
-		type(entity) ~= "string"
-		and get_player_cps(entity, "use") >= MITIGATION_CONFIG.cps_treshold
+		player
+		and get_player_cps(player, "use") >= MITIGATION_CONFIG.cps_treshold
 		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
 	then
 		add_cooldown(entity, "place_cube_mitigation", MITIGATION_CONFIG.duration)
 		return false
 	end
 
-	cube_cache[cube_position] = true
-
 	const clone = create_cube(appearance)
 	clone.Position = cube_position
 	clone.Parent = workspace.runtime_instances.cubes
+	-- The tag signal may be deferred, which would let a second placement in the same frame pass the occupancy check.
+	cube_cache.track(clone)
 	const entity_match = match.get_match_of(entity)
 	if entity_match then
 		match.track_cube(entity_match, clone)
