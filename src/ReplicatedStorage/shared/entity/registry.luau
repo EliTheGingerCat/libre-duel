@@ -32,6 +32,7 @@ const TEAM_VALUE = "entity_team"
 const added: event<entity> = signal.new()
 const removed: event<entity> = signal.new()
 const character_added: event<Model, entity> = signal.new()
+const died: event<Model, entity> = signal.new()
 const changed: event<> = signal.new()
 const members: { [entity]: boolean? } = {}
 const bots: { [string]: Model? } = {}
@@ -227,6 +228,21 @@ local function on_player_removing(player: Player): ()
 	changed:Fire()
 end
 
+local function watch_death(character: Model, entity: entity): ()
+	const humanoid = character:WaitForChild("Humanoid", 10)
+	if humanoid == nil or not humanoid:IsA("Humanoid") then
+		return
+	end
+	local function on_died(): ()
+		-- a replacement bot can reuse the ID while its old character is still around
+		if get_character(entity) == character then
+			died:Fire(character, entity)
+		end
+	end
+	humanoid.Died:Once(on_died)
+end
+
+character_added:Connect(watch_death)
 CollectionService:GetInstanceAddedSignal(BOT_TAG):Connect(on_bot_added)
 CollectionService:GetInstanceRemovedSignal(BOT_TAG):Connect(on_bot_removed)
 Players.PlayerAdded:Connect(on_player_added)
@@ -243,6 +259,7 @@ return {
 	added = added,
 	changed = changed,
 	character_added = character_added,
+	died = died,
 	fire_client = fire_client,
 	from_character = from_character,
 	get_all = get_all,

@@ -86,26 +86,10 @@ local function on_stop(match: match, callback: () -> ()): ()
 	table.insert(match.stop_callbacks, callback)
 end
 
-local function watch_death(match: match, entity: registry.entity, character: Model): ()
-	local function on_died(): ()
-		const hooks = match.hooks
-		if entity_matches[entity] == match and hooks and hooks.entity_died then
-			hooks.entity_died(entity)
-		end
-	end
-
-	const humanoid = character:WaitForChild("Humanoid") :: Humanoid
-	humanoid.Died:Once(on_died)
-end
-
 local function register(match: match, entity: registry.entity): ()
 	entity_matches[entity] = match
 	table.insert(match.entities, entity)
 	registry.fire_client(entity, ReplicatedStorage.remotes.game_is_active, true)
-	const character = registry.get_character(entity)
-	if character then
-		task.spawn(watch_death, match, entity, character)
-	end
 end
 
 local function unregister(match: match, entity: registry.entity): ()
@@ -247,10 +231,11 @@ local function track_cube(match: match, cube: BasePart): ()
 	cube.Destroying:Once(on_destroying)
 end
 
-local function on_character_added(character: Model, entity: registry.entity): ()
+local function on_entity_died(_character: Model, entity: registry.entity): ()
 	const match = entity_matches[entity]
-	if match then
-		watch_death(match, entity, character)
+	const hooks = if match then match.hooks else nil
+	if hooks and hooks.entity_died then
+		hooks.entity_died(entity)
 	end
 end
 
@@ -269,7 +254,7 @@ local function stop_all(): ()
 	end
 end
 
-registry.character_added:Connect(on_character_added)
+registry.died:Connect(on_entity_died)
 registry.removed:Connect(on_entity_removed)
 game:BindToClose(stop_all)
 
