@@ -4,11 +4,13 @@ const TeleportService = game:GetService("TeleportService")
 
 const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
 const get_mode_definition = require(ReplicatedStorage.shared.modes.get_mode_definition)
-const match_session = require(script.Parent.match_session)
+const match = require(script.Parent.Parent.match.match)
 const queue_lobby = require(script.Parent.queue_lobby)
 const queue_record = require(script.Parent.queue_record)
 const queue_status = require(script.Parent.queue_status)
 const queue_store = require(script.Parent.queue_store)
+const registry = require(ReplicatedStorage.shared.entity.registry)
+const start_match = require(script.Parent.Parent.match.start_match)
 
 type record = queue_record.record
 type context = {
@@ -154,20 +156,30 @@ local function collect_tokens(context: context): { [string]: string }
 	return tokens
 end
 
-local function collect_roster(entry: record): match_session.roster
-	const roster: match_session.roster = {}
-	for team_name, members in entry.teams do
-		const user_ids: { number } = {}
-		for _, member in members do
-			table.insert(user_ids, member.user_id)
+local function collect_teams(entry: record): { { registry.entity } }
+	const teams: { { registry.entity } } = {}
+	for index = 1, get_mode_definition(entry.mode).teams do
+		const entities: { registry.entity } = {}
+		const members = entry.teams[`team{index}`]
+		if members then
+			for _, member in members do
+				const player = Players:GetPlayerByUserId(member.user_id)
+				if player then
+					table.insert(entities, player)
+				end
+			end
 		end
-		roster[team_name] = user_ids
+		teams[index] = entities
 	end
-	return roster
+	return teams
+end
+
+local function on_match_stopped(): ()
+	current = nil
 end
 
 local function try_start(context: context): ()
-	local function start_match(latest: record?): record?
+	local function mark_started(latest: record?): record?
 		if latest == nil or current ~= context then
 			return nil
 		end
@@ -182,7 +194,7 @@ local function try_start(context: context): ()
 		latest.status = "started"
 		return latest
 	end
-	const started = queue_store.update(context.mode, context.id, start_match)
+	const started = queue_store.update(context.mode, context.id, mark_started)
 	const entry = started.entry
 	if not started.ok or entry == nil or current ~= context then
 		return
@@ -195,7 +207,8 @@ local function try_start(context: context): ()
 	for player in context.players do
 		queue_status.clear(player)
 	end
-	match_session.start(collect_roster(entry))
+	const started_match = start_match(get_mode_definition(entry.mode), collect_teams(entry))
+	match.on_stop(started_match, on_match_stopped)
 end
 
 local function refresh(context: context): ()
@@ -269,12 +282,6 @@ local function leave(player: Player): boolean
 	end
 	return ok
 end
-
-local function on_finished(): ()
-	current = nil
-end
-
-match_session.finished:Connect(on_finished)
 
 return {
 	accept = accept,

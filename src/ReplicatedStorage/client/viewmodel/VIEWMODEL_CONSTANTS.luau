@@ -6,15 +6,15 @@ const VIEWMODEL_CONSTANTS = {
     -- Time is one way, so a full swing takes twice this because the tween reverses
     swing_tween_info = TweenInfo.new(0.13, Enum.EasingStyle.Sine, Enum.EasingDirection.Out, 0, true),
 
-    block_pose = CFrame.new(-0.06, 0.01, 0.02) * CFrame.Angles(math.rad(90), math.rad(-30), math.rad(100)),
+    block_pose = CFrame.new(-0.06, 0.01, 0.02) * CFrame.Angles(math.rad(90), math.rad(330), math.rad(100)),
 
     cube_size = 0.08,
 
     bow_full_draw_seconds = 2, -- matches when a shot reaches full damage in bow_handler
 
     eat_pose = CFrame.new(-0.1, 0.02, 0.03) * CFrame.Angles(0, math.rad(90), 0),
-    eat_bob_height = 0.006,
-    eat_bob_speed = 18,
+    eat_bob_height = 0.008,
+    eat_bob_speed = 24,
     eat_smoothing = 12,
 
     bob_full_speed = 32,

@@ -8,6 +8,7 @@ const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
+const match = require(ServerScriptService.match.match)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
 type mining = {
@@ -205,6 +206,12 @@ local function try_start(entity: registry.entity, id: unknown, cube: unknown): b
 
 	if cube:HasTag("cube") == false then
 		debug_print('Cube does not have the "cube" tag, so it is not actually a cube.')
+		return false
+	end
+
+	const cube_match = match.get_match_of_cube(cube)
+	if cube_match and not cube_match.stopped and cube_match ~= match.get_match_of(entity) then
+		debug_print("Cube belongs to another match.")
 		return false
 	end
 

@@ -12,6 +12,7 @@ const ENTITY_RANGE_SERVER = require(script.Parent.ENTITY_RANGE_SERVER)
 const get_player_cps = require(ServerScriptService.mitigation.get_player_cps)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const knockback_multiplier = require(script.Parent.knockback_multiplier)
+const match = require(ServerScriptService.match.match)
 const MELEE_COOLDOWN_SERVER = require(script.Parent.MELEE_COOLDOWN_SERVER)
 const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONFIG)
 const play_sound = require(ServerScriptService.util.play_sound)
@@ -97,6 +98,11 @@ local function attack_entity(attacker: registry.entity, target: registry.entity,
 	const target_team = registry.get_team(target)
 	if attacker_team ~= nil and attacker_team == target_team and attacker ~= target then
 		debug_print("Attacker and target are on the same team.")
+		return false
+	end
+
+	if match.get_match_of(attacker) ~= match.get_match_of(target) then
+		debug_print("Attacker and target are not in the same match.")
 		return false
 	end
 
