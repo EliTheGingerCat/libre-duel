@@ -8,7 +8,7 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 -- > local humanoid = game:GetService("Workspace"):FindFirstChild("clone of " .. game:GetService("Players"):GetPlayers()[1].Name).Humanoid humanoid.Health = humanoid.MaxHealth
 -- (Make sure to run in server.)
 
-const ENABLED = false
+const ENABLED = true
 if RunService:IsStudio() and ENABLED then
 	local function clone_maybe_not_archivable<T>(instance: T & Instance): T
 		local archivable = instance.Archivable

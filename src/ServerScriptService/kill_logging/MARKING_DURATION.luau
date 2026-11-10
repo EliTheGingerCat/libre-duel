@@ -1,0 +1,3 @@
+const MARKING_DURATION = 10
+
+return MARKING_DURATION
