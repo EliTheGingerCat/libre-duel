@@ -3,12 +3,18 @@
 -- hidden widgets start off the screen, as if removed, until added from the selector.
 -- supports_device lists the input devices the widget shows on (see input_device), nil means all of them.
 const HUD_DEFAULTS = {
-	ComboCounter = { size = Vector2.new(168, 42), anchor = Vector2.new(1, 0), position = UDim2.new(1, -12, 0, 12) },
+	ComboCounter = {
+		size = Vector2.new(168, 42),
+		anchor = Vector2.new(1, 0),
+		position = UDim2.new(1, -12, 0, 12),
+		hidden = true,
+	},
 	FpsCounter = {
 		size = Vector2.new(168, 42),
 		anchor = Vector2.new(1, 0),
 		position = UDim2.new(1, -12, 0, 12),
 		stack_offset = 102,
+		hidden = true,
 	},
 	Hotbar = { anchor = Vector2.new(0.5, 1), position = UDim2.new(0.5, 0, 1, -20) },
 	Infoboard = { anchor = Vector2.new(0.5, 0), position = UDim2.new(0.5, 0, 0, 10) },
@@ -46,7 +52,12 @@ const HUD_DEFAULTS = {
 		supports_device = { "touch" },
 	},
 	Notifications = { anchor = Vector2.new(0, 1), position = UDim2.new(0, 15, 1, -15) },
-	Paperdoll = { size = Vector2.new(128, 210), anchor = Vector2.new(0, 1), position = UDim2.new(0, 12, 1, -12) },
+	Paperdoll = {
+		size = Vector2.new(128, 210),
+		anchor = Vector2.new(0, 1),
+		position = UDim2.new(0, 12, 1, -12),
+		hidden = true,
+	},
 	PlayButton = { anchor = Vector2.new(0.5, 1), position = UDim2.new(0.5, 0, 1, -32), stack_offset = -130 },
 	QueueStatus = { anchor = Vector2.new(0.5, 1), position = UDim2.new(0.5, 0, 1, -32), stack_offset = -130 },
 	UseItemButton = {
@@ -60,6 +71,7 @@ const HUD_DEFAULTS = {
 		anchor = Vector2.new(1, 0),
 		position = UDim2.new(1, -12, 0, 12),
 		stack_offset = 51,
+		hidden = true,
 	},
 	TablistButton = {
 		size = Vector2.new(70, 70),
@@ -67,7 +79,8 @@ const HUD_DEFAULTS = {
 		position = UDim2.new(1, -16, 0, 12),
 		supports_device = { "touch" },
 	},
-	Tablist = { anchor = Vector2.new(0.5, 0), position = UDim2.new(0.5, 0, 0, 147) },
+	-- stack_offset clears the infoboard, which scales with the viewport instead of the builtin shrink.
+	Tablist = { anchor = Vector2.new(0.5, 0), position = UDim2.new(0.5, 0, 0, 10), stack_offset = 137 },
 }
 
 return table.freeze(HUD_DEFAULTS)

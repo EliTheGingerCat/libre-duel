@@ -4,6 +4,7 @@ const HUD_DEFAULTS = require(script.Parent.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
 local get_reference_resolution = require(script.Parent.Parent.visuals.REFERENCE_RESOLUTIONS)
 local input_device = require(ReplicatedStorage.client.util.input_device)
+local tween_number = require(script.Parent.Parent.effects.tween_number)
 local counter = require(script.Parent.counter)
 local hud_screen = require(script.Parent.hud_screen)
 local keystrokes = require(script.Parent.keystrokes)
@@ -12,6 +13,9 @@ local mousestrokes = require(script.Parent.mousestrokes)
 local use_editable_hud = require(script.Parent.use_editable_hud)
 
 local create_element = React.createElement
+
+-- Switching devices wobbles the widget into its new size instead of snapping.
+const DEVICE_TWEEN = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
 type props = use_editable_hud.props & { name: string }
 
@@ -39,18 +43,34 @@ local function builtin(props: props)
 		local screen = content:FindFirstAncestorOfClass("ScreenGui")
 		local scale = content:FindFirstChildOfClass("UIScale")
 		assert(screen and scale)
-		local function update_scale(): ()
+		local cancel_tween: (() -> ())? = nil
+		local function stop_tween(): ()
+			if cancel_tween then
+				cancel_tween()
+				cancel_tween = nil
+			end
+		end
+		local function get_target(): number
 			local size = screen.AbsoluteSize
 			local reference = get_reference_resolution("shrink", input_device.current)
-			set_factor(math.min(1, size.X / reference.X, size.Y / reference.Y))
+			return math.min(1, size.X / reference.X, size.Y / reference.Y)
+		end
+		local function update_scale(): ()
+			stop_tween()
+			set_factor(get_target())
+		end
+		local function on_device_changed(): ()
+			stop_tween()
+			cancel_tween = tween_number(factor:getValue(), get_target(), DEVICE_TWEEN, set_factor)
 		end
 		local connection = screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(update_scale)
-		local device_connection = input_device.changed:Connect(update_scale)
+		local device_connection = input_device.changed:Connect(on_device_changed)
 		update_scale()
 		local cleanup = mount_builtin(props.name, content)
 		local function disconnect(): ()
 			connection:Disconnect()
 			device_connection:Disconnect()
+			stop_tween()
 			cleanup()
 		end
 		return disconnect

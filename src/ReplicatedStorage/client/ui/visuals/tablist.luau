@@ -17,6 +17,7 @@ local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local tablist_state = require(script.Parent.tablist_state)
 local use_if_key_held = require(script.Parent.use_if_key_held)
+local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
 local create_element = React.createElement
 local local_player = Players.LocalPlayer
@@ -214,6 +215,8 @@ end
 local function tablist(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(tablist, props)
 	local held = use_if_key_held(KEYBINDS.tablist)
+	local defaults = HUD_DEFAULTS.Tablist
+	local position = defaults.position + UDim2.fromOffset(0, defaults.stack_offset * use_viewport_scale())
 	local pinned, set_pinned = use_state(tablist_state.pinned)
 	local function subscribe_pinned()
 		local function update(): ()
@@ -240,8 +243,8 @@ local function tablist(props: use_editable_hud.props)
 			"Frame",
 			{
 				ref = content_ref,
-				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else HUD_DEFAULTS.Tablist.anchor,
-				Position = if props.preview then UDim2.fromOffset(0, 0) else HUD_DEFAULTS.Tablist.position,
+				AnchorPoint = if props.preview then Vector2.new(0.5, 0.5) else defaults.anchor,
+				Position = if props.preview then UDim2.fromOffset(0, 0) else position,
 				Size = UDim2.fromOffset(720, 0),
 				AutomaticSize = "Y",
 				BackgroundColor3 = COLOURS.black,

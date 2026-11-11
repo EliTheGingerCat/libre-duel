@@ -3,6 +3,7 @@ const ServerScriptService = game:GetService("ServerScriptService")
 
 const drop = require(ServerScriptService.ServerPackages.drop)
 const PLAYER_STORE_NAME = require(script.Parent.PLAYER_STORE_NAME)
+const initialize_player_data = require(script.Parent.initialize_player_data)
 const player_schema = require(script.Parent.player_schema)
 const player_store = require(script.Parent.player_store)
 
@@ -20,6 +21,7 @@ const function player_added(player)
     end
 
     drop.waitforsession(player_store, key)
+    initialize_player_data(key)
 end
 
 const function player_removing(player)

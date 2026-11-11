@@ -13,6 +13,9 @@ local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
 local create_element = React.createElement
 
+-- Space kept free around the window so it never touches the screen edges.
+const SCREEN_MARGIN = 16
+
 export type props = {
 	name: string,
 	title: string,
@@ -27,13 +30,32 @@ local function menu_window(props: props)
 	local size = props.size or Vector2.new(1200, 720)
 	local motion = use_ui_motion(if props.enabled then 1 else 0, 0)
 	local viewport_scale = math.min(1, use_viewport_scale())
-	local function window_scale(value: number): number
-		return viewport_scale * (0.96 + 0.04 * value)
+	local screen_ref = React.useRef(nil :: ScreenGui?)
+	local fit, set_fit = React.useBinding(1)
+	-- The viewport scale is tuned for the HUD, so tall windows can still overflow small screens without this.
+	local function track_fit()
+		local screen = screen_ref.current
+		assert(screen)
+		local function update(): ()
+			local available = screen.AbsoluteSize - Vector2.new(SCREEN_MARGIN * 2, SCREEN_MARGIN * 2)
+			set_fit(math.max(0.001, math.min(available.X / size.X, available.Y / size.Y)))
+		end
+		local connection = screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
+		update()
+		local function disconnect(): ()
+			connection:Disconnect()
+		end
+		return disconnect
+	end
+	React.useLayoutEffect(track_fit, { size.X, size.Y })
+	local function window_scale(values: { motion: number, fit: number }): number
+		return math.min(viewport_scale, values.fit) * (0.96 + 0.04 * values.motion)
 	end
 	local function window_position(value: number): UDim2
 		return UDim2.new(0.5, 0, 0.5, 12 * (1 - value))
 	end
 	return create_element("ScreenGui", {
+		ref = screen_ref,
 		Name = props.name,
 		Enabled = props.enabled,
 		ResetOnSpawn = false,
@@ -60,7 +82,10 @@ local function menu_window(props: props)
 			BorderSizePixel = 0,
 			Active = true,
 		}, {
-			scale = create_element("UIScale", { Scale = motion:map(window_scale) }),
+			scale = create_element(
+				"UIScale",
+				{ Scale = React.joinBindings({ motion = motion, fit = fit }):map(window_scale) }
+			),
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 60) }),
 			shadow = create_element(
 				shadow,
