@@ -2,6 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const HUD_DEFAULTS = require(script.Parent.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
+local get_reference_resolution = require(script.Parent.Parent.visuals.REFERENCE_RESOLUTIONS)
+local input_device = require(ReplicatedStorage.client.util.input_device)
 local counter = require(script.Parent.counter)
 local hud_screen = require(script.Parent.hud_screen)
 local keystrokes = require(script.Parent.keystrokes)
@@ -39,13 +41,16 @@ local function builtin(props: props)
 		assert(screen and scale)
 		local function update_scale(): ()
 			local size = screen.AbsoluteSize
-			set_factor(math.min(1, size.X / 900, size.Y / 700))
+			local reference = get_reference_resolution("shrink", input_device.current)
+			set_factor(math.min(1, size.X / reference.X, size.Y / reference.Y))
 		end
 		local connection = screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(update_scale)
+		local device_connection = input_device.changed:Connect(update_scale)
 		update_scale()
 		local cleanup = mount_builtin(props.name, content)
 		local function disconnect(): ()
 			connection:Disconnect()
+			device_connection:Disconnect()
 			cleanup()
 		end
 		return disconnect
