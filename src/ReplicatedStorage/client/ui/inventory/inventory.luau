@@ -7,6 +7,7 @@ local React = require(ReplicatedStorage.Packages.react)
 const get_slot_amount = require(ReplicatedStorage.client.tools.get_slot_amount)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
+local item_amount = require(script.Parent.item_amount)
 local item_slot = require(script.Parent.item_slot)
 local mount_paperdoll = require(script.Parent.Parent.hud.mount_paperdoll)
 local scale = require(script.Parent.Parent.visuals.scale)
@@ -167,10 +168,33 @@ local function crafting(props: { shake_count: number })
 	})
 end
 
+-- A loose item drawn over the window, with the same icon and counter as a slot. `size` is the slot size in pixels.
+local function floating_item(props: { name: string, image: string, amount: number?, size: number, position: unknown })
+	return create_element("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		BackgroundTransparency = 1,
+		Name = props.name,
+		Position = props.position :: any,
+		Size = UDim2.fromOffset(props.size, props.size),
+		ZIndex = 10,
+	}, {
+		icon = create_element("ImageLabel", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			BackgroundTransparency = 1,
+			Image = props.image,
+			Name = "icon",
+			Position = UDim2.fromScale(0.5, 0.5),
+			ScaleType = Enum.ScaleType.Fit,
+			Size = UDim2.fromScale(INVENTORY_LAYOUT.ICON_SCALE, INVENTORY_LAYOUT.ICON_SCALE),
+		}),
+		amount = create_element(item_amount, { amount = props.amount }),
+	})
+end
+
 local function held_item(props: { held_slot: number?, cursor: unknown })
 	local viewport_scale = use_viewport_scale()
 	const tool = if props.held_slot ~= nil then get_slot_tool(props.held_slot) else nil
-	if tool == nil then
+	if props.held_slot == nil or tool == nil then
 		return nil
 	end
 
@@ -178,38 +202,30 @@ local function held_item(props: { held_slot: number?, cursor: unknown })
 		return UDim2.fromOffset(position.X, position.Y)
 	end
 
-	const size = INVENTORY_LAYOUT.SLOT_SIZE * INVENTORY_LAYOUT.ICON_SCALE * viewport_scale
-	return create_element("ImageLabel", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		BackgroundTransparency = 1,
-		Image = tool.image,
-		Name = "held_item",
-		Position = (props.cursor :: any):map(to_position),
-		ScaleType = Enum.ScaleType.Fit,
-		Size = UDim2.fromOffset(size, size),
-		ZIndex = 10,
+	return create_element(floating_item, {
+		name = "held_item",
+		image = tool.image,
+		amount = get_slot_amount(props.held_slot),
+		size = INVENTORY_LAYOUT.SLOT_SIZE * viewport_scale,
+		position = (props.cursor :: any):map(to_position),
 	})
 end
 
 local function flying_item(props: { flight: use_inventory_input.flight })
 	local progress = use_ui_motion(1, 0, 0)
 	const flight = props.flight
-	const size = flight.size * INVENTORY_LAYOUT.ICON_SCALE
 
 	local function to_position(value: number): UDim2
 		const position = flight.from:Lerp(flight.to, value)
 		return UDim2.fromOffset(position.X, position.Y)
 	end
 
-	return create_element("ImageLabel", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		BackgroundTransparency = 1,
-		Image = flight.image,
-		Name = "flying_item",
-		Position = progress:map(to_position),
-		ScaleType = Enum.ScaleType.Fit,
-		Size = UDim2.fromOffset(size, size),
-		ZIndex = 10,
+	return create_element(floating_item, {
+		name = "flying_item",
+		image = flight.image,
+		amount = flight.amount,
+		size = flight.size,
+		position = progress:map(to_position),
 	})
 end
 

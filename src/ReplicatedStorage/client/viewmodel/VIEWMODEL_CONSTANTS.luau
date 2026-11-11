@@ -6,7 +6,7 @@ const VIEWMODEL_CONSTANTS = {
     -- Time is one way, so a full swing takes twice this because the tween reverses
     swing_tween_info = TweenInfo.new(0.13, Enum.EasingStyle.Sine, Enum.EasingDirection.Out, 0, true),
 
-    block_pose = CFrame.new(-0.06, 0.01, 0.02) * CFrame.Angles(math.rad(90), math.rad(330), math.rad(100)),
+    block_pose = CFrame.new(-0.06, 0.01, 0.02) * CFrame.Angles(math.rad(90), math.rad(150), math.rad(250)),
 
     cube_size = 0.08,
 

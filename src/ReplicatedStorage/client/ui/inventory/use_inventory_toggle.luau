@@ -64,7 +64,7 @@ local function use_inventory_toggle(): boolean
 
 	React.useEffect(subscribe, {})
 
-	-- The cursor is freed every frame, but holding right click still lets the camera turn a little in between.
+	-- Holding right click can still pan the camera while the cursor is free.
 	local function block_camera()
 		if not enabled then
 			return

@@ -1,10 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
-const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const INVENTORY_LAYOUT = require(script.Parent.INVENTORY_LAYOUT)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
+local item_amount = require(script.Parent.item_amount)
 
 local create_element = React.createElement
 
@@ -45,19 +44,7 @@ local function item_slot(props: {
 			ScaleType = Enum.ScaleType.Fit,
 			Size = UDim2.fromScale(INVENTORY_LAYOUT.ICON_SCALE, INVENTORY_LAYOUT.ICON_SCALE),
 		}),
-		amount = props.amount ~= nil and props.amount > 1 and create_element("TextLabel", {
-			AnchorPoint = Vector2.new(1, 1),
-			BackgroundTransparency = 1,
-			FontFace = FONTS.semi_bold,
-			Name = "amount",
-			Position = UDim2.fromScale(0.95, 1),
-			Size = UDim2.fromScale(0.6, 0.4),
-			Text = tostring(props.amount),
-			TextColor3 = COLOURS.white,
-			TextScaled = true,
-			TextXAlignment = Enum.TextXAlignment.Right,
-			ZIndex = 2,
-		}),
+		amount = create_element(item_amount, { amount = props.amount }),
 		stroke = props.selected and create_element(gradient_stroke),
 	})
 end

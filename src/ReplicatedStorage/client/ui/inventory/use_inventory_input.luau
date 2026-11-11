@@ -6,6 +6,7 @@ const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 local React = require(ReplicatedStorage.Packages.react)
 local client_inventory_util = require(ReplicatedStorage.client.inventory.client_inventory_util)
 local get_slot_at_position = require(script.Parent.get_slot_at_position)
+local get_slot_amount = require(ReplicatedStorage.client.tools.get_slot_amount)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
 local scale_animation_time = require(script.Parent.Parent.effects.scale_animation_time)
@@ -27,6 +28,7 @@ type held = {
 export type flight = {
 	id: number,
 	image: string,
+	amount: number?,
 	to_slot: number,
 	from: Vector2,
 	to: Vector2,
@@ -154,6 +156,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			add_flight({
 				id = next_flight_id.current,
 				image = tool.image,
+				amount = get_slot_amount(from_slot),
 				to_slot = to_slot,
 				from = get_centre(from_frame),
 				to = get_centre(to_frame),

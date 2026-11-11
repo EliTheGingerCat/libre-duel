@@ -5,6 +5,7 @@ const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
 local button = require(script.Parent.Parent.visuals.button)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
+local inventory_state = require(script.Parent.Parent.inventory.inventory_state)
 local mode_selector_state = require(script.Parent.mode_selector_state)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_editor_enabled = require(script.Parent.Parent.hud.use_editor_enabled)
@@ -28,11 +29,26 @@ local function play_button(props: use_editable_hud.props)
 	local state = use_queue_status()
 	local editor_enabled = use_editor_enabled()
 	local factor = use_viewport_scale()
+	local inventory_open, set_inventory_open = React.useState(inventory_state.enabled)
+
+	local function subscribe()
+		local function update(): ()
+			set_inventory_open(inventory_state.enabled)
+		end
+		local connection = inventory_state.on_change:Connect(update)
+		update()
+		local function disconnect(): ()
+			connection:Disconnect()
+		end
+		return disconnect
+	end
+	React.useEffect(subscribe, {})
+
 	return create_element(
 		hud_screen,
 		{
 			Name = "PlayButton",
-			Enabled = editor_enabled or (not IS_RESERVED and state.mode == nil),
+			Enabled = editor_enabled or (not IS_RESERVED and state.mode == nil and not inventory_open),
 			ResetOnSpawn = false,
 			preview = props.preview,
 		},
