@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
+local input_device = require(script.Parent.Parent.Parent.util.input_device)
 local registry = require(script.Parent.registry)
 local scrolling_content = require(script.Parent.Parent.visuals.scrolling_content)
 local selector_tile = require(script.Parent.selector_tile)
@@ -21,6 +22,11 @@ const WIDGETS = {
 	{ "infoboard", "Infoboard" },
 	{ "Notifications", "Notifications" },
 	{ "Tablist", "Player List" },
+	{ "JumpButton", "Jump Button" },
+	{ "AttackButton", "Attack Button" },
+	{ "UseItemButton", "Use Item Button" },
+	{ "InventoryButton", "Inventory Button" },
+	{ "TablistButton", "Player List Button" },
 }
 
 local function increment(value: number): number
@@ -40,7 +46,7 @@ local function selector(props: { enabled: boolean, display_order: number, on_clo
 	if props.enabled then
 		for index, widget in WIDGETS do
 			for _, item in registry.get_entries() do
-				if item.screen.Name == widget[1] then
+				if item.screen.Name == widget[1] and input_device.supports(item.supports_device) then
 					tiles[widget[1]] = create_element(
 						selector_tile,
 						{ item = item, title = widget[2], order = index, on_close = props.on_close }

@@ -25,12 +25,17 @@ const select_slot = ReplicatedStorage.remotes.select_slot
 
 const local_player = Players.LocalPlayer
 
+const INPUT_TO_BUTTON: { [Enum.UserInputType]: string } = {
+	[KEYBINDS.tool_attack] = "attack",
+	[KEYBINDS.tool_use] = "use",
+}
+
 const TOOL_BUTTONS = {
 	-- attacking isn't listed because every tool does it
-	[KEYBINDS.tool_attack] = create_tool_button({
+	attack = create_tool_button({
 		pickaxe = mine_cube,
 	}),
-	[KEYBINDS.tool_use] = create_tool_button({
+	use = create_tool_button({
 		bow = pull_bow,
 		cake = eat_cake,
 		cube = { start = place_cube },
@@ -71,22 +76,11 @@ tool_state.on_select_requested:Connect(set_tool)
 
 local key_to_slot = table_flip(KEYBINDS.slot)
 
-local function on_input_began(input: InputObject, game_processed: boolean): ()
-	-- the inventory uses the number keys and clicks itself
-	if game_processed or editor_state.enabled or inventory_state.enabled then
+local function press_button(button: string): ()
+	if editor_state.enabled or inventory_state.enabled or mode_selector_state.enabled then
 		return
 	end
-
-	local slot: number? = key_to_slot[input.KeyCode]
-	if slot ~= nil then
-		set_tool(slot)
-	end
-
-	if mode_selector_state.enabled then
-		return
-	end
-
-	const tool_button = TOOL_BUTTONS[input.UserInputType]
+	const tool_button = TOOL_BUTTONS[button]
 	if tool_button == nil then
 		return
 	end
@@ -98,24 +92,56 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 		return
 	end
 
-	if input.UserInputType == KEYBINDS.tool_attack then
+	if button == "attack" then
 		tool_state.on_attack:Fire()
 		attack_melee()
-	elseif input.UserInputType == KEYBINDS.tool_use then
+	elseif button == "use" then
 		tool_state.on_use:Fire()
 	end
 end
 
-local function on_input_ended(input: InputObject, game_processed: boolean): ()
-	const tool_button = TOOL_BUTTONS[input.UserInputType]
+-- letting go over UI cancels the handler instead of finishing it, otherwise it would shoot the bow
+local function release_button(button: string, interrupted: boolean): ()
+	const tool_button = TOOL_BUTTONS[button]
 	if tool_button == nil then
 		return
 	end
-	-- letting go over UI cancels the handler instead of finishing it, otherwise it would shoot the bow
-	if game_processed then
+	if interrupted then
 		tool_button.interrupt()
 	else
 		tool_button.release()
+	end
+end
+
+local function on_input_began(input: InputObject, game_processed: boolean): ()
+	-- the inventory uses the number keys and clicks itself
+	if game_processed or editor_state.enabled or inventory_state.enabled then
+		return
+	end
+
+	local slot: number? = key_to_slot[input.KeyCode]
+	if slot ~= nil then
+		set_tool(slot)
+	end
+
+	const button = INPUT_TO_BUTTON[input.UserInputType]
+	if button ~= nil then
+		press_button(button)
+	end
+end
+
+local function on_input_ended(input: InputObject, game_processed: boolean): ()
+	const button = INPUT_TO_BUTTON[input.UserInputType]
+	if button ~= nil then
+		release_button(button, game_processed)
+	end
+end
+
+local function on_button_requested(button: string, is_pressed: boolean): ()
+	if is_pressed then
+		press_button(button)
+	else
+		release_button(button, false)
 	end
 end
 
@@ -138,3 +164,4 @@ local_player.CharacterRemoving:Connect(interrupt_tool_buttons)
 inventory_state.on_change:Connect(on_menu_change)
 mode_selector_state.on_change:Connect(on_menu_change)
 editor_state.subscribe(on_menu_change)
+tool_state.on_button_requested:Connect(on_button_requested)

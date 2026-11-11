@@ -52,7 +52,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	end
 
 	local function find_hovered(pointer: Vector2): create_widget.view?
-		if hovered and not hovered.item.hidden then
+		if hovered and registry.is_shown(hovered.item) then
 			if
 				button_contains(hovered.delete_button.current, pointer)
 				or button_contains(hovered.settings_button.current, pointer)
@@ -63,11 +63,11 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		end
 		for index = #views, 1, -1 do
 			local view = views[index]
-			if not view.item.hidden and geometry.contains(view.get_rectangle(), pointer) then
+			if registry.is_shown(view.item) and geometry.contains(view.get_rectangle(), pointer) then
 				return view
 			end
 		end
-		if hovered and not hovered.item.hidden and hovered.in_hover_margin(pointer) then
+		if hovered and registry.is_shown(hovered.item) and hovered.in_hover_margin(pointer) then
 			return hovered
 		end
 		return nil

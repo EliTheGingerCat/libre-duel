@@ -92,7 +92,7 @@ local function create_widget(item: registry.entry, preview: Frame, actions: acti
 			return
 		end
 		local rect = get_rectangle()
-		bounds.Visible = not item.hidden
+		bounds.Visible = registry.is_shown(item)
 		bounds.Position = UDim2.fromOffset(rect.position.X, rect.position.Y)
 		bounds.Size = UDim2.fromOffset(rect.size.X, rect.size.Y)
 	end
@@ -101,7 +101,7 @@ local function create_widget(item: registry.entry, preview: Frame, actions: acti
 		if not bounds then
 			return
 		end
-		local visible = hovered and not item.hidden
+		local visible = hovered and registry.is_shown(item)
 		local move = move_ref.current
 		if move then
 			move.BackgroundTransparency = if dragging then 0.7 elseif visible then 0.8 else 1
@@ -154,7 +154,7 @@ local function create_widget(item: registry.entry, preview: Frame, actions: acti
 		delete_ref = delete_ref,
 		settings_ref = settings_ref,
 		rectangle = get_rectangle(),
-		hidden = item.hidden,
+		hidden = not registry.is_shown(item),
 		on_delete = delete,
 		on_settings = settings,
 		on_drag_start = drag_start,

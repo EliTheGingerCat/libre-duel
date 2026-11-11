@@ -45,7 +45,7 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 		end
 	end
 	local function begin(view: create_widget.view, source: UIDragDetector, position: Vector2, handle: Vector2?): boolean
-		if current or view.item.hidden then
+		if current or not registry.is_shown(view.item) then
 			return false
 		end
 		local rect = view.get_rectangle()
@@ -73,7 +73,7 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 		pointer = position
 		local others: { geometry.rectangle } = {}
 		for _, view in views do
-			if view ~= drag.view and not view.item.hidden then
+			if view ~= drag.view and registry.is_shown(view.item) then
 				table.insert(others, view.get_rectangle())
 			end
 		end

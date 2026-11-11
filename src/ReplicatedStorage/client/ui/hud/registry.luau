@@ -1,6 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const HUD_DEFAULTS = require(script.Parent.HUD_DEFAULTS)
 local Signal = require(ReplicatedStorage.Packages.signal)
+local input_device = require(script.Parent.Parent.Parent.util.input_device)
 local geometry = require(script.Parent.editor_geometry)
 local widget_copies = require(script.Parent.widget_copies)
 local widget_corners = require(script.Parent.widget_corners)
@@ -15,6 +17,7 @@ export type entry = {
 	layout: geometry.layout?,
 	multiplier: number,
 	hidden: boolean,
+	supports_device: { string }?,
 	default_hidden: boolean,
 	preview: Frame?,
 	corners: widget_corners.controller,
@@ -26,6 +29,11 @@ export type entry = {
 
 local entries: { entry } = {}
 local changed = Signal.new()
+
+-- Removed by the player, or not meant for the device they're on.
+local function is_shown(item: entry): boolean
+	return not item.hidden and input_device.supports(item.supports_device)
+end
 
 local function notify(): ()
 	changed:Fire()
@@ -73,7 +81,7 @@ local function register(
 		local factor = if preview then math.max(0.001, preview.AbsoluteSize.X / math.max(1, width)) else 1
 		container.Parent = preview or screen
 		scale.Scale = item.multiplier * factor
-		container.Visible = not item.hidden
+		container.Visible = is_shown(item)
 		local layout = item.layout
 		if layout then
 			container.AnchorPoint = layout.anchor
@@ -89,6 +97,7 @@ local function register(
 			)
 		end
 	end
+	local defaults = HUD_DEFAULTS[screen.Name]
 	item = {
 		content = content,
 		container = container,
@@ -97,6 +106,7 @@ local function register(
 		layout = if on_remove then { anchor = Vector2.new(0.5, 0.5), offset = Vector2.zero } else nil,
 		multiplier = 1,
 		hidden = starts_hidden,
+		supports_device = if defaults then defaults.supports_device else nil,
 		default_hidden = starts_hidden,
 		preview = nil,
 		corners = widget_corners(content),
@@ -180,8 +190,18 @@ local function reset(): ()
 	notify()
 end
 
+local function on_device_changed(): ()
+	for _, item in entries do
+		item.refresh()
+	end
+	notify()
+end
+
+input_device.changed:Connect(on_device_changed)
+
 return {
 	add = add,
+	is_shown = is_shown,
 	remove = remove,
 	reset = reset,
 	clear_duplicates = widget_copies.clear,

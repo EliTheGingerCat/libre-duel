@@ -15,6 +15,7 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 local scale = require(script.Parent.scale)
 local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
+local tablist_state = require(script.Parent.tablist_state)
 local use_if_key_held = require(script.Parent.use_if_key_held)
 
 local create_element = React.createElement
@@ -212,7 +213,20 @@ end
 
 local function tablist(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(tablist, props)
-	local enabled = use_if_key_held(KEYBINDS.tablist)
+	local held = use_if_key_held(KEYBINDS.tablist)
+	local pinned, set_pinned = use_state(tablist_state.pinned)
+	local function subscribe_pinned()
+		local function update(): ()
+			set_pinned(tablist_state.pinned)
+		end
+		local connection = tablist_state.on_change:Connect(update)
+		local function disconnect(): ()
+			connection:Disconnect()
+		end
+		return disconnect
+	end
+	use_effect(subscribe_pinned, {})
+	local enabled = held or pinned
 
 	return create_element(
 		hud_screen,
