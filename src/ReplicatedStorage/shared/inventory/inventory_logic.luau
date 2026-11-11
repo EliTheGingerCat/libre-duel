@@ -10,7 +10,7 @@ local inventory_logic = {}
 function inventory_logic.create_empty(): inventory_types.inventory
 	local inventory: inventory_types.inventory = {}
 	for slot = 1, INVENTORY_CONSTANTS.INVENTORY_SIZE do
-		inventory[slot] = false
+		inventory[slot] = "empty"
 	end
 	return inventory
 end
@@ -24,9 +24,13 @@ function inventory_logic.is_valid_slot(slot_index: unknown): boolean
 		and slot_index <= INVENTORY_CONSTANTS.INVENTORY_SIZE
 end
 
-function inventory_logic.find_free_slot(inventory: inventory_types.inventory): number?
+-- whitelist is if someone already has a sword and u give them another one itll give it to their existing slot instead of making a new one
+function inventory_logic.find_free_slot(inventory: inventory_types.inventory, whitelist: inventory_types.item_id?): number?
 	for i, slot in ipairs(inventory) do
-		if slot == false then
+		if slot == "empty" then
+			return i
+		end
+		if type(slot) == "table" and slot.item_id == whitelist then
 			return i
 		end
 	end
@@ -55,10 +59,10 @@ function inventory_logic.move_item(
 	if not inventory_logic.is_valid_slot(from_slot_index) or not inventory_logic.is_valid_slot(to_slot_index) then
 		return false
 	end
-	if inventory[from_slot_index] == false or inventory[to_slot_index] ~= false then
+	if inventory[from_slot_index] == "empty" or inventory[to_slot_index] ~= "empty" then
 		return false
 	end
-	inventory[from_slot_index], inventory[to_slot_index] = false, inventory[from_slot_index]
+	inventory[from_slot_index], inventory[to_slot_index] = "empty", inventory[from_slot_index]
 	return true
 end
 
@@ -68,14 +72,14 @@ end
 
 -- the slot a quick move would put the item in: the first free slot on the other side of the hotbar
 function inventory_logic.find_quick_move_slot(inventory: inventory_types.inventory, from_slot_index: number): number?
-	if not inventory_logic.is_valid_slot(from_slot_index) or inventory[from_slot_index] == false then
+	if not inventory_logic.is_valid_slot(from_slot_index) or inventory[from_slot_index] == "empty" then
 		return nil
 	end
 	const from_hotbar = inventory_logic.is_hotbar_slot(from_slot_index)
 	const first = if from_hotbar then INVENTORY_CONSTANTS.COLUMNS + 1 else 1
 	const last = if from_hotbar then INVENTORY_CONSTANTS.INVENTORY_SIZE else INVENTORY_CONSTANTS.COLUMNS
 	for slot_index = first, last do
-		if inventory[slot_index] == false then
+		if inventory[slot_index] == "empty" then
 			return slot_index
 		end
 	end
@@ -93,7 +97,7 @@ function inventory_logic.quick_move(
 	if to_slot_index == nil then
 		return false
 	end
-	inventory[to_slot_index], inventory[from_slot_index] = inventory[from_slot_index], false
+	inventory[to_slot_index], inventory[from_slot_index] = inventory[from_slot_index], "empty"
 	return true
 end
 

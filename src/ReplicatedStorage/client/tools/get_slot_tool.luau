@@ -15,7 +15,9 @@ local function get_slot_tool(slot: number): tool_types.tool?
 		return nil
 	end
 	const tool = tool_registry.resolve(item.item_id, item.data)
-	assert(tool ~= nil, `Slot {slot} holds unregistered tool "{item.item_id}".`)
+	if not tool then
+		return nil
+	end
 	return tool
 end
 

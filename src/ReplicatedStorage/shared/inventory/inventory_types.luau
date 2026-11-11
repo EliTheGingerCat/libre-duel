@@ -6,7 +6,7 @@ const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 export type item_id = string
 -- replace `data` instead of mutating it, resolved tools are cached per table
 export type slot_data = { item_id: item_id, amount: number, data: tool_types.overrides? }
-export type slot = slot_data | false -- false instead of nil because ipairs stops at a nil
+export type slot = slot_data | "empty" -- "empty" instead of nil because ipairs stops at a nil
 export type inventory = { [number]: slot }
 export type entity_inventories = { [registry.entity]: inventory }
 

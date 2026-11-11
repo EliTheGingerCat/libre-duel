@@ -46,7 +46,7 @@ end
 
 function inventory_util.clear_inventory(inventory: inventory_types.inventory): inventory_types.inventory
 	for i in inventory do
-		inventory[i] = false
+		inventory[i] = "empty"
 	end
 
 	return inventory
@@ -60,13 +60,17 @@ function inventory_util.delete_inventory(entity: registry.entity): boolean
 	return false
 end
 
-function inventory_util.give_item(inventory: inventory_types.inventory, item: inventory_types.item_id): boolean
-	local slot = inventory_logic.find_free_slot(inventory)
+function inventory_util.give_item(inventory: inventory_types.inventory, item: inventory_types.item_id, amount: number?): boolean
+	local slot = inventory_logic.find_free_slot(inventory, item)
 	if not slot then
 		return false
 	end
 
-	inventory[slot] = { item_id = item, amount = 1 }
+	const to_add = amount or 1
+	const existing = inventory[slot]
+	const current = if type(existing) == "table" then existing.amount else 0
+
+	inventory[slot] = { item_id = item, amount = current + to_add }
 
 	return true
 end
@@ -128,7 +132,7 @@ function inventory_util.consume_selected_item(entity: registry.entity): boolean
 
 	item.amount -= 1
 	if item.amount <= 0 then
-		inventory[slot_index] = false
+		inventory[slot_index] = "empty"
 	end
 	inventory_util.replicate(entity)
 	return true

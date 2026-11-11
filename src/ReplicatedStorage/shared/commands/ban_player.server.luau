@@ -3,7 +3,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local conch = require(ReplicatedStorage.Packages.conch)
 
--- Conch infers the callback's argument types from the inline arguments function, so these stay anonymous.
 conch.register("ban", {
 	description = "Bans the given player from the game",
 	permissions = { "administrator" },
