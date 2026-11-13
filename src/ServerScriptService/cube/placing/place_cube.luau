@@ -9,8 +9,10 @@ const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
+const is_building_allowed = require(ServerScriptService.cube.building_restrictions.is_building_allowed)
 const get_player_cps = require(ServerScriptService.cps.get_player_cps)
 const match = require(ServerScriptService.match.match)
+const send_notification = ReplicatedStorage.remotes.send_notification
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONFIG)
 const play_sound = require(ServerScriptService.util.play_sound)
@@ -44,6 +46,12 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, appea
 		return false
 	end
 
+	if not is_building_allowed(cube_position) then
+		debug_print("The player cannot build here.")
+		registry.fire_client(entity, send_notification, '<font color="rgb(255, 84, 84)">You cannot place cubes here!</font>')
+		return false
+	end
+
 	if cube_cache.is_occupied(cube_position) then
 		debug_print("Occupied by cube.")
 		return false
@@ -63,7 +71,7 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, appea
 	const player = registry.get_player(entity)
 	if
 		player
-		and get_player_cps(player, "use") >= MITIGATION_CONFIG.cps_treshold
+		and get_player_cps(player) >= MITIGATION_CONFIG.cps_treshold
 		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
 	then
 		add_cooldown(entity, "place_cube_mitigation", MITIGATION_CONFIG.duration)
@@ -73,7 +81,7 @@ local function place_cube(entity: registry.entity, cube_position: Vector3, appea
 	const clone = create_cube(appearance)
 	clone.Position = cube_position
 	clone.Parent = workspace.runtime_instances.cubes
-	-- The tag signal may be deferred, which would let a second placement in the same frame pass the occupancy check.
+	-- The tag signal may be deferred, which would let a second placement in the same frame pass the occupancy check
 	cube_cache.track(clone)
 	const entity_match = match.get_match_of(entity)
 	if entity_match then
