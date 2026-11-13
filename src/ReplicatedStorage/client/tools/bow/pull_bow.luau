@@ -1,13 +1,13 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const get_aim_target = require(ReplicatedStorage.client.aim.get_aim_target)
 const TOOL_USE_WALKSPEED_MODIFIER = require(ReplicatedStorage.client.tools.TOOL_USE_WALKSPEED_MODIFIER)
 const bow_state = require(script.Parent.bow_state)
 
 const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
 const player = Players.LocalPlayer
-const Mouse = player:GetMouse()
 
 local function pull_bow(): ()
 	const character = player.Character
@@ -34,7 +34,7 @@ local function shoot_bow_f(character: Model, dt: number): ()
 	end
 
 	const origin = head.Position
-	local direction = (Mouse.Hit.Position - origin).Unit
+	local direction = (get_aim_target().position - origin).Unit
 	shoot_bow:InvokeServer(origin, direction, dt)
 end
 

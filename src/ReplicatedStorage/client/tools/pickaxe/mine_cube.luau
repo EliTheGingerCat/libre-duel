@@ -1,16 +1,12 @@
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local set_cube_transparency = require(ReplicatedStorage.shared.cube.set_cube_transparency)
 const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
-const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
-local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
+const get_aim_target = require(ReplicatedStorage.client.aim.get_aim_target)
+const get_mining_fail_reason = require(script.Parent.get_mining_fail_reason)
 const TRANSPARENCY_MAXIMUM = require(ReplicatedStorage.client.cube.TRANSPARENCY_MAXIMUM)
-
-local local_player = Players.LocalPlayer
-local local_mouse = local_player:GetMouse()
 
 local connection_heartbeat_passive: RBXScriptConnection?
 
@@ -109,7 +105,10 @@ local function mine_new_cube(state: state_local, cube: BasePart): ()
 end
 
 local function on_heartbeat_passive(): ()
-	local cube = local_mouse.Target
+	const cube = get_aim_target().instance
+	if cube == nil then
+		return
+	end
 	mine_start(cube)
 end
 
@@ -140,33 +139,6 @@ local function stop_mining(): ()
 	disable_heartbeat_passive()
 end
 
--- If the return value is false, the client will stop mining.
-local function can_mine(cube: Instance?): string?
-	if cube == nil then
-		return "Mouse is not pointing at anything."
-	end
-
-	if not cube:IsA("Part") then
-		return "Mouse target is not a Part."
-	end
-
-	if cube:HasTag("cube") == false then
-		return "Mouse target is not a cube."
-	end
-
-	local local_position = get_entity_position(local_player)
-	if local_position == nil then
-		return "Local position is missing."
-	end
-
-	local distance = (cube.Position - local_position).Magnitude
-	if distance > ENTITY_RANGE then
-		return "Too far."
-	end
-
-	return nil
-end
-
 local function on_heartbeat_active(): ()
 	local state = local_mining
 	if state == nil then
@@ -174,8 +146,8 @@ local function on_heartbeat_active(): ()
 		return
 	end
 
-	local cube_now = local_mouse.Target
-	local fail_message = can_mine(cube_now)
+	local cube_now = get_aim_target().instance
+	local fail_message = get_mining_fail_reason(cube_now)
 	local fail = fail_message ~= nil
 	if fail == true then
 		-- As this runs every Heartbeat, do not spam the fail message nor the pausing.
@@ -189,11 +161,16 @@ local function on_heartbeat_active(): ()
 		end
 
 		-- Maybe whatever is preventing mining will cease. Do not stop mining --- keep checking. Only releasing of the keybind should stop all operations.
-		-- Technically, some more connections could be added to reduce the amount of work every frame. For example, if `local_mouse.Target` has not changed since last frame, and it was problematic in the last frame, then it is certainly problematic in this frame, though that seems overly complicated for not much benefit and in an already complicated system.
+		-- Technically, some more connections could be added to reduce the amount of work every frame. For example, if the aim target has not changed since last frame, and it was problematic in the last frame, then it is certainly problematic in this frame, though that seems overly complicated for not much benefit and in an already complicated system.
 		return
 	end
 
-	-- An example of when this would be `true` is if the player starts mining a cube, moves their mouse away from it, and then moves it back on. During the time that the mouse was away, `can_mine` reported a specific fail message and the mining was paused.
+	-- get_mining_fail_reason already rejected nil, this only narrows the type
+	if cube_now == nil then
+		return
+	end
+
+	-- An example of when this would be `true` is if the player starts mining a cube, moves their mouse away from it, and then moves it back on. During the time that the mouse was away, `get_mining_fail_reason` reported a specific fail message and the mining was paused.
 	local unpaused = state.last_fail ~= nil
 	if unpaused then
 		mine_new_cube(state, cube_now)
@@ -218,7 +195,7 @@ local function on_heartbeat_active(): ()
 end
 
 function mine_start(cube: BasePart): ()
-	local fail_message = can_mine(cube)
+	local fail_message = get_mining_fail_reason(cube)
 	local failed = fail_message ~= nil
 	if failed == true then
 		debug_print(`Failed to start mining: {fail_message}`)

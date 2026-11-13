@@ -2,6 +2,7 @@ local ContextActionService = game:GetService("ContextActionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
+const GAMEPAD_KEYBINDS = require(ReplicatedStorage.client.util.GAMEPAD_KEYBINDS)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 local React = require(ReplicatedStorage.Packages.react)
 local client_inventory_util = require(ReplicatedStorage.client.inventory.client_inventory_util)
@@ -10,12 +11,21 @@ local inventory_state = require(script.Parent.inventory_state)
 local mode_selector_state = require(script.Parent.Parent.matchmaking.mode_selector_state)
 
 const BLOCK_CAMERA_ACTION = "inventory_block_camera"
+const GAMEPAD_CLOSE_ACTION = "inventory_gamepad_close"
 
 local function close(): ()
 	inventory_state.set_enabled(false)
 end
 
 local function sink(): Enum.ContextActionResult
+	return Enum.ContextActionResult.Sink
+end
+
+-- bound through ContextActionService so the press reaches everything else as game processed, otherwise B would also start sneaking
+const function close_from_gamepad(_action_name: string, input_state: Enum.UserInputState): Enum.ContextActionResult
+	if input_state == Enum.UserInputState.Begin then
+		close()
+	end
 	return Enum.ContextActionResult.Sink
 end
 
@@ -35,7 +45,7 @@ local function use_inventory_toggle(): boolean
 			if processed or UserInputService:GetFocusedTextBox() ~= nil then
 				return
 			end
-			if input.KeyCode == KEYBINDS.inventory then
+			if input.KeyCode == KEYBINDS.inventory or input.KeyCode == GAMEPAD_KEYBINDS.inventory then
 				inventory_state.set_enabled(not inventory_state.enabled)
 				update()
 			elseif input.KeyCode == Enum.KeyCode.Escape then
@@ -64,8 +74,8 @@ local function use_inventory_toggle(): boolean
 
 	React.useEffect(subscribe, {})
 
-	-- Holding right click can still pan the camera while the cursor is free.
-	local function block_camera()
+	-- holding right click can still pan the camera while the cursor is free, and B closes instead of sneaking
+	local function bind_open_actions()
 		if not enabled then
 			return
 		end
@@ -76,15 +86,23 @@ local function use_inventory_toggle(): boolean
 			Enum.ContextActionPriority.High.Value,
 			Enum.UserInputType.MouseButton2
 		)
+		ContextActionService:BindActionAtPriority(
+			GAMEPAD_CLOSE_ACTION,
+			close_from_gamepad,
+			false,
+			Enum.ContextActionPriority.High.Value,
+			GAMEPAD_KEYBINDS.menu_close
+		)
 
 		local function unbind(): ()
 			ContextActionService:UnbindAction(BLOCK_CAMERA_ACTION)
+			ContextActionService:UnbindAction(GAMEPAD_CLOSE_ACTION)
 		end
 
 		return unbind
 	end
 
-	React.useEffect(block_camera, { enabled })
+	React.useEffect(bind_open_actions, { enabled })
 
 	return enabled
 end

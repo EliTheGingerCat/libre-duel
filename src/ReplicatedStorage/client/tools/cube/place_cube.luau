@@ -5,6 +5,7 @@ local workspace = game:GetService("Workspace")
 local create_cube = require(ReplicatedStorage.shared.cube.create_cube)
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.shared.cube.cube_in_hitbox)
+const get_aim_ray = require(ReplicatedStorage.client.aim.get_aim_ray)
 const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
@@ -13,7 +14,6 @@ local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 local tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 local local_player = Players.LocalPlayer
-local local_mouse = local_player:GetMouse()
 
 const CUBE_SIZE_HALF = CUBE_SIZE / 2
 const CUBE_SIZE_HALF_SOFT = CUBE_SIZE_HALF * 0.9
@@ -34,8 +34,8 @@ local function place_cube(tool: tool_types.tool): ()
 	end
 	build_ray_params.FilterDescendantsInstances = ignore_list
 
-	local mouse_ray = local_mouse.UnitRay
-	local ray_result = workspace:Raycast(mouse_ray.Origin, mouse_ray.Direction * 1000, build_ray_params)
+	const aim_ray = get_aim_ray()
+	local ray_result = workspace:Raycast(aim_ray.Origin, aim_ray.Direction * 1000, build_ray_params)
 
 	if not ray_result then
 		debug_print("Mouse target is missing.")

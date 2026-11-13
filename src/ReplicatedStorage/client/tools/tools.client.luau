@@ -8,6 +8,8 @@ const client_inventory_util = require(ReplicatedStorage.client.inventory.client_
 const create_tool_button = require(script.Parent.create_tool_button)
 const eat_cake = require(script.Parent.cake.eat_cake)
 const editor_state = require(ReplicatedStorage.client.ui.hud.editor_state)
+const GAMEPAD_KEYBINDS = require(ReplicatedStorage.client.util.GAMEPAD_KEYBINDS)
+const get_cycled_slot = require(script.Parent.get_cycled_slot)
 const get_slot_tool = require(script.Parent.get_slot_tool)
 const inventory_state = require(ReplicatedStorage.client.ui.inventory.inventory_state)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
@@ -28,6 +30,16 @@ const local_player = Players.LocalPlayer
 const INPUT_TO_BUTTON: { [Enum.UserInputType]: string } = {
 	[KEYBINDS.tool_attack] = "attack",
 	[KEYBINDS.tool_use] = "use",
+}
+
+const GAMEPAD_KEY_TO_BUTTON: { [Enum.KeyCode]: string } = {
+	[GAMEPAD_KEYBINDS.tool_attack] = "attack",
+	[GAMEPAD_KEYBINDS.tool_use] = "use",
+}
+
+const GAMEPAD_KEY_TO_SLOT_STEP: { [Enum.KeyCode]: number } = {
+	[GAMEPAD_KEYBINDS.slot_next] = 1,
+	[GAMEPAD_KEYBINDS.slot_previous] = -1,
 }
 
 const TOOL_BUTTONS = {
@@ -75,6 +87,10 @@ client_inventory_util.on_change:Connect(on_inventory_change)
 tool_state.on_select_requested:Connect(set_tool)
 
 local key_to_slot = table_flip(KEYBINDS.slot)
+
+const function get_input_button(input: InputObject): string?
+	return INPUT_TO_BUTTON[input.UserInputType] or GAMEPAD_KEY_TO_BUTTON[input.KeyCode]
+end
 
 local function press_button(button: string): ()
 	if editor_state.enabled or inventory_state.enabled or mode_selector_state.enabled then
@@ -124,14 +140,19 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 		set_tool(slot)
 	end
 
-	const button = INPUT_TO_BUTTON[input.UserInputType]
+	const slot_step = GAMEPAD_KEY_TO_SLOT_STEP[input.KeyCode]
+	if slot_step ~= nil then
+		set_tool(get_cycled_slot(tool_state.current, slot_step))
+	end
+
+	const button = get_input_button(input)
 	if button ~= nil then
 		press_button(button)
 	end
 end
 
 local function on_input_ended(input: InputObject, game_processed: boolean): ()
-	const button = INPUT_TO_BUTTON[input.UserInputType]
+	const button = get_input_button(input)
 	if button ~= nil then
 		release_button(button, game_processed)
 	end

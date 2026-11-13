@@ -9,6 +9,12 @@ const HUD_DEFAULTS = {
 		position = UDim2.new(1, -12, 0, 12),
 		hidden = true,
 	},
+	ControllerGlyphs = {
+		size = Vector2.new(220, 222),
+		anchor = Vector2.one,
+		position = UDim2.new(1, -12, 1, -12),
+		supports_device = { "gamepad" },
+	},
 	FpsCounter = {
 		size = Vector2.new(168, 42),
 		anchor = Vector2.new(1, 0),

@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+const GAMEPAD_KEYBINDS = require(ReplicatedStorage.client.util.GAMEPAD_KEYBINDS)
 const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
@@ -214,7 +215,9 @@ end
 
 local function tablist(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(tablist, props)
-	local held = use_if_key_held(KEYBINDS.tablist)
+	const held_key = use_if_key_held(KEYBINDS.tablist)
+	const held_gamepad = use_if_key_held(GAMEPAD_KEYBINDS.tablist)
+	const held = held_key or held_gamepad
 	local defaults = HUD_DEFAULTS.Tablist
 	local position = defaults.position + UDim2.fromOffset(0, defaults.stack_offset * use_viewport_scale())
 	local pinned, set_pinned = use_state(tablist_state.pinned)

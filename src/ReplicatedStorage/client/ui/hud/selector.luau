@@ -27,6 +27,7 @@ const WIDGETS = {
 	{ "UseItemButton", "Use Item Button" },
 	{ "InventoryButton", "Inventory Button" },
 	{ "TablistButton", "Player List Button" },
+	{ "ControllerGlyphs", "Controller Glyphs" },
 }
 
 local function increment(value: number): number

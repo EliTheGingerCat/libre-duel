@@ -1,18 +1,35 @@
+const ContextActionService = game:GetService("ContextActionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
+const GAMEPAD_KEYBINDS = require(ReplicatedStorage.client.util.GAMEPAD_KEYBINDS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 local React = require(ReplicatedStorage.Packages.react)
 local editor_state = require(script.Parent.Parent.hud.editor_state)
 local mode_selector_state = require(script.Parent.mode_selector_state)
 local notification_management = require(script.Parent.Parent.notification_management)
 
+const GAMEPAD_CLOSE_ACTION = "mode_selector_gamepad_close"
+
 local function close(): ()
 	mode_selector_state.set_enabled(false)
 end
 
-local function use_mode_selector(): { enabled: boolean, busy: boolean, close: () -> (), join: (MODE_DEFINITIONS.mode_id) -> () }
+-- bound through ContextActionService so it wins over gamepad ui navigation, which would otherwise take B to deselect
+const function close_from_gamepad(_action_name: string, input_state: Enum.UserInputState): Enum.ContextActionResult
+	if input_state == Enum.UserInputState.Begin then
+		close()
+	end
+	return Enum.ContextActionResult.Sink
+end
+
+local function use_mode_selector(): {
+	enabled: boolean,
+	busy: boolean,
+	close: () -> (),
+	join: (MODE_DEFINITIONS.mode_id) -> (),
+}
 	local enabled, set_enabled = React.useState(mode_selector_state.enabled)
 	local busy, set_busy = React.useState(false)
 	local pending = React.useRef(false)
@@ -42,6 +59,26 @@ local function use_mode_selector(): { enabled: boolean, busy: boolean, close: ()
 		return disconnect
 	end
 	React.useEffect(subscribe, {})
+
+	const function bind_gamepad_close(): (() -> ())?
+		if not enabled then
+			return nil
+		end
+		ContextActionService:BindActionAtPriority(
+			GAMEPAD_CLOSE_ACTION,
+			close_from_gamepad,
+			false,
+			Enum.ContextActionPriority.High.Value,
+			GAMEPAD_KEYBINDS.menu_close
+		)
+
+		const function unbind(): ()
+			ContextActionService:UnbindAction(GAMEPAD_CLOSE_ACTION)
+		end
+
+		return unbind
+	end
+	React.useEffect(bind_gamepad_close, { enabled })
 
 	local function join(mode: MODE_DEFINITIONS.mode_id): ()
 		if pending.current then
