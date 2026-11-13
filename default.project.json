@@ -49,6 +49,12 @@
       }
     },
 
+    "Players": {
+      "$properties": {
+        "RespawnTime": 0
+      }
+    },
+
     "ServerStorage": {
       "$path": "./src/ServerStorage"
     },
