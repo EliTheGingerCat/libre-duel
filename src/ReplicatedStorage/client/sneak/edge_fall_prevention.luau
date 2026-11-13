@@ -2,36 +2,53 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local get_nearest_supported_point = require(script.Parent.get_nearest_supported_point)
 const SNEAKING_CONSTANTS = require(script.Parent.SNEAKING_CONSTANTS)
 
 local player = Players.LocalPlayer
 
 local edge_fall_prevention = {}
 
-local controls_module = nil
-local old_move_function = nil
+const OVERHANG = SNEAKING_CONSTANTS.overhang
+-- How far above or below the feet a surface can be and still count as the floor being stood on.
+const STEP_TOLERANCE = 1
+-- How far past the overhang limit a floor is still found, so being pushed out a little keeps the limit.
+const SEARCH_MARGIN = 2
+const SEARCH_SIZE = Vector3.new((OVERHANG + SEARCH_MARGIN) * 2, STEP_TOLERANCE * 2, (OVERHANG + SEARCH_MARGIN) * 2)
+const PAD_SIZE = Vector3.new(2, 0.05, 2)
 
-local update_connection = nil
-local camera_connection = nil
-local cleanup_connection = nil
-local overhang_part = nil
+local controls_module: any = nil
+local old_move_function: any = nil
 
-local move_ray_check = RaycastParams.new()
-move_ray_check.FilterType = Enum.RaycastFilterType.Exclude
+local update_connection: RBXScriptConnection? = nil
+local cleanup_connection: RBXScriptConnection? = nil
+local pad_part: Part? = nil
 
-local floor_ray_check = RaycastParams.new()
-floor_ray_check.FilterType = Enum.RaycastFilterType.Exclude
+local floor_query = OverlapParams.new()
+floor_query.FilterType = Enum.RaycastFilterType.Exclude
+floor_query.RespectCanCollide = true
 
-const OVERHANG_OFFSET = SNEAKING_CONSTANTS.overhang
-const HIDING_CFRAME = CFrame.new(0, math.huge, 0)
-const OVERHANG_THICKNESS = 0.05
+local pad_ray_check = RaycastParams.new()
+pad_ray_check.FilterType = Enum.RaycastFilterType.Include
 
-local cached_char, cached_root, cached_hum
-local cached_camera = Workspace.CurrentCamera
-local last_floor_part = nil
+local cached_char: Model? = nil
+local cached_root: BasePart? = nil
+local cached_hum: Humanoid? = nil
 local is_enabled = false
 
-local function update_character_cache()
+-- The pad is never a floor, otherwise standing on it would hide the real floor it extends.
+local function refresh_floor_filter(): ()
+	local ignored: { Instance } = { Workspace.Terrain }
+	if cached_char then
+		table.insert(ignored, cached_char)
+	end
+	if pad_part then
+		table.insert(ignored, pad_part)
+	end
+	floor_query.FilterDescendantsInstances = ignored
+end
+
+local function update_character_cache(): ()
 	local char = player.Character
 	if char == cached_char then
 		return
@@ -39,15 +56,13 @@ local function update_character_cache()
 
 	cached_char = char
 	if char then
-		cached_root = char:FindFirstChild("HumanoidRootPart")
+		cached_root = char:FindFirstChild("HumanoidRootPart") :: BasePart?
 		cached_hum = char:FindFirstChildOfClass("Humanoid")
-
-		floor_ray_check.FilterDescendantsInstances = { char }
-		move_ray_check.FilterDescendantsInstances = { char, cached_camera }
 	else
 		cached_root = nil
 		cached_hum = nil
 	end
+	refresh_floor_filter()
 end
 
 -- PlayerModule only exists at runtime, so it cannot be required with the others.
@@ -55,7 +70,7 @@ local function require_controls(player_module: Instance): any
 	return (require :: any)(player_module):GetControls()
 end
 
-local function get_controls()
+local function get_controls(): any
 	if controls_module then
 		return controls_module
 	end
@@ -74,114 +89,114 @@ local function get_controls()
 	return controls_module
 end
 
-local function is_direction_safe(pos: Vector3, offset: Vector3, drop_vec: Vector3): boolean
-	return Workspace:Raycast(pos + offset, drop_vec, move_ray_check) ~= nil
+local function is_airborne(hum: Humanoid): boolean
+	local state = hum:GetState()
+	return hum.FloorMaterial == Enum.Material.Air
+		or state == Enum.HumanoidStateType.Freefall
+		or state == Enum.HumanoidStateType.Jumping
 end
 
-local function is_on_overhang(): boolean
-	if not (cached_root and cached_hum and cached_hum.Health > 0) then
+local function get_feet_y(root: BasePart, hum: Humanoid): number
+	return root.Position.Y - (root.Size.Y * 0.5) - hum.HipHeight
+end
+
+local function get_floor_parts(position: Vector3, feet_y: number): { BasePart }
+	return Workspace:GetPartBoundsInBox(CFrame.new(position.X, feet_y, position.Z), SEARCH_SIZE, floor_query)
+end
+
+local function is_on_pad(): boolean
+	local root, hum = cached_root, cached_hum
+	if not (root and hum and hum.Health > 0) then
 		return false
 	end
-	local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-	local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
-	return ray ~= nil and ray.Instance == overhang_part
+	local drop_vec = Vector3.new(0, -(root.Size.Y * 0.5) - hum.HipHeight - 1, 0)
+	return Workspace:Raycast(root.Position, drop_vec, pad_ray_check) ~= nil
 end
 
-local function on_camera_changed(): ()
-	cached_camera = Workspace.CurrentCamera
-	if cached_char then
-		move_ray_check.FilterDescendantsInstances = { cached_char, cached_camera }
-	end
-end
-
-local function update_overhang(): ()
+local function update_pad(): ()
 	update_character_cache()
 
-	if not (cached_char and cached_root and cached_hum and cached_hum.Health > 0) then
+	local root, hum, pad = cached_root, cached_hum, pad_part
+	if not (root and hum and pad and hum.Health > 0) then
 		return
 	end
 
-	local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-	local ray = Workspace:Raycast(cached_root.Position, drop_vec, floor_ray_check)
+	-- The pad stays where it was during a jump, so jumping in place lands back on it.
+	if is_airborne(hum) then
+		return
+	end
 
-	if ray and ray.Instance then
-		local hit_inst = ray.Instance
+	local position = root.Position
+	local feet_y = get_feet_y(root, hum)
+	local point =
+		get_nearest_supported_point(position, feet_y, get_floor_parts(position, feet_y), OVERHANG, STEP_TOLERANCE)
 
-		if hit_inst == overhang_part then
-			return
-		elseif hit_inst:IsA("BasePart") and not hit_inst:IsA("Terrain") then
-			if hit_inst ~= last_floor_part then
-				last_floor_part = hit_inst
-				local floor_size = hit_inst.Size
-
-				overhang_part.Size = Vector3.new(
-					floor_size.X + (OVERHANG_OFFSET * 2),
-					OVERHANG_THICKNESS,
-					floor_size.Z + (OVERHANG_OFFSET * 2)
-				)
-
-				overhang_part.CFrame = hit_inst.CFrame
-					* CFrame.new(0, (floor_size.Y * 0.5) - (OVERHANG_THICKNESS * 0.5), 0)
-			end
-		end
+	-- The pad sits on the nearest allowed point rather than under the player, so being knocked past
+	-- the limit still drops them, and losing the floor entirely takes the pad with it.
+	if point then
+		pad.CFrame = CFrame.new(point.X, point.Y - (PAD_SIZE.Y * 0.5), point.Z)
+		pad.Parent = Workspace
+	else
+		pad.Parent = nil
 	end
 end
 
 local function get_safe_direction(vec: Vector3): Vector3
-	if not (cached_root and cached_hum and cached_hum.Health > 0) or vec.Magnitude == 0 then
+	local root, hum = cached_root, cached_hum
+	if not (root and hum and hum.Health > 0) or vec.Magnitude == 0 or is_airborne(hum) then
 		return vec
 	end
 
-	local is_airborne = (cached_hum.FloorMaterial == Enum.Material.Air)
-		or (cached_hum:GetState() == Enum.HumanoidStateType.Freefall)
-		or (cached_hum:GetState() == Enum.HumanoidStateType.Jumping)
-
-	if is_airborne then
+	local look_ahead = (hum.WalkSpeed / 60) * 1.5
+	if look_ahead <= 0 then
 		return vec
 	end
 
-	local look_ahead = (cached_hum.WalkSpeed / 60) * 1.5
-	local test_vec = vec.Unit * look_ahead
-	local drop_vec = Vector3.new(0, -cached_hum.HipHeight - 2, 0)
-	local root_pos = cached_root.Position
+	local position = root.Position
+	local feet_y = get_feet_y(root, hum)
+	local parts = get_floor_parts(position, feet_y)
 
-	if is_direction_safe(root_pos, test_vec, drop_vec) then
+	-- Measuring from the nearest allowed point instead of the real position means stopping a little
+	-- past the limit neither pulls the player back nor blocks sliding along the edge.
+	local base = get_nearest_supported_point(position, feet_y, parts, OVERHANG, STEP_TOLERANCE)
+	if not base then
 		return vec
 	end
 
-	local v_x, v_z = vec.X, vec.Z
-	local abs_x, abs_z = math.abs(v_x), math.abs(v_z)
-
-	local safe_x = abs_x > 0.01 and is_direction_safe(root_pos, Vector3.new(test_vec.X, 0, 0), drop_vec)
-	local safe_z = abs_z > 0.01 and is_direction_safe(root_pos, Vector3.new(0, 0, test_vec.Z), drop_vec)
-
-	if safe_x and not safe_z then
-		return Vector3.new(v_x, 0, 0)
-	elseif safe_z and not safe_x then
-		return Vector3.new(0, 0, v_z)
-	elseif safe_x and safe_z then
-		return if abs_x > abs_z then Vector3.new(v_x, 0, 0) else Vector3.new(0, 0, v_z)
+	local flat_vec = Vector3.new(vec.X, 0, vec.Z)
+	local target = get_nearest_supported_point(base + (flat_vec * look_ahead), feet_y, parts, OVERHANG, STEP_TOLERANCE)
+	if not target then
+		return vec
 	end
-	return Vector3.zero
+
+	local allowed = Vector3.new(target.X - base.X, 0, target.Z - base.Z) / look_ahead
+	if allowed:FuzzyEq(flat_vec, 1e-3) then
+		return vec
+	end
+	return allowed
 end
 
 local function move_with_edge_check(self: any, vec: Vector3, face: boolean): ()
 	old_move_function(self, get_safe_direction(vec), face)
 end
 
-local function wait_until_off_overhang(): ()
+local function destroy_pad(): ()
+	if pad_part then
+		pad_part:Destroy()
+		pad_part = nil
+	end
+end
+
+local function wait_until_off_pad(): ()
 	update_character_cache()
-	if is_on_overhang() then
+	if is_on_pad() then
 		return
 	end
 	if cleanup_connection then
 		cleanup_connection:Disconnect()
 		cleanup_connection = nil
 	end
-	if overhang_part then
-		overhang_part:Destroy()
-		overhang_part = nil
-	end
+	destroy_pad()
 end
 
 function edge_fall_prevention.enable()
@@ -200,19 +215,22 @@ function edge_fall_prevention.enable()
 		return
 	end
 
-	if not overhang_part then
-		overhang_part = Instance.new("Part")
-		overhang_part.Name = "sneak_overhang"
-		overhang_part.Anchored = true
-		overhang_part.CanCollide = true
-		overhang_part.Transparency = 1
-		overhang_part.CastShadow = false
-		overhang_part.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0, 0, 0, 0) --Density has to be 0.0001 so roblox stops crying in the console...
-		overhang_part.Parent = Workspace
+	if not pad_part then
+		local pad = Instance.new("Part")
+		pad.Name = "sneak_overhang"
+		pad.Size = PAD_SIZE
+		pad.Anchored = true
+		pad.CanCollide = true
+		pad.Transparency = 1
+		pad.CastShadow = false
+		pad.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0, 0, 0, 0) --Density has to be 0.0001 so roblox stops crying in the console...
+		pad_part = pad
+
+		pad_ray_check.FilterDescendantsInstances = { pad }
+		refresh_floor_filter()
 	end
 
-	camera_connection = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(on_camera_changed)
-	update_connection = RunService.Heartbeat:Connect(update_overhang)
+	update_connection = RunService.Heartbeat:Connect(update_pad)
 
 	old_move_function = controls.moveFunction
 	controls.moveFunction = move_with_edge_check
@@ -229,26 +247,18 @@ function edge_fall_prevention.disable()
 		update_connection = nil
 	end
 
-	if camera_connection then
-		camera_connection:Disconnect()
-		camera_connection = nil
-	end
-
 	local controls = get_controls()
 	if controls and old_move_function then
 		controls.moveFunction = old_move_function
 		old_move_function = nil
 	end
 
-	last_floor_part = nil
-
-	if overhang_part then
+	if pad_part then
 		update_character_cache()
-		if is_on_overhang() then
-			cleanup_connection = RunService.Heartbeat:Connect(wait_until_off_overhang)
+		if is_on_pad() then
+			cleanup_connection = RunService.Heartbeat:Connect(wait_until_off_pad)
 		else
-			overhang_part:Destroy()
-			overhang_part = nil
+			destroy_pad()
 		end
 	end
 end
