@@ -4,6 +4,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const get_aim_target = require(ReplicatedStorage.client.aim.get_aim_target)
 const TOOL_USE_WALKSPEED_MODIFIER = require(ReplicatedStorage.client.tools.TOOL_USE_WALKSPEED_MODIFIER)
 const bow_state = require(script.Parent.bow_state)
+const walkspeed = require(ReplicatedStorage.client.util.walkspeed)
 
 const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
@@ -18,7 +19,7 @@ const function pull_bow(): ()
 	if humanoid == nil or humanoid.Health <= 0 then
 		return
 	end
-	humanoid.WalkSpeed *= TOOL_USE_WALKSPEED_MODIFIER
+	walkspeed.set_modifier("bow", TOOL_USE_WALKSPEED_MODIFIER)
 	bow_state.draw_started = os.clock()
 end
 
@@ -40,10 +41,9 @@ end
 
 const function release_bow(was_released: boolean): ()
 	const draw_started = bow_state.draw_started
-	const character = player.Character or player.CharacterAdded:Wait()
-	const humanoid = character.Humanoid
+	const character = player.Character
 
-	humanoid.WalkSpeed /= TOOL_USE_WALKSPEED_MODIFIER
+	walkspeed.set_modifier("bow", nil)
 	bow_state.draw_started = nil
 	if was_released and draw_started ~= nil and character ~= nil then
 		shoot_bow_f(character, os.clock() - draw_started)
