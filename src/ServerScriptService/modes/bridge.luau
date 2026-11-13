@@ -6,6 +6,7 @@ const Workspace = game:GetService("Workspace")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const debug_print = require(script.Parent.Parent.util.debug_print)
+const generate_bridge = require(ServerScriptService.cube.generate_bridge)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
 const map_data = require(ReplicatedStorage.shared.maps.map_data)
@@ -117,6 +118,7 @@ local function new(this_match: match.match): match.hooks
 	const load_info: (ModuleScript) -> map_data.map_data = require
 	const info = load_info(info_module)
 	const teams = create_teams(info)
+	generate_bridge(info.BRIDGE, info.TEAM1.SPAWN.Position, this_match)
 	const connections: { RBXScriptConnection | registry.connection } = {}
 	local cages_are_closed = false
 

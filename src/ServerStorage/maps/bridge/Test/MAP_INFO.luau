@@ -14,6 +14,7 @@ const MAP_DATA: map_data.map_data = {
 		"breter98",
 		"Jane Doe",
 	},
+	BRIDGE = MAP_ROOT.bridge,
 	TEAM1 = {
 		CAGE = MAP_ROOT.team1_base.Cage1,
 		GOAL = MAP_ROOT.team1_base.Goal1,
