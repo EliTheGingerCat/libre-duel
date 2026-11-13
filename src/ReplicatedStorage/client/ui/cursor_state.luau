@@ -1,11 +1,11 @@
 -- Menus that need a free mouse cursor register here. The crosshair is the only code that writes the cursor state.
 local free_reasons: { [string]: boolean } = {}
 
-local function set_free(reason: string, free: boolean): ()
+const function set_free(reason: string, free: boolean): ()
 	free_reasons[reason] = if free then true else nil
 end
 
-local function is_free(): boolean
+const function is_free(): boolean
 	return next(free_reasons) ~= nil
 end
 

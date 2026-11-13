@@ -11,7 +11,6 @@ const get_slot_amount = require(ReplicatedStorage.client.tools.get_slot_amount)
 local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local gradient_stroke = require(script.Parent.gradient_stroke)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local inventory_state = require(script.Parent.Parent.inventory.inventory_state)
 local item_slot = require(script.Parent.Parent.inventory.item_slot)
 local scale = require(script.Parent.scale)
@@ -33,7 +32,7 @@ const SLOTS_HEIGHT = INVENTORY_LAYOUT.SLOT_SIZE + INVENTORY_LAYOUT.HOTBAR_PADDIN
 const HEALTH_WIDTH = SLOTS_WIDTH - INVENTORY_LAYOUT.HOTBAR_PADDING
 const HEALTH_HEIGHT = 26
 
-local function slider_display(props: {
+const function slider_display(props: {
 	anchor_point: Vector2,
 	colour_background: Color3,
 	colour_gradient: ColorSequence,
@@ -90,24 +89,24 @@ local function slider_display(props: {
 end
 
 type state_setter<T> = (((T) -> T) | T) -> ()
-local function use_character(): Model?
+const function use_character(): Model?
 	local character: Model?, set_character: state_setter<Model?> = use_state(local_player.Character)
 
-	local function effect_character_formation()
-		local function on_character_added(character: Model): ()
+	const function effect_character_formation()
+		const function on_character_added(character: Model): ()
 			set_character(character)
 		end
 
 		local connection_character_added = local_player.CharacterAdded:Connect(on_character_added)
 
-		local function on_character_removing(): ()
+		const function on_character_removing(): ()
 			set_character(nil)
 		end
 
 		local connection_character_removing = local_player.CharacterRemoving:Connect(on_character_removing)
 		set_character(local_player.Character)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection_character_added:Disconnect()
 			connection_character_removing:Disconnect()
 		end
@@ -117,11 +116,11 @@ local function use_character(): Model?
 
 	use_effect(effect_character_formation, {})
 
-	local function effect_character_destroying()
+	const function effect_character_destroying()
 		local connection_character_destroying: RBXScriptConnection?
 		if character ~= nil then
-			local function on_character_destroying(): ()
-				local function clear_if_current(current: Model?): Model?
+			const function on_character_destroying(): ()
+				const function clear_if_current(current: Model?): Model?
 					return if current == character then nil else current
 				end
 				set_character(clear_if_current)
@@ -132,7 +131,7 @@ local function use_character(): Model?
 			connection_character_destroying = nil
 		end
 
-		local function disconnect()
+		const function disconnect()
 			if connection_character_destroying ~= nil then
 				connection_character_destroying:Disconnect()
 			end
@@ -146,22 +145,22 @@ local function use_character(): Model?
 	return character
 end
 
-local function use_humanoid(): Humanoid?
+const function use_humanoid(): Humanoid?
 	local character = use_character()
 	local humanoid: Humanoid?, set_humanoid: state_setter<Humanoid?> =
 		use_state(if character then character:FindFirstChildOfClass("Humanoid") else nil)
 
-	local function effect_humanoid()
+	const function effect_humanoid()
 		if character == nil then
 			set_humanoid(nil)
 			return
 		end
 
-		local function update_humanoid(): ()
+		const function update_humanoid(): ()
 			set_humanoid(character:FindFirstChildOfClass("Humanoid"))
 		end
 
-		local function on_child_changed(child: Instance): ()
+		const function on_child_changed(child: Instance): ()
 			if child:IsA("Humanoid") then
 				update_humanoid()
 			end
@@ -171,7 +170,7 @@ local function use_humanoid(): Humanoid?
 		local connection_child_removed = character.ChildRemoved:Connect(on_child_changed)
 		update_humanoid()
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection_child_added:Disconnect()
 			connection_child_removed:Disconnect()
 		end
@@ -184,7 +183,7 @@ local function use_humanoid(): Humanoid?
 	return humanoid
 end
 
-local function get_health_optional(humanoid: Humanoid?): number
+const function get_health_optional(humanoid: Humanoid?): number
 	if humanoid == nil then
 		return 0
 	end
@@ -192,11 +191,11 @@ local function get_health_optional(humanoid: Humanoid?): number
 	return humanoid.Health
 end
 
-local function use_health_main(): number
+const function use_health_main(): number
 	local humanoid = use_humanoid()
 	local health_main, set_health_main = use_state(get_health_optional(humanoid))
 
-	local function effect_health_main()
+	const function effect_health_main()
 		if humanoid == nil then
 			set_health_main(0)
 			return
@@ -204,13 +203,13 @@ local function use_health_main(): number
 
 		set_health_main(humanoid.Health)
 
-		local function on_health_changed(health: number): ()
+		const function on_health_changed(health: number): ()
 			set_health_main(health)
 		end
 
 		local connection = humanoid.HealthChanged:Connect(on_health_changed)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -222,7 +221,7 @@ local function use_health_main(): number
 	return health_main
 end
 
-local function health_main()
+const function health_main()
 	local health_main = use_health_main()
 
 	local props_slider = {
@@ -243,7 +242,7 @@ local function health_main()
 	return create_element(slider_display, props_slider)
 end
 
-local function health_shield(props: {
+const function health_shield(props: {
 	health_shield: number,
 })
 	local props_slider = {
@@ -265,7 +264,7 @@ local function health_shield(props: {
 	return create_element(slider_display, props_slider)
 end
 
-local function health_bar(props: {
+const function health_bar(props: {
 	health_shield: number,
 })
 	return create_element("Frame", {
@@ -278,17 +277,17 @@ local function health_bar(props: {
 	}))
 end
 
-local function use_active_slot(): number
+const function use_active_slot(): number
 	local active_slot, set_active_slot = use_state(tool_state.current)
 
-	local function effect_active_slot()
-		local function on_fire(slot: number): ()
+	const function effect_active_slot()
+		const function on_fire(slot: number): ()
 			set_active_slot(slot)
 		end
 
 		local connection = tool_state.on_change:Connect(on_fire)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -300,20 +299,20 @@ local function use_active_slot(): number
 	return active_slot
 end
 
-local function select_slot(slot: number): ()
+const function select_slot(slot: number): ()
 	tool_state.on_select_requested:Fire(slot)
 end
 
 -- One click handler per slot, made once so slots do not render again for a new function every time.
 local on_clicks: { () -> () } = {}
 for slot = 1, INVENTORY_CONSTANTS.COLUMNS do
-	local function on_click(): ()
+	const function on_click(): ()
 		select_slot(slot)
 	end
 	on_clicks[slot] = on_click
 end
 
-local function slots_container(props: { preview: boolean? })
+const function slots_container(props: { preview: boolean? })
 	local active_slot = use_active_slot()
 	use_inventory_version()
 
@@ -339,7 +338,6 @@ local function slots_container(props: { preview: boolean? })
 		Size = UDim2.fromOffset(SLOTS_WIDTH, SLOTS_HEIGHT),
 	}, {
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0.45, 0) }),
-		blur = not props.preview and create_element(ui_blur),
 		grid = create_element("UIGridLayout", {
 			CellPadding = UDim2.fromOffset(INVENTORY_LAYOUT.HOTBAR_SLOT_GAP, INVENTORY_LAYOUT.HOTBAR_SLOT_GAP),
 			CellSize = UDim2.fromOffset(INVENTORY_LAYOUT.SLOT_SIZE, INVENTORY_LAYOUT.SLOT_SIZE),
@@ -359,17 +357,17 @@ local function slots_container(props: { preview: boolean? })
 end
 
 -- The inventory window has its own hotbar row, so this one hides while it is open.
-local function use_inventory_open(): boolean
+const function use_inventory_open(): boolean
 	local open, set_open = use_state(inventory_state.enabled)
 
-	local function subscribe()
-		local function on_change(): ()
+	const function subscribe()
+		const function on_change(): ()
 			set_open(inventory_state.enabled)
 		end
 
 		local connection = inventory_state.on_change:Connect(on_change)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -381,7 +379,7 @@ local function use_inventory_open(): boolean
 	return open
 end
 
-local function hotbar(props: use_editable_hud.props)
+const function hotbar(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(hotbar, props)
 	local inventory_open = use_inventory_open()
 	return create_element(

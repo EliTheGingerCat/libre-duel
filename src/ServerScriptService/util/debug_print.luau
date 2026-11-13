@@ -6,14 +6,14 @@ const IS_STUDIO = RunService:IsStudio()
 
 local debug_enabled = true
 
-local function debug_print(...: any): ()
+const function debug_print(...: any): ()
 	if debug_enabled then
 		local source = debug.info(2, "s")
 		print(source, ...)
 	end
 end
 
-local function on_event(player: Player): ()
+const function on_event(player: Player): ()
 	local is_owner = player.UserId == CREATOR_ID
 	local has_permission = IS_STUDIO or is_owner
 	if not has_permission then

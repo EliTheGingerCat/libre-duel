@@ -7,11 +7,11 @@ local editor = require(script.Parent.Parent.hud.editor)
 local registry = require(script.Parent.Parent.hud.registry)
 local touch_button = require(script.Parent.Parent.hud.touch_button)
 
-local function cleanup()
+const function cleanup()
 	return registry.clear_duplicates
 end
 
-local function gameplay_hud()
+const function gameplay_hud()
 	React.useEffect(cleanup, {})
 	local widgets = {
 		editor = React.createElement(editor),

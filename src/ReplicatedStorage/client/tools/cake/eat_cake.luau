@@ -8,14 +8,14 @@ const set_cake_state = ReplicatedStorage.remotes.set_cake_state
 
 local cached_walkspeed: number? = nil
 
-local function restore_walkspeed(humanoid: Humanoid): ()
+const function restore_walkspeed(humanoid: Humanoid): ()
 	if cached_walkspeed ~= nil then
 		humanoid.WalkSpeed = cached_walkspeed
 		cached_walkspeed = nil
 	end
 end
 
-local function start_eating(): ()
+const function start_eating(): ()
 	const character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
 	const humanoid = character:WaitForChild("Humanoid") :: Humanoid
 	cake_state.eating = true
@@ -33,7 +33,7 @@ local function start_eating(): ()
 	end
 end
 
-local function stop_eating(): ()
+const function stop_eating(): ()
 	if cake_state.eating then
 		const character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
 		const humanoid = character:WaitForChild("Humanoid") :: Humanoid

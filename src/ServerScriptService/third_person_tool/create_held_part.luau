@@ -4,7 +4,7 @@ const create_cube_part = require(ReplicatedStorage.shared.cube.create_cube_part)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 const THIRD_PERSON_TOOL_CONSTANTS = require(script.Parent.THIRD_PERSON_TOOL_CONSTANTS)
 
-local function create_mesh_part(mesh_id: string, texture_id: string): Part
+const function create_mesh_part(mesh_id: string, texture_id: string): Part
     const part = Instance.new("Part")
     part.Size = Vector3.one
 
@@ -19,7 +19,7 @@ local function create_mesh_part(mesh_id: string, texture_id: string): Part
 end
 
 -- nil for tools that have nothing to show, the same ones the viewmodel leaves empty
-local function create_held_part(tool: tool_types.tool): Part?
+const function create_held_part(tool: tool_types.tool): Part?
     const cube = tool.behaviours.cube
     const mesh_id = tool.mesh
 

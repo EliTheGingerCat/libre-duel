@@ -7,10 +7,10 @@ local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
 local surface = require(script.Parent.controls.surface)
 
-local function check_box(props: { active: boolean?, round: boolean?, text: string?, on_changed: ((boolean) -> ())? })
+const function check_box(props: { active: boolean?, round: boolean?, text: string?, on_changed: ((boolean) -> ())? })
 	local stored, set_stored = React.useState(props.active == true)
 	local active = if props.on_changed then props.active == true else stored
-	local function activate(): ()
+	const function activate(): ()
 		if props.on_changed then
 			props.on_changed(not active)
 		else

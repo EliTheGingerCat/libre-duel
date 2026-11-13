@@ -27,7 +27,7 @@ local connection_heartbeat: RBXScriptConnection?
 const minings: minings = {}
 local total_minings = 0
 
-local function find_mining(entity: registry.entity, id: number): mining?
+const function find_mining(entity: registry.entity, id: number): mining?
 	const entries = minings[entity]
 	if entries == nil then
 		return nil
@@ -41,7 +41,7 @@ local function find_mining(entity: registry.entity, id: number): mining?
 	return nil
 end
 
-local function mine_ceased(mining: mining): boolean
+const function mine_ceased(mining: mining): boolean
 	const entries = minings[mining.entity]
 	const index = if entries then table.find(entries, mining) else nil
 	if entries == nil or index == nil then
@@ -53,7 +53,7 @@ local function mine_ceased(mining: mining): boolean
 	return true
 end
 
-local function mine_finished(mining: mining): ()
+const function mine_finished(mining: mining): ()
 	if not mine_ceased(mining) then
 		return
 	end
@@ -62,7 +62,7 @@ local function mine_finished(mining: mining): ()
 	registry.fire_client(mining.entity, ReplicatedStorage.remotes.mine_finished, mining.id)
 end
 
-local function fire_excluding(remote: RemoteEvent, entity: registry.entity, cube: Part, time_fraction: number): ()
+const function fire_excluding(remote: RemoteEvent, entity: registry.entity, cube: Part, time_fraction: number): ()
 	for _, recipient in Players:GetPlayers() do
 		if recipient ~= entity then
 			remote:FireClient(recipient, cube, time_fraction)
@@ -70,11 +70,11 @@ local function fire_excluding(remote: RemoteEvent, entity: registry.entity, cube
 	end
 end
 
-local function mine_progress(mining: mining, time_fraction: number): ()
+const function mine_progress(mining: mining, time_fraction: number): ()
 	fire_excluding(ReplicatedStorage.remotes.mine_progress, mining.entity, mining.cube, time_fraction)
 end
 
-local function mine_fail(mining: mining): ()
+const function mine_fail(mining: mining): ()
 	debug_print("Failed to mine. Cube:", mining.cube)
 	if not mine_ceased(mining) then
 		return
@@ -83,7 +83,7 @@ local function mine_fail(mining: mining): ()
 	mine_progress(mining, 0)
 end
 
-local function should_fail(mining: mining): boolean
+const function should_fail(mining: mining): boolean
 	const entity_position = get_entity_position(mining.entity)
 	if entity_position == nil then
 		debug_print("Entity has no position.")
@@ -99,14 +99,14 @@ local function should_fail(mining: mining): boolean
 	return false
 end
 
-local function deactivate_heartbeat(): ()
+const function deactivate_heartbeat(): ()
 	assert(connection_heartbeat ~= nil, "There is no connection for heartbeat.")
 	connection_heartbeat:Disconnect()
 	connection_heartbeat = nil
 	debug_print("Deactivated the heartbeat connection.")
 end
 
-local function on_heartbeat(): ()
+const function on_heartbeat(): ()
 	const now = os.clock()
 	const finished: { mining } = {}
 	const failed: { mining } = {}
@@ -146,16 +146,16 @@ local function on_heartbeat(): ()
 	end
 end
 
-local function activate_heartbeat(): ()
+const function activate_heartbeat(): ()
 	if connection_heartbeat == nil then
 		connection_heartbeat = RunService.Heartbeat:Connect(on_heartbeat)
 	end
 end
 
-local function start_mining(entity: registry.entity, id: number, cube: Part): ()
+const function start_mining(entity: registry.entity, id: number, cube: Part): ()
 	local mining: mining
 
-	local function on_destroying(): ()
+	const function on_destroying(): ()
 		mine_fail(mining)
 	end
 	const connection_destroying = cube.Destroying:Connect(on_destroying)
@@ -176,7 +176,7 @@ local function start_mining(entity: registry.entity, id: number, cube: Part): ()
 	activate_heartbeat()
 end
 
-local function try_start(entity: registry.entity, id: unknown, cube: unknown): boolean
+const function try_start(entity: registry.entity, id: unknown, cube: unknown): boolean
 	-- When dealing with high lag, this can happen if the player places a cube and then immediately begins to mine it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
 	if cube == nil then
 		debug_print("Not enough arguments. This is likely because the cube does does not exist on the server yet.")
@@ -228,14 +228,14 @@ local function try_start(entity: registry.entity, id: unknown, cube: unknown): b
 	return true
 end
 
-local function stop(entity: registry.entity, id: number): ()
+const function stop(entity: registry.entity, id: number): ()
 	const mining = find_mining(entity, id)
 	if mining and mine_ceased(mining) then
 		mine_progress(mining, 0)
 	end
 end
 
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
 	const entries = minings[entity]
 	if entries == nil then
 		return

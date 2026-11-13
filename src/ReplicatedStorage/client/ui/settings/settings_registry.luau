@@ -15,7 +15,7 @@ local entries: { entry } = {}
 local values: { [string]: value? } = {}
 local by_id: { [string]: entry } = {}
 
-local function register_category(category: category): ()
+const function register_category(category: category): ()
 	for _, existing in categories do
 		assert(existing.id ~= category.id, "Duplicate settings category: " .. category.id)
 	end
@@ -23,7 +23,7 @@ local function register_category(category: category): ()
 	changed:Fire()
 end
 
-local function register(entry: entry)
+const function register(entry: entry)
 	assert(not by_id[entry.id], "Duplicate setting: " .. entry.id)
 	local found = false
 	for _, category in categories do
@@ -43,7 +43,7 @@ local function register(entry: entry)
 	values[entry.id] = default
 	table.insert(entries, entry)
 	changed:Fire()
-	local function unregister(): ()
+	const function unregister(): ()
 		local index = table.find(entries, entry)
 		if not index then
 			return
@@ -56,11 +56,11 @@ local function register(entry: entry)
 	return unregister
 end
 
-local function get(id: string): value?
+const function get(id: string): value?
 	return values[id]
 end
 
-local function set(id: string, value: value): ()
+const function set(id: string, value: value): ()
 	local entry = by_id[id]
 	assert(entry, "Unknown setting: " .. id)
 	settings_value.validate(entry, value)
@@ -72,12 +72,12 @@ local function set(id: string, value: value): ()
 	changed:Fire()
 end
 
-local function is_visible(entry: entry): boolean
+const function is_visible(entry: entry): boolean
 	local visible = entry.visible :: (() -> boolean)?
 	return visible == nil or visible()
 end
 
-local function get_children(id: string): { entry }
+const function get_children(id: string): { entry }
 	local children = {}
 	for _, entry in entries do
 		if (entry.parent :: string?) == id then
@@ -88,13 +88,13 @@ local function get_children(id: string): { entry }
 end
 
 -- For settings whose visibility depends on something outside the registry.
-local function refresh(): ()
+const function refresh(): ()
 	changed:Fire()
 end
 
-local function subscribe(callback: () -> ())
+const function subscribe(callback: () -> ())
 	local connection = changed:Connect(callback)
-	local function disconnect(): ()
+	const function disconnect(): ()
 		connection:Disconnect()
 	end
 	return disconnect

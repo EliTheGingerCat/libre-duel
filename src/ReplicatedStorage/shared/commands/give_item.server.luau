@@ -5,7 +5,7 @@ const ServerScriptService = game:GetService("ServerScriptService")
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
 local conch = require(ReplicatedStorage.Packages.conch)
 
-local function get_items()
+const function get_items()
 	local map = {}
 	for _, item in ReplicatedStorage.shared.tools.definitions:GetChildren() do
 		map[item.name] = item.name

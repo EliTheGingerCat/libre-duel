@@ -6,7 +6,7 @@ const TWO_PI = 2 * math.pi
 local bob_phase = 0
 local bob_strength = 0
 
-local function update_bob(delta_time: number): CFrame
+const function update_bob(delta_time: number): CFrame
     const speed = get_grounded_speed()
     const target_strength = math.min(speed / VIEWMODEL_CONSTANTS.bob_full_speed, 1)
 

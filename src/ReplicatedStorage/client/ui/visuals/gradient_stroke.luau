@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local function gradient_stroke(props: {
+const function gradient_stroke(props: {
 	colour: Color3?,
 	bottom: Color3?,
 	rotation: number?,

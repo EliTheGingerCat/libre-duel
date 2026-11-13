@@ -10,10 +10,10 @@ const DISTANCE = 8
 const FREQUENCY = 40
 
 -- Returns a horizontal offset binding that shakes every time `trigger` changes.
-local function use_shake(trigger: number)
+const function use_shake(trigger: number)
 	local offset, set_offset = React.useBinding(0)
 
-	local function shake()
+	const function shake()
 		local duration = scale_animation_time(DURATION)
 		if trigger == 0 or GuiService.ReducedMotionEnabled or duration == 0 then
 			return
@@ -21,7 +21,7 @@ local function use_shake(trigger: number)
 		local started = os.clock()
 		local connection: RBXScriptConnection
 
-		local function step(): ()
+		const function step(): ()
 			const progress = (os.clock() - started) / duration
 			if progress >= 1 then
 				set_offset(0)
@@ -33,7 +33,7 @@ local function use_shake(trigger: number)
 
 		connection = RunService.RenderStepped:Connect(step)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			set_offset(0)
 		end

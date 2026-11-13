@@ -6,7 +6,7 @@ const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 local id = 0
 
-local function create_cube(appearance: tool_types.cube_params): Part
+const function create_cube(appearance: tool_types.cube_params): Part
 	id += 1
 	local cube = create_cube_part(appearance, CUBE_SIZE)
 	cube.Anchored = true

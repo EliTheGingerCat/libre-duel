@@ -8,7 +8,7 @@ local registry = require(script.Parent.registry)
 
 local create_element = React.createElement
 
-local function settings(props: { selected: registry.entry?, display_order: number, on_close: () -> () })
+const function settings(props: { selected: registry.entry?, display_order: number, on_close: () -> () })
 	local selected = props.selected
 	return create_element(
 		menu_window,

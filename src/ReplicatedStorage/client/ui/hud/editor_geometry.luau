@@ -18,11 +18,11 @@ export type guide = {
 	on_screen: boolean,
 }
 
-local function anchor_axis(value: number): number
+const function anchor_axis(value: number): number
 	return if value < 1 / 3 then 0 elseif value > 2 / 3 then 1 else 0.5
 end
 
-local function get_layout(rect: rectangle, bounds: Vector2, preview_factor: number): layout
+const function get_layout(rect: rectangle, bounds: Vector2, preview_factor: number): layout
 	local centre = (rect.position + rect.size / 2) / bounds
 	local anchor = Vector2.new(anchor_axis(centre.X), anchor_axis(centre.Y))
 	return {
@@ -42,12 +42,12 @@ const HANDLES = {
 	Vector2.new(1, 1),
 }
 
-local function contains(rect: rectangle, point: Vector2): boolean
+const function contains(rect: rectangle, point: Vector2): boolean
 	local relative = point - rect.position
 	return relative.X >= 0 and relative.Y >= 0 and relative.X <= rect.size.X and relative.Y <= rect.size.Y
 end
 
-local function get_handle(rect: rectangle, point: Vector2): Vector2?
+const function get_handle(rect: rectangle, point: Vector2): Vector2?
 	for _, handle in HANDLES do
 		local position = rect.position + rect.size * ((handle + Vector2.one) / 2)
 		if (point - position).Magnitude <= 9 then
@@ -57,7 +57,7 @@ local function get_handle(rect: rectangle, point: Vector2): Vector2?
 	return nil
 end
 
-local function targets(others: { rectangle }, bounds: Vector2): { Vector2 }
+const function targets(others: { rectangle }, bounds: Vector2): { Vector2 }
 	local result = { Vector2.zero, bounds / 2, bounds }
 	for _, other in others do
 		table.insert(result, other.position)
@@ -67,7 +67,7 @@ local function targets(others: { rectangle }, bounds: Vector2): { Vector2 }
 	return result
 end
 
-local function move(rect: rectangle, delta: Vector2, others: { rectangle }, bounds: Vector2): rectangle
+const function move(rect: rectangle, delta: Vector2, others: { rectangle }, bounds: Vector2): rectangle
 	local max_x = math.max(0, bounds.X - rect.size.X)
 	local max_y = math.max(0, bounds.Y - rect.size.Y)
 	local position = rect.position + delta
@@ -91,7 +91,7 @@ local function move(rect: rectangle, delta: Vector2, others: { rectangle }, boun
 end
 
 -- The lines a rectangle lines up with, one per axis, to show why it snapped.
-local function get_guides(rect: rectangle, others: { rectangle }, bounds: Vector2): (guide?, guide?)
+const function get_guides(rect: rectangle, others: { rectangle }, bounds: Vector2): (guide?, guide?)
 	local guide_x: guide? = nil
 	local guide_y: guide? = nil
 	for index, target in targets(others, bounds) do
@@ -109,7 +109,7 @@ local function get_guides(rect: rectangle, others: { rectangle }, bounds: Vector
 	return guide_x, guide_y
 end
 
-local function resize(
+const function resize(
 	rect: rectangle,
 	delta: Vector2,
 	handle: Vector2,

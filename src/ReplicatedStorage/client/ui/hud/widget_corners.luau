@@ -4,11 +4,11 @@ export type controller = {
 	disconnect: () -> (),
 }
 
-local function widget_corners(content: GuiObject): controller
+const function widget_corners(content: GuiObject): controller
 	local roundness: number? = nil
 	local connections: { [UICorner]: RBXScriptConnection } = {}
 
-	local function apply(corner: UICorner): ()
+	const function apply(corner: UICorner): ()
 		if roundness ~= nil then
 			local radius = UDim.new(roundness / 200, 0)
 			if corner.CornerRadius ~= radius then
@@ -17,9 +17,9 @@ local function widget_corners(content: GuiObject): controller
 		end
 	end
 
-	local function watch(descendant: Instance): ()
+	const function watch(descendant: Instance): ()
 		if descendant:IsA("UICorner") then
-			local function on_radius_changed(): ()
+			const function on_radius_changed(): ()
 				apply(descendant)
 			end
 			connections[descendant] = descendant:GetPropertyChangedSignal("CornerRadius"):Connect(on_radius_changed)
@@ -27,7 +27,7 @@ local function widget_corners(content: GuiObject): controller
 		end
 	end
 
-	local function unwatch(descendant: Instance): ()
+	const function unwatch(descendant: Instance): ()
 		if descendant:IsA("UICorner") then
 			local connection = connections[descendant]
 			if connection then
@@ -37,7 +37,7 @@ local function widget_corners(content: GuiObject): controller
 		end
 	end
 
-	local function get(): number
+	const function get(): number
 		if roundness ~= nil then
 			return roundness
 		end
@@ -53,7 +53,7 @@ local function widget_corners(content: GuiObject): controller
 		return 0
 	end
 
-	local function set(value: number): ()
+	const function set(value: number): ()
 		roundness = math.clamp(value, 0, 100)
 		for corner in connections do
 			apply(corner)
@@ -66,7 +66,7 @@ local function widget_corners(content: GuiObject): controller
 		watch(descendant)
 	end
 
-	local function disconnect(): ()
+	const function disconnect(): ()
 		added_connection:Disconnect()
 		removing_connection:Disconnect()
 		for _, connection in connections do

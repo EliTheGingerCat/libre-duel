@@ -6,25 +6,25 @@ local get_drag_offset = require(script.Parent.get_drag_offset)
 
 type props = { on_activated: ((GuiButton, InputObject?) -> ())? }
 
-local function button_input(props: props)
+const function button_input(props: props)
 	local ref = React.useRef(nil :: UIDragDetector?)
 	local input = React.useRef(nil :: InputObject?)
 	local origin = React.useRef(Vector2.zero)
 	local armed = React.useRef(false)
 	local moved = React.useRef(false)
-	local function mount()
+	const function mount()
 		local detector = ref.current
 		assert(detector)
 		local button = detector.Parent
 		assert(button and button:IsA("GuiButton"))
-		local function capture(next_input: InputObject): ()
+		const function capture(next_input: InputObject): ()
 			input.current = next_input
 		end
-		local function cancel(): ()
+		const function cancel(): ()
 			armed.current = false
 		end
 		local connections = { button.InputBegan:Connect(capture), UserInputService.WindowFocusReleased:Connect(cancel) }
-		local function disconnect(): ()
+		const function disconnect(): ()
 			for _, connection in connections do
 				connection:Disconnect()
 			end
@@ -32,15 +32,15 @@ local function button_input(props: props)
 		return disconnect
 	end
 	React.useLayoutEffect(mount, {})
-	local function begin(_detector: UIDragDetector, position: Vector2): ()
+	const function begin(_detector: UIDragDetector, position: Vector2): ()
 		origin.current = position
 		armed.current = true
 		moved.current = false
 	end
-	local function drag(_detector: UIDragDetector, position: Vector2): ()
+	const function drag(_detector: UIDragDetector, position: Vector2): ()
 		moved.current = moved.current or (position - origin.current).Magnitude >= 8
 	end
-	local function finish(detector: UIDragDetector, position: Vector2): ()
+	const function finish(detector: UIDragDetector, position: Vector2): ()
 		local clicked = armed.current and not moved.current and (position - origin.current).Magnitude < 8
 		armed.current = false
 		local button = detector.Parent

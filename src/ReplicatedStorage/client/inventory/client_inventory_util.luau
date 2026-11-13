@@ -33,7 +33,7 @@ end
 inventory_util.find_free_slot = inventory_logic.find_free_slot
 
 -- predicts the action locally, the server answers with the authoritative inventory
-local function request_action(
+const function request_action(
 	action: inventory_types.inventory_action,
 	predict: (inventory_types.inventory, number, number) -> boolean,
 	from_slot_index: number,

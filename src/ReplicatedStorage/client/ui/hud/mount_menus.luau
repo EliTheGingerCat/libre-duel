@@ -10,44 +10,44 @@ export type controller = {
 	disconnect: () -> (),
 }
 
-local function mount_menus(player_gui: PlayerGui, display_order: number, on_changed: (boolean) -> ()): controller
+const function mount_menus(player_gui: PlayerGui, display_order: number, on_changed: (boolean) -> ()): controller
 	local enabled = false
-	local function set_open(open: boolean): ()
+	const function set_open(open: boolean): ()
 		if enabled == open then
 			return
 		end
 		enabled = open
 		on_changed(open)
 	end
-	local function on_close(): ()
+	const function on_close(): ()
 		set_open(false)
 	end
 	local selector = mount_selector(player_gui, display_order, on_close)
 	local settings = mount_settings(player_gui, display_order, on_close)
 
-	local function close(): ()
+	const function close(): ()
 		selector.set_enabled(false)
 		settings.close()
 		set_open(false)
 	end
 
-	local function open_selector(): ()
+	const function open_selector(): ()
 		close()
 		set_open(true)
 		selector.set_enabled(true)
 	end
 
-	local function open_settings(item: registry.entry): ()
+	const function open_settings(item: registry.entry): ()
 		close()
 		set_open(true)
 		settings.open(item)
 	end
 
-	local function is_open(): boolean
+	const function is_open(): boolean
 		return enabled
 	end
 
-	local function disconnect(): ()
+	const function disconnect(): ()
 		selector.disconnect()
 		settings.disconnect()
 	end

@@ -18,7 +18,7 @@ const START_DELAY = 5
 local current: match.match? = nil
 local start_thread: thread? = nil
 
-local function start(): ()
+const function start(): ()
 	start_thread = nil
 	const entities = registry.get_all()
 	if current ~= nil or #entities == 0 then
@@ -35,7 +35,7 @@ local function start(): ()
 	end
 
 	const new_match = start_match(definition, teams)
-	local function on_stop(): ()
+	const function on_stop(): ()
 		if current == new_match then
 			current = nil
 		end
@@ -44,13 +44,13 @@ local function start(): ()
 	match.on_stop(new_match, on_stop)
 end
 
-local function schedule_start(): ()
+const function schedule_start(): ()
 	if current == nil and start_thread == nil and #registry.get_all() > 0 then
 		start_thread = task.delay(START_DELAY, start)
 	end
 end
 
-local function on_entity_added(entity: registry.entity): ()
+const function on_entity_added(entity: registry.entity): ()
 	if current then
 		match.add_entity(current, entity)
 	else

@@ -53,11 +53,11 @@ const COLOUR3_TO_BRICKCOLOUR = {
 
 
 -- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`.
-local function CFrame_from_position(position: Vector3): CFrame
+const function CFrame_from_position(position: Vector3): CFrame
 	return CFrame.new(position)
 end
 
-local function move_entity(entity: registry.entity, position: Vector3): ()
+const function move_entity(entity: registry.entity, position: Vector3): ()
 	const character = registry.get_character(entity)
 	if character == nil then
 		return
@@ -71,7 +71,7 @@ local function move_entity(entity: registry.entity, position: Vector3): ()
 	character:PivotTo(new_pivot)
 end
 
-local function give_match_loadout(entity: registry.entity, team: team): ()
+const function give_match_loadout(entity: registry.entity, team: team): ()
 	const inventory = inventory_util.get_inventory(entity)
 	if inventory then
 		inventory_util.clear_inventory(inventory)
@@ -82,7 +82,7 @@ local function give_match_loadout(entity: registry.entity, team: team): ()
 	end
 end
 
-local function create_teams(info: map_data.map_data): { team }
+const function create_teams(info: map_data.map_data): { team }
 	const teams: { team } = {}
 
 	for index, data in { info.TEAM1, info.TEAM2 } do
@@ -111,7 +111,7 @@ local function create_teams(info: map_data.map_data): { team }
 	return teams
 end
 
-local function new(this_match: match.match): match.hooks
+const function new(this_match: match.match): match.hooks
 	const map = match.load_map(this_match)
 	const info_module = map:FindFirstChild("MAP_INFO")
 	assert(info_module and info_module:IsA("ModuleScript"), "Map is missing MAP_INFO")
@@ -122,7 +122,7 @@ local function new(this_match: match.match): match.hooks
 	const connections: { RBXScriptConnection | registry.connection } = {}
 	local cages_are_closed = false
 
-	local function find_team_by_entity(entity: registry.entity): team?
+	const function find_team_by_entity(entity: registry.entity): team?
 		for _, team in teams do
 			if table.find(team.entities, entity) then
 				return team
@@ -131,11 +131,11 @@ local function new(this_match: match.match): match.hooks
 		return nil
 	end
 
-	local function get_opposing_team(team: team): team
+	const function get_opposing_team(team: team): team
 		return teams[team.index % #teams + 1]
 	end
 
-	local function get_smallest_team(): team
+	const function get_smallest_team(): team
 		local smallest_count = math.huge
 		const smallest_teams: { team } = {}
 		for _, team in teams do
@@ -151,7 +151,7 @@ local function new(this_match: match.match): match.hooks
 		return smallest_teams[math.random(1, #smallest_teams)]
 	end
 
-	local function open_cages(): ()
+	const function open_cages(): ()
 		for _, team in teams do
 			team.cage.Parent = nil
 		end
@@ -159,7 +159,7 @@ local function new(this_match: match.match): match.hooks
 		cages_are_closed = false
 	end
 
-	local function close_cages(): ()
+	const function close_cages(): ()
 		cages_are_closed = true
 
 		for _, team in teams do
@@ -173,12 +173,12 @@ local function new(this_match: match.match): match.hooks
 		end
 	end
 
-	local function close_then_open_cages(scoring_team: team?): ()
+	const function close_then_open_cages(scoring_team: team?): ()
 		if this_match.stopped then
 			return
 		end
 		close_cages()
-		local function open_current_cages(): ()
+		const function open_current_cages(): ()
 			for i = CAGE_TIME, 1, -1 do
 				if this_match.stopped then
 					return
@@ -201,7 +201,7 @@ local function new(this_match: match.match): match.hooks
 		task.spawn(open_current_cages)
 	end
 
-	local function process_goal(entity: registry.entity, team: team): ()
+	const function process_goal(entity: registry.entity, team: team): ()
 		team.points += 1
 		match.award(this_match, entity, "goals")
 
@@ -239,8 +239,8 @@ local function new(this_match: match.match): match.hooks
 		close_then_open_cages(team)
 	end
 
-	local function watch_goal(team: team): ()
-		local function on_touched(toucher: BasePart): ()
+	const function watch_goal(team: team): ()
+		const function on_touched(toucher: BasePart): ()
 			if this_match.stopped or cages_are_closed == true then
 				return
 			end
@@ -268,7 +268,7 @@ local function new(this_match: match.match): match.hooks
 			process_goal(entity, scoring_team)
 		end
 
-		local function on_heartbeat(): ()
+		const function on_heartbeat(): ()
 			const overlap_parameters = OverlapParams.new()
 			-- ~ investigate: For some reason, collision group seems to not be respected.
 			overlap_parameters.CollisionGroup = "hitbox"
@@ -283,7 +283,7 @@ local function new(this_match: match.match): match.hooks
 		table.insert(connections, RunService.Heartbeat:Connect(on_heartbeat))
 	end
 
-	local function setup_entity(entity: registry.entity, team: team): ()
+	const function setup_entity(entity: registry.entity, team: team): ()
 		if find_team_by_entity(entity) ~= nil then
 			return
 		end
@@ -294,7 +294,7 @@ local function new(this_match: match.match): match.hooks
 		registry.fire_client(entity, ReplicatedStorage.remotes.map_name, info.MAP_NAME)
 	end
 
-	local function on_character_added(_character: Model, entity: registry.entity): ()
+	const function on_character_added(_character: Model, entity: registry.entity): ()
 		const team = find_team_by_entity(entity)
 		if team then
 			move_entity(entity, team.spawn_part.Position)
@@ -302,14 +302,14 @@ local function new(this_match: match.match): match.hooks
 	end
 
 	-- not character_added, signals fire newest first so the inventory wouldn't exist yet
-	local function on_inventory_created(entity: registry.entity): ()
+	const function on_inventory_created(entity: registry.entity): ()
 		const team = find_team_by_entity(entity)
 		if team then
 			give_match_loadout(entity, team)
 		end
 	end
 
-	local function start(initial_teams: { { registry.entity } }): ()
+	const function start(initial_teams: { { registry.entity } }): ()
 		assert(#initial_teams <= #teams, "Bridge maps do not have that many teams.")
 		for _, team in teams do
 			watch_goal(team)
@@ -324,11 +324,11 @@ local function new(this_match: match.match): match.hooks
 		close_then_open_cages()
 	end
 
-	local function on_entity_added(entity: registry.entity): ()
+	const function on_entity_added(entity: registry.entity): ()
 		setup_entity(entity, get_smallest_team())
 	end
 
-	local function on_entity_removed(entity: registry.entity): ()
+	const function on_entity_removed(entity: registry.entity): ()
 		const team = find_team_by_entity(entity)
 		if team then
 			const index = table.find(team.entities, entity)
@@ -339,7 +339,7 @@ local function new(this_match: match.match): match.hooks
 		end
 	end
 
-	local function stop(): ()
+	const function stop(): ()
 		for _, connection in connections do
 			connection:Disconnect()
 		end

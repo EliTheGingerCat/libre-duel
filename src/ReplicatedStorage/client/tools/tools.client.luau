@@ -59,7 +59,7 @@ const TOOL_BUTTONS = {
 local tool_selected: tool_types.tool? = nil
 local slot_sent: number? = nil
 
-local function set_tool(slot: number): ()
+const function set_tool(slot: number): ()
 	tool_selected = get_slot_tool(slot)
 	-- the server only lets us use the tool in the slot it thinks is selected
 	if slot ~= slot_sent then
@@ -77,7 +77,7 @@ local tool_cube = table.find(STARTING_LOADOUT, "cube")
 set_tool(tool_cube or 1)
 
 -- the selected slot's item can change underneath us (swaps, respawn, death)
-local function on_inventory_change(): ()
+const function on_inventory_change(): ()
 	if get_slot_tool(tool_state.current) ~= tool_selected then
 		set_tool(tool_state.current)
 	end
@@ -92,7 +92,7 @@ const function get_input_button(input: InputObject): string?
 	return INPUT_TO_BUTTON[input.UserInputType] or GAMEPAD_KEY_TO_BUTTON[input.KeyCode]
 end
 
-local function press_button(button: string): ()
+const function press_button(button: string): ()
 	if editor_state.enabled or inventory_state.enabled or mode_selector_state.enabled then
 		return
 	end
@@ -117,7 +117,7 @@ local function press_button(button: string): ()
 end
 
 -- letting go over UI cancels the handler instead of finishing it, otherwise it would shoot the bow
-local function release_button(button: string, interrupted: boolean): ()
+const function release_button(button: string, interrupted: boolean): ()
 	const tool_button = TOOL_BUTTONS[button]
 	if tool_button == nil then
 		return
@@ -129,7 +129,7 @@ local function release_button(button: string, interrupted: boolean): ()
 	end
 end
 
-local function on_input_began(input: InputObject, game_processed: boolean): ()
+const function on_input_began(input: InputObject, game_processed: boolean): ()
 	-- the inventory uses the number keys and clicks itself
 	if game_processed or editor_state.enabled or inventory_state.enabled then
 		return
@@ -151,14 +151,14 @@ local function on_input_began(input: InputObject, game_processed: boolean): ()
 	end
 end
 
-local function on_input_ended(input: InputObject, game_processed: boolean): ()
+const function on_input_ended(input: InputObject, game_processed: boolean): ()
 	const button = get_input_button(input)
 	if button ~= nil then
 		release_button(button, game_processed)
 	end
 end
 
-local function on_button_requested(button: string, is_pressed: boolean): ()
+const function on_button_requested(button: string, is_pressed: boolean): ()
 	if is_pressed then
 		press_button(button)
 	else
@@ -166,13 +166,13 @@ local function on_button_requested(button: string, is_pressed: boolean): ()
 	end
 end
 
-local function interrupt_tool_buttons(): ()
+const function interrupt_tool_buttons(): ()
 	for _, tool_button in TOOL_BUTTONS do
 		tool_button.interrupt()
 	end
 end
 
-local function on_menu_change(): ()
+const function on_menu_change(): ()
 	if editor_state.enabled or inventory_state.enabled or mode_selector_state.enabled then
 		interrupt_tool_buttons()
 	end

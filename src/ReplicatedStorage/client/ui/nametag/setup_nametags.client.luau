@@ -8,14 +8,14 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 const create_element = React.createElement
 const cleanups: { [registry.entity]: () -> () } = {}
 
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
 	const cleanup = cleanups[entity]
 	if cleanup then
 		cleanup()
 	end
 end
 
-local function on_character_added(character: Model, entity: registry.entity): ()
+const function on_character_added(character: Model, entity: registry.entity): ()
 	const head = character:WaitForChild("Head", 10)
 	const humanoid = character:WaitForChild("Humanoid", 10)
 	if head == nil or humanoid == nil or not humanoid:IsA("Humanoid") then
@@ -30,7 +30,7 @@ local function on_character_added(character: Model, entity: registry.entity): ()
 
 	const player = registry.get_player(entity)
 
-	local function render(): ()
+	const function render(): ()
 		local team = registry.get_team(entity)
 		tree:render(ReactRoblox.createPortal(
 			create_element(nametag, {
@@ -45,7 +45,7 @@ local function on_character_added(character: Model, entity: registry.entity): ()
 
 	local team: Team? = nil
 	local team_connection: RBXScriptConnection? = nil
-	local function on_identity_changed(): ()
+	const function on_identity_changed(): ()
 		local current_team = registry.get_team(entity)
 		if team ~= current_team then
 			if team_connection then
@@ -64,7 +64,7 @@ local function on_character_added(character: Model, entity: registry.entity): ()
 	end
 	local destroying_connection: RBXScriptConnection? = nil
 	local active = true
-	local function cleanup(): ()
+	const function cleanup(): ()
 		if not active then
 			return
 		end

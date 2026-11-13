@@ -5,14 +5,14 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 
 const select_slot = ReplicatedStorage.remotes.select_slot
 
-local function on_select_slot(player: Player, slot: unknown): ()
+const function on_select_slot(player: Player, slot: unknown): ()
 	if type(slot) ~= "number" or not inventory_util.is_hotbar_slot(slot) then
 		return
 	end
 	inventory_util.set_selected_slot(player, slot)
 end
 
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
 	inventory_util.clear_selected_slot(entity)
 end
 

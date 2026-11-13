@@ -6,16 +6,16 @@ local React = require(ReplicatedStorage.Packages.react)
 local scale_animation_time = require(script.Parent.Parent.effects.scale_animation_time)
 
 -- Bindings update the native properties without rendering React on every frame.
-local function use_ui_motion(target: number, initial: number?, start: number?)
+const function use_ui_motion(target: number, initial: number?, start: number?)
 	local value = React.useRef(nil :: NumberValue?)
 	local binding, update = React.useBinding(initial or target)
 
-	local function mount()
+	const function mount()
 		local driver = Instance.new("NumberValue")
 		driver.Value = initial or target
 		value.current = driver
 		local connection = driver.Changed:Connect(update)
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			driver:Destroy()
 			value.current = nil
@@ -24,7 +24,7 @@ local function use_ui_motion(target: number, initial: number?, start: number?)
 	end
 	React.useLayoutEffect(mount, {})
 
-	local function animate()
+	const function animate()
 		local driver = value.current
 		assert(driver)
 		if start then
@@ -32,7 +32,7 @@ local function use_ui_motion(target: number, initial: number?, start: number?)
 		end
 		local info = TweenInfo.new(scale_animation_time(0.28), Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
 		local tween = TweenService:Create(driver, info, { Value = target })
-		local function apply_preference(): ()
+		const function apply_preference(): ()
 			if GuiService.ReducedMotionEnabled then
 				tween:Cancel()
 				driver.Value = target
@@ -42,7 +42,7 @@ local function use_ui_motion(target: number, initial: number?, start: number?)
 		end
 		local connection = GuiService:GetPropertyChangedSignal("ReducedMotionEnabled"):Connect(apply_preference)
 		apply_preference()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			tween:Cancel()
 			tween:Destroy()

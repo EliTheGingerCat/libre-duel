@@ -10,7 +10,7 @@ local player = Players.LocalPlayer
 local sneaking_state: boolean = false
 local default_walkspeed: number? = nil
 
-local function set_player_sneak(set_to_state: boolean)
+const function set_player_sneak(set_to_state: boolean)
 	local character = player.Character
 	if not character then
 		return

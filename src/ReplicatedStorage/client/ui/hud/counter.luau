@@ -5,11 +5,10 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local shadow = require(script.Parent.Parent.visuals.shadow)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 
 local create_element = React.createElement
 
-local function counter(props: { name: string, preview: boolean? })
+const function counter(props: { name: string, preview: boolean? })
 	return create_element("Frame", {
 		Name = "Main",
 		Size = UDim2.fromScale(1, 1),
@@ -19,7 +18,6 @@ local function counter(props: { name: string, preview: boolean? })
 	}, {
 		shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),
-		blur = not props.preview and create_element(ui_blur),
 		stroke = create_element(
 			gradient_stroke,
 			{

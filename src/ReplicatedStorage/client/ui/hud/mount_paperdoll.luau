@@ -8,7 +8,7 @@ type part_pair = {
 	copy: BasePart,
 }
 
-local function collect_parts(source: Instance, copy: Instance, parts: { part_pair }): ()
+const function collect_parts(source: Instance, copy: Instance, parts: { part_pair }): ()
 	if source:IsA("BasePart") and copy:IsA("BasePart") then
 		copy.Anchored = true
 		copy.CanCollide = false
@@ -27,7 +27,7 @@ local function collect_parts(source: Instance, copy: Instance, parts: { part_pai
 	end
 end
 
-local function mount_paperdoll(viewport: ViewportFrame)
+const function mount_paperdoll(viewport: ViewportFrame)
 	local world = Instance.new("WorldModel")
 	world.Parent = viewport
 	local camera = Instance.new("Camera")
@@ -42,7 +42,7 @@ local function mount_paperdoll(viewport: ViewportFrame)
 	local rebuild_pending = false
 	local active = true
 
-	local function clear_copy(): ()
+	const function clear_copy(): ()
 		table.clear(parts)
 		if copy then
 			copy:Destroy()
@@ -50,7 +50,7 @@ local function mount_paperdoll(viewport: ViewportFrame)
 		end
 	end
 
-	local function update_pose(): ()
+	const function update_pose(): ()
 		local source = character
 		if not source then
 			return
@@ -66,7 +66,7 @@ local function mount_paperdoll(viewport: ViewportFrame)
 		end
 	end
 
-	local function rebuild(): ()
+	const function rebuild(): ()
 		rebuild_pending = false
 		if not active then
 			return
@@ -113,20 +113,20 @@ local function mount_paperdoll(viewport: ViewportFrame)
 		camera.CFrame = CFrame.new(centre + Vector3.new(0, 0, -distance * 1.1)) * CFrame.Angles(0, math.pi, 0)
 	end
 
-	local function schedule_rebuild(): ()
+	const function schedule_rebuild(): ()
 		if not rebuild_pending then
 			rebuild_pending = true
 			task.defer(rebuild)
 		end
 	end
 
-	local function on_descendant_changed(descendant: Instance): ()
+	const function on_descendant_changed(descendant: Instance): ()
 		if descendant:IsA("BasePart") or descendant:IsA("Clothing") or descendant:IsA("CharacterMesh") then
 			schedule_rebuild()
 		end
 	end
 
-	local function detach_character(): ()
+	const function detach_character(): ()
 		for _, connection in character_connections do
 			connection:Disconnect()
 		end
@@ -135,7 +135,7 @@ local function mount_paperdoll(viewport: ViewportFrame)
 		clear_copy()
 	end
 
-	local function on_character_added(new_character: Model): ()
+	const function on_character_added(new_character: Model): ()
 		detach_character()
 		character = new_character
 		table.insert(character_connections, new_character.DescendantAdded:Connect(on_descendant_changed))
@@ -151,7 +151,7 @@ local function mount_paperdoll(viewport: ViewportFrame)
 		on_character_added(local_player.Character)
 	end
 
-	local function disconnect(): ()
+	const function disconnect(): ()
 		active = false
 		detach_character()
 		added_connection:Disconnect()

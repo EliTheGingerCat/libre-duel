@@ -44,29 +44,29 @@ export type inventory_input = {
 
 local key_to_slot = table_flip(KEYBINDS.slot)
 
-local function increment(current: number): number
+const function increment(current: number): number
 	return current + 1
 end
 
-local function is_shift_down(): boolean
+const function is_shift_down(): boolean
 	return UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
 end
 
-local function get_mouse_position(): Vector2
+const function get_mouse_position(): Vector2
 	const inset = GuiService:GetGuiInset()
 	return UserInputService:GetMouseLocation() - inset
 end
 
-local function get_slot_frame(window: GuiObject, slot: number): GuiObject?
+const function get_slot_frame(window: GuiObject, slot: number): GuiObject?
 	const frame = window:FindFirstChild(`slot_{slot}`, true)
 	return if frame ~= nil and frame:IsA("GuiObject") then frame else nil
 end
 
-local function get_centre(object: GuiObject): Vector2
+const function get_centre(object: GuiObject): Vector2
 	return object.AbsolutePosition + object.AbsoluteSize / 2
 end
 
-local function is_inside(object: GuiObject, position: Vector2): boolean
+const function is_inside(object: GuiObject, position: Vector2): boolean
 	const corner = object.AbsolutePosition
 	const size = object.AbsoluteSize
 	return position.X >= corner.X
@@ -83,7 +83,7 @@ Minecraft style controls:
 - Pressing a hotbar number while hovering a slot swaps that slot with the hotbar slot.
 - Crafting does not work yet, so clicking or dropping anything on it shakes it instead.
 ]]
-local function use_inventory_input(window_ref: { current: GuiObject? }, enabled: boolean): inventory_input
+const function use_inventory_input(window_ref: { current: GuiObject? }, enabled: boolean): inventory_input
 	local held_slot: number?, set_held_slot: (number?) -> () = React.useState(nil :: number?)
 	local shake_count, set_shake_count = React.useState(0)
 	local flights: { flight }, set_flights: (({ flight }) -> { flight }) -> () = React.useState({} :: { flight })
@@ -91,34 +91,34 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 	local cursor, set_cursor = React.useBinding(Vector2.zero)
 	local held_ref = React.useRef(nil :: held?)
 
-	local function subscribe()
+	const function subscribe()
 		if not enabled then
 			return
 		end
 
-		local function release(): ()
+		const function release(): ()
 			held_ref.current = nil
 			set_held_slot(nil)
 		end
 
-		local function hold(slot: number, position: Vector2): ()
+		const function hold(slot: number, position: Vector2): ()
 			held_ref.current = { slot = slot, dragging = true, press_position = position }
 			set_cursor(position)
 			set_held_slot(slot)
 		end
 
-		local function shake(): ()
+		const function shake(): ()
 			set_shake_count(increment)
 		end
 
-		local function add_flight(new_flight: flight): ()
-			local function append(current: { flight }): { flight }
+		const function add_flight(new_flight: flight): ()
+			const function append(current: { flight }): { flight }
 				const copy = table.clone(current)
 				table.insert(copy, new_flight)
 				return copy
 			end
 
-			local function without(current: { flight }): { flight }
+			const function without(current: { flight }): { flight }
 				const copy = table.clone(current)
 				const index = table.find(copy, new_flight)
 				if index ~= nil then
@@ -127,7 +127,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 				return copy
 			end
 
-			local function finish(): ()
+			const function finish(): ()
 				set_flights(without)
 			end
 
@@ -136,7 +136,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 		end
 
 		-- must run before the move, since it reads where the item is about to go
-		local function start_flight(from_slot: number): ()
+		const function start_flight(from_slot: number): ()
 			const window = window_ref.current
 			const inventory = client_inventory_util.get_inventory()
 			const tool = get_slot_tool(from_slot)
@@ -164,7 +164,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			})
 		end
 
-		local function drop(held: held, position: Vector2, moved: boolean): ()
+		const function drop(held: held, position: Vector2, moved: boolean): ()
 			const window = window_ref.current
 			const target = if window then get_slot_at_position(window, position) else nil
 			if target == nil then
@@ -194,7 +194,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			release()
 		end
 
-		local function on_mouse_down(position: Vector2): ()
+		const function on_mouse_down(position: Vector2): ()
 			const held = held_ref.current
 			if held ~= nil then
 				drop(held, position, true)
@@ -217,7 +217,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			hold(target.index, position)
 		end
 
-		local function on_mouse_up(position: Vector2): ()
+		const function on_mouse_up(position: Vector2): ()
 			const held = held_ref.current
 			if held == nil or not held.dragging then
 				return
@@ -225,7 +225,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			drop(held, position, (position - held.press_position).Magnitude > DRAG_THRESHOLD)
 		end
 
-		local function on_number_key(hotbar_slot: number): ()
+		const function on_number_key(hotbar_slot: number): ()
 			const window = window_ref.current
 			if held_ref.current ~= nil or window == nil or UserInputService:GetFocusedTextBox() ~= nil then
 				return
@@ -237,7 +237,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			client_inventory_util.swap_items(target.index, hotbar_slot)
 		end
 
-		local function on_input_began(input: InputObject): ()
+		const function on_input_began(input: InputObject): ()
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
 				on_mouse_down(Vector2.new(input.Position.X, input.Position.Y))
 				return
@@ -248,20 +248,20 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			end
 		end
 
-		local function on_input_ended(input: InputObject): ()
+		const function on_input_ended(input: InputObject): ()
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
 				on_mouse_up(Vector2.new(input.Position.X, input.Position.Y))
 			end
 		end
 
-		local function on_input_changed(input: InputObject): ()
+		const function on_input_changed(input: InputObject): ()
 			if input.UserInputType == Enum.UserInputType.MouseMovement then
 				set_cursor(Vector2.new(input.Position.X, input.Position.Y))
 			end
 		end
 
 		-- a server rollback can empty the held slot
-		local function on_inventory_change(): ()
+		const function on_inventory_change(): ()
 			const held = held_ref.current
 			if held ~= nil and get_slot_tool(held.slot) == nil then
 				release()
@@ -273,7 +273,7 @@ local function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 		local connection_changed = UserInputService.InputChanged:Connect(on_input_changed)
 		local connection_inventory = client_inventory_util.on_change:Connect(on_inventory_change)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection_began:Disconnect()
 			connection_ended:Disconnect()
 			connection_changed:Disconnect()

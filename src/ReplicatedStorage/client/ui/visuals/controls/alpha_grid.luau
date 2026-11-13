@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 
-local function alpha_grid(props: { radius: number?, children: unknown? })
+const function alpha_grid(props: { radius: number?, children: unknown? })
 	return React.createElement("ImageLabel", {
 		Name = "alpha_grid",
 		Size = UDim2.fromScale(1, 1),

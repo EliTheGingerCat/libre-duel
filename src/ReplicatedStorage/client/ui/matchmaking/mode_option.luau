@@ -12,14 +12,14 @@ local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
-local function mode_option(props: {
+const function mode_option(props: {
 	mode: MODE_DEFINITIONS.mode_id,
 	layout_order: number,
 	busy: boolean,
 	on_join: (MODE_DEFINITIONS.mode_id) -> (),
 })
 	local option = get_mode_definition(props.mode)
-	local function activate(): ()
+	const function activate(): ()
 		props.on_join(props.mode)
 	end
 	return create_element(animated_button, {

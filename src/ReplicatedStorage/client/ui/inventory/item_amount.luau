@@ -7,7 +7,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local create_element = React.createElement
 
 -- The counter in the bottom right of an item. Shows nothing unless there's more than one.
-local function item_amount(props: { amount: number? })
+const function item_amount(props: { amount: number? })
 	if props.amount == nil or props.amount <= 1 then
 		return nil
 	end

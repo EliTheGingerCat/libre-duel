@@ -14,13 +14,13 @@ PhysicsService:CollisionGroupSetCollidable(GROUP_HITBOX, "Default", true)
 
 const connections: { [registry.entity]: RBXScriptConnection } = {}
 
-local function set_collision_group(descendant: Instance): ()
+const function set_collision_group(descendant: Instance): ()
 	if descendant:IsA("BasePart") then
 		descendant.CollisionGroup = if descendant.Name == GROUP_HITBOX then GROUP_HITBOX else GROUP_CHARACTER
 	end
 end
 
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
 	const connection = connections[entity]
 	if connection then
 		connection:Disconnect()
@@ -28,7 +28,7 @@ local function on_entity_removed(entity: registry.entity): ()
 	end
 end
 
-local function on_character_added(character: Model, entity: registry.entity): ()
+const function on_character_added(character: Model, entity: registry.entity): ()
 	on_entity_removed(entity)
 	connections[entity] = character.DescendantAdded:Connect(set_collision_group)
 	for _, descendant in character:GetDescendants() do

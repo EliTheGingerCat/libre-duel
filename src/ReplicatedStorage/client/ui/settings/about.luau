@@ -7,7 +7,7 @@ local git_info = ReplicatedStorage:WaitForChild("git_info")
 local commit = git_info:WaitForChild("commit") :: StringValue
 local license = git_info:WaitForChild("license") :: StringValue
 
-local function about()
+const function about()
 	return React.createElement("Frame", {
 		Name = "about",
 		Size = UDim2.new(1, 0, 0, 0),

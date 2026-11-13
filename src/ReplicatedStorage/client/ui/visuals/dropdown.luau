@@ -14,7 +14,7 @@ const DEFAULT_OPTIONS: { { text: string, colour: Color3? } } = {
 	{ text = "Spectator", colour = Color3.new(1, 1, 1) },
 }
 
-local function dropdown(props: {
+const function dropdown(props: {
 	value: string?,
 	options: { { text: string, colour: Color3? } }?,
 	on_changed: ((string) -> ())?,
@@ -24,13 +24,13 @@ local function dropdown(props: {
 	local value = if props.on_changed then props.value else stored
 	local options: { { text: string, colour: Color3? } } = props.options or DEFAULT_OPTIONS
 	local motion = use_ui_motion(if expanded then 1 else 0)
-	local function size(amount: number): UDim2
+	const function size(amount: number): UDim2
 		return UDim2.fromOffset(200, 40 + #options * 40 * amount)
 	end
-	local function rotation(amount: number): number
+	const function rotation(amount: number): number
 		return amount * 180
 	end
-	local function toggle(): ()
+	const function toggle(): ()
 		set_expanded(not expanded)
 	end
 	local children = {
@@ -42,7 +42,7 @@ local function dropdown(props: {
 		if option.text == value then
 			selected_colour = option.colour or selected_colour
 		end
-		local function choose(): ()
+		const function choose(): ()
 			if props.on_changed then
 				props.on_changed(option.text)
 			else

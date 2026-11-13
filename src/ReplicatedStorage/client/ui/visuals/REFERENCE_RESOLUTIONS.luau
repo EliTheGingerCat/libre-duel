@@ -14,7 +14,7 @@ const REFERENCE_RESOLUTIONS = {
 	},
 }
 
-local function get_reference_resolution(kind: "full" | "shrink", device: string): Vector2
+const function get_reference_resolution(kind: "full" | "shrink", device: string): Vector2
 	const resolutions: { [string]: Vector2 } = REFERENCE_RESOLUTIONS[kind]
 	return resolutions[device] or resolutions.keyboard_mouse
 end

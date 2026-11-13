@@ -11,7 +11,7 @@ local create_element = React.createElement
 
 const REFERENCE_HEIGHT = 1080
 
-local function get_scale(viewport_size: Vector2): number
+const function get_scale(viewport_size: Vector2): number
 	return viewport_size.Y / REFERENCE_HEIGHT
 end
 
@@ -21,11 +21,11 @@ type title_text = {
 	colour: Color3?,
 }
 
-local function background_transparency(transparency: number): number
+const function background_transparency(transparency: number): number
 	return 0.5 + transparency * 0.5
 end
 
-local function stroke_gradient()
+const function stroke_gradient()
 	return create_element("UIGradient", {
 		Color = ColorSequence.new(Color3.new(1, 1, 1)),
 		Rotation = -90,
@@ -33,7 +33,7 @@ local function stroke_gradient()
 	})
 end
 
-local function title_label(props: {
+const function title_label(props: {
 	text: string,
 	top: boolean,
 	colour: Color3?,
@@ -92,20 +92,20 @@ local function title_label(props: {
 	})
 end
 
-local function title()
+const function title()
 	local current_title, set_current_title = React.useState(nil :: title_text?)
 	local transparency, set_transparency = React.useBinding(1)
 
-	local function effect_titles()
+	const function effect_titles()
 		local animation: thread? = nil
 
-		local function cancel_animation(): ()
+		const function cancel_animation(): ()
 			if animation ~= nil and coroutine.status(animation) ~= "dead" then
 				task.cancel(animation)
 			end
 		end
 
-		local function on_title(
+		const function on_title(
 			fade_in: number,
 			stay: number,
 			fade_out: number,
@@ -118,7 +118,7 @@ local function title()
 			set_transparency(if replacing then 0 else 1)
 			set_current_title({ top_text = top_text, bottom_text = bottom_text, colour = colour })
 
-			local function animate(): ()
+			const function animate(): ()
 				if not replacing then
 					fade(1, 0, fade_in, set_transparency)
 				end
@@ -134,7 +134,7 @@ local function title()
 
 		local connection = ReplicatedStorage.remotes.show_title.OnClientEvent:Connect(on_title)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			cancel_animation()
 		end
@@ -146,17 +146,17 @@ local function title()
 
 	local scale, set_scale = React.useBinding(1)
 
-	local function effect_scale()
+	const function effect_scale()
 		local camera = Workspace.CurrentCamera
 
-		local function update_scale(): ()
+		const function update_scale(): ()
 			set_scale(get_scale(camera.ViewportSize))
 		end
 
 		update_scale()
 		local connection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(update_scale)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 

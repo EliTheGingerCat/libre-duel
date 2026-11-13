@@ -10,7 +10,7 @@ export type transform = (record?) -> record?
 
 const handles: { [string]: MemoryStoreSortedMap? } = {}
 
-local function get_map(mode: mode, shard: number): MemoryStoreSortedMap
+const function get_map(mode: mode, shard: number): MemoryStoreSortedMap
 	const name = `{QUEUE_CONFIG.map_prefix}_{mode}_s{shard}`
 	const existing = handles[name]
 	if existing then
@@ -21,7 +21,7 @@ local function get_map(mode: mode, shard: number): MemoryStoreSortedMap
 	return map
 end
 
-local function get_shard(id: string): number
+const function get_shard(id: string): number
 	local hash = 0
 	for index = 1, #id do
 		hash = (hash * 31 + string.byte(id, index)) % QUEUE_CONFIG.shards
@@ -29,16 +29,16 @@ local function get_shard(id: string): number
 	return hash + 1
 end
 
-local function get(mode: mode, id: string): result
+const function get(mode: mode, id: string): result
 	const map = get_map(mode, get_shard(id))
 	const ok, value = pcall(map.GetAsync, map, id)
 	const entry = queue_record.decode(value)
 	return { ok = ok, entry = if entry and entry.id == id and entry.mode == mode then entry else nil }
 end
 
-local function update(mode: mode, id: string, transform: transform): result
+const function update(mode: mode, id: string, transform: transform): result
 	const map = get_map(mode, get_shard(id))
-	local function on_update(value: unknown): record?
+	const function on_update(value: unknown): record?
 		const entry = queue_record.decode(value)
 		if value ~= nil and (entry == nil or entry.mode ~= mode or entry.id ~= id) then
 			return nil
@@ -50,8 +50,8 @@ local function update(mode: mode, id: string, transform: transform): result
 end
 
 -- Renews this server's claims. With destination_only, only entries routed to this server are touched.
-local function renew(mode: mode, id: string, tokens: { [string]: string }, destination_only: boolean): result
-	local function renew_claims(entry: record?): record?
+const function renew(mode: mode, id: string, tokens: { [string]: string }, destination_only: boolean): result
+	const function renew_claims(entry: record?): record?
 		if entry == nil or (destination_only and entry.destination_job_id ~= game.JobId) then
 			return nil
 		end
@@ -61,11 +61,11 @@ local function renew(mode: mode, id: string, tokens: { [string]: string }, desti
 	return update(mode, id, renew_claims)
 end
 
-local function fuller_first(left: record, right: record): boolean
+const function fuller_first(left: record, right: record): boolean
 	return queue_record.count_members(left) > queue_record.count_members(right)
 end
 
-local function find(mode: mode): { ok: boolean, entries: { record } }
+const function find(mode: mode): { ok: boolean, entries: { record } }
 	const entries: { record } = {}
 	for shard = 1, QUEUE_CONFIG.shards do
 		const map = get_map(mode, shard)
@@ -104,8 +104,8 @@ local function find(mode: mode): { ok: boolean, entries: { record } }
 	return { ok = true, entries = entries }
 end
 
-local function release(mode: mode, id: string, user_id: number, token: string): ()
-	local function remove_member(entry: record?): record?
+const function release(mode: mode, id: string, user_id: number, token: string): ()
+	const function remove_member(entry: record?): record?
 		if entry then
 			queue_record.release(entry, user_id, token)
 		end

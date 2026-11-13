@@ -8,7 +8,7 @@ local tablist_state = {
 	on_change = Signal.new(),
 }
 
-local function set_pinned(pinned: boolean): ()
+const function set_pinned(pinned: boolean): ()
 	if tablist_state.pinned == pinned then
 		return
 	end

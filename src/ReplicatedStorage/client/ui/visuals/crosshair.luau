@@ -7,13 +7,13 @@ local cursor_state = require(script.Parent.Parent.cursor_state)
 
 local create_element = React.createElement
 
-local function crosshair()
+const function crosshair()
 	local locked, set_locked = React.useState(false)
 	local free, set_free = React.useState(false)
 
-	local function bind_cursor()
+	const function bind_cursor()
 		-- Runs last so it sees the mouse behaviour the camera scripts settled on this frame.
-		local function update_cursor(): ()
+		const function update_cursor(): ()
 			local is_free = cursor_state.is_free()
 			local is_locked = not is_free and UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter
 			UserInputService.MouseIconEnabled = not is_locked
@@ -21,7 +21,7 @@ local function crosshair()
 			set_free(is_free)
 		end
 		RunService:BindToRenderStep("cursor", Enum.RenderPriority.Last.Value, update_cursor)
-		local function unbind(): ()
+		const function unbind(): ()
 			RunService:UnbindFromRenderStep("cursor")
 		end
 		return unbind

@@ -12,7 +12,7 @@ local current_id = 0
 local existing_notifications: { notification } = {}
 local on_change = signal.new()
 
-local function notification_add(message: string): ()
+const function notification_add(message: string): ()
 	current_id += 1
 
 	local new_notification: notification = {
@@ -25,7 +25,7 @@ local function notification_add(message: string): ()
 	on_change:Fire()
 end
 
-local function notification_find(id: number): number?
+const function notification_find(id: number): number?
 	for index, notification in existing_notifications do
 		if notification.id == id then
 			return index
@@ -34,7 +34,7 @@ local function notification_find(id: number): number?
 	return nil
 end
 
-local function notification_remove(id: number): ()
+const function notification_remove(id: number): ()
 	local index = notification_find(id)
 	if index == nil then
 		return
@@ -44,7 +44,7 @@ local function notification_remove(id: number): ()
 end
 
 -- A copy, so callers cannot change the notifications without firing on_change.
-local function notification_get_all(): { notification }
+const function notification_get_all(): { notification }
 	return table.clone(existing_notifications)
 end
 

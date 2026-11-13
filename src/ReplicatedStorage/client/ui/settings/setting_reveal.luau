@@ -10,7 +10,7 @@ local create_element = React.createElement
 const ROW_GAP = 20
 const NESTED_GAP = 8
 
-local function get_scale(instance: Instance): number
+const function get_scale(instance: Instance): number
 	local factor = 1
 	local current: Instance? = instance
 	while current and not current:IsA("LayerCollector") do
@@ -23,7 +23,7 @@ local function get_scale(instance: Instance): number
 	return factor
 end
 
-local function setting_reveal(props: {
+const function setting_reveal(props: {
 	entry: settings_registry.entry,
 	order: number,
 	shown: boolean,
@@ -33,25 +33,25 @@ local function setting_reveal(props: {
 	local gap = if props.nested then NESTED_GAP else ROW_GAP
 	local height, set_height = React.useBinding(0)
 	local content_ref = React.useRef(nil :: GuiObject?)
-	local function measure(content: GuiObject): ()
+	const function measure(content: GuiObject): ()
 		set_height(content.AbsoluteSize.Y / math.max(0.001, get_scale(content)))
 	end
-	local function measure_on_mount(): ()
+	const function measure_on_mount(): ()
 		if content_ref.current then
 			measure(content_ref.current)
 		end
 	end
 	React.useLayoutEffect(measure_on_mount, {})
-	local function row_size(values: { motion: number, height: number }): UDim2
+	const function row_size(values: { motion: number, height: number }): UDim2
 		return UDim2.new(1, 0, 0, (values.height + gap) * values.motion)
 	end
-	local function is_visible(value: number): boolean
+	const function is_visible(value: number): boolean
 		return value > 0.001
 	end
-	local function is_clipped(value: number): boolean
+	const function is_clipped(value: number): boolean
 		return value < 0.999
 	end
-	local function transparency(value: number): number
+	const function transparency(value: number): number
 		return 1 - value
 	end
 	local fades = props.entry.visible ~= nil

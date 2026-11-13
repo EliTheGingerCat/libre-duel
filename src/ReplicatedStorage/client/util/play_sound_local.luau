@@ -10,7 +10,7 @@ const SOUNDS = {
 	player_damaged = { 6586979979 },
 }
 
-local function play_sound_local(name: string, position: Vector3): ()
+const function play_sound_local(name: string, position: Vector3): ()
 	local list = SOUNDS[name]
 	assert(list, `Sound list "{name}" was not found.`)
 

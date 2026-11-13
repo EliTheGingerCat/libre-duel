@@ -22,11 +22,11 @@ const CUBE_SIZE_HALF_SOFT = CUBE_SIZE_HALF * 0.9
 local build_ray_params = RaycastParams.new()
 build_ray_params.FilterType = Enum.RaycastFilterType.Exclude
 
-local function snap_position(position: Vector3): Vector3
+const function snap_position(position: Vector3): Vector3
 	return Vector3.new(snap_coordinate(position.X), snap_coordinate(position.Y), snap_coordinate(position.Z))
 end
 
-local function place_cube(tool: tool_types.tool): ()
+const function place_cube(tool: tool_types.tool): ()
 	local ignore_list = { local_player.Character }
 	local overhang = workspace:FindFirstChild("sneak_overhang")
 	if overhang then

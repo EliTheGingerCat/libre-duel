@@ -8,7 +8,7 @@ local inventory_state = {
 	on_change = Signal.new(),
 }
 
-local function set_enabled(enabled: boolean): ()
+const function set_enabled(enabled: boolean): ()
 	if inventory_state.enabled == enabled then
 		return
 	end

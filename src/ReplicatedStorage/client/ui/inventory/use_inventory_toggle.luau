@@ -13,11 +13,11 @@ local mode_selector_state = require(script.Parent.Parent.matchmaking.mode_select
 const BLOCK_CAMERA_ACTION = "inventory_block_camera"
 const GAMEPAD_CLOSE_ACTION = "inventory_gamepad_close"
 
-local function close(): ()
+const function close(): ()
 	inventory_state.set_enabled(false)
 end
 
-local function sink(): Enum.ContextActionResult
+const function sink(): Enum.ContextActionResult
 	return Enum.ContextActionResult.Sink
 end
 
@@ -30,18 +30,18 @@ const function close_from_gamepad(_action_name: string, input_state: Enum.UserIn
 end
 
 -- Opens and closes the inventory with its keybind. It closes on escape, on death, and when another menu opens.
-local function use_inventory_toggle(): boolean
+const function use_inventory_toggle(): boolean
 	local enabled, set_enabled = React.useState(inventory_state.enabled)
 
-	local function subscribe()
-		local function update(): ()
+	const function subscribe()
+		const function update(): ()
 			if editor_state.enabled or mode_selector_state.enabled or client_inventory_util.get_inventory() == nil then
 				close()
 			end
 			set_enabled(inventory_state.enabled)
 		end
 
-		local function on_input(input: InputObject, processed: boolean): ()
+		const function on_input(input: InputObject, processed: boolean): ()
 			if processed or UserInputService:GetFocusedTextBox() ~= nil then
 				return
 			end
@@ -60,7 +60,7 @@ local function use_inventory_toggle(): boolean
 		local unsubscribe_editor = editor_state.subscribe(update)
 		update()
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			connection_input:Disconnect()
 			connection_inventory:Disconnect()
@@ -75,7 +75,7 @@ local function use_inventory_toggle(): boolean
 	React.useEffect(subscribe, {})
 
 	-- holding right click can still pan the camera while the cursor is free, and B closes instead of sneaking
-	local function bind_open_actions()
+	const function bind_open_actions()
 		if not enabled then
 			return
 		end
@@ -94,7 +94,7 @@ local function use_inventory_toggle(): boolean
 			GAMEPAD_KEYBINDS.menu_close
 		)
 
-		local function unbind(): ()
+		const function unbind(): ()
 			ContextActionService:UnbindAction(BLOCK_CAMERA_ACTION)
 			ContextActionService:UnbindAction(GAMEPAD_CLOSE_ACTION)
 		end

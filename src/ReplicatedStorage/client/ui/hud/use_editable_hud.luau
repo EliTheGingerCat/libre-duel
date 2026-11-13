@@ -7,18 +7,18 @@ local registry = require(script.Parent.registry)
 type content_ref = { current: GuiObject? }
 export type props = { on_remove: (() -> ())?, preview: boolean? }
 
-local function use_editable_hud(component: (props) -> unknown, props: props, default_hidden: boolean?): content_ref
+const function use_editable_hud(component: (props) -> unknown, props: props, default_hidden: boolean?): content_ref
 	local ref: content_ref = React.useRef(nil)
 	-- Registration happens once, so read on_remove through a ref to always call the latest one.
 	local on_remove_ref = React.useRef(props.on_remove)
 	on_remove_ref.current = props.on_remove
-	local function call_on_remove(): ()
+	const function call_on_remove(): ()
 		local on_remove = on_remove_ref.current
 		if on_remove then
 			on_remove()
 		end
 	end
-	local function register_content()
+	const function register_content()
 		if props.preview then
 			return
 		end
@@ -30,11 +30,11 @@ local function use_editable_hud(component: (props) -> unknown, props: props, def
 		assert(screen and screen:IsA("ScreenGui"))
 		local player_gui = screen.Parent
 		assert(player_gui and player_gui:IsA("PlayerGui"))
-		local function create(on_remove: () -> ())
+		const function create(on_remove: () -> ())
 			local container = Instance.new("Folder")
 			local tree = ReactRoblox.createRoot(container)
 			local active = true
-			local function disconnect(): ()
+			const function disconnect(): ()
 				if not active then
 					return
 				end
@@ -47,7 +47,7 @@ local function use_editable_hud(component: (props) -> unknown, props: props, def
 			)
 			return disconnect
 		end
-		local function render_preview()
+		const function render_preview()
 			return React.createElement(component, { preview = true })
 		end
 		return registry.register(

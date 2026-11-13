@@ -2,7 +2,7 @@ const TIE_EPSILON = 1e-4
 
 -- Each part counts as its world-space bounding box, which is only exact for axis-aligned blocks.
 -- The returned point's Y is the top of the surface that supports it.
-local function get_nearest_supported_point(
+const function get_nearest_supported_point(
 	position: Vector3,
 	feet_y: number,
 	parts: { BasePart },

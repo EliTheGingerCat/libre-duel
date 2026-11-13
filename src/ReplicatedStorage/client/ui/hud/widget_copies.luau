@@ -2,9 +2,9 @@ export type factory = (on_remove: () -> ()) -> () -> ()
 
 local copies: { [() -> ()]: boolean } = {}
 
-local function add(create: factory): ()
+const function add(create: factory): ()
 	local disconnect: (() -> ())? = nil
-	local function remove(): ()
+	const function remove(): ()
 		local cleanup = disconnect
 		if cleanup then
 			copies[cleanup] = nil
@@ -17,7 +17,7 @@ local function add(create: factory): ()
 	copies[cleanup] = true
 end
 
-local function clear(): ()
+const function clear(): ()
 	for disconnect in table.clone(copies) do
 		copies[disconnect] = nil
 		disconnect()

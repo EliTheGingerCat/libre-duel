@@ -3,7 +3,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 -- only the look of a cube, without what makes it a placed block
-local function create_cube_part(appearance: tool_types.cube_params, size: number): Part
+const function create_cube_part(appearance: tool_types.cube_params, size: number): Part
 	const cube = Instance.new("Part")
 	cube.Size = Vector3.one * size
 	if appearance.colour ~= nil then

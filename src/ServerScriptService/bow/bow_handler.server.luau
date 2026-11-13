@@ -49,7 +49,7 @@ behaviour.CosmeticBulletTemplate = BEHAVIOUR.BULLET_TEMPLATE
 const caster = (FastCast2.new() :: unknown) :: caster_api
 FastCast2.Init("BulkMoveTo")
 
-local function on_hit(cast: active_cast, result: RaycastResult, velocity: Vector3, _bullet: Instance?): ()
+const function on_hit(cast: active_cast, result: RaycastResult, velocity: Vector3, _bullet: Instance?): ()
 	const attacker = cast.UserData.shooter
 	if attacker.Parent ~= Players or attacker.Character ~= cast.UserData.character then
 		return
@@ -77,18 +77,18 @@ local function on_hit(cast: active_cast, result: RaycastResult, velocity: Vector
 	})
 end
 
-local function on_cast_terminating(cast: active_cast): ()
+const function on_cast_terminating(cast: active_cast): ()
 	const bullet = cast.RayInfo.CosmeticBulletObject
 	if bullet then
 		bullet:Destroy()
 	end
 end
 
-local function is_finite_vector(vector: Vector3): boolean
+const function is_finite_vector(vector: Vector3): boolean
 	return math.abs(vector.X) < math.huge and math.abs(vector.Y) < math.huge and math.abs(vector.Z) < math.huge
 end
 
-local function on_invoke(player: Player, origin: unknown, direction: unknown, dt: number): boolean
+const function on_invoke(player: Player, origin: unknown, direction: unknown, dt: number): boolean
 	if typeof(origin) ~= "Vector3" or typeof(direction) ~= "Vector3" then
 		return false
 	end

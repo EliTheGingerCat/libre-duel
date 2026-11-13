@@ -20,15 +20,15 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 const snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
-local function verify_coordinate(coordinate: number): boolean
+const function verify_coordinate(coordinate: number): boolean
 	return coordinate == snap_coordinate(coordinate)
 end
 
-local function verify_position(position: Vector3): boolean
+const function verify_position(position: Vector3): boolean
 	return (verify_coordinate(position.X) and verify_coordinate(position.Y) and verify_coordinate(position.Z))
 end
 
-local function place_cube(entity: registry.entity, cube_position: Vector3, appearance: tool_types.cube_params): boolean
+const function place_cube(entity: registry.entity, cube_position: Vector3, appearance: tool_types.cube_params): boolean
 	const entity_position = get_entity_position(entity)
 	if entity_position == nil then
 		debug_print("Entity has no position.")

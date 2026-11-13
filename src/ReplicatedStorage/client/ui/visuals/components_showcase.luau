@@ -22,15 +22,15 @@ local warning_text = require(script.Parent.warning_text)
 
 local create_element = React.createElement
 
-local function components_showcase()
+const function components_showcase()
 	local held = use_if_key_held(KEYBINDS.components_showcase)
 	local dismissed, set_dismissed = React.useState(false)
-	local function reset_dismissed()
+	const function reset_dismissed()
 		set_dismissed(false)
 	end
 	React.useEffect(reset_dismissed, { held })
 
-	local function close(): ()
+	const function close(): ()
 		set_dismissed(true)
 	end
 

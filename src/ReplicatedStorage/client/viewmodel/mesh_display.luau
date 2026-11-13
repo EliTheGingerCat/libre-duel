@@ -8,19 +8,19 @@ const part = create_viewmodel_part()
 const specialmesh = part:FindFirstChildOfClass("SpecialMesh") :: SpecialMesh
 part.Parent = Workspace.CurrentCamera
 
-local function hide(): ()
+const function hide(): ()
     part.Transparency = 1
 end
 
-local function set_mesh(mesh: string): ()
+const function set_mesh(mesh: string): ()
     specialmesh.MeshId = mesh
 end
 
-local function set_texture(texture: string): ()
+const function set_texture(texture: string): ()
     specialmesh.TextureId = texture
 end
 
-local function show(tool: tool_types.tool): ()
+const function show(tool: tool_types.tool): ()
     if tool.mesh == nil then
         hide()
         return
@@ -31,11 +31,11 @@ local function show(tool: tool_types.tool): ()
     part.Parent = Workspace.CurrentCamera
 end
 
-local function get_part(): BasePart?
+const function get_part(): BasePart?
     return part
 end
 
-local function set_transparency(transparency: number): ()
+const function set_transparency(transparency: number): ()
     part.LocalTransparencyModifier = transparency
 end
 

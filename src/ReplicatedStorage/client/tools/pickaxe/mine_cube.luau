@@ -6,7 +6,7 @@ const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const get_aim_target = require(ReplicatedStorage.client.aim.get_aim_target)
 const get_mining_fail_reason = require(script.Parent.get_mining_fail_reason)
-const TRANSPARENCY_MAXIMUM = require(ReplicatedStorage.client.cube.TRANSPARENCY_MAXIMUM)
+const TRANSPARENCY_MAXIMUM = require(ReplicatedStorage.client.cube.mining.TRANSPARENCY_MAXIMUM)
 
 local connection_heartbeat_passive: RBXScriptConnection?
 
@@ -35,7 +35,7 @@ type state_any = state_local | state_pending
 local minings: { state_any } = {}
 local local_mining: state_local?
 
-local function find_by_id(id: number): state_any?
+const function find_by_id(id: number): state_any?
 	for _, state in minings do
 		if state.id == id then
 			return state
@@ -46,7 +46,7 @@ local function find_by_id(id: number): state_any?
 	return nil
 end
 
-local function remove_by_id(id: number): ()
+const function remove_by_id(id: number): ()
 	for index, state in minings do
 		if state.id == id then
 			minings[index] = nil
@@ -58,7 +58,7 @@ local function remove_by_id(id: number): ()
 end
 
 -- The state_local `state` must not be used after this point.
-local function cleanup_local(state: state_local): state_pending
+const function cleanup_local(state: state_local): state_pending
 	local_mining = nil
 
 	state.connection_heartbeat:Disconnect()
@@ -73,38 +73,38 @@ local function cleanup_local(state: state_local): state_pending
 end
 
 -- The pending `state` must not be used after this point.
-local function cleanup_pending(state: state_pending): ()
+const function cleanup_pending(state: state_pending): ()
 	state.connection_destroying:Disconnect()
 	remove_by_id(state.id)
 end
 
 -- Destroys the state.
-local function cleanup_all(state: state_local): ()
+const function cleanup_all(state: state_local): ()
 	local state_pending = cleanup_local(state)
 	cleanup_pending(state_pending)
 end
 
-local function set_mining_display(state: state_any, fraction: number): ()
+const function set_mining_display(state: state_any, fraction: number): ()
 	set_cube_transparency(state.cube_target, fraction)
 end
 
-local function mine_pause(state: state_local): ()
+const function mine_pause(state: state_local): ()
 	set_mining_display(state, 0)
 	ReplicatedStorage.remotes.mine_stop:FireServer(state.id)
 end
 
-local function mine_stop(state: state_local): ()
+const function mine_stop(state: state_local): ()
 	mine_pause(state) -- Must pause before cleaning up the cube pointer.
 	cleanup_all(state)
 end
 
 local mine_start
-local function mine_new_cube(state: state_local, cube: BasePart): ()
+const function mine_new_cube(state: state_local, cube: BasePart): ()
 	mine_stop(state)
 	mine_start(cube)
 end
 
-local function on_heartbeat_passive(): ()
+const function on_heartbeat_passive(): ()
 	const cube = get_aim_target().instance
 	if cube == nil then
 		return
@@ -112,26 +112,26 @@ local function on_heartbeat_passive(): ()
 	mine_start(cube)
 end
 
-local function activate_heartbeat_passive(): ()
+const function activate_heartbeat_passive(): ()
 	connection_heartbeat_passive = RunService.Heartbeat:Connect(on_heartbeat_passive)
 	debug_print("Activated passive heartbeat.")
 end
 
-local function disable_heartbeat_passive(): ()
+const function disable_heartbeat_passive(): ()
 	if connection_heartbeat_passive ~= nil then
 		connection_heartbeat_passive:Disconnect()
 		connection_heartbeat_passive = nil
 	end
 end
 
-local function local_mining_finished(state: state_local): ()
+const function local_mining_finished(state: state_local): ()
 	state.cube_target.Parent = nil
 	cleanup_local(state)
 
 	activate_heartbeat_passive()
 end
 
-local function stop_mining(): ()
+const function stop_mining(): ()
 	if local_mining ~= nil then
 		mine_stop(local_mining)
 	end
@@ -139,7 +139,7 @@ local function stop_mining(): ()
 	disable_heartbeat_passive()
 end
 
-local function on_heartbeat_active(): ()
+const function on_heartbeat_active(): ()
 	local state = local_mining
 	if state == nil then
 		debug_print("Error: Local mining is missing.")
@@ -218,7 +218,7 @@ function mine_start(cube: BasePart): ()
 	debug_print("Activated active heartbeat.")
 
 	-- This connection is always made, even when debug mode is disabled.
-	local function on_destroying(): ()
+	const function on_destroying(): ()
 		debug_print("Destroying cube:", cube)
 	end
 	local connection_destroying = cube.Destroying:Connect(on_destroying)
@@ -239,7 +239,7 @@ function mine_start(cube: BasePart): ()
 	ReplicatedStorage.remotes.mine_cube:FireServer(id, cube)
 end
 
-local function on_mine_suceeded(id: number): ()
+const function on_mine_suceeded(id: number): ()
 	local state: state_pending? = find_by_id(id)
 	if state == nil then
 		return
@@ -248,7 +248,7 @@ local function on_mine_suceeded(id: number): ()
 	cleanup_pending(state)
 end
 
-local function on_mine_failed(id: number): ()
+const function on_mine_failed(id: number): ()
 	local state: state_pending? = find_by_id(id)
 	if state == nil then
 		return

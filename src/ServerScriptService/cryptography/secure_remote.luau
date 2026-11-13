@@ -15,7 +15,7 @@ type packet = { public: buffer, nonce: buffer, ciphertext: buffer, tag: buffer }
 
 local secure_remote = {}
 
-local function encrypt_for_player(player: Player, data_table: unknown): packet?
+const function encrypt_for_player(player: Player, data_table: unknown): packet?
 	local target_public = client_keys[player]
 	if not target_public then
 		return nil
@@ -37,7 +37,7 @@ local function encrypt_for_player(player: Player, data_table: unknown): packet?
 end
 
 -- The packet comes from the client, so it is checked before use.
-local function decrypt_from_player(packet: any): unknown
+const function decrypt_from_player(packet: any): unknown
 	if typeof(packet) ~= "table" or typeof(packet.public) ~= "buffer" then
 		return nil
 	end
@@ -75,7 +75,7 @@ function secure_remote.on_server_event_encrypted(
 	remote_event: RemoteEvent,
 	callback: (Player, unknown) -> ()
 ): RBXScriptConnection
-	local function on_server_event(player: Player, packet: unknown): ()
+	const function on_server_event(player: Player, packet: unknown): ()
 		local data_table = decrypt_from_player(packet)
 		if data_table then
 			callback(player, data_table)
@@ -85,7 +85,7 @@ function secure_remote.on_server_event_encrypted(
 end
 
 function secure_remote.on_server_invoke_encrypted(remote_function: RemoteFunction, callback: (Player, unknown) -> unknown): ()
-	local function on_server_invoke(player: Player, packet: unknown): unknown
+	const function on_server_invoke(player: Player, packet: unknown): unknown
 		local data_table = decrypt_from_player(packet)
 		if data_table then
 			return callback(player, data_table)

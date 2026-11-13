@@ -6,13 +6,13 @@ local selector = require(script.Parent.selector)
 
 export type controller = { set_enabled: (boolean) -> (), disconnect: () -> () }
 
-local function mount_selector(player_gui: PlayerGui, display_order: number, on_close: () -> ()): controller
+const function mount_selector(player_gui: PlayerGui, display_order: number, on_close: () -> ()): controller
 	local portal = mount_portal(player_gui)
-	local function close(): ()
+	const function close(): ()
 		portal.render(nil)
 		on_close()
 	end
-	local function set_enabled(enabled: boolean): ()
+	const function set_enabled(enabled: boolean): ()
 		portal.render(
 			React.createElement(selector, { enabled = enabled, display_order = display_order, on_close = close })
 		)

@@ -6,7 +6,7 @@ const remote_id = require(script.Parent.remote_id)
 
 const update_inventory = ReplicatedStorage.remotes.update_inventory
 
-local function on_update(update: inventory_types.inventory_update): ()
+const function on_update(update: inventory_types.inventory_update): ()
 	-- server pushes have no id, request responses are only applied if they're for the latest request
 	if update.id ~= nil and update.id ~= remote_id.current then
 		return

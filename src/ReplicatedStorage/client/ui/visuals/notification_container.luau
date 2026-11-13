@@ -6,7 +6,6 @@ const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
 local fade = require(script.Parent.Parent.effects.fade)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local notification_management = require(script.Parent.Parent.notification_management)
 local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
@@ -21,12 +20,12 @@ const LIFETIME_UNTIL_FADE = 3
 const FADE_DURATION = 0.5
 const EXAMPLE_NOTIFICATION: notification = { id = 0, message = "Example notification", created_at = 0 }
 
-local function do_nothing(): () end
+const function do_nothing(): () end
 
-local function use_fade_out(created_at: number, preview: boolean): number
+const function use_fade_out(created_at: number, preview: boolean): number
 	local transparency, set_transparency = use_state(0)
 
-	local function effect_fade_out()
+	const function effect_fade_out()
 		if preview then
 			set_transparency(0)
 			return
@@ -34,7 +33,7 @@ local function use_fade_out(created_at: number, preview: boolean): number
 		local time_since_creation = os.clock() - created_at
 		local time_until_fade = LIFETIME_UNTIL_FADE - time_since_creation
 
-		local function thread_fade(): ()
+		const function thread_fade(): ()
 			if time_until_fade > 0 then
 				task.wait(time_until_fade)
 			end
@@ -44,7 +43,7 @@ local function use_fade_out(created_at: number, preview: boolean): number
 
 		local task_fade = task.spawn(thread_fade)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			if coroutine.status(task_fade) ~= "dead" then
 				task.cancel(task_fade)
 			end
@@ -59,19 +58,18 @@ local function use_fade_out(created_at: number, preview: boolean): number
 	return transparency
 end
 
-local function notification_component(props: {
+const function notification_component(props: {
 	notification: notification,
 	index: number,
 	on_destroy: () -> (),
 	preview: boolean?,
-	blur: boolean?,
 })
 	local notification = props.notification
 	local index = props.index
 
 	local transparency = use_fade_out(notification.created_at, props.preview == true)
 
-	local function effect_destroy()
+	const function effect_destroy()
 		if transparency == 1 then
 			props.on_destroy()
 		end
@@ -93,7 +91,6 @@ local function notification_component(props: {
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),
-		props.blur and create_element(ui_blur),
 		create_element(
 			"UIStroke",
 			{
@@ -134,17 +131,17 @@ local function notification_component(props: {
 	)
 end
 
-local function use_notifications(): { notification }
+const function use_notifications(): { notification }
 	local notifications, set_notifications = use_state(notification_management.get_all)
 
-	local function effect_notifications()
-		local function on_fire(): ()
+	const function effect_notifications()
+		const function on_fire(): ()
 			set_notifications(notification_management.get_all())
 		end
 
 		local connection = notification_management.on_change:Connect(on_fire)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -156,7 +153,7 @@ local function use_notifications(): { notification }
 	return notifications
 end
 
-local function notifications_container(props: use_editable_hud.props)
+const function notifications_container(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(notifications_container, props)
 	local editor_enabled = use_editor_enabled()
 	local current_notifications = use_notifications()
@@ -171,7 +168,6 @@ local function notifications_container(props: use_editable_hud.props)
 				notification = EXAMPLE_NOTIFICATION,
 				index = 1,
 				preview = true,
-				blur = not props.preview,
 				on_destroy = do_nothing,
 			})
 		)
@@ -180,7 +176,7 @@ local function notifications_container(props: use_editable_hud.props)
 	for index, notification in notifications do
 		local display_order = notifications_length - index + 1 -- Convert to bottom-up index
 
-		local function on_destroy(): ()
+		const function on_destroy(): ()
 			notification_management.remove(notification.id)
 		end
 
@@ -190,7 +186,6 @@ local function notifications_container(props: use_editable_hud.props)
 				key = notification.id,
 				notification = notification,
 				index = display_order,
-				blur = true,
 				on_destroy = on_destroy,
 			})
 		)

@@ -7,7 +7,7 @@ local settings_registry = require(script.Parent.settings_registry)
 local shadow = require(script.Parent.Parent.visuals.shadow)
 local text_input = require(script.Parent.Parent.visuals.text_input)
 
-local function sidebar(
+const function sidebar(
 	props: { selected: string, query: string, on_selected: (string) -> (), on_search: (string) -> () }
 )
 	local buttons = {

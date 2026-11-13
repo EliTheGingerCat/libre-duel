@@ -4,7 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ADJECTIVES = require(ReplicatedStorage.shared.common_words.ADJECTIVES)
 const ANIMALS = require(ReplicatedStorage.shared.common_words.ANIMALS)
 
-local function generate_random_username(): string
+const function generate_random_username(): string
 	local adjective = ADJECTIVES[math.random(1, #ADJECTIVES)]
 	local first_adjective_letter = string.sub(adjective, 1, 1)
 	-- i want an alliteration so let's look through the ANIMALS array for matches

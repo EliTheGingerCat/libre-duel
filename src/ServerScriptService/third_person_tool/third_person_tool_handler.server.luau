@@ -16,11 +16,11 @@ type held_tool = {
 const held_tools: { [registry.entity]: held_tool } = {}
 const hand_connections: { [registry.entity]: RBXScriptConnection } = {}
 
-local function is_hand(instance: Instance): boolean
+const function is_hand(instance: Instance): boolean
     return instance.Name == "RightHand" or instance.Name == "Right Arm"
 end
 
-local function find_hand(character: Model): BasePart?
+const function find_hand(character: Model): BasePart?
     for _, child in character:GetChildren() do
         if is_hand(child) and child:IsA("BasePart") then
             return child
@@ -29,7 +29,7 @@ local function find_hand(character: Model): BasePart?
     return nil
 end
 
-local function remove_held_tool(entity: registry.entity): ()
+const function remove_held_tool(entity: registry.entity): ()
     const held = held_tools[entity]
     if held ~= nil then
         held.part:Destroy()
@@ -37,7 +37,7 @@ local function remove_held_tool(entity: registry.entity): ()
     end
 end
 
-local function attach_to_hand(part: BasePart, hand: BasePart, character: Model): ()
+const function attach_to_hand(part: BasePart, hand: BasePart, character: Model): ()
     const weld = Instance.new("Weld")
     weld.Part0 = hand
     weld.Part1 = part
@@ -46,7 +46,7 @@ local function attach_to_hand(part: BasePart, hand: BasePart, character: Model):
     part.Parent = character
 end
 
-local function update_held_tool(entity: registry.entity): ()
+const function update_held_tool(entity: registry.entity): ()
     const character = registry.get_character(entity)
     const hand = if character ~= nil then find_hand(character) else nil
     const tool = inventory_util.get_selected_tool(entity)
@@ -67,7 +67,7 @@ local function update_held_tool(entity: registry.entity): ()
     end
 end
 
-local function stop_watching_hand(entity: registry.entity): ()
+const function stop_watching_hand(entity: registry.entity): ()
     const connection = hand_connections[entity]
     if connection then
         connection:Disconnect()
@@ -75,9 +75,9 @@ local function stop_watching_hand(entity: registry.entity): ()
     end
 end
 
-local function on_character_added(character: Model, entity: registry.entity): ()
+const function on_character_added(character: Model, entity: registry.entity): ()
     -- the hand may not exist yet, and loading the avatar can replace it
-    local function on_child_added(child: Instance): ()
+    const function on_child_added(child: Instance): ()
         if is_hand(child) then
             -- deferred so that the old hand is gone by then if it was replaced this frame
             task.defer(update_held_tool, entity)
@@ -89,7 +89,7 @@ local function on_character_added(character: Model, entity: registry.entity): ()
     update_held_tool(entity)
 end
 
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
     stop_watching_hand(entity)
     -- unregistering a bot keeps its character around
     remove_held_tool(entity)

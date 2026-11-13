@@ -12,7 +12,7 @@ const create_element = React.createElement
 const WIDGET_NAME = "ControllerGlyphs"
 
 -- local instead of const since it passes itself to use_editable_hud for its copies
-local function controller_glyphs(props: use_editable_hud.props)
+const function controller_glyphs(props: use_editable_hud.props)
 	const defaults = HUD_DEFAULTS[WIDGET_NAME]
 	assert(defaults)
 	const content_ref = use_editable_hud(controller_glyphs, props, defaults.hidden)

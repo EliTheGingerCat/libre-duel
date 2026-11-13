@@ -15,7 +15,7 @@ const RELEASED_COLOUR = COLOURS.surface
 const PRESSED_KEY_COLOUR = Color3.new(80 / 255, 80 / 255, 80 / 255)
 const PRESSED_MOUSE_COLOUR = Color3.new(40 / 255, 40 / 255, 40 / 255)
 
-local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
+const function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 	local keys: { [Enum.KeyCode]: GuiObject } = {}
 	for _, key_code in { Enum.KeyCode.W, Enum.KeyCode.A, Enum.KeyCode.S, Enum.KeyCode.D, Enum.KeyCode.Space } do
 		if keystrokes then
@@ -47,7 +47,7 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 	local pending_delta = Vector2.zero
 	local displayed_delta = Vector2.zero
 
-	local function update_button(button: mouse_button): ()
+	const function update_button(button: mouse_button): ()
 		local count = #button.clicks
 		local text = if count > 0 then `{count} CPS` else button.name
 		if button.label.Text ~= text then
@@ -56,7 +56,7 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 		button.label.BackgroundColor3 = if button.pressed then PRESSED_MOUSE_COLOUR else RELEASED_COLOUR
 	end
 
-	local function reset_input(): ()
+	const function reset_input(): ()
 		for _, key in keys do
 			key.BackgroundColor3 = RELEASED_COLOUR
 		end
@@ -72,7 +72,7 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 		end
 	end
 
-	local function on_input_began(input: InputObject, processed: boolean): ()
+	const function on_input_began(input: InputObject, processed: boolean): ()
 		local key = keys[input.KeyCode]
 		if key and not processed and UserInputService:GetFocusedTextBox() == nil then
 			key.BackgroundColor3 = PRESSED_KEY_COLOUR
@@ -85,7 +85,7 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 		end
 	end
 
-	local function on_input_ended(input: InputObject): ()
+	const function on_input_ended(input: InputObject): ()
 		local key = keys[input.KeyCode]
 		if key then
 			key.BackgroundColor3 = RELEASED_COLOUR
@@ -97,13 +97,13 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 		end
 	end
 
-	local function on_input_changed(input: InputObject): ()
+	const function on_input_changed(input: InputObject): ()
 		if input.UserInputType == Enum.UserInputType.MouseMovement then
 			pending_delta += Vector2.new(input.Delta.X, input.Delta.Y)
 		end
 	end
 
-	local function on_render(delta_time: number): ()
+	const function on_render(delta_time: number): ()
 		-- Keep the 60 FPS sensitivity consistent across frame rates.
 		local normalized_delta = if delta_time > 0 then pending_delta / (60 * delta_time) else Vector2.zero
 		local target = Vector2.new(
@@ -144,7 +144,7 @@ local function mount_input(keystrokes: Frame?, mousestrokes: Frame?)
 		RunService.RenderStepped:Connect(on_render),
 	}
 
-	local function disconnect(): ()
+	const function disconnect(): ()
 		for _, connection in connections do
 			connection:Disconnect()
 		end

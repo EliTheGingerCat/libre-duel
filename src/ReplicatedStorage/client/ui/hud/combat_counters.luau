@@ -10,33 +10,33 @@ local reach = 0
 local listeners: { (number, number) -> () } = {}
 local disconnect_tracking: (() -> ())? = nil
 
-local function notify(): ()
+const function notify(): ()
 	for _, callback in table.clone(listeners) do
 		callback(combo, reach)
 	end
 end
 
-local function track_character()
+const function track_character()
 	local health_connection: RBXScriptConnection? = nil
 	local child_connection: RBXScriptConnection? = nil
 
-	local function reset_combo(): ()
+	const function reset_combo(): ()
 		combo = 0
 		notify()
 	end
 
-	local function reset_counters(): ()
+	const function reset_counters(): ()
 		reach = 0
 		reset_combo()
 	end
 
-	local function on_hit(distance: number): ()
+	const function on_hit(distance: number): ()
 		combo += 1
 		reach = distance
 		notify()
 	end
 
-	local function detach_character(): ()
+	const function detach_character(): ()
 		if health_connection then
 			health_connection:Disconnect()
 			health_connection = nil
@@ -47,16 +47,16 @@ local function track_character()
 		end
 	end
 
-	local function on_character_added(character: Model): ()
+	const function on_character_added(character: Model): ()
 		detach_character()
 		reset_counters()
 
-		local function watch_humanoid(child: Instance): ()
+		const function watch_humanoid(child: Instance): ()
 			if not child:IsA("Humanoid") or health_connection then
 				return
 			end
 			local previous_health = child.Health
-			local function on_health_changed(health: number): ()
+			const function on_health_changed(health: number): ()
 				if health < previous_health then
 					reset_combo()
 				end
@@ -72,7 +72,7 @@ local function track_character()
 		end
 	end
 
-	local function on_character_removing(): ()
+	const function on_character_removing(): ()
 		detach_character()
 		reset_counters()
 	end
@@ -85,7 +85,7 @@ local function track_character()
 		on_character_added(local_player.Character)
 	end
 
-	local function disconnect(): ()
+	const function disconnect(): ()
 		detach_character()
 		disconnect_hit()
 		added_connection:Disconnect()
@@ -95,7 +95,7 @@ local function track_character()
 	return disconnect
 end
 
-local function subscribe(callback: (number, number) -> ())
+const function subscribe(callback: (number, number) -> ())
 	table.insert(listeners, callback)
 	if disconnect_tracking then
 		callback(combo, reach)
@@ -103,7 +103,7 @@ local function subscribe(callback: (number, number) -> ())
 		disconnect_tracking = track_character()
 	end
 	local active = true
-	local function disconnect(): ()
+	const function disconnect(): ()
 		if not active then
 			return
 		end

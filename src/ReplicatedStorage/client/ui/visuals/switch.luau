@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local surface = require(script.Parent.controls.surface)
 local use_ui_motion = require(script.Parent.use_ui_motion)
 
-local function switch(props: { active: boolean?, on_changed: ((boolean) -> ())? })
+const function switch(props: { active: boolean?, on_changed: ((boolean) -> ())? })
 	local stored, set_stored = React.useState(props.active == true)
 	local active = if props.on_changed then props.active == true else stored
 	local dragging, set_dragging = React.useState(false)
@@ -12,7 +12,7 @@ local function switch(props: { active: boolean?, on_changed: ((boolean) -> ())? 
 	local gesture =
 		React.useRef({ value = if active then 1 else 0, origin = Vector2.zero, grab_offset = 0, moved = false })
 	local motion = use_ui_motion(if active then 1 else 0, nil, if dragging then nil else gesture.current.value)
-	local function choose(next_active: boolean): ()
+	const function choose(next_active: boolean): ()
 		if not dragging then
 			gesture.current.value = motion:getValue()
 		end
@@ -22,23 +22,23 @@ local function switch(props: { active: boolean?, on_changed: ((boolean) -> ())? 
 			set_stored(next_active)
 		end
 	end
-	local function toggle(_button: GuiButton, _input: InputObject): ()
+	const function toggle(_button: GuiButton, _input: InputObject): ()
 		choose(not active)
 	end
-	local function amount(values: { motion: number, progress: number }): number
+	const function amount(values: { motion: number, progress: number }): number
 		return if dragging then values.progress else values.motion
 	end
 	local current = React.joinBindings({ motion = motion, progress = progress }):map(amount)
-	local function position(amount: number): UDim2
+	const function position(amount: number): UDim2
 		return UDim2.new(amount, 24 - 48 * amount, 0.5, 0)
 	end
-	local function colour(amount: number): Color3
+	const function colour(amount: number): Color3
 		local yellow = Color3.new(1, 0.85, 0)
 		return if amount < 0.5
 			then Color3.new(1, 65 / 255, 65 / 255):Lerp(yellow, amount * 2)
 			else yellow:Lerp(Color3.new(60 / 255, 1, 0), (amount - 0.5) * 2)
 	end
-	local function begin(detector: UIDragDetector, point: Vector2): ()
+	const function begin(detector: UIDragDetector, point: Vector2): ()
 		gesture.current.origin = point
 		gesture.current.moved = false
 		local thumb = detector.Parent :: GuiObject
@@ -47,7 +47,7 @@ local function switch(props: { active: boolean?, on_changed: ((boolean) -> ())? 
 		set_progress(gesture.current.value)
 		set_dragging(true)
 	end
-	local function drag(detector: UIDragDetector, point: Vector2): ()
+	const function drag(detector: UIDragDetector, point: Vector2): ()
 		gesture.current.moved = gesture.current.moved or (point - gesture.current.origin).Magnitude >= 4
 		local thumb = detector.Parent
 		assert(thumb)
@@ -61,11 +61,11 @@ local function switch(props: { active: boolean?, on_changed: ((boolean) -> ())? 
 		gesture.current.value = amount
 		set_progress(amount)
 	end
-	local function finish(): ()
+	const function finish(): ()
 		choose(if gesture.current.moved then gesture.current.value >= 0.5 else not active)
 		set_dragging(false)
 	end
-	local function key(_button: GuiButton, input: InputObject): ()
+	const function key(_button: GuiButton, input: InputObject): ()
 		if input.KeyCode == Enum.KeyCode.Left or input.KeyCode == Enum.KeyCode.DPadLeft then
 			choose(false)
 		elseif input.KeyCode == Enum.KeyCode.Right or input.KeyCode == Enum.KeyCode.DPadRight then

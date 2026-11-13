@@ -14,7 +14,7 @@ const COLOUR_SELECTED = Color3.fromRGB(100, 100, 100)
 -- A single slot. `image` is nil for an empty slot, `selected` highlights it (such as the active hotbar slot).
 -- `amount` shows as a counter when there's more than one.
 -- With `on_click` the slot is a button, which also stops the click from reaching the game.
-local function item_slot(props: {
+const function item_slot(props: {
 	name: string,
 	image: string?,
 	amount: number?,

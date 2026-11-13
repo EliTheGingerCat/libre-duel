@@ -6,14 +6,14 @@ const VIEWMODEL_CONSTANTS = require(script.Parent.VIEWMODEL_CONSTANTS)
 const progress = Instance.new("NumberValue")
 const tween = TweenService:Create(progress, VIEWMODEL_CONSTANTS.swing_tween_info, { Value = 1 })
 
-local function play(): ()
+const function play(): ()
     if tween.PlaybackState == Enum.PlaybackState.Playing then
         return
     end
     tween:Play()
 end
 
-local function get_offset(): CFrame
+const function get_offset(): CFrame
     return CFrame.identity:Lerp(VIEWMODEL_CONSTANTS.swing_pose, progress.Value)
 end
 

@@ -25,13 +25,13 @@ type controller = {
 	get_guides: () -> (geometry.guide?, geometry.guide?),
 }
 
-local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_widget.view }): controller
+const function editor_drag(preview: Frame, screen: ScreenGui, views: { create_widget.view }): controller
 	local current: drag_state? = nil
 	local pointer: Vector2? = nil
-	local function preview_factor(): number
+	const function preview_factor(): number
 		return preview.AbsoluteSize.X / math.max(1, screen.AbsoluteSize.X)
 	end
-	local function finish(): ()
+	const function finish(): ()
 		local previous = current
 		current = nil
 		if
@@ -44,7 +44,7 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 			previous.view.item.refresh()
 		end
 	end
-	local function begin(view: create_widget.view, source: UIDragDetector, position: Vector2, handle: Vector2?): boolean
+	const function begin(view: create_widget.view, source: UIDragDetector, position: Vector2, handle: Vector2?): boolean
 		if current or not registry.is_shown(view.item) then
 			return false
 		end
@@ -65,7 +65,7 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 		}
 		return true
 	end
-	local function update(source: UIDragDetector, position: Vector2): ()
+	const function update(source: UIDragDetector, position: Vector2): ()
 		local drag = current
 		if not drag or drag.source ~= source or preview.AbsoluteSize.X <= 0 or preview.AbsoluteSize.Y <= 0 then
 			return
@@ -94,19 +94,19 @@ local function editor_drag(preview: Frame, screen: ScreenGui, views: { create_wi
 		drag.view.item.refresh()
 		drag.view.refresh()
 	end
-	local function finish_input(source: UIDragDetector, position: Vector2): ()
+	const function finish_input(source: UIDragDetector, position: Vector2): ()
 		if current and current.source == source then
 			update(source, position)
 			finish()
 		end
 	end
-	local function get_view(): create_widget.view?
+	const function get_view(): create_widget.view?
 		return if current then current.view else nil
 	end
-	local function get_pointer(): Vector2?
+	const function get_pointer(): Vector2?
 		return pointer
 	end
-	local function get_guides(): (geometry.guide?, geometry.guide?)
+	const function get_guides(): (geometry.guide?, geometry.guide?)
 		if current then
 			return current.guide_x, current.guide_y
 		end

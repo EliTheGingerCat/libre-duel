@@ -1,4 +1,4 @@
-local function create_viewmodel_part(): Part
+const function create_viewmodel_part(): Part
     const part = Instance.new("Part")
     part.Size = Vector3.new(0.1, 0.1, 0.1) --making it so smol so that it doesn't clip into walls
     -- unanchored, it falls out of the world and gets destroyed whenever nothing is positioning it

@@ -23,7 +23,7 @@ export type record = {
 	destination_job_id: string,
 }
 
-local function as_dictionary(value: unknown): { [string]: unknown }?
+const function as_dictionary(value: unknown): { [string]: unknown }?
 	if typeof(value) ~= "table" then
 		return nil
 	end
@@ -31,7 +31,7 @@ local function as_dictionary(value: unknown): { [string]: unknown }?
 	return value :: { [string]: unknown }
 end
 
-local function parse_member(value: unknown): member?
+const function parse_member(value: unknown): member?
 	const fields = as_dictionary(value)
 	if fields == nil then
 		return nil
@@ -56,7 +56,7 @@ local function parse_member(value: unknown): member?
 	}
 end
 
-local function decode(value: unknown): record?
+const function decode(value: unknown): record?
 	const fields = as_dictionary(value)
 	if fields == nil then
 		return nil
@@ -115,7 +115,7 @@ local function decode(value: unknown): record?
 	}
 end
 
-local function create(id: string, mode: mode, matchmaking_type: number): record
+const function create(id: string, mode: mode, matchmaking_type: number): record
 	const teams: { [string]: { [string]: member } } = {}
 	for team_index = 1, get_mode_definition(mode).teams do
 		teams[`team{team_index}`] = {}
@@ -131,7 +131,7 @@ local function create(id: string, mode: mode, matchmaking_type: number): record
 	}
 end
 
-local function count_members(entry: record): number
+const function count_members(entry: record): number
 	local count = 0
 	for _, members in entry.teams do
 		for _ in members do
@@ -141,7 +141,7 @@ local function count_members(entry: record): number
 	return count
 end
 
-local function find_member(entry: record, user_id: number): member?
+const function find_member(entry: record, user_id: number): member?
 	const key = tostring(user_id)
 	for _, members in entry.teams do
 		if members[key] then
@@ -151,7 +151,7 @@ local function find_member(entry: record, user_id: number): member?
 	return nil
 end
 
-local function prune(entry: record, now: number): ()
+const function prune(entry: record, now: number): ()
 	if entry.status == "started" or entry.status == "cancelled" then
 		return
 	end
@@ -170,7 +170,7 @@ local function prune(entry: record, now: number): ()
 	end
 end
 
-local function claim(entry: record, user_id: number, token: string, source_job_id: string, now: number): boolean
+const function claim(entry: record, user_id: number, token: string, source_job_id: string, now: number): boolean
 	prune(entry, now)
 	if entry.status ~= "waiting" or find_member(entry, user_id) ~= nil then
 		return false
@@ -204,7 +204,7 @@ local function claim(entry: record, user_id: number, token: string, source_job_i
 	return true
 end
 
-local function renew(entry: record, tokens: { [string]: string }, now: number): ()
+const function renew(entry: record, tokens: { [string]: string }, now: number): ()
 	prune(entry, now)
 	if entry.status ~= "waiting" and entry.status ~= "ready" then
 		return
@@ -218,7 +218,7 @@ local function renew(entry: record, tokens: { [string]: string }, now: number): 
 	end
 end
 
-local function release(entry: record, user_id: number, token: string): ()
+const function release(entry: record, user_id: number, token: string): ()
 	if entry.status == "started" then
 		return
 	end

@@ -23,13 +23,13 @@ const MESSAGES = { information = information_text, warning = warning_text, dange
 const BOX_PADDING_X = 20
 const BOX_PADDING_Y = 10
 
-local function setting_row(props: { entry: settings_registry.entry, order: number, children: unknown? })
+const function setting_row(props: { entry: settings_registry.entry, order: number, children: unknown? })
 	local entry = props.entry
 	local value = settings_registry.get(entry.id)
-	local function changed(next_value: settings_registry.value): ()
+	const function changed(next_value: settings_registry.value): ()
 		settings_registry.set(entry.id, next_value)
 	end
-	local function colour_changed(colour: Color3, alpha: number): ()
+	const function colour_changed(colour: Color3, alpha: number): ()
 		changed({ colour = colour, alpha = alpha })
 	end
 	local control

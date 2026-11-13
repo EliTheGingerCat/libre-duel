@@ -9,7 +9,7 @@ const SIZE = VIEWMODEL_CONSTANTS.cube_size
 local part: Part? = nil
 local textures: { Texture } = {}
 
-local function hide(): ()
+const function hide(): ()
     if part ~= nil then
         part:Destroy()
     end
@@ -17,7 +17,7 @@ local function hide(): ()
     table.clear(textures)
 end
 
-local function add_textures(cube: Part, texture_id: string): ()
+const function add_textures(cube: Part, texture_id: string): ()
     for _, face in Enum.NormalId:GetEnumItems() do
         const texture = Instance.new("Texture")
         texture.Face = face
@@ -30,7 +30,7 @@ local function add_textures(cube: Part, texture_id: string): ()
 end
 
 -- not using create_cube because this must not get the "cube" tag, and textures need to fit this size
-local function show(tool: tool_types.tool): ()
+const function show(tool: tool_types.tool): ()
     hide()
 
     const appearance: tool_types.cube_params = tool.behaviours.cube or {}
@@ -57,12 +57,12 @@ local function show(tool: tool_types.tool): ()
     part = cube
 end
 
-local function get_part(): BasePart?
+const function get_part(): BasePart?
     return part
 end
 
 -- textures don't inherit this from their part
-local function set_transparency(transparency: number): ()
+const function set_transparency(transparency: number): ()
     if part == nil then
         return
     end

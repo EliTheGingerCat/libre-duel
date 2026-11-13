@@ -8,7 +8,7 @@ local mode_selector_state = {
 	on_change = Signal.new(),
 }
 
-local function set_enabled(enabled: boolean): ()
+const function set_enabled(enabled: boolean): ()
 	if mode_selector_state.enabled == enabled then
 		return
 	end

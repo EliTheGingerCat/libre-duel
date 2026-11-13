@@ -31,28 +31,28 @@ local entries: { entry } = {}
 local changed = Signal.new()
 
 -- Removed by the player, or not meant for the device they're on.
-local function is_shown(item: entry): boolean
+const function is_shown(item: entry): boolean
 	return not item.hidden and input_device.supports(item.supports_device)
 end
 
-local function notify(): ()
+const function notify(): ()
 	changed:Fire()
 end
 
-local function subscribe(callback: () -> ())
+const function subscribe(callback: () -> ())
 	local connection = changed:Connect(callback)
-	local function disconnect(): ()
+	const function disconnect(): ()
 		connection:Disconnect()
 	end
 	return disconnect
 end
 
 -- A copy, so callers cannot change the registry without notifying subscribers.
-local function get_entries(): { entry }
+const function get_entries(): { entry }
 	return table.clone(entries)
 end
 
-local function register(
+const function register(
 	content: GuiObject,
 	screen: ScreenGui,
 	create: factory?,
@@ -74,7 +74,7 @@ local function register(
 	local starts_hidden = default_hidden == true and not on_remove
 
 	local item: entry
-	local function refresh(): ()
+	const function refresh(): ()
 		local preview = item.preview
 		local preview_screen = if preview then preview:FindFirstAncestorOfClass("ScreenGui") else nil
 		local width = if preview_screen then preview_screen.AbsoluteSize.X else screen.AbsoluteSize.X
@@ -116,7 +116,7 @@ local function register(
 		refresh = refresh,
 	}
 
-	local function on_size_changed(): ()
+	const function on_size_changed(): ()
 		local size = content.AbsoluteSize / math.max(0.001, scale.Scale)
 		local current = container.Size
 		if math.abs(current.X.Offset - size.X) > 0.01 or math.abs(current.Y.Offset - size.Y) > 0.01 then
@@ -124,7 +124,7 @@ local function register(
 		end
 	end
 
-	local function on_position_changed(): ()
+	const function on_position_changed(): ()
 		if content.Position ~= UDim2.fromOffset(0, 0) then
 			default_position = content.Position
 			content.Position = UDim2.fromOffset(0, 0)
@@ -139,7 +139,7 @@ local function register(
 	table.insert(entries, item)
 	notify()
 
-	local function unregister(): ()
+	const function unregister(): ()
 		item.corners.disconnect()
 		size_connection:Disconnect()
 		position_connection:Disconnect()
@@ -155,7 +155,7 @@ local function register(
 	return unregister
 end
 
-local function add(item: entry): ()
+const function add(item: entry): ()
 	if item.hidden then
 		item.hidden = false
 		item.refresh()
@@ -168,7 +168,7 @@ local function add(item: entry): ()
 	widget_copies.add(create)
 end
 
-local function remove(item: entry): ()
+const function remove(item: entry): ()
 	item.hidden = true
 	item.refresh()
 	if item.on_remove then
@@ -177,7 +177,7 @@ local function remove(item: entry): ()
 end
 
 -- Removes every copy and puts the built-in widgets back where they started.
-local function reset(): ()
+const function reset(): ()
 	widget_copies.clear()
 	for _, item in entries do
 		if not item.on_remove then
@@ -190,7 +190,7 @@ local function reset(): ()
 	notify()
 end
 
-local function on_device_changed(): ()
+const function on_device_changed(): ()
 	for _, item in entries do
 		item.refresh()
 	end

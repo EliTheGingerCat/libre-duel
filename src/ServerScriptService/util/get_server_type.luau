@@ -1,6 +1,6 @@
 type server_types = "vip" | "reserved" | "standard"
 
-local function get_server_type(): server_types
+const function get_server_type(): server_types
 	if game.PrivateServerId ~= "" then
 		if game.PrivateServerOwnerId ~= 0 then
 			return "vip"

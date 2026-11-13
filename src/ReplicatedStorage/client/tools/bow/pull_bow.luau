@@ -9,7 +9,7 @@ const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
 const player = Players.LocalPlayer
 
-local function pull_bow(): ()
+const function pull_bow(): ()
 	const character = player.Character
 	if character == nil then
 		return
@@ -23,7 +23,7 @@ local function pull_bow(): ()
 end
 
 -- i added "f" to stop lua from thinking i'm reffering to the remote (short for function)
-local function shoot_bow_f(character: Model, dt: number): ()
+const function shoot_bow_f(character: Model, dt: number): ()
 	const head = character:FindFirstChild("Head")
 	if head == nil or not head:IsA("BasePart") then
 		return
@@ -38,7 +38,7 @@ local function shoot_bow_f(character: Model, dt: number): ()
 	shoot_bow:InvokeServer(origin, direction, dt)
 end
 
-local function release_bow(was_released: boolean): ()
+const function release_bow(was_released: boolean): ()
 	const draw_started = bow_state.draw_started
 	const character = player.Character or player.CharacterAdded:Wait()
 	const humanoid = character.Humanoid

@@ -6,7 +6,7 @@ const positions: { [Instance]: Vector3? } = {}
 -- Counted, because the client's temporary cube overlaps the server's cube until it is destroyed.
 const counts: { [Vector3]: number? } = {}
 
-local function track(cube: Instance): ()
+const function track(cube: Instance): ()
 	if positions[cube] ~= nil or not cube:IsA("BasePart") then
 		return
 	end
@@ -15,7 +15,7 @@ local function track(cube: Instance): ()
 	counts[position] = (counts[position] or 0) + 1
 end
 
-local function untrack(cube: Instance): ()
+const function untrack(cube: Instance): ()
 	const position = positions[cube]
 	if position == nil then
 		return
@@ -25,7 +25,7 @@ local function untrack(cube: Instance): ()
 	counts[position] = if count > 0 then count else nil
 end
 
-local function is_occupied(position: Vector3): boolean
+const function is_occupied(position: Vector3): boolean
 	return counts[position] ~= nil
 end
 

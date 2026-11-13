@@ -5,11 +5,10 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local shadow = require(script.Parent.Parent.visuals.shadow)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 
 local create_element = React.createElement
 
-local function key(props: { name: string, position: Vector2, preview: boolean? })
+const function key(props: { name: string, position: Vector2, preview: boolean? })
 	return create_element("TextLabel", {
 		Name = props.name,
 		Position = UDim2.fromOffset(props.position.X, props.position.Y),
@@ -23,7 +22,6 @@ local function key(props: { name: string, position: Vector2, preview: boolean? }
 		FontFace = FONTS.regular,
 	}, {
 		shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
-		blur = not props.preview and create_element(ui_blur),
 		corner = create_element("UICorner", {
 			TopLeftRadius = UDim.new(0, if props.name == "W" or props.name == "A" then 16 else 0),
 			TopRightRadius = UDim.new(0, if props.name == "W" or props.name == "D" then 16 else 0),
@@ -42,7 +40,7 @@ local function key(props: { name: string, position: Vector2, preview: boolean? }
 	})
 end
 
-local function keystrokes(props: { preview: boolean? })
+const function keystrokes(props: { preview: boolean? })
 	return create_element(React.Fragment, {}, {
 		W = create_element(key, { name = "W", position = Vector2.new(52, 0), preview = props.preview }),
 		A = create_element(key, { name = "A", position = Vector2.new(0, 52), preview = props.preview }),
@@ -56,7 +54,6 @@ local function keystrokes(props: { preview: boolean? })
 			BorderSizePixel = 0,
 		}, {
 			shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
-			blur = not props.preview and create_element(ui_blur),
 			corner = create_element("UICorner", {
 				TopLeftRadius = UDim.new(0, 0),
 				TopRightRadius = UDim.new(0, 0),

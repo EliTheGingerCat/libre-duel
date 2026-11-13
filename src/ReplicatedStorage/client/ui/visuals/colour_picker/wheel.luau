@@ -3,12 +3,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local drag_detector = require(script.Parent.Parent.controls.drag_detector)
 
-local function wheel(props: { hue: number, saturation: number, on_changed: (number, number) -> () })
-	local function drag(point: Vector2): ()
+const function wheel(props: { hue: number, saturation: number, on_changed: (number, number) -> () })
+	const function drag(point: Vector2): ()
 		local offset = (point - Vector2.new(0.5, 0.5)) * 2
 		props.on_changed((math.atan2(offset.Y, -offset.X) / (2 * math.pi)) % 1, math.min(1, offset.Magnitude))
 	end
-	local function key(_button: GuiButton, input: InputObject): ()
+	const function key(_button: GuiButton, input: InputObject): ()
 		local code = input.KeyCode
 		if code == Enum.KeyCode.Left or code == Enum.KeyCode.DPadLeft then
 			props.on_changed((props.hue - 1 / 360) % 1, props.saturation)

@@ -26,7 +26,7 @@ const SIZE = UDim2.fromOffset(280, 84)
 const IS_RESERVED = game.PrivateServerId ~= "" and game.PrivateServerOwnerId == 0
 const GAMEPAD_PLAY_ACTION = "play_button_gamepad"
 
-local function open_mode_selector(): ()
+const function open_mode_selector(): ()
 	mode_selector_state.set_enabled(true)
 end
 
@@ -44,7 +44,7 @@ const function open_mode_selector_from_gamepad(
 	return Enum.ContextActionResult.Sink
 end
 
-local function play_button(props: use_editable_hud.props)
+const function play_button(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(play_button, props)
 	local state = use_queue_status()
 	local editor_enabled = use_editor_enabled()
@@ -54,13 +54,13 @@ local function play_button(props: use_editable_hud.props)
 	const is_gamepad = use_input_device() == "gamepad"
 	local inventory_open, set_inventory_open = React.useState(inventory_state.enabled)
 
-	local function subscribe()
-		local function update(): ()
+	const function subscribe()
+		const function update(): ()
 			set_inventory_open(inventory_state.enabled)
 		end
 		local connection = inventory_state.on_change:Connect(update)
 		update()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 		return disconnect

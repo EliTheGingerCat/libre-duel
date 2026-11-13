@@ -15,18 +15,18 @@ const CENTER_CLAY = "white_clay"
 -- Read from the template's `center_length` attribute, in cubes.
 const DEFAULT_CENTER_LENGTH = 1
 
-local function get_appearance(id: string): tool_types.cube_params
+const function get_appearance(id: string): tool_types.cube_params
 	const tool = tools.get(id)
 	assert(tool and tool.behaviours.cube, `Tool "{id}" is not a cube.`)
 	return tool.behaviours.cube
 end
 
-local function snap(position: Vector3): Vector3
+const function snap(position: Vector3): Vector3
 	return Vector3.new(snap_coordinate(position.X), snap_coordinate(position.Y), snap_coordinate(position.Z))
 end
 
 -- Fills the template's volume with cubes: team 1's clay on the half nearest `team1_position`, team 2's on the other, and a strip of white clay in the middle.
-local function generate_bridge(template: BasePart, team1_position: Vector3, this_match: match.match): ()
+const function generate_bridge(template: BasePart, team1_position: Vector3, this_match: match.match): ()
 	-- Cubes are axis aligned, so only the world space extents of the template matter.
 	const world_size = template.CFrame:VectorToWorldSpace(template.Size)
 	const size = Vector3.new(math.abs(world_size.X), math.abs(world_size.Y), math.abs(world_size.Z))

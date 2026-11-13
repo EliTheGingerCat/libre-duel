@@ -3,7 +3,7 @@ local UserInputService = game:GetService("UserInputService")
 
 const KEYBINDS = require(script.Parent.KEYBINDS)
 
-local function on_input_began(input: InputObject): ()
+const function on_input_began(input: InputObject): ()
 	if input.KeyCode == KEYBINDS.debug_server then
 		ReplicatedStorage.remotes.debug_server:FireServer()
 	end

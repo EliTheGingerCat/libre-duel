@@ -12,7 +12,7 @@ const preloaded: { [{ tool_types.bow_draw_frame }]: true } = {}
 local shown_frame: tool_types.bow_draw_frame? = nil
 
 -- assets that haven't loaded yet would flicker when the draw first reaches them
-local function preload(draw_frames: { tool_types.bow_draw_frame }): ()
+const function preload(draw_frames: { tool_types.bow_draw_frame }): ()
     if preloaded[draw_frames] then
         return
     end
@@ -26,7 +26,7 @@ local function preload(draw_frames: { tool_types.bow_draw_frame }): ()
     task.spawn(ContentProvider.PreloadAsync, ContentProvider, assets)
 end
 
-local function get_draw_frame(
+const function get_draw_frame(
     draw_frames: { tool_types.bow_draw_frame },
     draw_started: number
 ): tool_types.bow_draw_frame
@@ -34,7 +34,7 @@ local function get_draw_frame(
     return draw_frames[math.floor(progress * (#draw_frames - 1)) + 1]
 end
 
-local function show(tool: tool_types.tool): ()
+const function show(tool: tool_types.tool): ()
     shown_frame = nil
     mesh_display.show(tool)
 
@@ -44,7 +44,7 @@ local function show(tool: tool_types.tool): ()
     end
 end
 
-local function update(tool: tool_types.tool): ()
+const function update(tool: tool_types.tool): ()
     const bow = tool.behaviours.bow
     const draw_frames = if bow ~= nil then bow.draw_frames else nil
     if draw_frames == nil or #draw_frames == 0 then

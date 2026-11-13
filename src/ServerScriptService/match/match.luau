@@ -47,21 +47,21 @@ local last_id = 0
 
 local stop: (match: match) -> ()
 
-local function get_match_of(entity: registry.entity): match?
+const function get_match_of(entity: registry.entity): match?
 	return entity_matches[entity]
 end
 
-local function get_match_of_cube(cube: BasePart): match?
+const function get_match_of_cube(cube: BasePart): match?
 	return cube_matches[cube]
 end
 
-local function fire_all(match: match, remote: RemoteEvent, ...: unknown): ()
+const function fire_all(match: match, remote: RemoteEvent, ...: unknown): ()
 	for _, entity in match.entities do
 		registry.fire_client(entity, remote, ...)
 	end
 end
 
-local function show_title(
+const function show_title(
 	match: match,
 	fade_in: number,
 	stay: number,
@@ -78,21 +78,21 @@ local function show_title(
 	end
 end
 
-local function award(match: match, entity: registry.entity, stat: GAME_STATS.stat, increment: number?): ()
+const function award(match: match, entity: registry.entity, stat: GAME_STATS.stat, increment: number?): ()
 	award_mode_stat(entity, match.definition.id, stat, increment)
 end
 
-local function on_stop(match: match, callback: () -> ()): ()
+const function on_stop(match: match, callback: () -> ()): ()
 	table.insert(match.stop_callbacks, callback)
 end
 
-local function register(match: match, entity: registry.entity): ()
+const function register(match: match, entity: registry.entity): ()
 	entity_matches[entity] = match
 	table.insert(match.entities, entity)
 	registry.fire_client(entity, ReplicatedStorage.remotes.game_is_active, true)
 end
 
-local function unregister(match: match, entity: registry.entity): ()
+const function unregister(match: match, entity: registry.entity): ()
 	entity_matches[entity] = nil
 	const index = table.find(match.entities, entity)
 	if index then
@@ -101,7 +101,7 @@ local function unregister(match: match, entity: registry.entity): ()
 	registry.fire_client(entity, ReplicatedStorage.remotes.game_is_active, false)
 end
 
-local function add_entity(match: match, entity: registry.entity): ()
+const function add_entity(match: match, entity: registry.entity): ()
 	const hooks = match.hooks
 	if match.stopped or hooks == nil or entity_matches[entity] ~= nil then
 		return
@@ -110,7 +110,7 @@ local function add_entity(match: match, entity: registry.entity): ()
 	hooks.entity_added(entity)
 end
 
-local function remove_entity(match: match, entity: registry.entity): ()
+const function remove_entity(match: match, entity: registry.entity): ()
 	if entity_matches[entity] ~= match then
 		return
 	end
@@ -123,7 +123,7 @@ local function remove_entity(match: match, entity: registry.entity): ()
 	end
 end
 
-local function clear_remains(slot: number): ()
+const function clear_remains(slot: number): ()
 	const old = remains[slot]
 	if old == nil then
 		return
@@ -138,7 +138,7 @@ local function clear_remains(slot: number): ()
 	end
 end
 
-local function take_slot(match: match): number
+const function take_slot(match: match): number
 	local slot = 0
 	while slots[slot] ~= nil do
 		slot += 1
@@ -148,7 +148,7 @@ local function take_slot(match: match): number
 	return slot
 end
 
-local function create(definition: MODE_DEFINITIONS.definition): match
+const function create(definition: MODE_DEFINITIONS.definition): match
 	last_id += 1
 	const match: match = {
 		id = last_id,
@@ -163,7 +163,7 @@ local function create(definition: MODE_DEFINITIONS.definition): match
 	return match
 end
 
-local function start(match: match, hooks: hooks, teams: { { registry.entity } }): ()
+const function start(match: match, hooks: hooks, teams: { { registry.entity } }): ()
 	assert(match.hooks == nil and not match.stopped, "Match has already been started.")
 	match.hooks = hooks
 	for _, entities in teams do
@@ -193,7 +193,7 @@ function stop(match: match): ()
 	remains[match.slot] = match
 end
 
-local function move(instance: Instance, offset: Vector3): ()
+const function move(instance: Instance, offset: Vector3): ()
 	if instance:IsA("PVInstance") then
 		instance:PivotTo(instance:GetPivot() + offset)
 		return
@@ -204,7 +204,7 @@ local function move(instance: Instance, offset: Vector3): ()
 end
 
 -- Maps are stored where slot 0 plays them, so every other slot is that position shifted along X.
-local function load_map(match: match): Instance
+const function load_map(match: match): Instance
 	const folder = ServerStorage.maps:FindFirstChild(match.definition.game)
 	assert(folder, `No maps folder for "{match.definition.game}"`)
 	const maps = folder:GetChildren()
@@ -221,8 +221,8 @@ local function load_map(match: match): Instance
 	return map
 end
 
-local function track_cube(match: match, cube: BasePart): ()
-	local function on_destroying(): ()
+const function track_cube(match: match, cube: BasePart): ()
+	const function on_destroying(): ()
 		match.cubes[cube] = nil
 		cube_matches[cube] = nil
 	end
@@ -231,7 +231,7 @@ local function track_cube(match: match, cube: BasePart): ()
 	cube.Destroying:Once(on_destroying)
 end
 
-local function on_entity_died(_character: Model, entity: registry.entity): ()
+const function on_entity_died(_character: Model, entity: registry.entity): ()
 	const match = entity_matches[entity]
 	const hooks = if match then match.hooks else nil
 	if hooks and hooks.entity_died then
@@ -239,14 +239,14 @@ local function on_entity_died(_character: Model, entity: registry.entity): ()
 	end
 end
 
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
 	const match = entity_matches[entity]
 	if match then
 		remove_entity(match, entity)
 	end
 end
 
-local function stop_all(): ()
+const function stop_all(): ()
 	for _, match in table.clone(slots) do
 		if match then
 			stop(match)

@@ -10,7 +10,7 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 
 const ENABLED = true
 if RunService:IsStudio() and ENABLED then
-	local function clone_maybe_not_archivable<T>(instance: T & Instance): T
+	const function clone_maybe_not_archivable<T>(instance: T & Instance): T
 		local archivable = instance.Archivable
 		instance.Archivable = true
 		local clone = instance:Clone()
@@ -18,8 +18,8 @@ if RunService:IsStudio() and ENABLED then
 		return clone
 	end
 
-	local function on_player_added(player: Player): ()
-		local function on_character(character: Model): ()
+	const function on_player_added(player: Player): ()
+		const function on_character(character: Model): ()
 			local clone = clone_maybe_not_archivable(character)
 			clone.Name = `clone of {character.Name}`
 

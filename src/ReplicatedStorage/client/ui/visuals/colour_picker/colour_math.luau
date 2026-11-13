@@ -1,4 +1,4 @@
-local function from_hsv(hue: number, saturation: number, value: number): Color3
+const function from_hsv(hue: number, saturation: number, value: number): Color3
 	local sector = (hue % 1) * 6
 	local chroma = value * saturation
 	local secondary = chroma * (1 - math.abs(sector % 2 - 1))

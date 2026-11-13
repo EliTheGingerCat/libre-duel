@@ -39,33 +39,33 @@ export type actions = {
 	drag_finish: (UIDragDetector, Vector2) -> (),
 }
 
-local function create_widget(item: registry.entry, preview: Frame, actions: actions): view
+const function create_widget(item: registry.entry, preview: Frame, actions: actions): view
 	local bounds_ref = React.createRef()
 	local move_ref = React.createRef()
 	local view: view
 	local delete_ref = React.createRef()
 	local settings_ref = React.createRef()
 	local portal = mount_portal(preview)
-	local function delete(): ()
+	const function delete(): ()
 		actions.delete(item)
 	end
-	local function settings(): ()
+	const function settings(): ()
 		actions.settings(item)
 	end
-	local function drag_start(source: UIDragDetector, position: Vector2, handle: Vector2?): ()
+	const function drag_start(source: UIDragDetector, position: Vector2, handle: Vector2?): ()
 		actions.drag_start(view, source, position, handle)
 	end
 
-	local function get_rectangle(): geometry.rectangle
+	const function get_rectangle(): geometry.rectangle
 		return {
 			position = item.container.AbsolutePosition - preview.AbsolutePosition,
 			size = item.container.AbsoluteSize,
 		}
 	end
-	local function is_compact(rect: geometry.rectangle): boolean
+	const function is_compact(rect: geometry.rectangle): boolean
 		return rect.size.X < COMPACT_SIZE.X or rect.size.Y < COMPACT_SIZE.Y
 	end
-	local function in_hover_margin(pointer: Vector2): boolean
+	const function in_hover_margin(pointer: Vector2): boolean
 		local rect = get_rectangle()
 		if not is_compact(rect) then
 			return false
@@ -73,7 +73,7 @@ local function create_widget(item: registry.entry, preview: Frame, actions: acti
 		local margin = Vector2.one * HOVER_MARGIN
 		return geometry.contains({ position = rect.position - margin, size = rect.size + margin * 2 }, pointer)
 	end
-	local function get_action_position(rect: geometry.rectangle): UDim2
+	const function get_action_position(rect: geometry.rectangle): UDim2
 		if not is_compact(rect) then
 			return UDim2.fromScale(0.5, 0.5)
 		end
@@ -86,7 +86,7 @@ local function create_widget(item: registry.entry, preview: Frame, actions: acti
 		end
 		return UDim2.new(0.5, shift, 1, ACTION_DISTANCE)
 	end
-	local function refresh(): ()
+	const function refresh(): ()
 		local bounds = bounds_ref.current
 		if not bounds then
 			return
@@ -96,7 +96,7 @@ local function create_widget(item: registry.entry, preview: Frame, actions: acti
 		bounds.Position = UDim2.fromOffset(rect.position.X, rect.position.Y)
 		bounds.Size = UDim2.fromOffset(rect.size.X, rect.size.Y)
 	end
-	local function hover(hovered: boolean, pointer: Vector2, dragging: boolean): ()
+	const function hover(hovered: boolean, pointer: Vector2, dragging: boolean): ()
 		local bounds = bounds_ref.current
 		if not bounds then
 			return

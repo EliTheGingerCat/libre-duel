@@ -15,7 +15,7 @@ const GAMEPAD_CLICK_TYPES = {
 	[GAMEPAD_KEYBINDS.tool_use] = "use",
 }
 
-local function on_input_began(input: InputObject): ()
+const function on_input_began(input: InputObject): ()
 	const click_type = CLICK_TYPES[input.UserInputType] or GAMEPAD_CLICK_TYPES[input.KeyCode]
 	if click_type ~= nil then
 		ReplicatedStorage.remotes.mouse_click:FireServer(click_type)

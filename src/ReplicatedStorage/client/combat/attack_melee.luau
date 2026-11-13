@@ -10,7 +10,7 @@ const MELEE_COOLDOWN = require(ReplicatedStorage.shared.combat.MELEE_COOLDOWN)
 
 const local_player = Players.LocalPlayer
 
-local function attack_melee(): ()
+const function attack_melee(): ()
 	const melee_target, fail_reason = get_melee_target()
 	if melee_target == nil then
 		debug_print(fail_reason)

@@ -7,13 +7,13 @@ local settings = require(script.Parent.settings)
 
 export type controller = { open: (registry.entry) -> (), close: () -> (), disconnect: () -> () }
 
-local function mount_settings(player_gui: PlayerGui, display_order: number, on_close: () -> ()): controller
+const function mount_settings(player_gui: PlayerGui, display_order: number, on_close: () -> ()): controller
 	local portal = mount_portal(player_gui)
-	local function close(): ()
+	const function close(): ()
 		portal.render(nil)
 		on_close()
 	end
-	local function open(item: registry.entry): ()
+	const function open(item: registry.entry): ()
 		portal.render(
 			React.createElement(settings, { selected = item, display_order = display_order, on_close = close })
 		)

@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local function hud_screen(props: {
+const function hud_screen(props: {
 	preview: boolean?,
 	children: unknown,
 	Name: string,
@@ -14,7 +14,7 @@ local function hud_screen(props: {
 })
 	local ref = React.useRef(nil :: Frame?)
 	local factor, set_factor = React.useBinding(1)
-	local function fit_preview()
+	const function fit_preview()
 		local frame = ref.current
 		if not frame then
 			return
@@ -22,7 +22,7 @@ local function hud_screen(props: {
 		local content = frame:FindFirstChildWhichIsA("GuiObject")
 		local parent = frame.Parent
 		assert(content and parent and parent:IsA("GuiObject"))
-		local function update(): ()
+		const function update(): ()
 			local size = content.AbsoluteSize / math.max(0.001, factor:getValue())
 			local available = parent.AbsoluteSize - Vector2.new(48, 24)
 			set_factor(
@@ -32,7 +32,7 @@ local function hud_screen(props: {
 		local connection = parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
 		local size_connection = content:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
 		update()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			size_connection:Disconnect()
 		end

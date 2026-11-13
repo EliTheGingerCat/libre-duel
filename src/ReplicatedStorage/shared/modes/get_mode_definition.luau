@@ -5,7 +5,7 @@ for _, definition in MODE_DEFINITIONS do
 	definitions_by_id[definition.id] = definition
 end
 
-local function get_mode_definition(id: MODE_DEFINITIONS.mode_id): MODE_DEFINITIONS.definition
+const function get_mode_definition(id: MODE_DEFINITIONS.mode_id): MODE_DEFINITIONS.definition
 	return definitions_by_id[id]
 end
 

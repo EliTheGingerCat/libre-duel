@@ -4,7 +4,7 @@ const ServerScriptService = game:GetService("ServerScriptService")
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const place_cube = require(script.Parent.place_cube)
 
-local function on_invoke(player: Player, position: unknown): boolean
+const function on_invoke(player: Player, position: unknown): boolean
 	if typeof(position) ~= "Vector3" then
 		return false
 	end

@@ -11,7 +11,6 @@ const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 local React = require(ReplicatedStorage.Packages.react)
 local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 local scale = require(script.Parent.scale)
 local shadow = require(script.Parent.shadow)
@@ -25,7 +24,7 @@ local local_player = Players.LocalPlayer
 local use_effect = React.useEffect
 local use_state = React.useState
 
-local function entity_card(props: {
+const function entity_card(props: {
 	colour: Color3,
 	image: string,
 	name: string,
@@ -81,16 +80,16 @@ local function entity_card(props: {
 	)
 end
 
-local function use_entities(): { registry.entity }
+const function use_entities(): { registry.entity }
 	const entities, set_entities = use_state(registry.get_all())
 
-	local function subscribe_to_entities()
-		local function on_entity_list_change(): ()
+	const function subscribe_to_entities()
+		const function on_entity_list_change(): ()
 			set_entities(registry.get_all())
 		end
 		const connection = registry.changed:Connect(on_entity_list_change)
 		on_entity_list_change()
-		local function destroy(): ()
+		const function destroy(): ()
 			connection:Disconnect()
 		end
 		return destroy
@@ -99,7 +98,7 @@ local function use_entities(): { registry.entity }
 	return entities
 end
 
-local function entity_list()
+const function entity_list()
 	const entities = use_entities()
 
 	local cards = {}
@@ -130,17 +129,17 @@ local function entity_list()
 	)
 end
 
-local function use_ping(): number
+const function use_ping(): number
 	local ping, set_ping = use_state(0)
 
-	local function track_ping()
-		local function on_heartbeat(): ()
+	const function track_ping()
+		const function on_heartbeat(): ()
 			set_ping(local_player:GetNetworkPing())
 		end
 
 		local connection = RunService.Heartbeat:Connect(on_heartbeat)
 
-		local function destroy()
+		const function destroy()
 			connection:Disconnect()
 		end
 
@@ -151,7 +150,7 @@ local function use_ping(): number
 	return ping
 end
 
-local function ping_display()
+const function ping_display()
 	local ping = use_ping()
 	const IDEAL_PING, BAD_PING = 40, 350
 
@@ -175,10 +174,10 @@ local function ping_display()
 end
 
 local location_saved = LOCATION_DEFAULT
-local function use_location(): LOCATION_DEFAULT.location
+const function use_location(): LOCATION_DEFAULT.location
 	local location, set_location = use_state(location_saved)
 
-	local function load_location()
+	const function load_location()
 		if location_saved.status == "loading" then
 			-- I know this is a side effect but Womp womp.
 			location_saved = ReplicatedStorage.remotes.server_location:InvokeServer()
@@ -190,7 +189,7 @@ local function use_location(): LOCATION_DEFAULT.location
 	return location
 end
 
-local function location_display()
+const function location_display()
 	local location = use_location()
 
 	local location_text: string
@@ -213,7 +212,7 @@ local function location_display()
 	})
 end
 
-local function tablist(props: use_editable_hud.props)
+const function tablist(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(tablist, props)
 	const held_key = use_if_key_held(KEYBINDS.tablist)
 	const held_gamepad = use_if_key_held(GAMEPAD_KEYBINDS.tablist)
@@ -221,12 +220,12 @@ local function tablist(props: use_editable_hud.props)
 	local defaults = HUD_DEFAULTS.Tablist
 	local position = defaults.position + UDim2.fromOffset(0, defaults.stack_offset * use_viewport_scale())
 	local pinned, set_pinned = use_state(tablist_state.pinned)
-	local function subscribe_pinned()
-		local function update(): ()
+	const function subscribe_pinned()
+		const function update(): ()
 			set_pinned(tablist_state.pinned)
 		end
 		local connection = tablist_state.on_change:Connect(update)
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 		return disconnect
@@ -257,7 +256,6 @@ local function tablist(props: use_editable_hud.props)
 			create_element("UICorner", {
 				CornerRadius = UDim.new(0, 39),
 			}),
-			not props.preview and create_element(ui_blur),
 			create_element("UIPadding", {
 				PaddingBottom = UDim.new(0, 45),
 				PaddingLeft = UDim.new(0, 20),

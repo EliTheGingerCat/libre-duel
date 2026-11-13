@@ -15,7 +15,7 @@ local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
 const RADIUS = 19
 
-local function colour_preview(props: { colour: Color3?, alpha: number?, on_changed: ((Color3, number) -> ())? })
+const function colour_preview(props: { colour: Color3?, alpha: number?, on_changed: ((Color3, number) -> ())? })
 	local stored, set_stored = React.useState(props.colour or Color3.new(1, 0, 0))
 	local stored_alpha, set_stored_alpha = React.useState(props.alpha or 1)
 	local position, set_position = React.useState(nil :: Vector2?)
@@ -23,10 +23,10 @@ local function colour_preview(props: { colour: Color3?, alpha: number?, on_chang
 	local alpha = if props.on_changed then props.alpha or 1 else stored_alpha
 	local scale = math.min(1, use_viewport_scale())
 	local motion = use_ui_motion(if position then 1 else 0, 0)
-	local function animated_scale(value: number): number
+	const function animated_scale(value: number): number
 		return scale * (0.96 + 0.04 * value)
 	end
-	local function changed(next_colour: Color3, next_alpha: number): ()
+	const function changed(next_colour: Color3, next_alpha: number): ()
 		if props.on_changed then
 			props.on_changed(next_colour, next_alpha)
 		else
@@ -34,10 +34,10 @@ local function colour_preview(props: { colour: Color3?, alpha: number?, on_chang
 			set_stored_alpha(next_alpha)
 		end
 	end
-	local function close(): ()
+	const function close(): ()
 		set_position(nil)
 	end
-	local function open(button: GuiButton, input: InputObject?): ()
+	const function open(button: GuiButton, input: InputObject?): ()
 		local point = UserInputService:GetMouseLocation()
 		if input and input.UserInputType == Enum.UserInputType.Touch then
 			point = Vector2.new(input.Position.X, input.Position.Y)
@@ -46,17 +46,17 @@ local function colour_preview(props: { colour: Color3?, alpha: number?, on_chang
 		end
 		set_position(point)
 	end
-	local function subscribe()
+	const function subscribe()
 		if not position then
 			return
 		end
-		local function key(input: InputObject, processed: boolean): ()
+		const function key(input: InputObject, processed: boolean): ()
 			if not processed and (input.KeyCode == Enum.KeyCode.Escape or input.KeyCode == Enum.KeyCode.ButtonB) then
 				close()
 			end
 		end
 		local connection = UserInputService.InputBegan:Connect(key)
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 		return disconnect

@@ -11,19 +11,19 @@ export type action = { press: () -> (), release: () -> () }
 
 local local_player = Players.LocalPlayer
 
-local function nothing(): () end
+const function nothing(): () end
 
 const JUMP_BIND = "touch_jump"
 
 local jumping = false
 
 -- Holding keeps jumping, like the stock button.
-local function press_jump(): ()
+const function press_jump(): ()
 	if jumping then
 		return
 	end
 	jumping = true
-	local function jump(): ()
+	const function jump(): ()
 		local character = local_player.Character
 		local humanoid = if character then character:FindFirstChildOfClass("Humanoid") else nil
 		if humanoid then
@@ -34,30 +34,30 @@ local function press_jump(): ()
 	RunService:BindToRenderStep(JUMP_BIND, Enum.RenderPriority.Input.Value + 1, jump)
 end
 
-local function release_jump(): ()
+const function release_jump(): ()
 	if jumping then
 		jumping = false
 		RunService:UnbindFromRenderStep(JUMP_BIND)
 	end
 end
 
-local function tool_button(button: string, click_type: string): action
-	local function press(): ()
+const function tool_button(button: string, click_type: string): action
+	const function press(): ()
 		-- counts towards the server's cps check like a mouse click would
 		ReplicatedStorage.remotes.mouse_click:FireServer(click_type)
 		tool_state.on_button_requested:Fire(button, true)
 	end
-	local function release(): ()
+	const function release(): ()
 		tool_state.on_button_requested:Fire(button, false)
 	end
 	return { press = press, release = release }
 end
 
-local function toggle_inventory(): ()
+const function toggle_inventory(): ()
 	inventory_state.set_enabled(not inventory_state.enabled)
 end
 
-local function toggle_tablist(): ()
+const function toggle_tablist(): ()
 	tablist_state.set_pinned(not tablist_state.pinned)
 end
 

@@ -19,8 +19,8 @@ const DEVICE_TWEEN = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirect
 
 type props = use_editable_hud.props & { name: string }
 
-local function builtin(props: props)
-	local function copy(copy_props: use_editable_hud.props)
+const function builtin(props: props)
+	const function copy(copy_props: use_editable_hud.props)
 		return create_element(
 			builtin,
 			{ name = props.name, on_remove = copy_props.on_remove, preview = copy_props.preview }
@@ -31,7 +31,7 @@ local function builtin(props: props)
 	local ref = use_editable_hud(copy, props, defaults.hidden)
 	local factor, set_factor = React.useBinding(1)
 
-	local function mount_content(): (() -> ())?
+	const function mount_content(): (() -> ())?
 		local content = ref.current
 		assert(content and content:IsA("Frame"))
 		if props.preview then
@@ -44,22 +44,22 @@ local function builtin(props: props)
 		local scale = content:FindFirstChildOfClass("UIScale")
 		assert(screen and scale)
 		local cancel_tween: (() -> ())? = nil
-		local function stop_tween(): ()
+		const function stop_tween(): ()
 			if cancel_tween then
 				cancel_tween()
 				cancel_tween = nil
 			end
 		end
-		local function get_target(): number
+		const function get_target(): number
 			local size = screen.AbsoluteSize
 			local reference = get_reference_resolution("shrink", input_device.current)
 			return math.min(1, size.X / reference.X, size.Y / reference.Y)
 		end
-		local function update_scale(): ()
+		const function update_scale(): ()
 			stop_tween()
 			set_factor(get_target())
 		end
-		local function on_device_changed(): ()
+		const function on_device_changed(): ()
 			stop_tween()
 			cancel_tween = tween_number(factor:getValue(), get_target(), DEVICE_TWEEN, set_factor)
 		end
@@ -67,7 +67,7 @@ local function builtin(props: props)
 		local device_connection = input_device.changed:Connect(on_device_changed)
 		update_scale()
 		local cleanup = mount_builtin(props.name, content)
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			device_connection:Disconnect()
 			stop_tween()
@@ -77,7 +77,7 @@ local function builtin(props: props)
 	end
 	React.useLayoutEffect(mount_content, {})
 
-	local function position(value: number): UDim2
+	const function position(value: number): UDim2
 		return defaults.position + UDim2.fromOffset(0, (defaults.stack_offset or 0) * value)
 	end
 	local child = if props.name == "Keystrokes"

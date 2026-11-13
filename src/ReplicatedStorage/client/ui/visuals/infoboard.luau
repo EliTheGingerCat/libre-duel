@@ -6,7 +6,6 @@ const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 local React = require(ReplicatedStorage.Packages.react)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local scale = require(script.Parent.scale)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 
@@ -23,7 +22,7 @@ type props_text_label = {
 	text_alignment_c1: TextXAlignment,
 	text_size: number,
 }
-local function text_label(props: props_text_label)
+const function text_label(props: props_text_label)
 	return create_element("TextLabel", {
 		BackgroundTransparency = 1,
 		FontFace = FONTS.regular,
@@ -45,7 +44,7 @@ type props_points_display = {
 	points: number,
 	text_alignment_c1: TextXAlignment,
 }
-local function point_display(props: props_points_display)
+const function point_display(props: props_points_display)
 	local points_full = string.rep("●", props.points)
 	local points_empty = string.rep("○", 5 - props.points)
 
@@ -72,17 +71,17 @@ const COLOUR_BLUE = "#0da2dd"
 const COLOUR_GREEN = "#5bd34c"
 const COLOUR_RED = "#b14c4e"
 
-local function use_game_is_active(): boolean
+const function use_game_is_active(): boolean
 	local game_is_active, set_game_is_active = use_state(false)
 
-	local function effect_game_is_active()
-		local function on_event(incoming_game_is_active: boolean): ()
+	const function effect_game_is_active()
+		const function on_event(incoming_game_is_active: boolean): ()
 			set_game_is_active(incoming_game_is_active)
 		end
 
 		local connection = ReplicatedStorage.remotes.game_is_active.OnClientEvent:Connect(on_event)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -94,20 +93,20 @@ local function use_game_is_active(): boolean
 	return game_is_active
 end
 
-local function use_kills(): number
+const function use_kills(): number
 	local kills, set_kills = use_state(0)
 
 	local game_is_active = use_game_is_active()
 
-	local function effect_kills()
+	const function effect_kills()
 		if game_is_active == true then
 			-- Game just started.
 			set_kills(0)
 		end
 
 		-- It is good to have the parameter of how many kills to add since some actions, such as explosions, may damage many people, resulting in multiple kills in one moment.
-		local function on_event(added_kills: number): ()
-			local function updater(kills: number): number
+		const function on_event(added_kills: number): ()
+			const function updater(kills: number): number
 				return kills + added_kills
 			end
 			set_kills(updater)
@@ -115,7 +114,7 @@ local function use_kills(): number
 
 		local connection = ReplicatedStorage.remotes.kills.OnClientEvent:Connect(on_event)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -127,17 +126,17 @@ local function use_kills(): number
 	return kills
 end
 
-local function use_map(): string
+const function use_map(): string
 	local map, set_map = use_state("unknown")
 
-	local function effect_map()
-		local function on_event(incoming_map: string): ()
+	const function effect_map()
+		const function on_event(incoming_map: string): ()
 			set_map(incoming_map)
 		end
 
 		local connection = ReplicatedStorage.remotes.map_name.OnClientEvent:Connect(on_event)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -149,19 +148,19 @@ local function use_map(): string
 	return map
 end
 
-local function use_points_self(): number
+const function use_points_self(): number
 	local points_self, set_points_self = use_state(0)
 
 	local game_is_active = use_game_is_active()
 
-	local function effect_points_self()
+	const function effect_points_self()
 		if game_is_active == true then
 			-- Game just started.
 			set_points_self(0)
 		end
 
-		local function on_event(): ()
-			local function updater(points_self: number): number
+		const function on_event(): ()
+			const function updater(points_self: number): number
 				return points_self + 1
 			end
 			set_points_self(updater)
@@ -169,7 +168,7 @@ local function use_points_self(): number
 
 		local connection = ReplicatedStorage.remotes.score_self.OnClientEvent:Connect(on_event)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -181,19 +180,19 @@ local function use_points_self(): number
 	return points_self
 end
 
-local function use_points_teams(): { number }
+const function use_points_teams(): { number }
 	local points_teams, set_points_teams = use_state({ 0, 0 })
 
 	local game_is_active = use_game_is_active()
 
-	local function effect_points_teams()
+	const function effect_points_teams()
 		if game_is_active == true then
 			-- Game just started.
 			set_points_teams({ 0, 0 })
 		end
 
-		local function on_event(team_number: number): ()
-			local function updater(points_teams: { number }): { number }
+		const function on_event(team_number: number): ()
+			const function updater(points_teams: { number }): { number }
 				local clone = table.clone(points_teams)
 				clone[team_number] += 1
 				return clone
@@ -203,7 +202,7 @@ local function use_points_teams(): { number }
 
 		local connection = ReplicatedStorage.remotes.score_team.OnClientEvent:Connect(on_event)
 
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 
@@ -215,19 +214,19 @@ local function use_points_teams(): { number }
 	return points_teams
 end
 
-local function use_time_elapsed(): number
+const function use_time_elapsed(): number
 	local time_elapsed, set_time_elapsed = use_state(0)
 
 	local game_is_active = use_game_is_active()
 
-	local function effect_time_elapsed()
+	const function effect_time_elapsed()
 		if game_is_active == true then
 			-- Game just started.
 			local time_start = os.time()
 			set_time_elapsed(0)
 
-			local function on_heartbeat(time_change: number): ()
-				local function updater(): number
+			const function on_heartbeat(time_change: number): ()
+				const function updater(): number
 					local time_now = os.time()
 					return time_now - time_start
 				end
@@ -236,13 +235,13 @@ local function use_time_elapsed(): number
 
 			local connection = RunService.Heartbeat:Connect(on_heartbeat)
 
-			local function disconnect(): ()
+			const function disconnect(): ()
 				connection:Disconnect()
 			end
 
 			return disconnect
 		else
-			local function disconnect(): () end
+			const function disconnect(): () end
 
 			return disconnect
 		end
@@ -253,7 +252,7 @@ local function use_time_elapsed(): number
 	return time_elapsed
 end
 
-local function infoboard(props: use_editable_hud.props)
+const function infoboard(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(infoboard, props)
 	local game_is_active = use_game_is_active()
 	local kills = use_kills()
@@ -290,7 +289,6 @@ local function infoboard(props: use_editable_hud.props)
 				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				BackgroundTransparency = 0.5,
 			},
-			not props.preview and create_element(ui_blur),
 			create_element(scale),
 			create_element("UIGridLayout", {
 				CellSize = UDim2.fromOffset(175, 32),

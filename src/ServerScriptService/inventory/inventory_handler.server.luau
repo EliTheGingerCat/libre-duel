@@ -16,7 +16,7 @@ const ACTIONS: { [string]: (inventory_types.inventory, number, number) -> boolea
 
 local last_request_times: { [Player]: number } = {}
 
-local function on_request(player: Player, arguments: unknown): ()
+const function on_request(player: Player, arguments: unknown): ()
 	if type(arguments) ~= "table" then
 		return
 	end
@@ -43,7 +43,7 @@ local function on_request(player: Player, arguments: unknown): ()
 	update_inventory:FireClient(player, { inventory = inventory, id = id })
 end
 
-local function on_player_removing(player: Player): ()
+const function on_player_removing(player: Player): ()
 	last_request_times[player] = nil
 end
 

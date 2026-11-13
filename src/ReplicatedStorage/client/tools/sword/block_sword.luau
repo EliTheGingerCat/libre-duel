@@ -7,7 +7,7 @@ const sword_state = require(script.Parent.sword_state)
 -- suffixing _remote to not confuse roblo
 const update_blocking_remote = ReplicatedStorage.remotes.update_blocking
 
-local function set_blocking(blocking: boolean): ()
+const function set_blocking(blocking: boolean): ()
 	const character = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
 	const humanoid = character:WaitForChild("Humanoid")
 	if blocking == true then
@@ -20,11 +20,11 @@ local function set_blocking(blocking: boolean): ()
 	update_blocking_remote:InvokeServer(blocking)
 end
 
-local function start_blocking(): ()
+const function start_blocking(): ()
 	set_blocking(true)
 end
 
-local function stop_blocking(): ()
+const function stop_blocking(): ()
 	set_blocking(false)
 end
 

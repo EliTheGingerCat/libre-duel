@@ -40,29 +40,29 @@ const bot_connections: { [Model]: { RBXScriptConnection }? } = {}
 const bot_ids: { [Model]: string? } = {}
 const player_connections: { [Player]: { RBXScriptConnection }? } = {}
 
-local function get_character(entity: entity): Model?
+const function get_character(entity: entity): Model?
 	if type(entity) == "string" then
 		return bots[entity]
 	end
 	return entity.Character
 end
 
-local function get_player(entity: entity): Player?
+const function get_player(entity: entity): Player?
 	return if type(entity) == "string" then nil else entity
 end
 
 -- Bots have no client, so firing to one does nothing.
-local function fire_client(entity: entity, remote: RemoteEvent, ...: unknown): ()
+const function fire_client(entity: entity, remote: RemoteEvent, ...: unknown): ()
 	if type(entity) ~= "string" then
 		remote:FireClient(entity, ...)
 	end
 end
 
-local function from_character(character: Model): entity?
+const function from_character(character: Model): entity?
 	return Players:GetPlayerFromCharacter(character) or bot_ids[character]
 end
 
-local function get_all(): { entity }
+const function get_all(): { entity }
 	const entities: { entity } = {}
 	for entity in members do
 		table.insert(entities, entity)
@@ -70,7 +70,7 @@ local function get_all(): { entity }
 	return entities
 end
 
-local function get_name(entity: entity): string
+const function get_name(entity: entity): string
 	if type(entity) == "string" then
 		const character = bots[entity]
 		return if character then character.Name else entity
@@ -78,7 +78,7 @@ local function get_name(entity: entity): string
 	return entity.Name
 end
 
-local function get_team(entity: entity): Team?
+const function get_team(entity: entity): Team?
 	if type(entity) ~= "string" then
 		return if entity.Neutral then nil else entity.Team
 	end
@@ -93,7 +93,7 @@ local function get_team(entity: entity): Team?
 	return nil
 end
 
-local function set_team(entity: entity, team: Team?): ()
+const function set_team(entity: entity, team: Team?): ()
 	assert(RunService:IsServer(), "Entity teams must be set on the server.")
 	if type(entity) == "string" then
 		const character = bots[entity]
@@ -119,7 +119,7 @@ local function set_team(entity: entity, team: Team?): ()
 	changed:Fire()
 end
 
-local function on_bot_added(instance: Instance): ()
+const function on_bot_added(instance: Instance): ()
 	if not instance:IsA("Model") or bot_ids[instance] ~= nil then
 		return
 	end
@@ -132,10 +132,10 @@ local function on_bot_added(instance: Instance): ()
 	members[id] = true
 	const connections: { RBXScriptConnection } = {}
 	bot_connections[instance] = connections
-	local function on_team_changed(): ()
+	const function on_team_changed(): ()
 		changed:Fire()
 	end
-	local function on_team_value_added(child: Instance): ()
+	const function on_team_value_added(child: Instance): ()
 		if child.Name == TEAM_VALUE and child:IsA("ObjectValue") then
 			table.insert(connections, child.Changed:Connect(on_team_changed))
 			on_team_changed()
@@ -150,7 +150,7 @@ local function on_bot_added(instance: Instance): ()
 	changed:Fire()
 end
 
-local function on_bot_removed(instance: Instance): ()
+const function on_bot_removed(instance: Instance): ()
 	if not instance:IsA("Model") then
 		return
 	end
@@ -172,7 +172,7 @@ local function on_bot_removed(instance: Instance): ()
 	changed:Fire()
 end
 
-local function register_bot(id: string, character: Model): ()
+const function register_bot(id: string, character: Model): ()
 	assert(RunService:IsServer(), "Bots must be registered on the server.")
 	assert(id ~= "" and bots[id] == nil, "Bot IDs must be non-empty and unique.")
 	assert(bot_ids[character] == nil, "Bot character is already registered.")
@@ -183,7 +183,7 @@ local function register_bot(id: string, character: Model): ()
 	on_bot_added(character)
 end
 
-local function unregister_bot(id: string): ()
+const function unregister_bot(id: string): ()
 	assert(RunService:IsServer(), "Bots must be removed on the server.")
 	const character = bots[id]
 	if character then
@@ -192,15 +192,15 @@ local function unregister_bot(id: string): ()
 	end
 end
 
-local function on_player_added(player: Player): ()
+const function on_player_added(player: Player): ()
 	if members[player] then
 		return
 	end
 	members[player] = true
-	local function on_character_added(character: Model): ()
+	const function on_character_added(character: Model): ()
 		character_added:Fire(character, player)
 	end
-	local function on_team_changed(): ()
+	const function on_team_changed(): ()
 		changed:Fire()
 	end
 	player_connections[player] = {
@@ -215,7 +215,7 @@ local function on_player_added(player: Player): ()
 	changed:Fire()
 end
 
-local function on_player_removing(player: Player): ()
+const function on_player_removing(player: Player): ()
 	const connections = player_connections[player]
 	if connections then
 		for _, connection in connections do
@@ -228,12 +228,12 @@ local function on_player_removing(player: Player): ()
 	changed:Fire()
 end
 
-local function watch_death(character: Model, entity: entity): ()
+const function watch_death(character: Model, entity: entity): ()
 	const humanoid = character:WaitForChild("Humanoid", 10)
 	if humanoid == nil or not humanoid:IsA("Humanoid") then
 		return
 	end
-	local function on_died(): ()
+	const function on_died(): ()
 		-- a replacement bot can reuse the ID while its old character is still around
 		if get_character(entity) == character then
 			died:Fire(character, entity)

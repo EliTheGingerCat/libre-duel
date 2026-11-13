@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 
-local function scrolling_content(props: {
+const function scrolling_content(props: {
 	size: UDim2?,
 	position: UDim2?,
 	anchor: Vector2?,
@@ -11,11 +11,11 @@ local function scrolling_content(props: {
 })
 	local ref = React.useRef(nil :: ScrollingFrame?)
 	local fade, set_fade = React.useBinding(Vector2.zero)
-	local function update(list: ScrollingFrame): ()
+	const function update(list: ScrollingFrame): ()
 		local remaining = list.AbsoluteCanvasSize.Y - list.AbsoluteWindowSize.Y - list.CanvasPosition.Y
 		set_fade(Vector2.new(math.clamp(list.CanvasPosition.Y / 32, 0, 1), math.clamp(remaining / 32, 0, 1)))
 	end
-	local function transparency(amount: Vector2): NumberSequence
+	const function transparency(amount: Vector2): NumberSequence
 		return NumberSequence.new({
 			NumberSequenceKeypoint.new(0, amount.X),
 			NumberSequenceKeypoint.new(0.05, 0),
@@ -23,7 +23,7 @@ local function scrolling_content(props: {
 			NumberSequenceKeypoint.new(1, amount.Y),
 		})
 	end
-	local function reset(): ()
+	const function reset(): ()
 		local list = ref.current
 		if list then
 			list.CanvasPosition = Vector2.zero

@@ -11,8 +11,8 @@ local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
-local function selector_tile(props: { item: registry.entry, title: string, order: number, on_close: () -> () })
-	local function select_widget(): ()
+const function selector_tile(props: { item: registry.entry, title: string, order: number, on_close: () -> () })
+	const function select_widget(): ()
 		props.on_close()
 		registry.add(props.item)
 	end

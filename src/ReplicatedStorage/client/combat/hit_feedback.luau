@@ -4,13 +4,13 @@ local signal = require(ReplicatedStorage.Packages.signal)
 
 local hit_signal = signal.new()
 
-local function report_hit(distance: number): ()
+const function report_hit(distance: number): ()
 	hit_signal:Fire(distance)
 end
 
-local function subscribe(callback: (number) -> ())
+const function subscribe(callback: (number) -> ())
 	local connection = hit_signal:Connect(callback)
-	local function disconnect(): ()
+	const function disconnect(): ()
 		connection:Disconnect()
 	end
 	return disconnect

@@ -1,6 +1,6 @@
 local settings_types = require(script.Parent.settings_types)
 
-local function default(entry: settings_types.entry): settings_types.value?
+const function default(entry: settings_types.entry): settings_types.value?
 	if
 		entry.kind == "switch"
 		or entry.kind == "checkbox"
@@ -14,7 +14,7 @@ local function default(entry: settings_types.entry): settings_types.value?
 	return nil
 end
 
-local function validate(entry: settings_types.entry, value: settings_types.value): ()
+const function validate(entry: settings_types.entry, value: settings_types.value): ()
 	if entry.kind == "switch" or entry.kind == "checkbox" then
 		assert(typeof(value) == "boolean", "Expected a boolean for " .. entry.id)
 	elseif entry.kind == "text" or entry.kind == "dropdown" then
@@ -38,7 +38,7 @@ local function validate(entry: settings_types.entry, value: settings_types.value
 	end
 end
 
-local function changed(entry: settings_types.entry, value: settings_types.value): ()
+const function changed(entry: settings_types.entry, value: settings_types.value): ()
 	if entry.kind == "switch" or entry.kind == "checkbox" then
 		if entry.on_changed then
 			entry.on_changed(value :: boolean)

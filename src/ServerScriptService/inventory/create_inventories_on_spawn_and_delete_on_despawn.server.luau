@@ -3,7 +3,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const inventory_util = require(script.Parent.inventory_util)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
-local function on_character_added(_character: Model, entity: registry.entity): ()
+const function on_character_added(_character: Model, entity: registry.entity): ()
 	const inventory = inventory_util.generate_inventory(entity)
 	if type(inventory) == "table" then
 		inventory_util.give_loadout(inventory)
@@ -13,14 +13,14 @@ local function on_character_added(_character: Model, entity: registry.entity): (
 	end
 end
 
-local function on_entity_died(_character: Model, entity: registry.entity): ()
+const function on_entity_died(_character: Model, entity: registry.entity): ()
 	if inventory_util.delete_inventory(entity) then
 		inventory_util.replicate(entity)
 	end
 end
 
 -- entities removed while alive never fire died
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
 	inventory_util.delete_inventory(entity)
 end
 

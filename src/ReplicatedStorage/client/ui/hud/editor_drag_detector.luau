@@ -2,13 +2,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 
-local function editor_drag_detector(props: {
+const function editor_drag_detector(props: {
 	handle: Vector2?,
 	on_start: (UIDragDetector, Vector2, Vector2?) -> (),
 	on_move: (UIDragDetector, Vector2) -> (),
 	on_finish: (UIDragDetector, Vector2) -> (),
 })
-	local function begin(detector: UIDragDetector, position: Vector2): ()
+	const function begin(detector: UIDragDetector, position: Vector2): ()
 		props.on_start(detector, position, props.handle)
 	end
 	return React.createElement("UIDragDetector", {

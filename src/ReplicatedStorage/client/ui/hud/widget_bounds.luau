@@ -6,7 +6,7 @@ local editor_drag_detector = require(script.Parent.editor_drag_detector)
 
 local create_element = React.createElement
 
-local function action_button(props: {
+const function action_button(props: {
 	image: string,
 	anchor: number,
 	side: "left" | "right",
@@ -40,7 +40,7 @@ local function action_button(props: {
 	)
 end
 
-local function widget_bounds(props: {
+const function widget_bounds(props: {
 	bounds_ref: { current: Frame? },
 	move_ref: { current: Frame? },
 	delete_ref: { current: ImageButton? },

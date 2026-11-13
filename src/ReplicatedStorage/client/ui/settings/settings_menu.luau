@@ -9,11 +9,11 @@ local setting_reveal = require(script.Parent.setting_reveal)
 local settings_registry = require(script.Parent.settings_registry)
 local sidebar = require(script.Parent.sidebar)
 
-local function increment(value: number): number
+const function increment(value: number): number
 	return value + 1
 end
 
-local function matches_search(entry: settings_registry.entry, search: string): boolean
+const function matches_search(entry: settings_registry.entry, search: string): boolean
 	if string.find(entry.text:lower(), search, 1, true) then
 		return true
 	end
@@ -25,18 +25,18 @@ local function matches_search(entry: settings_registry.entry, search: string): b
 	return false
 end
 
-local function settings_menu(props: { enabled: boolean, on_close: () -> () })
+const function settings_menu(props: { enabled: boolean, on_close: () -> () })
 	local selected, set_selected = React.useState("interface")
 	local query, set_query = React.useState("")
 	local _, set_revision = React.useState(0)
-	local function subscribe()
-		local function update(): ()
+	const function subscribe()
+		const function update(): ()
 			set_revision(increment)
 		end
 		return settings_registry.subscribe(update)
 	end
 	React.useEffect(subscribe, {})
-	local function choose(category: string): ()
+	const function choose(category: string): ()
 		set_selected(category)
 		set_query("")
 	end

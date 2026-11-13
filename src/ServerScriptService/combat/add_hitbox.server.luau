@@ -8,7 +8,7 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 const hitbox = ServerStorage.hitbox
 const cube_hitbox = ServerStorage.cube_hitbox
 
-local function attach_part(template: BasePart, root: BasePart): ()
+const function attach_part(template: BasePart, root: BasePart): ()
 	if root:FindFirstChild(template.Name) then
 		return
 	end
@@ -23,7 +23,7 @@ local function attach_part(template: BasePart, root: BasePart): ()
 	clone.Parent = root
 end
 
-local function on_character_added(character: Model): ()
+const function on_character_added(character: Model): ()
 	const root = character:WaitForChild("HumanoidRootPart", 10)
 	if root == nil or not root:IsA("BasePart") then
 		debug_print("Humanoid root part is missing.")

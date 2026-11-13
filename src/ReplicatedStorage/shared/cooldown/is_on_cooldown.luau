@@ -6,7 +6,7 @@ const remove_cooldown = require(script.Parent.remove_cooldown)
 
 type entity_cooldown = cooldowns.entity_cooldowns
 
-local function is_on_cooldown(entity: registry.entity, name: string): boolean
+const function is_on_cooldown(entity: registry.entity, name: string): boolean
 	const entity_cooldowns: entity_cooldown? = cooldowns[entity]
 	if entity_cooldowns == nil then
 		return false

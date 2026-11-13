@@ -12,7 +12,7 @@ const tools: { [string]: tool_types.tool } = {}
 const loading: { [string]: true } = {}
 const overridden: { [tool_types.overrides]: tool_types.tool } = setmetatable({}, { __mode = "k" }) :: any
 
-local function merge(base: { [any]: any }, overrides: { [any]: any }): { [any]: any }
+const function merge(base: { [any]: any }, overrides: { [any]: any }): { [any]: any }
 	local merged = {}
 	for key, value in base do
 		merged[key] = value
@@ -24,7 +24,7 @@ local function merge(base: { [any]: any }, overrides: { [any]: any }): { [any]: 
 	return merged
 end
 
-local function deep_freeze<T>(value: T): T
+const function deep_freeze<T>(value: T): T
 	if type(value) == "table" and not table.isfrozen(value) then
 		for _, child in value do
 			deep_freeze(child)
@@ -34,7 +34,7 @@ local function deep_freeze<T>(value: T): T
 	return value
 end
 
-local function load(id: string): tool_types.tool
+const function load(id: string): tool_types.tool
 	const existing = tools[id]
 	if existing ~= nil then
 		return existing
@@ -68,11 +68,11 @@ for _, module in definitions:GetChildren() do
 	load(module.Name)
 end
 
-local function get(id: string): tool_types.tool?
+const function get(id: string): tool_types.tool?
 	return tools[id]
 end
 
-local function resolve(id: string, overrides: tool_types.overrides?): tool_types.tool?
+const function resolve(id: string, overrides: tool_types.overrides?): tool_types.tool?
 	const tool = tools[id]
 	if tool == nil or overrides == nil then
 		return tool
@@ -85,7 +85,7 @@ local function resolve(id: string, overrides: tool_types.overrides?): tool_types
 	return resolved
 end
 
-local function has_behaviour(tool: tool_types.tool, behaviour: tool_types.behaviour): boolean
+const function has_behaviour(tool: tool_types.tool, behaviour: tool_types.behaviour): boolean
 	return (tool.behaviours :: any)[behaviour] ~= nil
 end
 

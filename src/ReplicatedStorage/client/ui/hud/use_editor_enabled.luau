@@ -3,10 +3,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local editor_state = require(script.Parent.editor_state)
 
-local function use_editor_enabled(): boolean
+const function use_editor_enabled(): boolean
 	local enabled, set_enabled = React.useState(editor_state.enabled)
-	local function subscribe()
-		local function update(): ()
+	const function subscribe()
+		const function update(): ()
 			set_enabled(editor_state.enabled)
 		end
 		local disconnect = editor_state.subscribe(update)

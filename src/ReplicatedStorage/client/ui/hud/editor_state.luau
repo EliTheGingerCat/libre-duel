@@ -11,7 +11,7 @@ local editor_state = {
 	enabled = false,
 }
 
-local function set_enabled(enabled: boolean): ()
+const function set_enabled(enabled: boolean): ()
 	if editor_state.enabled == enabled then
 		return
 	end
@@ -20,33 +20,33 @@ local function set_enabled(enabled: boolean): ()
 	changed:Fire()
 end
 
-local function subscribe(callback: () -> ())
+const function subscribe(callback: () -> ())
 	local connection = changed:Connect(callback)
-	local function disconnect(): ()
+	const function disconnect(): ()
 		connection:Disconnect()
 	end
 	return disconnect
 end
 
-local function request_enabled(enabled: boolean): ()
+const function request_enabled(enabled: boolean): ()
 	requested:Fire(enabled)
 end
 
-local function on_requested(callback: (boolean) -> ())
+const function on_requested(callback: (boolean) -> ())
 	local connection = requested:Connect(callback)
-	local function disconnect(): ()
+	const function disconnect(): ()
 		connection:Disconnect()
 	end
 	return disconnect
 end
 
-local function request_selector(): ()
+const function request_selector(): ()
 	selector_requested:Fire()
 end
 
-local function on_selector_requested(callback: () -> ())
+const function on_selector_requested(callback: () -> ())
 	local connection = selector_requested:Connect(callback)
-	local function disconnect(): ()
+	const function disconnect(): ()
 		connection:Disconnect()
 	end
 	return disconnect

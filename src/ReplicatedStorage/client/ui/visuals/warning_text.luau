@@ -5,7 +5,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local function warning_text(props: { text: string? })
+const function warning_text(props: { text: string? })
 	return create_element(
 		"Frame",
 		{ --Warning component

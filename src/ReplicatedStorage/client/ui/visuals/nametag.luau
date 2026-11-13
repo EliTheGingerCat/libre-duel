@@ -8,7 +8,7 @@ local create_element = React.createElement
 
 const PADDING_CHARACTER = "  "
 
-local function nametag(props: {
+const function nametag(props: {
 	adornee: BasePart | Attachment,
 	extra_text: string,
 	name: string,

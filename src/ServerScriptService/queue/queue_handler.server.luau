@@ -12,7 +12,7 @@ const queue_record = require(script.Parent.queue_record)
 const IS_RESERVED = game.PrivateServerId ~= "" and game.PrivateServerOwnerId == 0
 const next_join: { [Player]: number } = {}
 
-local function on_join(player: Player, requested_mode: unknown): boolean
+const function on_join(player: Player, requested_mode: unknown): boolean
 	const mode: queue_record.mode? = queue_record.parse_mode(requested_mode)
 	if RunService:IsStudio() or mode == nil or os.clock() < (next_join[player] or 0) then
 		return false
@@ -24,7 +24,7 @@ local function on_join(player: Player, requested_mode: unknown): boolean
 	return queue_lobby.enqueue(player, mode)
 end
 
-local function on_leave(player: Player): boolean
+const function on_leave(player: Player): boolean
 	if not queue_lobby.leave(player) then
 		return false
 	end
@@ -34,19 +34,19 @@ local function on_leave(player: Player): boolean
 	return true
 end
 
-local function on_player_added(player: Player): ()
+const function on_player_added(player: Player): ()
 	if IS_RESERVED then
 		task.spawn(match_host.accept, player)
 	end
 end
 
-local function on_player_removing(player: Player): ()
+const function on_player_removing(player: Player): ()
 	next_join[player] = nil
 	queue_lobby.on_player_removing(player)
 	match_host.on_player_removing(player)
 end
 
-local function on_ready(message: { Data: unknown }): ()
+const function on_ready(message: { Data: unknown }): ()
 	const data = queue_record.as_dictionary(message.Data)
 	const id = if data then data.id else nil
 	if data == nil or typeof(id) ~= "string" then
@@ -58,7 +58,7 @@ local function on_ready(message: { Data: unknown }): ()
 	end
 end
 
-local function subscribe(): ()
+const function subscribe(): ()
 	for attempt = 1, QUEUE_CONFIG.subscribe_attempts do
 		const ok, result = pcall(MessagingService.SubscribeAsync, MessagingService, QUEUE_CONFIG.ready_topic, on_ready)
 		if ok then
@@ -69,7 +69,7 @@ local function subscribe(): ()
 	end
 end
 
-local function run(): ()
+const function run(): ()
 	while true do
 		queue_lobby.step()
 		match_host.step()

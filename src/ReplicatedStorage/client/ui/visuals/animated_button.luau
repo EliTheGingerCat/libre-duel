@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local button_input = require(script.Parent.controls.button_input)
 
-local function animated_button(props: { [any]: any })
+const function animated_button(props: { [any]: any })
 	local ref = React.useRef(nil :: GuiButton?)
 	local minimum, set_minimum = React.useBinding(Vector2.zero)
 	local automatic = props.AutomaticSize
@@ -17,13 +17,13 @@ local function animated_button(props: { [any]: any })
 		or automatic == Enum.AutomaticSize.XY
 	local size = props.Size or UDim2.fromOffset(100, 100)
 
-	local function measure()
+	const function measure()
 		if not auto_x and not auto_y then
 			return
 		end
 		local button = ref.current
 		assert(button)
-		local function update_minimum(): ()
+		const function update_minimum(): ()
 			local motion = button:FindFirstChildOfClass("UIScale")
 			if motion and motion.Scale ~= 1 then
 				return
@@ -44,7 +44,7 @@ local function animated_button(props: { [any]: any })
 		end
 		local connection = button:GetPropertyChangedSignal("AbsoluteSize"):Connect(update_minimum)
 		update_minimum()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 		return disconnect

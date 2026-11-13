@@ -10,7 +10,7 @@ const set_cake_state = ReplicatedStorage.remotes.set_cake_state
 type eating_timestamps = { [Player]: { time: number, thread: thread? } }
 local eating_timestamps: eating_timestamps = {}
 
-local function heal_player(player: Player): boolean
+const function heal_player(player: Player): boolean
 	const character = player.Character
 	if character == nil then
 		return false
@@ -25,7 +25,7 @@ local function heal_player(player: Player): boolean
 	return true
 end
 
-local function check_eating_finished(player: Player): boolean
+const function check_eating_finished(player: Player): boolean
 	task.wait(CAKE_EATING_DURATION)
 	if
 		eating_timestamps[player]["time"]
@@ -40,7 +40,7 @@ local function check_eating_finished(player: Player): boolean
 	return false
 end
 
-local function stop_eating(player: Player): ()
+const function stop_eating(player: Player): ()
 	local eating_state = eating_timestamps[player]
 	if eating_state == nil then
 		return
@@ -53,7 +53,7 @@ local function stop_eating(player: Player): ()
 	eating_timestamps[player] = nil
 end
 
-local function on_set_cake_state(player: Player, new_state: unknown): boolean
+const function on_set_cake_state(player: Player, new_state: unknown): boolean
 	stop_eating(player)
 
 	if new_state == true then
@@ -69,7 +69,7 @@ local function on_set_cake_state(player: Player, new_state: unknown): boolean
 
 		local thread_returned: boolean
 
-		local function wait_for_eating(): ()
+		const function wait_for_eating(): ()
 			thread_returned = check_eating_finished(player)
 		end
 		local thread = task.spawn(wait_for_eating)

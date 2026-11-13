@@ -11,20 +11,20 @@ const EPSILON = 1e-3
 
 const zones: { [BasePart]: true? } = {}
 
-local function track(zone: Instance): ()
+const function track(zone: Instance): ()
 	if zone:IsA("BasePart") then
 		zones[zone] = true
 	end
 end
 
-local function untrack(zone: Instance): ()
+const function untrack(zone: Instance): ()
 	if zone:IsA("BasePart") then
 		zones[zone] = nil
 	end
 end
 
 -- The whole cube has to fit inside a zone, not just touch it.
-local function is_in_build_zone(position: Vector3): boolean
+const function is_in_build_zone(position: Vector3): boolean
 	for zone in zones do
 		const local_position = zone.CFrame:PointToObjectSpace(position)
 		const half = zone.Size / 2
@@ -39,7 +39,7 @@ local function is_in_build_zone(position: Vector3): boolean
 	return false
 end
 
-local function is_building_allowed(position: Vector3): boolean
+const function is_building_allowed(position: Vector3): boolean
 	const restriction = building_restriction_type.current
 	if restriction == "building_allowed_everywhere" then
 		return true

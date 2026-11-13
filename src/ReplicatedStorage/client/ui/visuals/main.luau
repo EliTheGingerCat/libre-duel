@@ -16,7 +16,7 @@ local version = require(script.Parent.version)
 
 local create_element = React.createElement
 
-local function main()
+const function main()
 	return create_element(
 		React.Fragment,
 		{},

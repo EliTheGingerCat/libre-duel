@@ -37,7 +37,7 @@ local cached_hum: Humanoid? = nil
 local is_enabled = false
 
 -- The pad is never a floor, otherwise standing on it would hide the real floor it extends.
-local function refresh_floor_filter(): ()
+const function refresh_floor_filter(): ()
 	local ignored: { Instance } = { Workspace.Terrain }
 	if cached_char then
 		table.insert(ignored, cached_char)
@@ -48,7 +48,7 @@ local function refresh_floor_filter(): ()
 	floor_query.FilterDescendantsInstances = ignored
 end
 
-local function update_character_cache(): ()
+const function update_character_cache(): ()
 	local char = player.Character
 	if char == cached_char then
 		return
@@ -66,11 +66,11 @@ local function update_character_cache(): ()
 end
 
 -- PlayerModule only exists at runtime, so it cannot be required with the others.
-local function require_controls(player_module: Instance): any
+const function require_controls(player_module: Instance): any
 	return (require :: any)(player_module):GetControls()
 end
 
-local function get_controls(): any
+const function get_controls(): any
 	if controls_module then
 		return controls_module
 	end
@@ -89,22 +89,22 @@ local function get_controls(): any
 	return controls_module
 end
 
-local function is_airborne(hum: Humanoid): boolean
+const function is_airborne(hum: Humanoid): boolean
 	local state = hum:GetState()
 	return hum.FloorMaterial == Enum.Material.Air
 		or state == Enum.HumanoidStateType.Freefall
 		or state == Enum.HumanoidStateType.Jumping
 end
 
-local function get_feet_y(root: BasePart, hum: Humanoid): number
+const function get_feet_y(root: BasePart, hum: Humanoid): number
 	return root.Position.Y - (root.Size.Y * 0.5) - hum.HipHeight
 end
 
-local function get_floor_parts(position: Vector3, feet_y: number): { BasePart }
+const function get_floor_parts(position: Vector3, feet_y: number): { BasePart }
 	return Workspace:GetPartBoundsInBox(CFrame.new(position.X, feet_y, position.Z), SEARCH_SIZE, floor_query)
 end
 
-local function is_on_pad(): boolean
+const function is_on_pad(): boolean
 	local root, hum = cached_root, cached_hum
 	if not (root and hum and hum.Health > 0) then
 		return false
@@ -113,7 +113,7 @@ local function is_on_pad(): boolean
 	return Workspace:Raycast(root.Position, drop_vec, pad_ray_check) ~= nil
 end
 
-local function update_pad(): ()
+const function update_pad(): ()
 	update_character_cache()
 
 	local root, hum, pad = cached_root, cached_hum, pad_part
@@ -141,7 +141,7 @@ local function update_pad(): ()
 	end
 end
 
-local function get_safe_direction(vec: Vector3): Vector3
+const function get_safe_direction(vec: Vector3): Vector3
 	local root, hum = cached_root, cached_hum
 	if not (root and hum and hum.Health > 0) or vec.Magnitude == 0 or is_airborne(hum) then
 		return vec
@@ -176,18 +176,18 @@ local function get_safe_direction(vec: Vector3): Vector3
 	return allowed
 end
 
-local function move_with_edge_check(self: any, vec: Vector3, face: boolean): ()
+const function move_with_edge_check(self: any, vec: Vector3, face: boolean): ()
 	old_move_function(self, get_safe_direction(vec), face)
 end
 
-local function destroy_pad(): ()
+const function destroy_pad(): ()
 	if pad_part then
 		pad_part:Destroy()
 		pad_part = nil
 	end
 end
 
-local function wait_until_off_pad(): ()
+const function wait_until_off_pad(): ()
 	update_character_cache()
 	if is_on_pad() then
 		return

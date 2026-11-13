@@ -18,12 +18,12 @@ export type tool_button = {
 	on_tool_changed: (tool: tool_types.tool?) -> (),
 }
 
-local function create_tool_button(handlers: { [tool_types.behaviour]: handler }): tool_button
+const function create_tool_button(handlers: { [tool_types.behaviour]: handler }): tool_button
 	local button_held: boolean = false
 	local tool_in_use: tool_types.tool? = nil
 
 	-- handlers can yield, so they each get a thread to not hold up the caller
-	local function start_handlers(tool: tool_types.tool, include_instant_handlers: boolean): ()
+	const function start_handlers(tool: tool_types.tool, include_instant_handlers: boolean): ()
 		tool_in_use = tool
 		for behaviour: tool_types.behaviour, handler in handlers do
 			if tool_registry.has_behaviour(tool, behaviour) and (include_instant_handlers or handler.stop ~= nil) then
@@ -32,7 +32,7 @@ local function create_tool_button(handlers: { [tool_types.behaviour]: handler })
 		end
 	end
 
-	local function stop_handlers(was_released: boolean): ()
+	const function stop_handlers(was_released: boolean): ()
 		const tool = tool_in_use
 		if tool == nil then
 			return
@@ -46,7 +46,7 @@ local function create_tool_button(handlers: { [tool_types.behaviour]: handler })
 		end
 	end
 
-	local function press(tool: tool_types.tool?): ()
+	const function press(tool: tool_types.tool?): ()
 		-- the release can go missing, for example if it happens while the Roblox menu is open
 		stop_handlers(false)
 		button_held = true
@@ -55,17 +55,17 @@ local function create_tool_button(handlers: { [tool_types.behaviour]: handler })
 		end
 	end
 
-	local function release(): ()
+	const function release(): ()
 		button_held = false
 		stop_handlers(true)
 	end
 
-	local function interrupt(): ()
+	const function interrupt(): ()
 		button_held = false
 		stop_handlers(false)
 	end
 
-	local function on_tool_changed(tool: tool_types.tool?): ()
+	const function on_tool_changed(tool: tool_types.tool?): ()
 		-- switching to another stack of the same item carries on using it
 		if tool_in_use ~= nil and (tool == nil or tool.id ~= tool_in_use.id) then
 			stop_handlers(false)

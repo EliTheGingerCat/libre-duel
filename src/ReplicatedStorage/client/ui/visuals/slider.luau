@@ -7,7 +7,7 @@ local drag_detector = require(script.Parent.controls.drag_detector)
 local surface = require(script.Parent.controls.surface)
 local use_ui_motion = require(script.Parent.use_ui_motion)
 
-local function slider(props: {
+const function slider(props: {
 	value: number?,
 	minimum: number?,
 	maximum: number?,
@@ -20,7 +20,7 @@ local function slider(props: {
 	local minimum, maximum = props.minimum or 0, props.maximum or 100
 	local stored, set_stored = React.useState(props.value or 50)
 	local value = math.clamp(if props.on_changed then props.value or minimum else stored, minimum, maximum)
-	local function change(next_value: number): ()
+	const function change(next_value: number): ()
 		local step = props.step or 1
 		local rounded = math.clamp(minimum + math.round((next_value - minimum) / step) * step, minimum, maximum)
 		if props.on_changed then
@@ -29,10 +29,10 @@ local function slider(props: {
 			set_stored(rounded)
 		end
 	end
-	local function drag(point: Vector2): ()
+	const function drag(point: Vector2): ()
 		change(minimum + math.clamp(point.X, 0, 1) * (maximum - minimum))
 	end
-	local function key(_button: GuiButton, input: InputObject): ()
+	const function key(_button: GuiButton, input: InputObject): ()
 		if input.KeyCode == Enum.KeyCode.Left or input.KeyCode == Enum.KeyCode.DPadLeft then
 			change(value - (props.step or 1))
 		elseif input.KeyCode == Enum.KeyCode.Right or input.KeyCode == Enum.KeyCode.DPadRight then
@@ -40,7 +40,7 @@ local function slider(props: {
 		end
 	end
 	local motion = use_ui_motion((value - minimum) / math.max(0.001, maximum - minimum))
-	local function position(amount: number): UDim2
+	const function position(amount: number): UDim2
 		return UDim2.new(amount, 24 - 48 * amount, 0.5, 0)
 	end
 	return React.createElement("Frame", {

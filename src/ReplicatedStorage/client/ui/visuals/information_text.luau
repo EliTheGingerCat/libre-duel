@@ -5,7 +5,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local function information_text(props: { text: string? })
+const function information_text(props: { text: string? })
 	return create_element(
 		"Frame",
 		{

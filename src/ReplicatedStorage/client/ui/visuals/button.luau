@@ -7,7 +7,7 @@ local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
 local surface = require(script.Parent.controls.surface)
 
-local function button(props: {
+const function button(props: {
 	text: string?,
 	on_activated: (() -> ())?,
 	size: UDim2?,

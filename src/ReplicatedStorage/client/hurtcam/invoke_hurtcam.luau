@@ -8,7 +8,7 @@ const roll_value = Instance.new("NumberValue")
 
 local current_tween: Tween? = nil
 
-local function invoke_hurtcam(strength: number, duration_s: number): ()
+const function invoke_hurtcam(strength: number, duration_s: number): ()
 	if current_tween then
 		current_tween:Cancel()
 	end
@@ -21,7 +21,7 @@ local function invoke_hurtcam(strength: number, duration_s: number): ()
 	current_tween = tween
 end
 
-local function apply_roll(): ()
+const function apply_roll(): ()
 	const x, y, z = current_camera.CFrame:ToEulerAnglesXYZ()
 	const position = current_camera.CFrame.Position
 	current_camera.CFrame = CFrame.new(position) * CFrame.Angles(x, y, z) * CFrame.Angles(0, 0, math.rad(roll_value.Value))

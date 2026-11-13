@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local remote = ReplicatedStorage.remotes.show_title
 
-local function show_title(
+const function show_title(
 	player: Player | "all",
 	fade_in: number,
 	stay: number,

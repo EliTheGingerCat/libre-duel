@@ -12,7 +12,7 @@ local notification_management = require(script.Parent.Parent.notification_manage
 
 const GAMEPAD_CLOSE_ACTION = "mode_selector_gamepad_close"
 
-local function close(): ()
+const function close(): ()
 	mode_selector_state.set_enabled(false)
 end
 
@@ -24,7 +24,7 @@ const function close_from_gamepad(_action_name: string, input_state: Enum.UserIn
 	return Enum.ContextActionResult.Sink
 end
 
-local function use_mode_selector(): {
+const function use_mode_selector(): {
 	enabled: boolean,
 	busy: boolean,
 	close: () -> (),
@@ -34,14 +34,14 @@ local function use_mode_selector(): {
 	local busy, set_busy = React.useState(false)
 	local pending = React.useRef(false)
 
-	local function subscribe()
-		local function update(): ()
+	const function subscribe()
+		const function update(): ()
 			if editor_state.enabled then
 				close()
 			end
 			set_enabled(mode_selector_state.enabled and not editor_state.enabled)
 		end
-		local function on_input(input: InputObject, processed: boolean): ()
+		const function on_input(input: InputObject, processed: boolean): ()
 			if not processed and input.KeyCode == Enum.KeyCode.Escape then
 				close()
 			end
@@ -50,7 +50,7 @@ local function use_mode_selector(): {
 		local input_connection = UserInputService.InputBegan:Connect(on_input)
 		local unsubscribe = editor_state.subscribe(update)
 		update()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 			input_connection:Disconnect()
 			unsubscribe()
@@ -80,7 +80,7 @@ local function use_mode_selector(): {
 	end
 	React.useEffect(bind_gamepad_close, { enabled })
 
-	local function join(mode: MODE_DEFINITIONS.mode_id): ()
+	const function join(mode: MODE_DEFINITIONS.mode_id): ()
 		if pending.current then
 			return
 		end

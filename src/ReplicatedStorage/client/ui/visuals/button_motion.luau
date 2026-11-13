@@ -7,9 +7,9 @@ local React = require(ReplicatedStorage.Packages.react)
 local button_tug = require(script.Parent.controls.button_tug)
 local scale_animation_time = require(script.Parent.Parent.effects.scale_animation_time)
 
-local function button_motion(props: { animate_colour: boolean? })
+const function button_motion(props: { animate_colour: boolean? })
 	local ref = React.useRef(nil :: UIScale?)
-	local function mount()
+	const function mount()
 		local scale = ref.current
 		assert(scale)
 		local button = scale.Parent
@@ -22,7 +22,7 @@ local function button_motion(props: { animate_colour: boolean? })
 		local pressed = false
 		local scale_tween: Tween? = nil
 		local light_tween: Tween? = nil
-		local function update(released: boolean?): ()
+		const function update(released: boolean?): ()
 			if scale_tween then
 				scale_tween:Cancel()
 				scale_tween:Destroy()
@@ -65,24 +65,24 @@ local function button_motion(props: { animate_colour: boolean? })
 				light_tween:Play()
 			end
 		end
-		local function enter(): ()
+		const function enter(): ()
 			hovered = true
 			update()
 		end
-		local function leave(): ()
+		const function leave(): ()
 			hovered = false
 			update()
 		end
-		local function focus(): ()
+		const function focus(): ()
 			focused = true
 			update()
 		end
-		local function blur(): ()
+		const function blur(): ()
 			focused = false
 			pressed = false
 			update()
 		end
-		local function begin(position: Vector2): ()
+		const function begin(position: Vector2): ()
 			if pressed or not button.Interactable or not button.Visible then
 				return
 			end
@@ -90,26 +90,26 @@ local function button_motion(props: { animate_colour: boolean? })
 			tug.begin(position)
 			update()
 		end
-		local function drag(position: Vector2): ()
+		const function drag(position: Vector2): ()
 			if pressed then
 				tug.drag(position)
 			end
 		end
-		local function finish(): ()
+		const function finish(): ()
 			pressed = false
 			update(true)
 		end
-		local function begin_key(input: InputObject): ()
+		const function begin_key(input: InputObject): ()
 			if input.KeyCode == Enum.KeyCode.ButtonA then
 				begin(Vector2.zero)
 			end
 		end
-		local function finish_key(input: InputObject): ()
+		const function finish_key(input: InputObject): ()
 			if input.KeyCode == Enum.KeyCode.ButtonA then
 				finish()
 			end
 		end
-		local function reset(): ()
+		const function reset(): ()
 			hovered = false
 			focused = false
 			pressed = false
@@ -132,7 +132,7 @@ local function button_motion(props: { animate_colour: boolean? })
 			button:GetPropertyChangedSignal("Visible"):Connect(reset),
 			GuiService:GetPropertyChangedSignal("ReducedMotionEnabled"):Connect(update),
 		}
-		local function disconnect(): ()
+		const function disconnect(): ()
 			tug.disconnect()
 			for _, connection in connections do
 				connection:Disconnect()

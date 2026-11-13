@@ -8,7 +8,7 @@ const ENABLED = false
 if RunService:IsStudio() and ENABLED then
 	const WORDS = { "Hi!", "Hello!" }
 
-	local function thread_notification(): ()
+	const function thread_notification(): ()
 		while true do
 			notification_management.add(WORDS[math.random(1, #WORDS)])
 			task.wait(math.random(0.3, 2))

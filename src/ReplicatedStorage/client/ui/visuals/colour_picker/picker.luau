@@ -9,7 +9,7 @@ local surface = require(script.Parent.Parent.controls.surface)
 local vertical_slider = require(script.Parent.vertical_slider)
 local wheel = require(script.Parent.wheel)
 
-local function picker(props: { colour: Color3, alpha: number, on_changed: (Color3, number) -> () })
+const function picker(props: { colour: Color3, alpha: number, on_changed: (Color3, number) -> () })
 	local hue, saturation, value = props.colour:ToHSV()
 	local last_hue = React.useRef(hue)
 	local last_saturation = React.useRef(saturation)
@@ -23,18 +23,18 @@ local function picker(props: { colour: Color3, alpha: number, on_changed: (Color
 	else
 		hue = last_hue.current
 	end
-	local function wheel_changed(next_hue: number, next_saturation: number): ()
+	const function wheel_changed(next_hue: number, next_saturation: number): ()
 		last_hue.current = next_hue
 		last_saturation.current = next_saturation
 		props.on_changed(colour_math.from_hsv(next_hue, next_saturation, value), props.alpha)
 	end
-	local function brightness_changed(next_value: number): ()
+	const function brightness_changed(next_value: number): ()
 		props.on_changed(colour_math.from_hsv(hue, saturation, next_value), props.alpha)
 	end
-	local function alpha_changed(next_alpha: number): ()
+	const function alpha_changed(next_alpha: number): ()
 		props.on_changed(props.colour, next_alpha)
 	end
-	local function fields_changed(colour: Color3): ()
+	const function fields_changed(colour: Color3): ()
 		props.on_changed(colour, props.alpha)
 	end
 	return React.createElement("Frame", {

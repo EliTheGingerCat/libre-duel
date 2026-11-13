@@ -9,22 +9,21 @@ local editor_reset_button = require(script.Parent.editor_reset_button)
 local editor_state = require(script.Parent.editor_state)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local mount_editor = require(script.Parent.mount_editor)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 
 local create_element = React.createElement
 
-local function leave_editor(): ()
+const function leave_editor(): ()
 	editor_state.request_enabled(false)
 end
 
-local function open_selector(): ()
+const function open_selector(): ()
 	editor_state.request_selector()
 end
 
-local function editor()
+const function editor()
 	local ref = React.useRef(nil :: ScreenGui?)
 	local content_visible, set_content_visible = React.useBinding(true)
-	local function mount()
+	const function mount()
 		local screen = ref.current
 		assert(screen)
 		return mount_editor(screen, set_content_visible)
@@ -87,7 +86,6 @@ local function editor()
 				feedback = create_element(button_motion),
 				corner = create_element("UICorner", { CornerRadius = UDim.new(1, 0) }),
 				stroke = create_element(gradient_stroke, { colour = green, rotation = -90 }),
-				blur = create_element(ui_blur),
 			}),
 			reset_button = create_element(editor_reset_button, { LayoutOrder = 2 }),
 			done_button = create_element(animated_button, {
@@ -105,7 +103,6 @@ local function editor()
 				feedback = create_element(button_motion),
 				corner = create_element("UICorner", { CornerRadius = UDim.new(1, 0) }),
 				stroke = create_element(gradient_stroke, { colour = COLOURS.grey_100, rotation = -90 }),
-				blur = create_element(ui_blur),
 			}),
 		}),
 		Bounds = create_element("Frame", {

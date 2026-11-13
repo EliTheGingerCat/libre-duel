@@ -1,7 +1,7 @@
 -- Perceived lightness is basically how light a colour is according to the human eye.
 -- Used mathematics from: <https://stackoverflow.com/a/56678483>
 
-local function sRGB_to_linear(colour_channel: number): number
+const function sRGB_to_linear(colour_channel: number): number
 	if colour_channel <= 0.04045 then
 		return colour_channel / 12.92
 	else
@@ -9,7 +9,7 @@ local function sRGB_to_linear(colour_channel: number): number
 	end
 end
 
-local function Color3_to_luminance(colour: Color3): number
+const function Color3_to_luminance(colour: Color3): number
 	local luminance = (
 		0.2126 * sRGB_to_linear(colour.R)
 		+ 0.7152 * sRGB_to_linear(colour.G)
@@ -18,7 +18,7 @@ local function Color3_to_luminance(colour: Color3): number
 	return luminance
 end
 
-local function luminance_to_perceived_lightness(luminance: number): number
+const function luminance_to_perceived_lightness(luminance: number): number
 	if luminance <= 216 / 24389 then
 		return luminance * (24389 / 27)
 	else
@@ -27,7 +27,7 @@ local function luminance_to_perceived_lightness(luminance: number): number
 end
 
 --- @return number -- ranges from 0 (pitch black) to 100 (fully white)
-local function get_perceived_lightness(colour: Color3): number
+const function get_perceived_lightness(colour: Color3): number
 	local luminance = Color3_to_luminance(colour)
 	local perceived_lightness = luminance_to_perceived_lightness(luminance)
 	return perceived_lightness

@@ -3,7 +3,7 @@ local mount_fps = require(script.Parent.mount_fps)
 local mount_input = require(script.Parent.mount_input)
 local mount_paperdoll = require(script.Parent.mount_paperdoll)
 
-local function mount_builtin(name: string, content: Frame): () -> ()
+const function mount_builtin(name: string, content: Frame): () -> ()
 	if name == "Keystrokes" then
 		return mount_input(content, nil)
 	elseif name == "Mousestrokes" then

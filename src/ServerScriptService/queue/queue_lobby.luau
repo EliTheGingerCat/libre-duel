@@ -32,14 +32,14 @@ const joining: { [Player]: string } = {}
 const pending: { [Player]: ticket } = {}
 const groups: { [string]: group } = {}
 
-local function publish_ready(entry: record): ()
+const function publish_ready(entry: record): ()
 	pcall(MessagingService.PublishAsync, MessagingService, QUEUE_CONFIG.ready_topic, {
 		id = entry.id,
 		mode = entry.mode,
 	})
 end
 
-local function forget(ticket: ticket): ()
+const function forget(ticket: ticket): ()
 	if pending[ticket.player] ~= ticket then
 		return
 	end
@@ -54,7 +54,7 @@ local function forget(ticket: ticket): ()
 	end
 end
 
-local function enqueue(player: Player, mode: mode): boolean
+const function enqueue(player: Player, mode: mode): boolean
 	if joining[player] or pending[player] or player.Parent ~= Players then
 		return false
 	end
@@ -76,7 +76,7 @@ local function enqueue(player: Player, mode: mode): boolean
 		end
 		const candidate = candidates.entries[index]
 		const id = if candidate then candidate.id else new_id
-		local function claim_slot(entry: record?): record?
+		const function claim_slot(entry: record?): record?
 			if joining[player] ~= token then
 				return nil
 			end
@@ -148,7 +148,7 @@ local function enqueue(player: Player, mode: mode): boolean
 end
 
 -- The caller marks the ticket as teleporting before scheduling this, so two refreshes cannot both send it.
-local function teleport_player(ticket: ticket): ()
+const function teleport_player(ticket: ticket): ()
 	if pending[ticket.player] ~= ticket or ticket.player.Parent ~= Players then
 		ticket.teleporting = false
 		return
@@ -172,7 +172,7 @@ local function teleport_player(ticket: ticket): ()
 	end
 end
 
-local function collect_tokens(group: group): { [string]: string }
+const function collect_tokens(group: group): { [string]: string }
 	const tokens: { [string]: string } = {}
 	for player, ticket in group.tickets do
 		if player.Parent == Players then
@@ -182,7 +182,7 @@ local function collect_tokens(group: group): { [string]: string }
 	return tokens
 end
 
-local function refresh_group(group: group): ()
+const function refresh_group(group: group): ()
 	const now = os.time()
 	const heartbeat_due = now - group.last_heartbeat >= QUEUE_CONFIG.heartbeat_interval
 	const result = if heartbeat_due
@@ -222,7 +222,7 @@ local function refresh_group(group: group): ()
 	group.busy = false
 end
 
-local function step(): ()
+const function step(): ()
 	for _, group in groups do
 		if not group.busy and os.time() >= group.next_poll then
 			group.busy = true
@@ -231,14 +231,14 @@ local function step(): ()
 	end
 end
 
-local function wake(mode: mode, id: string): ()
+const function wake(mode: mode, id: string): ()
 	const group = groups[id]
 	if group and group.mode == mode then
 		group.next_poll = 0
 	end
 end
 
-local function leave(player: Player): boolean
+const function leave(player: Player): boolean
 	const ticket = pending[player]
 	if ticket and ticket.teleporting then
 		return false
@@ -251,7 +251,7 @@ local function leave(player: Player): boolean
 	return true
 end
 
-local function on_player_removing(player: Player): ()
+const function on_player_removing(player: Player): ()
 	joining[player] = nil
 	const ticket = pending[player]
 	if ticket then
@@ -263,7 +263,7 @@ local function on_player_removing(player: Player): ()
 	end
 end
 
-local function on_teleport_failed(
+const function on_teleport_failed(
 	player: Player,
 	_result: Enum.TeleportResult,
 	failure: string,

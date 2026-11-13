@@ -30,14 +30,14 @@ const WIDGETS = {
 	{ "ControllerGlyphs", "Controller Glyphs" },
 }
 
-local function increment(value: number): number
+const function increment(value: number): number
 	return value + 1
 end
 
-local function selector(props: { enabled: boolean, display_order: number, on_close: () -> () })
+const function selector(props: { enabled: boolean, display_order: number, on_close: () -> () })
 	local _, set_revision = React.useState(0)
-	local function subscribe()
-		local function update(): ()
+	const function subscribe()
+		const function update(): ()
 			set_revision(increment)
 		end
 		return registry.subscribe(update)

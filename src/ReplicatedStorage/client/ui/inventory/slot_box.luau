@@ -8,7 +8,7 @@ local shadow = require(script.Parent.Parent.visuals.shadow)
 
 local create_element = React.createElement
 
-local function get_length(cells: number): number
+const function get_length(cells: number): number
 	return cells * INVENTORY_LAYOUT.SLOT_SIZE
 		+ (cells - 1) * INVENTORY_LAYOUT.SLOT_GAP
 		+ INVENTORY_LAYOUT.BOX_PADDING * 2
@@ -16,7 +16,7 @@ end
 
 -- The rounded box around a grid of `count` slots, `columns` per row.
 -- Its size is fixed, since a grid inside an automatically sized frame wraps at whatever width it guesses.
-local function slot_box(props: {
+const function slot_box(props: {
 	name: string,
 	columns: number,
 	count: number,

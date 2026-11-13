@@ -8,7 +8,7 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 const load_mode: (ModuleScript) -> match.mode = require
 
 -- The mode is the module in `modes` named after the definition's `game`.
-local function start_match(definition: MODE_DEFINITIONS.definition, teams: { { registry.entity } }): match.match
+const function start_match(definition: MODE_DEFINITIONS.definition, teams: { { registry.entity } }): match.match
 	const module = ServerScriptService.modes:FindFirstChild(definition.game)
 	assert(module and module:IsA("ModuleScript"), `No mode module for "{definition.game}"`)
 	const mode = load_mode(module)

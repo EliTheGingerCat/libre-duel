@@ -18,7 +18,7 @@ local registry = require(script.Parent.registry)
 const SCREEN_GUIDE_COLOUR = COLOURS.sky_400
 const WIDGET_GUIDE_COLOUR = COLOURS.fuchsia_400
 
-local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) -> ())
+const function mount_editor(screen: ScreenGui, set_content_visible: (boolean) -> ())
 	local preview = screen:FindFirstChild("Bounds")
 	assert(preview and preview:IsA("Frame"))
 	local guide_line_x = preview:FindFirstChild("guide_x")
@@ -31,17 +31,17 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	local views: { create_widget.view } = {}
 	local hovered: create_widget.view? = nil
 	local drag = editor_drag(preview, screen, views)
-	local function on_menu_changed(open: boolean): ()
+	const function on_menu_changed(open: boolean): ()
 		set_content_visible(not open)
 	end
 	local menus = mount_menus(player_gui, screen.DisplayOrder + 1, on_menu_changed)
 
-	local function get_pointer(): Vector2
+	const function get_pointer(): Vector2
 		local inset = GuiService:GetGuiInset()
 		return UserInputService:GetMouseLocation() - inset - preview.AbsolutePosition
 	end
 
-	local function button_contains(button: ImageButton?, pointer: Vector2): boolean
+	const function button_contains(button: ImageButton?, pointer: Vector2): boolean
 		if not button then
 			return false
 		end
@@ -51,7 +51,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		}, pointer)
 	end
 
-	local function find_hovered(pointer: Vector2): create_widget.view?
+	const function find_hovered(pointer: Vector2): create_widget.view?
 		if hovered and registry.is_shown(hovered.item) then
 			if
 				button_contains(hovered.delete_button.current, pointer)
@@ -73,7 +73,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		return nil
 	end
 
-	local function begin_drag(view: create_widget.view, source: UIDragDetector, position: Vector2, handle: Vector2?): ()
+	const function begin_drag(view: create_widget.view, source: UIDragDetector, position: Vector2, handle: Vector2?): ()
 		if not editor_state.enabled or menus.is_open() then
 			return
 		end
@@ -81,14 +81,14 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 			hovered = view
 		end
 	end
-	local function update_drag(source: UIDragDetector, position: Vector2): ()
+	const function update_drag(source: UIDragDetector, position: Vector2): ()
 		drag.update(source, get_drag_offset(preview, position))
 	end
-	local function finish_drag_input(source: UIDragDetector, position: Vector2): ()
+	const function finish_drag_input(source: UIDragDetector, position: Vector2): ()
 		drag.finish_input(source, get_drag_offset(preview, position))
 	end
 
-	local function update_editor(): ()
+	const function update_editor(): ()
 		if menus.is_open() then
 			return
 		end
@@ -116,7 +116,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		end
 	end
 
-	local function prepare_menu(): ()
+	const function prepare_menu(): ()
 		drag.finish()
 		hovered = nil
 		for _, view in views do
@@ -124,7 +124,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		end
 	end
 
-	local function delete_widget(item: registry.entry): ()
+	const function delete_widget(item: registry.entry): ()
 		if not editor_state.enabled or menus.is_open() then
 			return
 		end
@@ -132,7 +132,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		registry.remove(item)
 	end
 
-	local function open_settings(item: registry.entry): ()
+	const function open_settings(item: registry.entry): ()
 		if not editor_state.enabled or menus.is_open() then
 			return
 		end
@@ -140,7 +140,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		menus.open_settings(item)
 	end
 
-	local function sync_widgets(): ()
+	const function sync_widgets(): ()
 		drag.finish()
 		hovered = nil
 		for _, view in views do
@@ -170,11 +170,11 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		end
 	end
 
-	local function sink_controls(): Enum.ContextActionResult
+	const function sink_controls(): Enum.ContextActionResult
 		return Enum.ContextActionResult.Sink
 	end
 
-	local function set_enabled(enabled: boolean): ()
+	const function set_enabled(enabled: boolean): ()
 		drag.finish()
 		menus.close()
 		editor_state.set_enabled(enabled)
@@ -205,7 +205,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		sync_widgets()
 	end
 
-	local function toggle_editor(_action_name: string, input_state: Enum.UserInputState): Enum.ContextActionResult
+	const function toggle_editor(_action_name: string, input_state: Enum.UserInputState): Enum.ContextActionResult
 		if UserInputService:GetFocusedTextBox() ~= nil then
 			return Enum.ContextActionResult.Pass
 		end
@@ -215,20 +215,20 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		return Enum.ContextActionResult.Sink
 	end
 
-	local function on_requested(enabled: boolean): ()
+	const function on_requested(enabled: boolean): ()
 		if enabled ~= editor_state.enabled then
 			set_enabled(enabled)
 		end
 	end
 
-	local function on_size_changed(): ()
+	const function on_size_changed(): ()
 		drag.finish()
 		for _, view in views do
 			view.item.refresh()
 		end
 	end
 
-	local function open_selector(): ()
+	const function open_selector(): ()
 		if not editor_state.enabled or menus.is_open() then
 			return
 		end
@@ -236,20 +236,20 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 		menus.open_selector()
 	end
 
-	local function is_click(input: InputObject): boolean
+	const function is_click(input: InputObject): boolean
 		return input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
 	end
 
 	-- Exits on release, so the click that closes the editor cannot also reach the tools.
 	local pressed_outside = false
-	local function on_input_began(input: InputObject, processed: boolean): ()
+	const function on_input_began(input: InputObject, processed: boolean): ()
 		if processed or not is_click(input) or not editor_state.enabled or menus.is_open() then
 			return
 		end
 		local pointer = Vector2.new(input.Position.X, input.Position.Y) - preview.AbsolutePosition
 		pressed_outside = not geometry.contains({ position = Vector2.zero, size = preview.AbsoluteSize }, pointer)
 	end
-	local function on_input_ended(input: InputObject): ()
+	const function on_input_ended(input: InputObject): ()
 		if pressed_outside and is_click(input) then
 			pressed_outside = false
 			set_enabled(false)
@@ -273,7 +273,7 @@ local function mount_editor(screen: ScreenGui, set_content_visible: (boolean) ->
 	local unsubscribe_requests = editor_state.on_requested(on_requested)
 	local unsubscribe_selector = editor_state.on_selector_requested(open_selector)
 
-	local function disconnect(): ()
+	const function disconnect(): ()
 		set_enabled(false)
 		ContextActionService:UnbindAction("hud_editor_toggle")
 		menus.disconnect()

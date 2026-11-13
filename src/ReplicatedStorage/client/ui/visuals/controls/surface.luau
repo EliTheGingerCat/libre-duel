@@ -5,7 +5,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.gradient_stroke)
 local shadow = require(script.Parent.Parent.shadow)
 
-local function surface(props: { radius: number?, danger: boolean?, colour: Color3? })
+const function surface(props: { radius: number?, danger: boolean?, colour: Color3? })
 	return React.createElement(React.Fragment, {}, {
 		corner = React.createElement("UICorner", { CornerRadius = UDim.new(0, props.radius or 25) }),
 		shadow = React.createElement(shadow, {

@@ -1,6 +1,6 @@
 const registry = require(script.Parent.registry)
 
-local function get_entity_position(entity: registry.entity): Vector3?
+const function get_entity_position(entity: registry.entity): Vector3?
 	const character = registry.get_character(entity)
 	if character == nil then
 		return nil

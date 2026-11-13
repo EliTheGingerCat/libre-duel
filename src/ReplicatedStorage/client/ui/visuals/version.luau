@@ -7,7 +7,7 @@ local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local create_element = React.createElement
 
-local function version()
+const function version()
 	return create_element(
 		"ScreenGui",
 		{

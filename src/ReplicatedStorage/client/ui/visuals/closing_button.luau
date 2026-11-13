@@ -4,7 +4,7 @@ local React = require(ReplicatedStorage.Packages.react)
 
 local create_element = React.createElement
 
-local function closing_button()
+const function closing_button()
 	return create_element("ImageButton", {
 		BackgroundTransparency = 1,
 		Position = UDim2.new(1, -80, 0, 5),

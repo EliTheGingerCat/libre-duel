@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local slider = require(script.Parent.slider)
 
-local function hue_slider(props: { value: number?, colour: Color3?, on_changed: ((number) -> ())? })
+const function hue_slider(props: { value: number?, colour: Color3?, on_changed: ((number) -> ())? })
 	return React.createElement(slider, {
 		text = "Hue",
 		value = props.value or 0,

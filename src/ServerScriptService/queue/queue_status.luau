@@ -1,6 +1,6 @@
 const queue_record = require(script.Parent.queue_record)
 
-local function start(player: Player, mode: queue_record.mode): ()
+const function start(player: Player, mode: queue_record.mode): ()
 	if player:GetAttribute("queue_mode") ~= mode then
 		player:SetAttribute("queue_started_at", workspace:GetServerTimeNow())
 	end
@@ -8,7 +8,7 @@ local function start(player: Player, mode: queue_record.mode): ()
 	player:SetAttribute("queue_mode", mode)
 end
 
-local function clear(player: Player): ()
+const function clear(player: Player): ()
 	player:SetAttribute("queue_mode", nil)
 	player:SetAttribute("queue_started_at", nil)
 	player:SetAttribute("queue_teleporting", nil)

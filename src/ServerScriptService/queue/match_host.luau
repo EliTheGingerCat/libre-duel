@@ -26,7 +26,7 @@ type context = {
 const validating: { [Player]: boolean } = {}
 local current: context? = nil
 
-local function all_present(context: context, entry: record): boolean
+const function all_present(context: context, entry: record): boolean
 	const settings = get_mode_definition(entry.mode)
 	if queue_record.count_members(entry) ~= settings.teams * settings.entities_per_team then
 		return false
@@ -42,12 +42,12 @@ local function all_present(context: context, entry: record): boolean
 	return true
 end
 
-local function requeue(context: context): ()
+const function requeue(context: context): ()
 	if current ~= context then
 		return
 	end
 	current = nil
-	local function cancel_match(entry: record?): record?
+	const function cancel_match(entry: record?): record?
 		if entry and entry.destination_job_id == game.JobId then
 			entry.status = "cancelled"
 			return entry
@@ -61,7 +61,7 @@ local function requeue(context: context): ()
 	end
 end
 
-local function accept(player: Player): ()
+const function accept(player: Player): ()
 	validating[player] = true
 	const join_data = player:GetJoinData()
 	const data = queue_record.as_dictionary(join_data.TeleportData)
@@ -83,7 +83,7 @@ local function accept(player: Player): ()
 		player:Kick("This match is no longer available.")
 		return
 	end
-	local function confirm_arrival(entry: record?): record?
+	const function confirm_arrival(entry: record?): record?
 		if entry == nil or player.Parent ~= Players then
 			return nil
 		end
@@ -146,7 +146,7 @@ local function accept(player: Player): ()
 	context.next_poll = 0
 end
 
-local function collect_tokens(context: context): { [string]: string }
+const function collect_tokens(context: context): { [string]: string }
 	const tokens: { [string]: string } = {}
 	for player, token in context.players do
 		if player.Parent == Players then
@@ -156,7 +156,7 @@ local function collect_tokens(context: context): { [string]: string }
 	return tokens
 end
 
-local function collect_teams(entry: record): { { registry.entity } }
+const function collect_teams(entry: record): { { registry.entity } }
 	const teams: { { registry.entity } } = {}
 	for index = 1, get_mode_definition(entry.mode).teams do
 		const entities: { registry.entity } = {}
@@ -174,12 +174,12 @@ local function collect_teams(entry: record): { { registry.entity } }
 	return teams
 end
 
-local function on_match_stopped(): ()
+const function on_match_stopped(): ()
 	current = nil
 end
 
-local function try_start(context: context): ()
-	local function mark_started(latest: record?): record?
+const function try_start(context: context): ()
+	const function mark_started(latest: record?): record?
 		if latest == nil or current ~= context then
 			return nil
 		end
@@ -211,7 +211,7 @@ local function try_start(context: context): ()
 	match.on_stop(started_match, on_match_stopped)
 end
 
-local function refresh(context: context): ()
+const function refresh(context: context): ()
 	const now = os.time()
 	const heartbeat_due = now - context.last_heartbeat >= QUEUE_CONFIG.heartbeat_interval
 	const result = if heartbeat_due
@@ -238,7 +238,7 @@ local function refresh(context: context): ()
 	context.busy = false
 end
 
-local function step(): ()
+const function step(): ()
 	const context = current
 	if context and not context.started and not context.busy and os.time() >= context.next_poll then
 		context.busy = true
@@ -246,7 +246,7 @@ local function step(): ()
 	end
 end
 
-local function on_player_removing(player: Player): ()
+const function on_player_removing(player: Player): ()
 	validating[player] = nil
 	queue_status.clear(player)
 	const context = current
@@ -259,7 +259,7 @@ local function on_player_removing(player: Player): ()
 	end
 end
 
-local function leave_queue(player: Player): boolean
+const function leave_queue(player: Player): boolean
 	if validating[player] or (current and current.started and current.players[player] ~= nil) then
 		return false
 	end
@@ -269,7 +269,7 @@ local function leave_queue(player: Player): boolean
 	return true
 end
 
-local function leave(player: Player): boolean
+const function leave(player: Player): boolean
 	if validating[player] or (current and current.started) then
 		return false
 	end

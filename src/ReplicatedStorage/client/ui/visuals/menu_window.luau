@@ -7,7 +7,6 @@ local animated_button = require(script.Parent.animated_button)
 local button_motion = require(script.Parent.button_motion)
 local gradient_stroke = require(script.Parent.gradient_stroke)
 local shadow = require(script.Parent.shadow)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local use_ui_motion = require(script.Parent.use_ui_motion)
 local use_viewport_scale = require(script.Parent.use_viewport_scale)
 
@@ -26,32 +25,32 @@ export type props = {
 	children: unknown?,
 }
 
-local function menu_window(props: props)
+const function menu_window(props: props)
 	local size = props.size or Vector2.new(1200, 720)
 	local motion = use_ui_motion(if props.enabled then 1 else 0, 0)
 	local viewport_scale = math.min(1, use_viewport_scale())
 	local screen_ref = React.useRef(nil :: ScreenGui?)
 	local fit, set_fit = React.useBinding(1)
 	-- The viewport scale is tuned for the HUD, so tall windows can still overflow small screens without this.
-	local function track_fit()
+	const function track_fit()
 		local screen = screen_ref.current
 		assert(screen)
-		local function update(): ()
+		const function update(): ()
 			local available = screen.AbsoluteSize - Vector2.new(SCREEN_MARGIN * 2, SCREEN_MARGIN * 2)
 			set_fit(math.max(0.001, math.min(available.X / size.X, available.Y / size.Y)))
 		end
 		local connection = screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
 		update()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 		return disconnect
 	end
 	React.useLayoutEffect(track_fit, { size.X, size.Y })
-	local function window_scale(values: { motion: number, fit: number }): number
+	const function window_scale(values: { motion: number, fit: number }): number
 		return math.min(viewport_scale, values.fit) * (0.96 + 0.04 * values.motion)
 	end
-	local function window_position(value: number): UDim2
+	const function window_position(value: number): UDim2
 		return UDim2.new(0.5, 0, 0.5, 12 * (1 - value))
 	end
 	return create_element("ScreenGui", {
@@ -92,7 +91,6 @@ local function menu_window(props: props)
 				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
 			),
 			stroke = create_element(gradient_stroke),
-			blur = props.enabled and create_element(ui_blur),
 			title = create_element("TextLabel", {
 				AnchorPoint = Vector2.new(0.5, 0),
 				Position = UDim2.new(0.5, 0, 0, 13),

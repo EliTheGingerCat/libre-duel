@@ -7,7 +7,7 @@ const humanoid = character:WaitForChild("Humanoid") :: Humanoid
 
 local old_health: number = humanoid.Health
 
-local function on_health_changed(new_health: number): ()
+const function on_health_changed(new_health: number): ()
 	if new_health < old_health then
 		invoke_hurtcam(10, 0.7)
 	end

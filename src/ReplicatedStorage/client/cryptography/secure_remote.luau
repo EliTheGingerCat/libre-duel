@@ -13,7 +13,7 @@ type packet = { public: buffer, nonce: buffer, ciphertext: buffer, tag: buffer }
 
 local secure_remote = {}
 
-local function encrypt_payload(raw_data: unknown): packet
+const function encrypt_payload(raw_data: unknown): packet
 	while typeof(keys["server_public"]) ~= "buffer" do
 		task.wait()
 	end
@@ -33,7 +33,7 @@ local function encrypt_payload(raw_data: unknown): packet
 	}
 end
 
-local function decrypt_payload(packet: any): unknown
+const function decrypt_payload(packet: any): unknown
 	if typeof(keys["masked"]) ~= "buffer" or typeof(packet) ~= "table" or typeof(packet.public) ~= "buffer" then
 		return nil
 	end
@@ -60,7 +60,7 @@ function secure_remote.invoke_server_encrypted(remote_function: RemoteFunction, 
 end
 
 function secure_remote.on_client_event_encrypted(remote_event: RemoteEvent, callback: (unknown) -> ()): RBXScriptConnection
-	local function on_client_event(packet: unknown): ()
+	const function on_client_event(packet: unknown): ()
 		local decrypted_data = decrypt_payload(packet)
 		if decrypted_data then
 			callback(decrypted_data)

@@ -5,7 +5,7 @@ local debug_print = require(script.Parent.Parent.util.debug_print)
 local generate_keys = require(script.Parent.generate_keys)
 local keys = require(script.Parent.keys)
 
-local function on_exchange_public_keys(player: Player, client_public: unknown): buffer?
+const function on_exchange_public_keys(player: Player, client_public: unknown): buffer?
 	-- The key comes from the client, so only accept an actual buffer.
 	if typeof(client_public) ~= "buffer" then
 		return nil

@@ -27,8 +27,8 @@ const ICONS: { [string]: { image: string, rect_offset: Vector2?, rect_size: Vect
 
 type props = use_editable_hud.props & { name: string }
 
-local function touch_button(props: props)
-	local function copy(copy_props: use_editable_hud.props)
+const function touch_button(props: props)
+	const function copy(copy_props: use_editable_hud.props)
 		return create_element(
 			touch_button,
 			{ name = props.name, on_remove = copy_props.on_remove, preview = copy_props.preview }
@@ -42,20 +42,20 @@ local function touch_button(props: props)
 	local holding = React.useRef(false)
 
 	-- Fires on the finger going down, not on lifting it like Activated, since these are held like keys.
-	local function press(): ()
+	const function press(): ()
 		if props.preview or editor_state.enabled or holding.current then
 			return
 		end
 		holding.current = true
 		action.press()
 	end
-	local function release(): ()
+	const function release(): ()
 		if holding.current then
 			holding.current = false
 			action.release()
 		end
 	end
-	local function mount()
+	const function mount()
 		if props.preview then
 			return nil
 		end
@@ -72,7 +72,7 @@ local function touch_button(props: props)
 				unhide_stock = hide_stock_jump(player_gui)
 			end
 		end
-		local function cleanup(): ()
+		const function cleanup(): ()
 			release()
 			disconnect_editor()
 			for _, connection in connections do

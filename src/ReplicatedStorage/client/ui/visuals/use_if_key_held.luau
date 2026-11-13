@@ -7,11 +7,11 @@ local use_effect = React.useEffect
 local use_state = React.useState
 
 -- `key` must be constant.
-local function use_if_key_held(key: Enum.KeyCode): boolean
+const function use_if_key_held(key: Enum.KeyCode): boolean
 	local held, set_held = use_state(UserInputService:IsKeyDown(key))
 
-	local function track_key()
-		local function on_input_began(input: InputObject): ()
+	const function track_key()
+		const function on_input_began(input: InputObject): ()
 			if input.KeyCode == key then
 				set_held(true)
 			end
@@ -19,7 +19,7 @@ local function use_if_key_held(key: Enum.KeyCode): boolean
 
 		local connection_began = UserInputService.InputBegan:Connect(on_input_began)
 
-		local function on_input_ended(input: InputObject): ()
+		const function on_input_ended(input: InputObject): ()
 			if input.KeyCode == key then
 				set_held(false)
 			end
@@ -27,7 +27,7 @@ local function use_if_key_held(key: Enum.KeyCode): boolean
 
 		local connection_ended = UserInputService.InputEnded:Connect(on_input_ended)
 
-		local function destroy()
+		const function destroy()
 			connection_began:Disconnect()
 			connection_ended:Disconnect()
 		end

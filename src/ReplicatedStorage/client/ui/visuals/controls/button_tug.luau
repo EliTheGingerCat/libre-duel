@@ -10,13 +10,13 @@ type controller = {
 	disconnect: () -> (),
 }
 
-local function button_tug(button: GuiButton): controller
+const function button_tug(button: GuiButton): controller
 	local resting_position, resting_size = button.Position, button.Size
 	local origin, base_size = Vector2.zero, Vector2.zero
 	local parent_scale = 1
 	local tween: Tween? = nil
 	local completion: RBXScriptConnection? = nil
-	local function cancel(): ()
+	const function cancel(): ()
 		if completion then
 			completion:Disconnect()
 			completion = nil
@@ -27,7 +27,7 @@ local function button_tug(button: GuiButton): controller
 			tween = nil
 		end
 	end
-	local function begin(position: Vector2): ()
+	const function begin(position: Vector2): ()
 		cancel()
 		origin = position
 		parent_scale = 1
@@ -43,7 +43,7 @@ local function button_tug(button: GuiButton): controller
 		assert(slot and slot:IsA("GuiObject"))
 		base_size = slot.AbsoluteSize / math.max(parent_scale, 0.001)
 	end
-	local function drag(position: Vector2): ()
+	const function drag(position: Vector2): ()
 		if GuiService.ReducedMotionEnabled then
 			return
 		end
@@ -53,7 +53,7 @@ local function button_tug(button: GuiButton): controller
 		local stretch = Vector2.new(math.abs(offset.X), math.abs(offset.Y)) / 24 * 0.025
 		button.Size = UDim2.fromOffset(base_size.X * (1 + stretch.X), base_size.Y * (1 + stretch.Y))
 	end
-	local function restore(released: boolean?): ()
+	const function restore(released: boolean?): ()
 		cancel()
 		if GuiService.ReducedMotionEnabled then
 			button.Position = resting_position
@@ -71,7 +71,7 @@ local function button_tug(button: GuiButton): controller
 				),
 				{ Position = resting_position, Size = target_size }
 			)
-			local function complete(state: Enum.PlaybackState): ()
+			const function complete(state: Enum.PlaybackState): ()
 				if state == Enum.PlaybackState.Completed then
 					button.Size = resting_size
 				end
@@ -81,7 +81,7 @@ local function button_tug(button: GuiButton): controller
 			next_tween:Play()
 		end
 	end
-	local function disconnect(): ()
+	const function disconnect(): ()
 		cancel()
 		button.Position = resting_position
 		button.Size = resting_size

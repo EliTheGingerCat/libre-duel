@@ -20,7 +20,7 @@ const STYLES: { { behaviour: tool_types.behaviour, style: viewmodel_types.style 
     { behaviour = "pickaxe", style = { display = mesh_display } },
 }
 
-local function get_viewmodel_style(tool: tool_types.tool): viewmodel_types.style
+const function get_viewmodel_style(tool: tool_types.tool): viewmodel_types.style
     for _, entry in STYLES do
         if tool_registry.has_behaviour(tool, entry.behaviour) then
             return entry.style

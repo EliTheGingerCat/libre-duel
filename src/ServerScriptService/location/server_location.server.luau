@@ -5,7 +5,7 @@ const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 
 local location = LOCATION_DEFAULT
 
-local function get_server_location_legacy(): string?
+const function get_server_location_legacy(): string?
 	local data = IPinfo.get_legacy()
 
 	local country = data.country
@@ -23,7 +23,7 @@ local function get_server_location_legacy(): string?
 	return `{city}, {country}`
 end
 
-local function get_server_location_Lite(): string?
+const function get_server_location_Lite(): string?
 	local data = IPinfo.get_Lite()
 
 	local country = data.country
@@ -35,7 +35,7 @@ local function get_server_location_Lite(): string?
 	return country
 end
 
-local function get_token(): string?
+const function get_token(): string?
 	local token_module = script.Parent:FindFirstChild("IPinfo_token") :: ModuleScript?
 	if token_module ~= nil then
 		return require(token_module) :: string
@@ -44,7 +44,7 @@ local function get_token(): string?
 	return nil
 end
 
-local function get_server_location(): string?
+const function get_server_location(): string?
 	local token = get_token()
 	if token ~= nil then
 		IPinfo.set_token(token)
@@ -82,7 +82,7 @@ else
 	}
 end
 
-local function on_invoke(): LOCATION_DEFAULT.location
+const function on_invoke(): LOCATION_DEFAULT.location
 	return location
 end
 

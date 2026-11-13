@@ -1,7 +1,7 @@
 -- Roblox has no API to move or remove its jump button, so it's hidden here and replaced by the JumpButton widget.
-local function hide_stock_jump(player_gui: PlayerGui): () -> ()
+const function hide_stock_jump(player_gui: PlayerGui): () -> ()
 	local connections: { RBXScriptConnection } = {}
-	local function hide(button: Instance): ()
+	const function hide(button: Instance): ()
 		local parent = button.Parent
 		if
 			button.Name ~= "JumpButton"
@@ -13,7 +13,7 @@ local function hide_stock_jump(player_gui: PlayerGui): () -> ()
 		end
 		button.Visible = false
 		-- the PlayerModule shows it again whenever it rebuilds the controls
-		local function keep_hidden(): ()
+		const function keep_hidden(): ()
 			if button.Visible then
 				button.Visible = false
 			end
@@ -24,7 +24,7 @@ local function hide_stock_jump(player_gui: PlayerGui): () -> ()
 		hide(descendant)
 	end
 	table.insert(connections, player_gui.DescendantAdded:Connect(hide))
-	local function disconnect(): ()
+	const function disconnect(): ()
 		for _, connection in connections do
 			connection:Disconnect()
 		end

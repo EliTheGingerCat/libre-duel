@@ -10,7 +10,6 @@ local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local item_amount = require(script.Parent.item_amount)
 local item_slot = require(script.Parent.item_slot)
 local mount_paperdoll = require(script.Parent.Parent.hud.mount_paperdoll)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local shadow = require(script.Parent.Parent.visuals.shadow)
 local slot_box = require(script.Parent.slot_box)
 local use_inventory_input = require(script.Parent.use_inventory_input)
@@ -31,7 +30,7 @@ const SECTION_GAP = 20
 const SCREEN_MARGIN = 16
 
 -- The length of a slot box spanning `cells` slots, padding included.
-local function get_box_length(cells: number): number
+const function get_box_length(cells: number): number
 	return cells * INVENTORY_LAYOUT.SLOT_SIZE
 		+ (cells - 1) * INVENTORY_LAYOUT.SLOT_GAP
 		+ INVENTORY_LAYOUT.BOX_PADDING * 2
@@ -56,7 +55,7 @@ const WINDOW_SIZE = Vector2.new(
 ) + Vector2.one * INVENTORY_LAYOUT.BOX_PADDING * 2
 
 -- Held items and items still flying into place are drawn elsewhere, so their slots look empty.
-local function get_hidden_slots(input: use_inventory_input.inventory_input): { [number]: boolean }
+const function get_hidden_slots(input: use_inventory_input.inventory_input): { [number]: boolean }
 	const hidden: { [number]: boolean } = {}
 	if input.held_slot ~= nil then
 		hidden[input.held_slot] = true
@@ -67,7 +66,7 @@ local function get_hidden_slots(input: use_inventory_input.inventory_input): { [
 	return hidden
 end
 
-local function get_slot_image(slot: number, hidden_slots: { [number]: boolean }): string?
+const function get_slot_image(slot: number, hidden_slots: { [number]: boolean }): string?
 	if hidden_slots[slot] then
 		return nil
 	end
@@ -75,7 +74,7 @@ local function get_slot_image(slot: number, hidden_slots: { [number]: boolean })
 	return if tool ~= nil then tool.image else nil
 end
 
-local function inventory_slots(props: { first: number, last: number, hidden_slots: { [number]: boolean } })
+const function inventory_slots(props: { first: number, last: number, hidden_slots: { [number]: boolean } })
 	local slots = {}
 	for slot = props.first, props.last do
 		slots[slot] = create_element(item_slot, {
@@ -88,11 +87,11 @@ local function inventory_slots(props: { first: number, last: number, hidden_slot
 	return create_element(React.Fragment, {}, slots)
 end
 
-local function paperdoll(props: { enabled: boolean })
+const function paperdoll(props: { enabled: boolean })
 	local viewport_ref = React.useRef(nil :: ViewportFrame?)
 
 	-- Only render the character while the window is open.
-	local function mount()
+	const function mount()
 		const viewport = viewport_ref.current
 		if not props.enabled or viewport == nil then
 			return
@@ -127,10 +126,10 @@ end
 
 -- The crafting area is only a placeholder for now, it does not hold items. It shakes when clicked instead.
 -- Its wrapper has a fixed size so shaking does not move the layout.
-local function crafting(props: { shake_count: number })
+const function crafting(props: { shake_count: number })
 	local offset = use_shake(props.shake_count)
 
-	local function to_position(value: number): UDim2
+	const function to_position(value: number): UDim2
 		return UDim2.fromOffset(value, 0)
 	end
 
@@ -184,7 +183,7 @@ local function crafting(props: { shake_count: number })
 end
 
 -- A loose item drawn over the window, with the same icon and counter as a slot. `size` is the slot size in pixels.
-local function floating_item(props: { name: string, image: string, amount: number?, size: number, position: unknown })
+const function floating_item(props: { name: string, image: string, amount: number?, size: number, position: unknown })
 	return create_element("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
@@ -206,13 +205,13 @@ local function floating_item(props: { name: string, image: string, amount: numbe
 	})
 end
 
-local function held_item(props: { held_slot: number?, cursor: unknown, scale: number })
+const function held_item(props: { held_slot: number?, cursor: unknown, scale: number })
 	const tool = if props.held_slot ~= nil then get_slot_tool(props.held_slot) else nil
 	if props.held_slot == nil or tool == nil then
 		return nil
 	end
 
-	local function to_position(position: Vector2): UDim2
+	const function to_position(position: Vector2): UDim2
 		return UDim2.fromOffset(position.X, position.Y)
 	end
 
@@ -225,11 +224,11 @@ local function held_item(props: { held_slot: number?, cursor: unknown, scale: nu
 	})
 end
 
-local function flying_item(props: { flight: use_inventory_input.flight })
+const function flying_item(props: { flight: use_inventory_input.flight })
 	local progress = use_ui_motion(1, 0, 0)
 	const flight = props.flight
 
-	local function to_position(value: number): UDim2
+	const function to_position(value: number): UDim2
 		const position = flight.from:Lerp(flight.to, value)
 		return UDim2.fromOffset(position.X, position.Y)
 	end
@@ -243,7 +242,7 @@ local function flying_item(props: { flight: use_inventory_input.flight })
 	})
 end
 
-local function flying_items(props: { flights: { use_inventory_input.flight } })
+const function flying_items(props: { flights: { use_inventory_input.flight } })
 	local items = {}
 	for _, flight in props.flights do
 		items[`flight_{flight.id}`] = create_element(flying_item, { flight = flight })
@@ -251,7 +250,7 @@ local function flying_items(props: { flights: { use_inventory_input.flight } })
 	return create_element(React.Fragment, {}, items)
 end
 
-local function inventory()
+const function inventory()
 	local enabled = use_inventory_toggle()
 	local window_ref = React.useRef(nil :: GuiObject?)
 	local input = use_inventory_input(window_ref, enabled)
@@ -262,10 +261,10 @@ local function inventory()
 	local fit, set_fit = React.useState(1)
 
 	-- The viewport scale is tuned for the HUD, so the window can still overflow short screens like phones without this.
-	local function track_fit()
+	const function track_fit()
 		local screen = screen_ref.current
 		assert(screen)
-		local function update(): ()
+		const function update(): ()
 			local available = screen.AbsoluteSize - Vector2.one * SCREEN_MARGIN * 2
 			if available.X > 0 and available.Y > 0 then
 				set_fit(math.min(available.X / WINDOW_SIZE.X, available.Y / WINDOW_SIZE.Y))
@@ -273,7 +272,7 @@ local function inventory()
 		end
 		local connection = screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
 		update()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			connection:Disconnect()
 		end
 		return disconnect
@@ -319,7 +318,6 @@ local function inventory()
 				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
 			),
 			stroke = create_element(gradient_stroke),
-			blur = enabled and create_element(ui_blur),
 			top = create_element("Frame", {
 				BackgroundTransparency = 1,
 				LayoutOrder = 0,

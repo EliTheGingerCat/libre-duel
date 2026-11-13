@@ -8,7 +8,7 @@ export type entity_cooldowns = {
 
 const cooldowns: { [registry.entity]: entity_cooldowns } = {}
 
-local function on_entity_removed(entity: registry.entity): ()
+const function on_entity_removed(entity: registry.entity): ()
 	cooldowns[entity] = nil
 end
 

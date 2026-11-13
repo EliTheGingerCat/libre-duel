@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local React = require(ReplicatedStorage.Packages.react)
 local button = require(script.Parent.button)
 
-local function big_button(props: { text: string?, icon: string?, on_activated: (() -> ())? })
+const function big_button(props: { text: string?, icon: string?, on_activated: (() -> ())? })
 	return React.createElement(button, {
 		large = true,
 		icon = props.icon or "rbxassetid://104330757164550",

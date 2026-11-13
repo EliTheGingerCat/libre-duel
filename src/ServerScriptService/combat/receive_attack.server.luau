@@ -6,7 +6,7 @@ const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const NON_SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.NON_SWORD_DAMAGE)
 const SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.SWORD_DAMAGE)
 
-local function on_event(player: Player, target: unknown): ()
+const function on_event(player: Player, target: unknown): ()
 	-- an empty hand can't attack, which keeps the lobby peaceful since nobody holds anything there
 	const tool = inventory_util.get_selected_tool(player)
 	if tool == nil then

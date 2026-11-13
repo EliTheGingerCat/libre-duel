@@ -5,13 +5,13 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local surface = require(script.Parent.controls.surface)
 
-local function text_input(props: {
+const function text_input(props: {
 	text: string?,
 	placeholder: string?,
 	icon: string?,
 	on_changed: ((string) -> ())?,
 })
-	local function changed(box: TextBox): ()
+	const function changed(box: TextBox): ()
 		if props.on_changed then
 			props.on_changed(box.Text)
 		end

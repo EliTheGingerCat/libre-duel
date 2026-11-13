@@ -5,11 +5,11 @@ local React = require(ReplicatedStorage.Packages.react)
 local alpha_grid = require(script.Parent.Parent.controls.alpha_grid)
 local drag_detector = require(script.Parent.Parent.controls.drag_detector)
 
-local function vertical_slider(props: { value: number, colour: Color3, alpha: boolean?, on_changed: (number) -> () })
-	local function drag(point: Vector2): ()
+const function vertical_slider(props: { value: number, colour: Color3, alpha: boolean?, on_changed: (number) -> () })
+	const function drag(point: Vector2): ()
 		props.on_changed(1 - math.clamp((point.Y * 160 - 30) / 130, 0, 1))
 	end
-	local function key(_button: GuiButton, input: InputObject): ()
+	const function key(_button: GuiButton, input: InputObject): ()
 		if input.KeyCode == Enum.KeyCode.Up or input.KeyCode == Enum.KeyCode.DPadUp then
 			props.on_changed(math.min(1, props.value + 0.01))
 		elseif input.KeyCode == Enum.KeyCode.Down or input.KeyCode == Enum.KeyCode.DPadDown then

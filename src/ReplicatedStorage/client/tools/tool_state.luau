@@ -22,7 +22,7 @@ local state = {
 	on_use = on_use,
 }
 
-local function on_fire(tool: number): ()
+const function on_fire(tool: number): ()
 	state.current = tool
 end
 

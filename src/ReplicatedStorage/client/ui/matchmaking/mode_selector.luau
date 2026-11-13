@@ -10,7 +10,7 @@ const input_device = require(ReplicatedStorage.client.util.input_device)
 
 local create_element = React.createElement
 
-local function mode_selector()
+const function mode_selector()
 	local state = use_mode_selector()
 	const mode_options_ref = React.useRef(nil :: Frame?)
 

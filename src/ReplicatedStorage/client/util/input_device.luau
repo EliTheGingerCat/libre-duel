@@ -12,7 +12,7 @@ const DEVICE_NAMES: { [Enum.PreferredInput]: device } = {
 	[Enum.PreferredInput.Gamepad] = "gamepad",
 }
 
-local function read_device(): device
+const function read_device(): device
 	local preferred = UserInputService.PreferredInput
 	return DEVICE_NAMES[preferred] or string.lower(preferred.Name)
 end
@@ -23,11 +23,11 @@ local input_device = {
 }
 
 -- `supported` being nil means every device is supported.
-local function supports(supported: { device }?, device: device?): boolean
+const function supports(supported: { device }?, device: device?): boolean
 	return supported == nil or table.find(supported, device or input_device.current) ~= nil
 end
 
-local function update(): ()
+const function update(): ()
 	local device = read_device()
 	if device == input_device.current then
 		return

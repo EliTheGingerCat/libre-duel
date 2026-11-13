@@ -7,12 +7,12 @@ local parse_queue_mode = require(ReplicatedStorage.shared.queue.parse_queue_mode
 
 export type status = { mode: MODE_DEFINITIONS.mode_id?, elapsed: number, teleporting: boolean }
 
-local function use_queue_status(): status
+const function use_queue_status(): status
 	local state, set_state = React.useState({ mode = nil, elapsed = 0, teleporting = false } :: status)
-	local function subscribe()
+	const function subscribe()
 		local player = Players.LocalPlayer
 		local timer: thread? = nil
-		local function update(): ()
+		const function update(): ()
 			local mode: MODE_DEFINITIONS.mode_id? = parse_queue_mode(player:GetAttribute("queue_mode"))
 			local started_at = player:GetAttribute("queue_started_at")
 			local valid = mode ~= nil and typeof(started_at) == "number"
@@ -28,7 +28,7 @@ local function use_queue_status(): status
 				timer = nil
 			end
 			if valid then
-				local function tick_status(): ()
+				const function tick_status(): ()
 					timer = nil
 					update()
 				end
@@ -41,7 +41,7 @@ local function use_queue_status(): status
 			player:GetAttributeChangedSignal("queue_teleporting"):Connect(update),
 		}
 		update()
-		local function disconnect(): ()
+		const function disconnect(): ()
 			for _, connection in connections do
 				connection:Disconnect()
 			end

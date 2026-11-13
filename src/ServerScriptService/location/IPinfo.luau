@@ -1,7 +1,7 @@
 local HttpService = game:GetService("HttpService")
 
 local token_saved: string?
-local function use_token(): string
+const function use_token(): string
 	assert(
 		token_saved,
 		"Token is missing. Please use `set_token` before accessing the API. Alternatively, use the legacy API."
@@ -9,7 +9,7 @@ local function use_token(): string
 	return token_saved
 end
 
-local function set_token(token: string): ()
+const function set_token(token: string): ()
 	token_saved = token
 end
 
@@ -23,7 +23,7 @@ type HttpResponseData = {
 	Status: boolean,
 }
 
-local function request(URL: string): (boolean, HttpResponseData)
+const function request(URL: string): (boolean, HttpResponseData)
 	return pcall(HttpService.RequestAsync, HttpService, {
 		Url = URL,
 		Method = "GET",
@@ -33,7 +33,7 @@ local function request(URL: string): (boolean, HttpResponseData)
 	})
 end
 
-local function request_authorised(URL: string, token: string): (boolean, HttpResponseData)
+const function request_authorised(URL: string, token: string): (boolean, HttpResponseData)
 	return pcall(HttpService.RequestAsync, HttpService, {
 		Url = URL,
 		Method = "GET",
@@ -44,7 +44,7 @@ local function request_authorised(URL: string, token: string): (boolean, HttpRes
 	})
 end
 
-local function extract_data(success: boolean, result: HttpResponseData): {}?
+const function extract_data(success: boolean, result: HttpResponseData): {}?
 	if not success then
 		print("[IPinfo] Failed to request. Result:", result)
 		return nil
@@ -81,7 +81,7 @@ type data_legacy = {
 	readme: string, -- https://ipinfo.io/missingauth
 }
 
-local function get_legacy(target: string?): data_legacy
+const function get_legacy(target: string?): data_legacy
 	local target_string = target or ""
 	local success, result = request(`https://ipinfo.io/{target_string}`)
 	local data = extract_data(success, result)
@@ -100,7 +100,7 @@ type data_Lite = {
 	continent: string,
 }
 
-local function get_Lite(target: string?): data_Lite
+const function get_Lite(target: string?): data_Lite
 	local target_string = target or "me"
 	local success, result = request_authorised(`https://api.ipinfo.io/lite/{target_string}`, use_token())
 	local data = extract_data(success, result)

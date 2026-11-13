@@ -5,11 +5,10 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local shadow = require(script.Parent.Parent.visuals.shadow)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 
 local create_element = React.createElement
 
-local function mouse_button(props: { name: string, x: number })
+const function mouse_button(props: { name: string, x: number })
 	return create_element(
 		"TextLabel",
 		{
@@ -32,7 +31,7 @@ local function mouse_button(props: { name: string, x: number })
 	)
 end
 
-local function mousestrokes(props: { preview: boolean? })
+const function mousestrokes(props: { preview: boolean? })
 	return create_element(React.Fragment, {}, {
 		Top = create_element("ImageLabel", {
 			Size = UDim2.fromOffset(224, 122),
@@ -70,7 +69,6 @@ local function mousestrokes(props: { preview: boolean? })
 			ZIndex = 2,
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),
-			blur = not props.preview and create_element(ui_blur),
 			shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 			stroke = create_element(
 				gradient_stroke,

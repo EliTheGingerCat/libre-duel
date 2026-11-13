@@ -5,7 +5,7 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local colour_math = require(script.Parent.colour_math)
 
-local function fields(props: { colour: Color3, on_changed: (Color3) -> () })
+const function fields(props: { colour: Color3, on_changed: (Color3) -> () })
 	local hue, saturation, value = props.colour:ToHSV()
 	local rows: { { name: string, values: { string } } } = {
 		{
@@ -38,7 +38,7 @@ local function fields(props: { colour: Color3, on_changed: (Color3) -> () })
 			FontFace = FONTS.regular,
 		})
 		for index, initial in row.values do
-			local function commit(box: TextBox): ()
+			const function commit(box: TextBox): ()
 				if row.name == "Hex" then
 					local hex = box.Text:gsub("#", "")
 					if #hex == 6 and hex:match("^%x+$") then

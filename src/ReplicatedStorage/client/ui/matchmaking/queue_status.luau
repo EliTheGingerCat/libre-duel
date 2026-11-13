@@ -9,7 +9,6 @@ local animated_button = require(script.Parent.Parent.visuals.animated_button)
 local button_motion = require(script.Parent.Parent.visuals.button_motion)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
-local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local notification_management = require(script.Parent.Parent.notification_management)
 local shadow = require(script.Parent.Parent.visuals.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
@@ -21,7 +20,7 @@ local create_element = React.createElement
 
 const DEFAULTS = HUD_DEFAULTS.QueueStatus
 
-local function queue_status(props: use_editable_hud.props)
+const function queue_status(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(queue_status, props)
 	local state = use_queue_status()
 	local editor_enabled = use_editor_enabled()
@@ -29,7 +28,7 @@ local function queue_status(props: use_editable_hud.props)
 	local busy, set_busy = React.useState(false)
 	local pending = React.useRef(false)
 	local option = get_mode_definition(state.mode or "bridge_solo")
-	local function cancel(): ()
+	const function cancel(): ()
 		if pending.current or editor_enabled or props.preview or state.teleporting then
 			return
 		end
@@ -78,7 +77,6 @@ local function queue_status(props: use_editable_hud.props)
 			),
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 50) }),
 			stroke = create_element(gradient_stroke),
-			blur = not props.preview and create_element(ui_blur),
 			mode_icon = create_element("ImageLabel", {
 				AnchorPoint = Vector2.new(0, 0.5),
 				Position = UDim2.new(0, 24, 0.5, 0),

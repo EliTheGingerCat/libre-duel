@@ -1,6 +1,6 @@
 local Debris = game:GetService("Debris")
 
-local function apply_knockback(vector: Vector3, target: BasePart, strength_x: number?, strength_y: number?): ()
+const function apply_knockback(vector: Vector3, target: BasePart, strength_x: number?, strength_y: number?): ()
 	local strength_x_result = strength_x or 1
 	local strength_y_result = strength_y or 1
 
