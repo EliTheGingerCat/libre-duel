@@ -3,7 +3,7 @@ const ServerScriptService = game:GetService("ServerScriptService")
 const ServerStorage = game:GetService("ServerStorage")
 const Workspace = game:GetService("Workspace")
 
-const award_stat = require(ServerScriptService.player_data.award_stat)
+const award_mode_stat = require(ServerScriptService.player_data.awarding.award_mode_stat)
 const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
 const GAME_STATS = require(ReplicatedStorage.shared.modes.GAME_STATS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
@@ -79,7 +79,7 @@ local function show_title(
 end
 
 local function award(match: match, entity: registry.entity, stat: GAME_STATS.stat, increment: number?): ()
-	award_stat(entity, match.definition.id, stat, increment)
+	award_mode_stat(entity, match.definition.id, stat, increment)
 end
 
 local function on_stop(match: match, callback: () -> ()): ()

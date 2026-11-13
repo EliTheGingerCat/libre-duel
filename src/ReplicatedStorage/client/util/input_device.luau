@@ -1,4 +1,4 @@
--- Which kind of device the player is using right now, as a plain string so new ones need no special casing.
+-- which kind of device the player is using right now, as a plain string so new ones need no special casing.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
