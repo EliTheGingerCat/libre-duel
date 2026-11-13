@@ -36,7 +36,7 @@ export type mode = {
 }
 
 -- A multiple of the cube size keeps every slot on the cube grid.
-const SLOT_SPACING = CUBE_SIZE * 1000
+const SLOT_SPACING = CUBE_SIZE * 256
 
 const entity_matches: { [registry.entity]: match? } = {}
 const cube_matches: { [BasePart]: match? } = {}
@@ -214,8 +214,10 @@ const function load_map(match: match): Instance
 		map_candidate = maps[math.random(1, #maps)]
 	until map_candidate.Name ~= "example"
 	const map = map_candidate
+	-- i wanna give it some spacing by default
+	move(map, Vector3.new(SLOT_SPACING, 0, 0))
 	if match.slot ~= 0 then
-		move(map, Vector3.new(match.slot * SLOT_SPACING, 0, 0))
+		move(map, Vector3.new(if match.slot % 2 == 0 then -1 else 1 * (match.slot + 1) * SLOT_SPACING, 0, 0))
 	end
 	if match.map then
 		match.map:Destroy()
