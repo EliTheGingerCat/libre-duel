@@ -209,7 +209,11 @@ const function load_map(match: match): Instance
 	assert(folder, `No maps folder for "{match.definition.game}"`)
 	const maps = folder:GetChildren()
 	assert(#maps > 0, `No maps available for "{match.definition.game}"`)
-	const map = maps[math.random(1, #maps)]:Clone()
+	local map_candidate
+	repeat
+		map_candidate = maps[math.random(1, #maps)]
+	until map_candidate.Name ~= "example"
+	const map = map_candidate
 	if match.slot ~= 0 then
 		move(map, Vector3.new(match.slot * SLOT_SPACING, 0, 0))
 	end
