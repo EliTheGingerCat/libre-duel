@@ -11,7 +11,7 @@ local function show_title(
 	bottom_text: string?,
 	colour: Color3?
 ): ()
-	if typeof(player) == "Player" then
+	if typeof(player) == "Instance" then
 		remote:FireClient(player, math.max(0, fade_in), math.max(0, stay), math.max(0, fade_out), top_text, bottom_text, colour)
 	elseif player == "all" then
 		remote:FireAllClients(math.max(0, fade_in), math.max(0, stay), math.max(0, fade_out), top_text, bottom_text, colour)

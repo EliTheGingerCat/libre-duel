@@ -13,13 +13,16 @@ local local_player = Players.LocalPlayer
 
 local function nothing(): () end
 
-local jump_connection: RBXScriptConnection? = nil
+const JUMP_BIND = "touch_jump"
+
+local jumping = false
 
 -- Holding keeps jumping, like the stock button.
 local function press_jump(): ()
-	if jump_connection then
+	if jumping then
 		return
 	end
+	jumping = true
 	local function jump(): ()
 		local character = local_player.Character
 		local humanoid = if character then character:FindFirstChildOfClass("Humanoid") else nil
@@ -27,14 +30,14 @@ local function press_jump(): ()
 			humanoid.Jump = true
 		end
 	end
-	jump()
-	jump_connection = RunService.Heartbeat:Connect(jump)
+	-- The ControlModule overwrites Humanoid.Jump every frame at Input priority, so this has to run right after it.
+	RunService:BindToRenderStep(JUMP_BIND, Enum.RenderPriority.Input.Value + 1, jump)
 end
 
 local function release_jump(): ()
-	if jump_connection then
-		jump_connection:Disconnect()
-		jump_connection = nil
+	if jumping then
+		jumping = false
+		RunService:UnbindFromRenderStep(JUMP_BIND)
 	end
 end
 

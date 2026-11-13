@@ -10,7 +10,6 @@ local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local item_amount = require(script.Parent.item_amount)
 local item_slot = require(script.Parent.item_slot)
 local mount_paperdoll = require(script.Parent.Parent.hud.mount_paperdoll)
-local scale = require(script.Parent.Parent.visuals.scale)
 local ui_blur = require(script.Parent.Parent.blur.ui_blur)
 local shadow = require(script.Parent.Parent.visuals.shadow)
 local slot_box = require(script.Parent.slot_box)
@@ -27,18 +26,34 @@ const ARROW_IMAGE = "rbxassetid://84702625541122"
 const CRAFTING_COLUMNS = 2
 const CRAFTING_SLOTS = 4
 const PAPERDOLL_SIZE = Vector2.new(200, 300)
-const SLOTS_WIDTH = INVENTORY_CONSTANTS.COLUMNS * INVENTORY_LAYOUT.SLOT_SIZE
-	+ (INVENTORY_CONSTANTS.COLUMNS - 1) * INVENTORY_LAYOUT.SLOT_GAP
-	+ INVENTORY_LAYOUT.BOX_PADDING * 2
+const SECTION_GAP = 20
+-- Space kept free around the window so it never touches the screen edges.
+const SCREEN_MARGIN = 16
+
+-- The length of a slot box spanning `cells` slots, padding included.
+local function get_box_length(cells: number): number
+	return cells * INVENTORY_LAYOUT.SLOT_SIZE
+		+ (cells - 1) * INVENTORY_LAYOUT.SLOT_GAP
+		+ INVENTORY_LAYOUT.BOX_PADDING * 2
+end
+
+const SLOTS_WIDTH = get_box_length(INVENTORY_CONSTANTS.COLUMNS)
 -- Each crafting box is its slots plus padding, laid out as inputs, arrow, output.
-const CRAFTING_INPUTS_SIZE = CRAFTING_COLUMNS * INVENTORY_LAYOUT.SLOT_SIZE
-	+ (CRAFTING_COLUMNS - 1) * INVENTORY_LAYOUT.SLOT_GAP
-	+ INVENTORY_LAYOUT.BOX_PADDING * 2
+const CRAFTING_INPUTS_SIZE = get_box_length(CRAFTING_COLUMNS)
 const CRAFTING_OUTPUT_SIZE = INVENTORY_LAYOUT.SLOT_SIZE + INVENTORY_LAYOUT.BOX_PADDING * 2
 const CRAFTING_SIZE = Vector2.new(
 	CRAFTING_INPUTS_SIZE + INVENTORY_LAYOUT.SLOT_SIZE + CRAFTING_OUTPUT_SIZE + INVENTORY_LAYOUT.BOX_PADDING * 2,
 	CRAFTING_INPUTS_SIZE
 )
+-- The window sizes itself automatically, but fitting it to the screen needs its size up front.
+const WINDOW_SIZE = Vector2.new(
+	SLOTS_WIDTH,
+	PAPERDOLL_SIZE.Y
+		+ SECTION_GAP
+		+ get_box_length(INVENTORY_CONSTANTS.ROWS - 1)
+		+ INVENTORY_LAYOUT.BOX_PADDING
+		+ get_box_length(1)
+) + Vector2.one * INVENTORY_LAYOUT.BOX_PADDING * 2
 
 -- Held items and items still flying into place are drawn elsewhere, so their slots look empty.
 local function get_hidden_slots(input: use_inventory_input.inventory_input): { [number]: boolean }
@@ -191,8 +206,7 @@ local function floating_item(props: { name: string, image: string, amount: numbe
 	})
 end
 
-local function held_item(props: { held_slot: number?, cursor: unknown })
-	local viewport_scale = use_viewport_scale()
+local function held_item(props: { held_slot: number?, cursor: unknown, scale: number })
 	const tool = if props.held_slot ~= nil then get_slot_tool(props.held_slot) else nil
 	if props.held_slot == nil or tool == nil then
 		return nil
@@ -206,7 +220,7 @@ local function held_item(props: { held_slot: number?, cursor: unknown })
 		name = "held_item",
 		image = tool.image,
 		amount = get_slot_amount(props.held_slot),
-		size = INVENTORY_LAYOUT.SLOT_SIZE * viewport_scale,
+		size = INVENTORY_LAYOUT.SLOT_SIZE * props.scale,
 		position = (props.cursor :: any):map(to_position),
 	})
 end
@@ -243,8 +257,32 @@ local function inventory()
 	local input = use_inventory_input(window_ref, enabled)
 	const hidden_slots = get_hidden_slots(input)
 	use_inventory_version()
+	local viewport_scale = use_viewport_scale()
+	local screen_ref = React.useRef(nil :: ScreenGui?)
+	local fit, set_fit = React.useState(1)
+
+	-- The viewport scale is tuned for the HUD, so the window can still overflow short screens like phones without this.
+	local function track_fit()
+		local screen = screen_ref.current
+		assert(screen)
+		local function update(): ()
+			local available = screen.AbsoluteSize - Vector2.one * SCREEN_MARGIN * 2
+			if available.X > 0 and available.Y > 0 then
+				set_fit(math.min(available.X / WINDOW_SIZE.X, available.Y / WINDOW_SIZE.Y))
+			end
+		end
+		local connection = screen:GetPropertyChangedSignal("AbsoluteSize"):Connect(update)
+		update()
+		local function disconnect(): ()
+			connection:Disconnect()
+		end
+		return disconnect
+	end
+	React.useLayoutEffect(track_fit, { enabled })
+	const window_scale = math.min(viewport_scale, fit)
 
 	return create_element("ScreenGui", {
+		ref = screen_ref,
 		DisplayOrder = 10,
 		Enabled = enabled,
 		Name = "Inventory",
@@ -266,7 +304,7 @@ local function inventory()
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, INVENTORY_LAYOUT.WINDOW_RADIUS) }),
 			layout = create_element("UIListLayout", {
-				Padding = UDim.new(0, 20),
+				Padding = UDim.new(0, SECTION_GAP),
 				SortOrder = Enum.SortOrder.LayoutOrder,
 			}),
 			padding = create_element("UIPadding", {
@@ -275,7 +313,7 @@ local function inventory()
 				PaddingRight = UDim.new(0, INVENTORY_LAYOUT.BOX_PADDING),
 				PaddingTop = UDim.new(0, INVENTORY_LAYOUT.BOX_PADDING),
 			}),
-			scale = create_element(scale),
+			scale = create_element("UIScale", { Scale = window_scale }),
 			shadow = create_element(
 				shadow,
 				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
@@ -335,7 +373,10 @@ local function inventory()
 				}),
 			}),
 		}),
-		held_item = create_element(held_item, { held_slot = input.held_slot, cursor = input.cursor }),
+		held_item = create_element(
+			held_item,
+			{ held_slot = input.held_slot, cursor = input.cursor, scale = window_scale }
+		),
 		flying_items = create_element(flying_items, { flights = input.flights }),
 	})
 end
