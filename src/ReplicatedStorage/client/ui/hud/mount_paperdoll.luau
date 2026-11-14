@@ -27,7 +27,9 @@ const function collect_parts(source: Instance, copy: Instance, parts: { part_pai
 	end
 end
 
-const function mount_paperdoll(viewport: ViewportFrame)
+-- Shows the local character, or that of `player`.
+const function mount_paperdoll(viewport: ViewportFrame, player: Player?)
+	const shown_player = player or local_player
 	local world = Instance.new("WorldModel")
 	world.Parent = viewport
 	local camera = Instance.new("Camera")
@@ -143,12 +145,12 @@ const function mount_paperdoll(viewport: ViewportFrame)
 		schedule_rebuild()
 	end
 
-	local added_connection = local_player.CharacterAdded:Connect(on_character_added)
-	local removing_connection = local_player.CharacterRemoving:Connect(detach_character)
-	local appearance_connection = local_player.CharacterAppearanceLoaded:Connect(schedule_rebuild)
+	local added_connection = shown_player.CharacterAdded:Connect(on_character_added)
+	local removing_connection = shown_player.CharacterRemoving:Connect(detach_character)
+	local appearance_connection = shown_player.CharacterAppearanceLoaded:Connect(schedule_rebuild)
 	local render_connection = RunService.RenderStepped:Connect(update_pose)
-	if local_player.Character then
-		on_character_added(local_player.Character)
+	if shown_player.Character then
+		on_character_added(shown_player.Character)
 	end
 
 	const function disconnect(): ()

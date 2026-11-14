@@ -1,11 +1,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const INVENTORY_CONSTANTS = require(ReplicatedStorage.shared.inventory.INVENTORY_CONSTANTS)
 const INVENTORY_LAYOUT = require(script.Parent.INVENTORY_LAYOUT)
 local React = require(ReplicatedStorage.Packages.react)
-const get_slot_amount = require(ReplicatedStorage.client.tools.get_slot_amount)
-local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local item_amount = require(script.Parent.item_amount)
 local item_slot = require(script.Parent.item_slot)
@@ -15,9 +14,11 @@ local slot_box = require(script.Parent.slot_box)
 local use_inventory_input = require(script.Parent.use_inventory_input)
 local use_inventory_toggle = require(script.Parent.use_inventory_toggle)
 local use_inventory_version = require(script.Parent.use_inventory_version)
+local use_invsee_window = require(script.Parent.use_invsee_window)
 local use_shake = require(script.Parent.use_shake)
 local use_ui_motion = require(script.Parent.Parent.visuals.use_ui_motion)
 local use_viewport_scale = require(script.Parent.Parent.visuals.use_viewport_scale)
+local viewed_inventory = require(ReplicatedStorage.client.inventory.viewed_inventory)
 
 local create_element = React.createElement
 
@@ -25,6 +26,8 @@ const ARROW_IMAGE = "rbxassetid://84702625541122"
 const CRAFTING_COLUMNS = 2
 const CRAFTING_SLOTS = 4
 const PAPERDOLL_SIZE = Vector2.new(200, 300)
+const OWNER_LABEL_HEIGHT = 24
+const OWNER_LABEL_MARGIN = 14
 const SECTION_GAP = 20
 -- Space kept free around the window so it never touches the screen edges.
 const SCREEN_MARGIN = 16
@@ -70,25 +73,32 @@ const function get_slot_image(slot: number, hidden_slots: { [number]: boolean })
 	if hidden_slots[slot] then
 		return nil
 	end
-	const tool = get_slot_tool(slot)
+	const tool = viewed_inventory.get_slot_tool(slot)
 	return if tool ~= nil then tool.image else nil
 end
 
-const function inventory_slots(props: { first: number, last: number, hidden_slots: { [number]: boolean } })
+-- `bounces` is off for the inventory of another player, since the bounce follows what the local one receives.
+const function inventory_slots(props: {
+	first: number,
+	last: number,
+	hidden_slots: { [number]: boolean },
+	bounces: boolean,
+})
 	local slots = {}
 	for slot = props.first, props.last do
 		slots[slot] = create_element(item_slot, {
 			name = `slot_{slot}`,
 			image = get_slot_image(slot, props.hidden_slots),
-			amount = if props.hidden_slots[slot] then nil else get_slot_amount(slot),
+			amount = if props.hidden_slots[slot] then nil else viewed_inventory.get_slot_amount(slot),
 			layout_order = slot,
-			inventory_slot = slot,
+			inventory_slot = if props.bounces then slot else nil,
 		})
 	end
 	return create_element(React.Fragment, {}, slots)
 end
 
-const function paperdoll(props: { enabled: boolean })
+-- Shows the local character, or `target` with their name while looking into their inventory.
+const function paperdoll(props: { enabled: boolean, target: Player? })
 	local viewport_ref = React.useRef(nil :: ViewportFrame?)
 
 	-- Only render the character while the window is open.
@@ -97,10 +107,11 @@ const function paperdoll(props: { enabled: boolean })
 		if not props.enabled or viewport == nil then
 			return
 		end
-		return mount_paperdoll(viewport)
+		return mount_paperdoll(viewport, props.target)
 	end
 
-	React.useLayoutEffect(mount, { props.enabled })
+	-- false instead of nil keeps the dependency list the same length
+	React.useLayoutEffect(mount, { props.enabled, props.target or false } :: { unknown })
 
 	return create_element("CanvasGroup", {
 		BackgroundColor3 = COLOURS.surface,
@@ -121,6 +132,18 @@ const function paperdoll(props: { enabled: boolean })
 			Name = "viewport",
 			Position = UDim2.fromScale(0.5, 0.5),
 			Size = UDim2.fromScale(1, 1),
+		}),
+		owner = props.target ~= nil and create_element("TextLabel", {
+			AnchorPoint = Vector2.new(0.5, 1),
+			BackgroundTransparency = 1,
+			FontFace = FONTS.semi_bold,
+			Name = "owner",
+			Position = UDim2.new(0.5, 0, 1, -OWNER_LABEL_MARGIN),
+			Size = UDim2.new(1, -OWNER_LABEL_MARGIN * 2, 0, OWNER_LABEL_HEIGHT),
+			Text = props.target.DisplayName,
+			TextColor3 = COLOURS.white,
+			TextScaled = true,
+			ZIndex = 2,
 		}),
 	})
 end
@@ -207,7 +230,7 @@ const function floating_item(props: { name: string, image: string, amount: numbe
 end
 
 const function held_item(props: { held_slot: number?, cursor: unknown, scale: number })
-	const tool = if props.held_slot ~= nil then get_slot_tool(props.held_slot) else nil
+	const tool = if props.held_slot ~= nil then viewed_inventory.get_slot_tool(props.held_slot) else nil
 	if props.held_slot == nil or tool == nil then
 		return nil
 	end
@@ -219,7 +242,7 @@ const function held_item(props: { held_slot: number?, cursor: unknown, scale: nu
 	return create_element(floating_item, {
 		name = "held_item",
 		image = tool.image,
-		amount = get_slot_amount(props.held_slot),
+		amount = viewed_inventory.get_slot_amount(props.held_slot),
 		size = INVENTORY_LAYOUT.SLOT_SIZE * props.scale,
 		position = (props.cursor :: any):map(to_position),
 	})
@@ -257,6 +280,7 @@ const function inventory()
 	local input = use_inventory_input(window_ref, enabled)
 	const hidden_slots = get_hidden_slots(input)
 	use_inventory_version()
+	local invsee_target = use_invsee_window()
 	local viewport_scale = use_viewport_scale()
 	local screen_ref = React.useRef(nil :: ScreenGui?)
 	local fit, set_fit = React.useState(1)
@@ -332,7 +356,7 @@ const function inventory()
 					SortOrder = Enum.SortOrder.LayoutOrder,
 					VerticalAlignment = Enum.VerticalAlignment.Center,
 				}),
-				paperdoll = create_element(paperdoll, { enabled = enabled }),
+				paperdoll = create_element(paperdoll, { enabled = enabled, target = invsee_target }),
 				crafting = create_element(crafting, { shake_count = input.shake_count }),
 			}),
 			slots = create_element("Frame", {
@@ -356,6 +380,7 @@ const function inventory()
 						first = INVENTORY_CONSTANTS.COLUMNS + 1,
 						last = INVENTORY_CONSTANTS.INVENTORY_SIZE,
 						hidden_slots = hidden_slots,
+						bounces = invsee_target == nil,
 					}),
 				}),
 				hotbar_slots = create_element(slot_box, {
@@ -368,6 +393,7 @@ const function inventory()
 						first = 1,
 						last = INVENTORY_CONSTANTS.COLUMNS,
 						hidden_slots = hidden_slots,
+						bounces = invsee_target == nil,
 					}),
 				}),
 			}),

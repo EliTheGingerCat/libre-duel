@@ -9,6 +9,7 @@ local client_inventory_util = require(ReplicatedStorage.client.inventory.client_
 local editor_state = require(script.Parent.Parent.hud.editor_state)
 local inventory_state = require(script.Parent.inventory_state)
 local mode_selector_state = require(script.Parent.Parent.matchmaking.mode_selector_state)
+local viewed_inventory = require(ReplicatedStorage.client.inventory.viewed_inventory)
 
 const BLOCK_CAMERA_ACTION = "inventory_block_camera"
 const GAMEPAD_CLOSE_ACTION = "inventory_gamepad_close"
@@ -35,7 +36,9 @@ const function use_inventory_toggle(): boolean
 
 	const function subscribe()
 		const function update(): ()
-			if editor_state.enabled or mode_selector_state.enabled or client_inventory_util.get_inventory() == nil then
+			-- the inventory of another player stays open without a local one, such as while dead
+			const nothing_to_show = client_inventory_util.get_inventory() == nil and viewed_inventory.get_target() == nil
+			if editor_state.enabled or mode_selector_state.enabled or nothing_to_show then
 				close()
 			end
 			set_enabled(inventory_state.enabled)
@@ -55,7 +58,7 @@ const function use_inventory_toggle(): boolean
 
 		local connection = inventory_state.on_change:Connect(update)
 		local connection_input = UserInputService.InputBegan:Connect(on_input)
-		local connection_inventory = client_inventory_util.on_change:Connect(update)
+		local connection_inventory = viewed_inventory.on_change:Connect(update)
 		local connection_mode_selector = mode_selector_state.on_change:Connect(update)
 		local unsubscribe_editor = editor_state.subscribe(update)
 		update()

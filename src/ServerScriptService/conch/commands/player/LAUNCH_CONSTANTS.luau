@@ -1,0 +1,6 @@
+const LAUNCH_CONSTANTS = {
+	DEFAULT_POWER = 100,
+	MAXIMUM_POWER = 1000,
+}
+
+return table.freeze(LAUNCH_CONSTANTS)

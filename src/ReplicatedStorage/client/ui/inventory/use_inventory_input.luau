@@ -4,13 +4,11 @@ local UserInputService = game:GetService("UserInputService")
 
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 local React = require(ReplicatedStorage.Packages.react)
-local client_inventory_util = require(ReplicatedStorage.client.inventory.client_inventory_util)
 local get_slot_at_position = require(script.Parent.get_slot_at_position)
-local get_slot_amount = require(ReplicatedStorage.client.tools.get_slot_amount)
-local get_slot_tool = require(ReplicatedStorage.client.tools.get_slot_tool)
 local inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
 local scale_animation_time = require(script.Parent.Parent.effects.scale_animation_time)
 local table_flip = require(ReplicatedStorage.client.util.table_flip)
+local viewed_inventory = require(ReplicatedStorage.client.inventory.viewed_inventory)
 
 -- Moving further than this between press and release counts as a drag instead of a click.
 const DRAG_THRESHOLD = 4
@@ -138,8 +136,8 @@ const function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 		-- must run before the move, since it reads where the item is about to go
 		const function start_flight(from_slot: number): ()
 			const window = window_ref.current
-			const inventory = client_inventory_util.get_inventory()
-			const tool = get_slot_tool(from_slot)
+			const inventory = viewed_inventory.get_inventory()
+			const tool = viewed_inventory.get_slot_tool(from_slot)
 			if window == nil or inventory == nil or tool == nil then
 				return
 			end
@@ -156,7 +154,7 @@ const function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			add_flight({
 				id = next_flight_id.current,
 				image = tool.image,
-				amount = get_slot_amount(from_slot),
+				amount = viewed_inventory.get_slot_amount(from_slot),
 				to_slot = to_slot,
 				from = get_centre(from_frame),
 				to = get_centre(to_frame),
@@ -190,7 +188,7 @@ const function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 				end
 				return
 			end
-			client_inventory_util.swap_items(held.slot, target.index)
+			viewed_inventory.swap_items(held.slot, target.index)
 			release()
 		end
 
@@ -206,12 +204,12 @@ const function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 				shake()
 				return
 			end
-			if target == nil or get_slot_tool(target.index) == nil then
+			if target == nil or viewed_inventory.get_slot_tool(target.index) == nil then
 				return
 			end
 			if is_shift_down() then
 				start_flight(target.index)
-				client_inventory_util.quick_move(target.index)
+				viewed_inventory.quick_move(target.index)
 				return
 			end
 			hold(target.index, position)
@@ -234,7 +232,7 @@ const function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			if target == nil or target.kind ~= "inventory" or target.index == hotbar_slot then
 				return
 			end
-			client_inventory_util.swap_items(target.index, hotbar_slot)
+			viewed_inventory.swap_items(target.index, hotbar_slot)
 		end
 
 		const function on_input_began(input: InputObject): ()
@@ -260,18 +258,22 @@ const function use_inventory_input(window_ref: { current: GuiObject? }, enabled:
 			end
 		end
 
-		-- a server rollback can empty the held slot
+		local viewed_target = viewed_inventory.get_target()
+
+		-- a server rollback can empty the held slot, and a held item does not carry over to another inventory
 		const function on_inventory_change(): ()
 			const held = held_ref.current
-			if held ~= nil and get_slot_tool(held.slot) == nil then
+			const target = viewed_inventory.get_target()
+			if held ~= nil and (target ~= viewed_target or viewed_inventory.get_slot_tool(held.slot) == nil) then
 				release()
 			end
+			viewed_target = target
 		end
 
 		local connection_began = UserInputService.InputBegan:Connect(on_input_began)
 		local connection_ended = UserInputService.InputEnded:Connect(on_input_ended)
 		local connection_changed = UserInputService.InputChanged:Connect(on_input_changed)
-		local connection_inventory = client_inventory_util.on_change:Connect(on_inventory_change)
+		local connection_inventory = viewed_inventory.on_change:Connect(on_inventory_change)
 
 		const function disconnect(): ()
 			connection_began:Disconnect()

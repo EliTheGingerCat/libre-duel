@@ -10,6 +10,7 @@ local kill_log_util = require(ServerScriptService.kill_logging.kill_log_util)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(script.Parent.ENTITY_RANGE_SERVER)
 const get_player_cps = require(ServerScriptService.cps.get_player_cps)
+const god_mode = require(script.Parent.god_mode)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const knockback_multiplier = require(script.Parent.knockback_multiplier)
 const match = require(ServerScriptService.match.match)
@@ -45,6 +46,11 @@ const function attack_entity(attacker: registry.entity, target: registry.entity,
 
 	if target_humanoid.Health <= 0 then
 		debug_print("Target humanoid health is 0.")
+		return false
+	end
+
+	if god_mode.is_god(target) then
+		debug_print("Target is in god mode.")
 		return false
 	end
 

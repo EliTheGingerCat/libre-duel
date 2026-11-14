@@ -1,19 +1,12 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
-const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
+const INVENTORY_ACTIONS = require(ReplicatedStorage.shared.inventory.INVENTORY_ACTIONS)
 const inventory_util = require(script.Parent.inventory_util)
 
 const update_inventory = ReplicatedStorage.remotes.update_inventory
 
 const MIN_REQUEST_INTERVAL = 0.05
-
-const ACTIONS: { [string]: (inventory_types.inventory, number, number) -> boolean } = {
-	move_item = inventory_logic.move_item,
-	quick_move = inventory_logic.quick_move,
-	swap_items = inventory_logic.swap_items,
-}
 
 local last_request_times: { [Player]: number } = {}
 
@@ -22,7 +15,7 @@ const function on_request(player: Player, arguments: unknown): ()
 		return
 	end
 	const request = arguments :: { [any]: unknown }
-	const action = ACTIONS[request.action :: any]
+	const action = INVENTORY_ACTIONS[request.action :: any]
 	const id = request.id
 	if not action or type(id) ~= "number" then
 		return
