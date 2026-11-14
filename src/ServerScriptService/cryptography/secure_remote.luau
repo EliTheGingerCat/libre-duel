@@ -20,16 +20,18 @@ const function encrypt_for_player(player: Player, data_table: unknown): packet?
 	if not target_public then
 		return nil
 	end
+	const masked, public = keys.masked, keys.public
+	assert(masked and public, "The keys have not been generated yet.")
 
 	local json_string = HttpService:JSONEncode(serialiser.serialise(data_table))
 	local message_buffer = buffer.fromstring(json_string)
 
-	local derived_key = get_shared_key(target_public, keys["masked"])
+	local derived_key = get_shared_key(target_public, masked)
 	local nonce = CSPRNG.RandomBytes(24)
 	local ciphertext, tag = AEAD.Encrypt(message_buffer, derived_key, nonce, nil, nil, true)
 
 	return {
-		public = keys["public"],
+		public = public,
 		nonce = nonce,
 		ciphertext = ciphertext,
 		tag = tag,
@@ -42,7 +44,9 @@ const function decrypt_from_player(packet: any): unknown
 		return nil
 	end
 
-	local derived_key = get_shared_key(packet.public, keys["masked"])
+	const masked = keys.masked
+	assert(masked, "The keys have not been generated yet.")
+	local derived_key = get_shared_key(packet.public, masked)
 	local success, decrypted_buffer =
 		pcall(AEAD.Decrypt, packet.ciphertext, derived_key, packet.nonce, packet.tag, nil, nil, true)
 
@@ -84,7 +88,10 @@ function secure_remote.on_server_event_encrypted(
 	return remote_event.OnServerEvent:Connect(on_server_event)
 end
 
-function secure_remote.on_server_invoke_encrypted(remote_function: RemoteFunction, callback: (Player, unknown) -> unknown): ()
+function secure_remote.on_server_invoke_encrypted(
+	remote_function: RemoteFunction,
+	callback: (Player, unknown) -> unknown
+): ()
 	const function on_server_invoke(player: Player, packet: unknown): unknown
 		local data_table = decrypt_from_player(packet)
 		if data_table then

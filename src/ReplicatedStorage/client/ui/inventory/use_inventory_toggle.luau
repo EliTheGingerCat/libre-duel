@@ -37,7 +37,8 @@ const function use_inventory_toggle(): boolean
 	const function subscribe()
 		const function update(): ()
 			-- the inventory of another player stays open without a local one, such as while dead
-			const nothing_to_show = client_inventory_util.get_inventory() == nil and viewed_inventory.get_target() == nil
+			const nothing_to_show = client_inventory_util.get_inventory() == nil
+				and viewed_inventory.get_target() == nil
 			if editor_state.enabled or mode_selector_state.enabled or nothing_to_show then
 				close()
 			end

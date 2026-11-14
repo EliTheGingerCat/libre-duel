@@ -38,10 +38,7 @@ const function mode_option(props: {
 		[React.Event.Activated] = activate,
 	}, {
 		feedback = create_element(button_motion),
-		shadow = create_element(
-			shadow,
-			{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
-		),
+		shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0, 60) }),
 		stroke = create_element(gradient_stroke, { colour = option.colour }),
 		icon = create_element(

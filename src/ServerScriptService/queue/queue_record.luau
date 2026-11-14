@@ -92,7 +92,12 @@ const function decode(value: unknown): record?
 		local size = 0
 		for user_key, raw_member in raw_members do
 			const member = parse_member(raw_member)
-			if typeof(user_key) ~= "string" or member == nil or user_key ~= tostring(member.user_id) or seen[user_key] then
+			if
+				typeof(user_key) ~= "string"
+				or member == nil
+				or user_key ~= tostring(member.user_id)
+				or seen[user_key]
+			then
 				return nil
 			end
 			members[user_key] = member

@@ -18,52 +18,52 @@ local current_tool: tool_types.tool? = nil
 local current_style: viewmodel_types.style? = nil
 
 const function on_tool_change(slot: number): ()
-    const tool = get_slot_tool(slot)
-    const style = if tool ~= nil then get_viewmodel_style(tool) else nil
+	const tool = get_slot_tool(slot)
+	const style = if tool ~= nil then get_viewmodel_style(tool) else nil
 
-    if current_style ~= nil and (style == nil or style.display ~= current_style.display) then
-        current_style.display.hide()
-    end
+	if current_style ~= nil and (style == nil or style.display ~= current_style.display) then
+		current_style.display.hide()
+	end
 
-    current_tool = tool
-    current_style = style
-    if tool ~= nil and style ~= nil then
-        style.display.show(tool)
-    end
+	current_tool = tool
+	current_style = style
+	if tool ~= nil and style ~= nil then
+		style.display.show(tool)
+	end
 end
 
 const function on_tool_used(): ()
-    if current_style ~= nil and current_style.swings_on_use then
-        swing_animation.play()
-    end
+	if current_style ~= nil and current_style.swings_on_use then
+		swing_animation.play()
+	end
 end
 
 const function on_render_stepped(delta_time: number): ()
-    const bob_offset = update_bob(delta_time)
+	const bob_offset = update_bob(delta_time)
 
-    if current_style == nil or current_tool == nil then
-        return
-    end
+	if current_style == nil or current_tool == nil then
+		return
+	end
 
-    const display = current_style.display
-    if display.update ~= nil then
-        display.update(current_tool)
-    end
+	const display = current_style.display
+	if display.update ~= nil then
+		display.update(current_tool)
+	end
 
-    const part = display.get_part()
-    if part == nil then
-        return
-    end
-    display.set_transparency(get_zoom_transparency())
+	const part = display.get_part()
+	if part == nil then
+		return
+	end
+	display.set_transparency(get_zoom_transparency())
 
-    const use_animation = current_style.use_animation
-    const use_offset = if use_animation ~= nil then use_animation.get_offset(delta_time) else CFrame.identity
-    part.CFrame = CurrentCamera.CFrame
-        * VIEWMODEL_CONSTANTS.offset
-        * bob_offset
-        * use_offset
-        * swing_animation.get_offset()
-        * VIEWMODEL_CONSTANTS.item_rotation
+	const use_animation = current_style.use_animation
+	const use_offset = if use_animation ~= nil then use_animation.get_offset(delta_time) else CFrame.identity
+	part.CFrame = CurrentCamera.CFrame
+		* VIEWMODEL_CONSTANTS.offset
+		* bob_offset
+		* use_offset
+		* swing_animation.get_offset()
+		* VIEWMODEL_CONSTANTS.item_rotation
 end
 
 tool_state.on_change:Connect(on_tool_change)

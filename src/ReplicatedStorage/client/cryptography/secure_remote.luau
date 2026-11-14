@@ -17,16 +17,18 @@ const function encrypt_payload(raw_data: unknown): packet
 	while typeof(keys["server_public"]) ~= "buffer" do
 		task.wait()
 	end
+	const server_public, masked, public = keys.server_public, keys.masked, keys.public
+	assert(server_public and masked and public, "The keys have not been generated yet.")
 
 	local json_string = HttpService:JSONEncode(serialiser.serialise(raw_data))
 	local message_buffer = buffer.fromstring(json_string)
 
-	local derived_key = get_shared_key(keys["server_public"], keys["masked"])
+	local derived_key = get_shared_key(server_public, masked)
 	local nonce = CSPRNG.RandomBytes(24)
 	local ciphertext, tag = AEAD.Encrypt(message_buffer, derived_key, nonce, nil, nil, true)
 
 	return {
-		public = keys["public"],
+		public = public,
 		nonce = nonce,
 		ciphertext = ciphertext,
 		tag = tag,
@@ -59,7 +61,10 @@ function secure_remote.invoke_server_encrypted(remote_function: RemoteFunction, 
 	return remote_function:InvokeServer(encrypt_payload(data))
 end
 
-function secure_remote.on_client_event_encrypted(remote_event: RemoteEvent, callback: (unknown) -> ()): RBXScriptConnection
+function secure_remote.on_client_event_encrypted(
+	remote_event: RemoteEvent,
+	callback: (unknown) -> ()
+): RBXScriptConnection
 	const function on_client_event(packet: unknown): ()
 		local decrypted_data = decrypt_payload(packet)
 		if decrypted_data then

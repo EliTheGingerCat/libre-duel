@@ -3,9 +3,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const tool_registry = require(ReplicatedStorage.shared.tools.registry)
 const inventory_logic = require(script.Parent.inventory_logic)
 
-const STARTING_LOADOUT: { [number]: string } = {
-
-}
+const STARTING_LOADOUT: { [number]: string } = {}
 
 for slot, id in STARTING_LOADOUT do
 	assert(inventory_logic.is_valid_slot(slot), `Loadout slot {slot} is out of range.`)

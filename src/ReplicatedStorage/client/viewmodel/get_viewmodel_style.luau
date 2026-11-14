@@ -9,24 +9,35 @@ const tool_registry = require(ReplicatedStorage.shared.tools.registry)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 const viewmodel_types = require(script.Parent.viewmodel_types)
 
-const DEFAULT_STYLE: viewmodel_types.style = { display = mesh_display, swings_on_use = true }
+-- the display modules carry extra functions of their own, so they are narrowed to what a style needs
+-- the mesh one can't be cast, and every mesh style has to share this table since displays are compared by identity
+const MESH_DISPLAY: viewmodel_types.display = {
+	show = mesh_display.show,
+	hide = mesh_display.hide,
+	get_part = mesh_display.get_part,
+	set_transparency = mesh_display.set_transparency,
+}
+const CUBE_DISPLAY = cube_display :: viewmodel_types.display
+const BOW_DISPLAY = bow_display :: viewmodel_types.display
+
+const DEFAULT_STYLE: viewmodel_types.style = { display = MESH_DISPLAY, swings_on_use = true }
 
 -- a list so that a tool with several behaviours always gets the same style
 const STYLES: { { behaviour: tool_types.behaviour, style: viewmodel_types.style } } = {
-    { behaviour = "cube", style = { display = cube_display, swings_on_use = true } },
-    { behaviour = "bow", style = { display = bow_display } },
-    { behaviour = "cake", style = { display = mesh_display, use_animation = eat_animation } },
-    { behaviour = "sword", style = { display = mesh_display, use_animation = block_animation } },
-    { behaviour = "pickaxe", style = { display = mesh_display } },
+	{ behaviour = "cube", style = { display = CUBE_DISPLAY, swings_on_use = true } },
+	{ behaviour = "bow", style = { display = BOW_DISPLAY } },
+	{ behaviour = "cake", style = { display = MESH_DISPLAY, use_animation = eat_animation } },
+	{ behaviour = "sword", style = { display = MESH_DISPLAY, use_animation = block_animation } },
+	{ behaviour = "pickaxe", style = { display = MESH_DISPLAY } },
 }
 
 const function get_viewmodel_style(tool: tool_types.tool): viewmodel_types.style
-    for _, entry in STYLES do
-        if tool_registry.has_behaviour(tool, entry.behaviour) then
-            return entry.style
-        end
-    end
-    return DEFAULT_STYLE
+	for _, entry in STYLES do
+		if tool_registry.has_behaviour(tool, entry.behaviour) then
+			return entry.style
+		end
+	end
+	return DEFAULT_STYLE
 end
 
 return get_viewmodel_style

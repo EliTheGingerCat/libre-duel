@@ -17,7 +17,7 @@ const function generate_random_username(): string
 		end
 	end
 
-    --[[ examples:
+	--[[ examples:
         SneakyStoat19
         PretentiousPenguin93
         HappyHorse72

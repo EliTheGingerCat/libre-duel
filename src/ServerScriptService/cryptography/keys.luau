@@ -1,7 +1,7 @@
 local keys = {
-	secret = nil,
-	masked = nil,
-	public = nil,
+	secret = nil :: buffer?,
+	masked = nil :: buffer?,
+	public = nil :: buffer?,
 }
 
 return keys

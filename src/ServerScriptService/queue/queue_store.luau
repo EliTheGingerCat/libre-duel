@@ -85,7 +85,12 @@ const function find(mode: mode): { ok: boolean, entries: { record } }
 			end
 			for _, item in items do
 				const entry = queue_record.decode(item.value)
-				if entry and entry.mode == mode and entry.id == item.key and entry.matchmaking_type == game.MatchmakingType.Value then
+				if
+					entry
+					and entry.mode == mode
+					and entry.id == item.key
+					and entry.matchmaking_type == game.MatchmakingType.Value
+				then
 					queue_record.prune(entry, os.time())
 					if entry.status == "waiting" then
 						table.insert(entries, entry)

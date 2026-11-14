@@ -42,7 +42,7 @@ const GAMEPAD_KEY_TO_SLOT_STEP: { [Enum.KeyCode]: number } = {
 	[GAMEPAD_KEYBINDS.slot_previous] = -1,
 }
 
-const TOOL_BUTTONS = {
+const TOOL_BUTTONS: { [string]: create_tool_button.tool_button } = {
 	-- attacking isn't listed because every tool does it
 	attack = create_tool_button({
 		pickaxe = mine_cube,

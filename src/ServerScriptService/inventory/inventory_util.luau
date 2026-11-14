@@ -100,7 +100,12 @@ function inventory_util.set_slot(entity: registry.entity, slot_index: number, sl
 	return true
 end
 
-function inventory_util.give_item(entity: registry.entity, item: inventory_types.item_id, amount: number?, preferred_slot: number?): boolean
+function inventory_util.give_item(
+	entity: registry.entity,
+	item: inventory_types.item_id,
+	amount: number?,
+	preferred_slot: number?
+): boolean
 	const inventory = entity_inventories[entity]
 	if inventory == nil then
 		return false

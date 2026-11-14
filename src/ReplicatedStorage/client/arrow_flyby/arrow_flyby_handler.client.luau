@@ -67,7 +67,7 @@ const function on_projectile_added(child: Instance): ()
 end
 
 const function on_projectile_removed(child: Instance): ()
-	if not child:IsA("BasePart") or last_positions[child] == nil then
+	if not child:IsA("BasePart") or not last_positions[child] then
 		return
 	end
 

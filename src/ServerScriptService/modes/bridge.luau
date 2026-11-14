@@ -25,7 +25,7 @@ const LOADOUT: { [number]: inventory_types.item_id } = {
 	-- where the team clay will go (i couldn't think of anything better :broken_heart:)
 	[4] = "bow",
 	[5] = "cake",
-	[9] = "arrow"
+	[9] = "arrow",
 }
 const LOADOUT_AMOUNTS: { [inventory_types.item_id]: number } = {
 	cake = 8,
@@ -59,7 +59,6 @@ const COLOUR3_TO_BRICKCOLOUR = {
 	[COLOURS.blue] = BrickColor.new("Bright blue"),
 	[COLOURS.red] = BrickColor.new("Bright red"),
 }
-
 
 -- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`.
 const function CFrame_from_position(position: Vector3): CFrame
@@ -374,7 +373,8 @@ const function new(this_match: match.match): match.hooks
 
 	const function stop(): ()
 		for _, connection in connections do
-			connection:Disconnect()
+			-- both kinds of connection have Disconnect, but a method can't be called through a union
+			(connection :: any):Disconnect()
 		end
 
 		for _, team in teams do

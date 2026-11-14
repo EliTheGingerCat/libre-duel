@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: CompeyDev/setup-rokit@v0.2.1
+      - name: Check formatting
+        run: stylua --check src lune build_name.luau
+
+  build:
+    name: Build and types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: CompeyDev/setup-rokit@v0.2.1
+      - name: Install packages
+        run: wally install
+      - name: Write git info
+        run: lune run git_info
+      - name: Build the place
+        run: rojo build default.project.json --output "$RUNNER_TEMP/libre-duel.rbxl"
+      - name: Generate sourcemap
+        run: rojo sourcemap default.project.json --output sourcemap.json --include-non-scripts
+      # the definitions follow the latest Roblox API, the checker itself is pinned in rokit.toml
+      - name: Download Roblox type definitions
+        run: curl --fail --silent --show-error --location --output "$RUNNER_TEMP/roblox.d.luau" https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/main/scripts/globalTypes.d.luau
+      - name: Check types
+        run: >
+          luau-lsp analyze
+          --sourcemap=sourcemap.json
+          --base-luaurc=.luaurc
+          --definitions=@roblox="$RUNNER_TEMP/roblox.d.luau"
+          --ignore="Packages/**"
+          --ignore="ServerPackages/**"
+          src

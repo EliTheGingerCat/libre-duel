@@ -24,7 +24,12 @@ type projectile_hit = {
 }
 
 -- Projectile hits must come from a server cast, rather than a client-supplied target.
-const function attack_entity(attacker: registry.entity, target: registry.entity, damage: number,  hit: projectile_hit?): boolean
+const function attack_entity(
+	attacker: registry.entity,
+	target: registry.entity,
+	damage: number,
+	hit: projectile_hit?
+): boolean
 	const is_melee = hit == nil
 	const target_character = registry.get_character(target)
 	if target_character == nil or not target_character:IsDescendantOf(workspace) then
@@ -131,7 +136,7 @@ const function attack_entity(attacker: registry.entity, target: registry.entity,
 	end
 	debug_print("Attack success.")
 
-	kill_log_util.mark_entity(attacker,  target)
+	kill_log_util.mark_entity(attacker, target)
 
 	target_humanoid.Health -= damage * if get_blocking_state(target) then BLOCKING_DAMAGE_MULTIPLIER else 1
 

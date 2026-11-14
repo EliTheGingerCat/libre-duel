@@ -48,7 +48,11 @@ const function place_cube(entity: registry.entity, cube_position: Vector3, appea
 
 	if not is_building_allowed(cube_position) then
 		debug_print("The player cannot build here.")
-		registry.fire_client(entity, send_notification, '<font color="rgb(255, 84, 84)">You cannot place cubes here!</font>')
+		registry.fire_client(
+			entity,
+			send_notification,
+			'<font color="rgb(255, 84, 84)">You cannot place cubes here!</font>'
+		)
 		return false
 	end
 

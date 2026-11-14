@@ -12,7 +12,7 @@ conch.register("show_title", {
 		return conch.args.player("player", "The player to show the title to"),
 			conch.args.string("large_text", "The large text to show them (supports rich text)"),
 			conch.args.string("small_text", "The small text to show them (supports rich text)"),
-			conch.args.opt(conch.args.string("stay", "How much to make the title stay for"))
+			conch.args.opt(conch.args.number("stay", "How many seconds the title stays for"))
 	end,
 
 	callback = function(player, large_text, small_text, stay) -- typechecked!

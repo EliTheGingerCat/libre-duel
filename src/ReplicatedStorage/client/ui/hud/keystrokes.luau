@@ -28,15 +28,12 @@ const function key(props: { name: string, position: Vector2, preview: boolean? }
 			BottomLeftRadius = UDim.new(0, 0),
 			BottomRightRadius = UDim.new(0, 0),
 		}),
-		stroke = create_element(
-			gradient_stroke,
-			{
-				colour = Color3.new(0.86, 0.86, 0.86),
-				bottom = Color3.new(0.32, 0.32, 0.32),
-				rotation = -90,
-				border_position = Enum.BorderStrokePosition.Inner,
-			}
-		),
+		stroke = create_element(gradient_stroke, {
+			colour = Color3.new(0.86, 0.86, 0.86),
+			bottom = Color3.new(0.32, 0.32, 0.32),
+			rotation = -90,
+			border_position = Enum.BorderStrokePosition.Inner,
+		}),
 	})
 end
 
@@ -53,22 +50,22 @@ const function keystrokes(props: { preview: boolean? })
 			BackgroundTransparency = 0.5,
 			BorderSizePixel = 0,
 		}, {
-			shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
+			shadow = create_element(
+				shadow,
+				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
+			),
 			corner = create_element("UICorner", {
 				TopLeftRadius = UDim.new(0, 0),
 				TopRightRadius = UDim.new(0, 0),
 				BottomLeftRadius = UDim.new(0, 24),
 				BottomRightRadius = UDim.new(0, 24),
 			}),
-			stroke = create_element(
-				gradient_stroke,
-				{
-					colour = Color3.new(0.86, 0.86, 0.86),
-					bottom = Color3.new(0.32, 0.32, 0.32),
-					rotation = -90,
-					border_position = Enum.BorderStrokePosition.Inner,
-				}
-			),
+			stroke = create_element(gradient_stroke, {
+				colour = Color3.new(0.86, 0.86, 0.86),
+				bottom = Color3.new(0.32, 0.32, 0.32),
+				rotation = -90,
+				border_position = Enum.BorderStrokePosition.Inner,
+			}),
 			Dash = create_element("Frame", {
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = UDim2.fromScale(0.5, 0.5),

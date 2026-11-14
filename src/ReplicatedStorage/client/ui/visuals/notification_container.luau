@@ -87,7 +87,10 @@ const function notification_component(props: {
 			BackgroundTransparency = 0.5 + (transparency * 0.5),
 			ZIndex = 2,
 		},
-		create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 + (transparency * 0.7) }),
+		create_element(
+			shadow,
+			{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 + (transparency * 0.7) }
+		),
 		create_element("UICorner", {
 			CornerRadius = UDim.new(1, 0),
 		}),

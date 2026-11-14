@@ -10,7 +10,9 @@ const function format_player_data(data: player_schema.player_data): { string }
 	const lines = {
 		`first joined: {if data.first_joined == 0 then "never" else os.date("!%Y-%m-%d %H:%M UTC", data.first_joined)}`,
 		-- saves that never went through a session can be missing migrated fields
-		`playtime: {format_duration(data.playtime or 0)}`,
+		`playtime: {format_duration(
+			data.playtime or 0
+		)}`,
 		`total clicks: {data.total_clicks}`,
 	}
 	for _, definition in MODE_DEFINITIONS do

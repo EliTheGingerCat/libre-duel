@@ -42,9 +42,7 @@ const function use_editable_hud(component: (props) -> unknown, props: props, def
 				tree:unmount()
 				container:Destroy()
 			end
-			tree:render(
-				ReactRoblox.createPortal(React.createElement(component, { on_remove = on_remove }), player_gui)
-			)
+			tree:render(ReactRoblox.createPortal(React.createElement(component, { on_remove = on_remove }), player_gui))
 			return disconnect
 		end
 		const function render_preview()

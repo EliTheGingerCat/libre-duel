@@ -20,9 +20,7 @@ const function check_box(props: { active: boolean?, round: boolean?, text: strin
 	local control = React.createElement(animated_button, {
 		Name = "checkbox",
 		Size = UDim2.fromOffset(40, 40),
-		BackgroundColor3 = if active
-			then Color3.new(140 / 255, 140 / 255, 140 / 255)
-			else COLOURS.surface,
+		BackgroundColor3 = if active then Color3.new(140 / 255, 140 / 255, 140 / 255) else COLOURS.surface,
 		BackgroundTransparency = 0.5,
 		Text = if active then "✓" else "",
 		TextSize = 32,

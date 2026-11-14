@@ -67,12 +67,7 @@ const function accept(player: Player): ()
 	const data = queue_record.as_dictionary(join_data.TeleportData)
 	const id = if data then data.queue_match_id else nil
 	const token = if data then data.queue_token else nil
-	if
-		join_data.SourceGameId ~= game.GameId
-		or data == nil
-		or typeof(id) ~= "string"
-		or typeof(token) ~= "string"
-	then
+	if join_data.SourceGameId ~= game.GameId or data == nil or typeof(id) ~= "string" or typeof(token) ~= "string" then
 		validating[player] = nil
 		player:Kick("This match is no longer available.")
 		return

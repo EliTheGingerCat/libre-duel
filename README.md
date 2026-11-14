@@ -195,6 +195,7 @@ return IPinfo_token
 ### Style
 
 - Add a trailing newline to text files.
+- Format code with StyLua by running `stylua src lune build_name.luau`. CI rejects unformatted code, and also checks that the Place builds and has no type errors.
 - Use trailing commas in code.
 - Use `lower_snake_case`.
 - Place all requires in the same spot.

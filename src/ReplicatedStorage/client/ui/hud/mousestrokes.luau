@@ -69,16 +69,16 @@ const function mousestrokes(props: { preview: boolean? })
 			ZIndex = 2,
 		}, {
 			corner = create_element("UICorner", { CornerRadius = UDim.new(0, 24) }),
-			shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
-			stroke = create_element(
-				gradient_stroke,
-				{
-					colour = Color3.new(0.86, 0.86, 0.86),
-					bottom = Color3.new(0.32, 0.32, 0.32),
-					rotation = -90,
-					border_position = Enum.BorderStrokePosition.Inner,
-				}
+			shadow = create_element(
+				shadow,
+				{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
 			),
+			stroke = create_element(gradient_stroke, {
+				colour = Color3.new(0.86, 0.86, 0.86),
+				bottom = Color3.new(0.32, 0.32, 0.32),
+				rotation = -90,
+				border_position = Enum.BorderStrokePosition.Inner,
+			}),
 		}),
 	})
 end

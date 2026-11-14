@@ -80,9 +80,7 @@ const function slider(props: {
 				Position = UDim2.fromScale(0, 0.5),
 				Size = UDim2.new(1, 0, 0, 10),
 				BorderSizePixel = 0,
-				BackgroundColor3 = if props.gradient
-					then Color3.new(1, 1, 1)
-					else COLOURS.surface,
+				BackgroundColor3 = if props.gradient then Color3.new(1, 1, 1) else COLOURS.surface,
 				BackgroundTransparency = if props.gradient then 0 else 0.5,
 			}, {
 				surface = React.createElement(surface),

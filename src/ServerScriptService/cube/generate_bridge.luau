@@ -30,11 +30,8 @@ const function generate_bridge(template: BasePart, team1_position: Vector3, this
 	-- Cubes are axis aligned, so only the world space extents of the template matter.
 	const world_size = template.CFrame:VectorToWorldSpace(template.Size)
 	const size = Vector3.new(math.abs(world_size.X), math.abs(world_size.Y), math.abs(world_size.Z))
-	const counts = Vector3.new(
-		math.round(size.X / CUBE_SIZE),
-		math.round(size.Y / CUBE_SIZE),
-		math.round(size.Z / CUBE_SIZE)
-	)
+	const counts =
+		Vector3.new(math.round(size.X / CUBE_SIZE), math.round(size.Y / CUBE_SIZE), math.round(size.Z / CUBE_SIZE))
 	const first = snap(template.Position - size / 2 + Vector3.one * (CUBE_SIZE / 2))
 
 	const along_x = counts.X >= counts.Z

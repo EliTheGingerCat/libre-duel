@@ -12,9 +12,24 @@ const function show_title(
 	colour: Color3?
 ): ()
 	if typeof(player) == "Instance" then
-		remote:FireClient(player, math.max(0, fade_in), math.max(0, stay), math.max(0, fade_out), top_text, bottom_text, colour)
+		remote:FireClient(
+			player,
+			math.max(0, fade_in),
+			math.max(0, stay),
+			math.max(0, fade_out),
+			top_text,
+			bottom_text,
+			colour
+		)
 	elseif player == "all" then
-		remote:FireAllClients(math.max(0, fade_in), math.max(0, stay), math.max(0, fade_out), top_text, bottom_text, colour)
+		remote:FireAllClients(
+			math.max(0, fade_in),
+			math.max(0, stay),
+			math.max(0, fade_out),
+			top_text,
+			bottom_text,
+			colour
+		)
 	end
 	-- Luau has no `unreachable` keyword, just pretend there is one here...
 	return

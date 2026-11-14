@@ -7,7 +7,12 @@ const update_player_data = require(script.Parent.update_player_data)
 
 const GAME_STATS = require(ReplicatedStorage.shared.modes.GAME_STATS)
 
-const function award_mode_stat(entity: registry.entity, mode: GAME_STATS.mode, stat: GAME_STATS.stat, increment: number?): ()
+const function award_mode_stat(
+	entity: registry.entity,
+	mode: GAME_STATS.mode,
+	stat: GAME_STATS.stat,
+	increment: number?
+): ()
 	const amount = increment or 1
 	const function add_to_mode_stat(data: player_schema.player_data): player_schema.player_data
 		const new_data = table.clone(data)

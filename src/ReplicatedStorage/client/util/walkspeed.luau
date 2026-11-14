@@ -5,7 +5,7 @@ const StarterPlayer = game:GetService("StarterPlayer")
 -- otherwise they cache/restore each other's values and the player gets stuck slow (or fast)
 const player = Players.LocalPlayer
 
-const modifiers: { [string]: number } = {}
+const modifiers: { [string]: number? } = {}
 
 const function apply(): ()
 	const character = player.Character

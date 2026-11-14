@@ -1,7 +1,9 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
 local conch = require(ReplicatedStorage.Packages.conch)
+local get_executor_player = require(ServerScriptService.conch.get_executor_player)
 
 conch.register("ban", {
 	description = "Bans the given player from the game",
@@ -12,8 +14,7 @@ conch.register("ban", {
 			conch.args.number("duration", "The duration of the ban in seconds.")
 	end,
 	callback = function(player, reason, duration) -- typechecked!
-		local context = conch.get_command_context()
-		local executor = context.executor.player
+		local executor = get_executor_player()
 		local executing_player = if executor then executor.UserId else "an unknown user"
 
 		Players:BanAsync({

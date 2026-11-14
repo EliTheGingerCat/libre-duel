@@ -31,10 +31,7 @@ const function selector_tile(props: { item: registry.entry, title: string, order
 		[React.Event.Activated] = select_widget,
 	}, {
 		feedback = create_element(button_motion),
-		shadow = create_element(
-			shadow,
-			{ ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }
-		),
+		shadow = create_element(shadow, { ShowBehindParent = false, BlurRadius = UDim.new(0, 8), Transparency = 0.3 }),
 		corner = create_element("UICorner", { CornerRadius = UDim.new(0, 60) }),
 		stroke = create_element(gradient_stroke),
 		padding = create_element("UIPadding", { PaddingBottom = UDim.new(0, 16) }),

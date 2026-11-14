@@ -24,7 +24,9 @@ end
 const function apply_roll(): ()
 	const x, y, z = current_camera.CFrame:ToEulerAnglesXYZ()
 	const position = current_camera.CFrame.Position
-	current_camera.CFrame = CFrame.new(position) * CFrame.Angles(x, y, z) * CFrame.Angles(0, 0, math.rad(roll_value.Value))
+	current_camera.CFrame = CFrame.new(position)
+		* CFrame.Angles(x, y, z)
+		* CFrame.Angles(0, 0, math.rad(roll_value.Value))
 end
 
 RunService.RenderStepped:Connect(apply_roll)

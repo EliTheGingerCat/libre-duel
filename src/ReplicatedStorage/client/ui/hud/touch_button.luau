@@ -55,7 +55,7 @@ const function touch_button(props: props)
 			action.release()
 		end
 	end
-	const function mount()
+	const function mount(): (() -> ())?
 		if props.preview then
 			return nil
 		end

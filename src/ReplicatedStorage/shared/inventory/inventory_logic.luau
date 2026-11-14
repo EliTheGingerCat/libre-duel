@@ -25,7 +25,10 @@ function inventory_logic.is_valid_slot(slot_index: unknown): boolean
 end
 
 -- whitelist is if someone already has a sword and u give them another one itll give it to their existing slot instead of making a new one
-function inventory_logic.find_free_slot(inventory: inventory_types.inventory, whitelist: inventory_types.item_id?): number?
+function inventory_logic.find_free_slot(
+	inventory: inventory_types.inventory,
+	whitelist: inventory_types.item_id?
+): number?
 	for i, slot in ipairs(inventory) do
 		if slot == "empty" then
 			return i
@@ -38,7 +41,10 @@ function inventory_logic.find_free_slot(inventory: inventory_types.inventory, wh
 	return nil
 end
 
-function inventory_logic.find_item(inventory: inventory_types.inventory, looking_for_item: inventory_types.item_id): (number | false)
+function inventory_logic.find_item(
+	inventory: inventory_types.inventory,
+	looking_for_item: inventory_types.item_id
+): number | false
 	for i, slot in ipairs(inventory) do
 		-- you have to do it like this instead of `if slot == "empty"` otherwise the typechecker will be angy! 3:<
 		if type(slot) == "string" then

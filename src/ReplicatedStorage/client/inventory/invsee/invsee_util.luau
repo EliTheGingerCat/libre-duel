@@ -69,7 +69,11 @@ const function request_action(
 ): boolean
 	const target = invsee_state.target
 	const inventory = invsee_util.get_inventory()
-	if target == nil or inventory == nil or not INVENTORY_ACTIONS[action](inventory, from_slot_index, to_slot_index) then
+	if
+		target == nil
+		or inventory == nil
+		or not INVENTORY_ACTIONS[action](inventory, from_slot_index, to_slot_index)
+	then
 		return false
 	end
 	invsee_state.request_id += 1

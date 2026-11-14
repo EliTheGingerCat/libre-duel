@@ -20,7 +20,7 @@ const guild_schema = drop.schema({
 		[string]: { -- tostring(userid)
 			joined: number, -- unix time
 			-- TODO: still not sure how to figure out migration since these are created in runtime!!
-			stats: GAME_STATS.modes
+			stats: GAME_STATS.modes,
 		},
 	},
 })

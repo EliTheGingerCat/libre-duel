@@ -33,19 +33,23 @@ const function stroke_gradient()
 	})
 end
 
-const function title_label(props: {
-	text: string,
-	top: boolean,
-	colour: Color3?,
-	transparency: React.Binding<number>,
-})
+const function title_label(
+	props: {
+		text: string,
+		top: boolean,
+		colour: Color3?,
+		-- a number binding, typed loosely because the package link does not export React's types
+		transparency: unknown,
+	}
+)
+	const transparency = props.transparency :: any
 	local padding = if props.top then 30 else 20
 	return create_element("TextLabel", {
 		Name = if props.top then "TopText" else "BottomText",
 		AnchorPoint = Vector2.new(0.5, if props.top then 1 else 0),
 		AutomaticSize = Enum.AutomaticSize.XY,
 		BackgroundColor3 = COLOURS.surface,
-		BackgroundTransparency = props.transparency:map(background_transparency),
+		BackgroundTransparency = transparency:map(background_transparency),
 		BorderSizePixel = 0,
 		FontFace = FONTS.semi_bold,
 		Position = UDim2.new(0.5, 0, 0.5, if props.top then 0 else 10),
@@ -54,7 +58,7 @@ const function title_label(props: {
 		Text = props.text,
 		TextColor3 = props.colour or Color3.new(1, 1, 1),
 		TextSize = if props.top then 100 else 50,
-		TextTransparency = props.transparency,
+		TextTransparency = transparency,
 		TextWrapped = false,
 		Visible = props.text ~= "",
 	}, {
@@ -69,14 +73,14 @@ const function title_label(props: {
 		shadow = create_element(shadow, {
 			BlurRadius = UDim.new(0, 8),
 			ShowBehindParent = false,
-			Transparency = props.transparency:map(background_transparency),
+			Transparency = transparency:map(background_transparency),
 		}),
 		border_stroke = create_element("UIStroke", {
 			Name = "BorderStroke",
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
 			Color = Color3.new(1, 1, 1),
 			Thickness = 1,
-			Transparency = props.transparency,
+			Transparency = transparency,
 		}, {
 			gradient = create_element(stroke_gradient),
 		}),
@@ -85,7 +89,7 @@ const function title_label(props: {
 			ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
 			Color = Color3.new(1, 1, 1),
 			Thickness = 1,
-			Transparency = props.transparency,
+			Transparency = transparency,
 		}, {
 			gradient = create_element(stroke_gradient),
 		}),
@@ -93,7 +97,7 @@ const function title_label(props: {
 end
 
 const function title()
-	local current_title, set_current_title = React.useState(nil :: title_text?)
+	local current_title: title_text?, set_current_title: (title_text?) -> () = React.useState(nil :: title_text?)
 	local transparency, set_transparency = React.useBinding(1)
 
 	const function effect_titles()
@@ -178,7 +182,7 @@ const function title()
 		scale = create_element("UIScale", {
 			Scale = scale,
 		}),
-		top_text =create_element(title_label, {
+		top_text = create_element(title_label, {
 			text = current_title.top_text,
 			top = true,
 			colour = current_title.colour,
