@@ -129,6 +129,8 @@ const function new(this_match: match.match): match.hooks
 	const connections: { RBXScriptConnection | registry.connection } = {}
 	local cages_are_closed = false
 
+	local pending_arrow_recharges: {[registry.entity]: thread} = {}
+
 	const function find_team_by_entity(entity: registry.entity): team?
 		for _, team in teams do
 			if table.find(team.entities, entity) then
@@ -335,8 +337,15 @@ const function new(this_match: match.match): match.hooks
 		end
 	end
 
+	const function on_entity_died(_character, entity: registry.entity)
+		const thread = pending_arrow_recharges[entity]
+		if thread then
+			task.cancel(thread)
+		end
+	end
+
 	const function on_bow_shot(entity: registry.entity)
-		task.delay(BOW_RECHARGE_DELAY, inventory_util.give_item, entity, "arrow", 1, 9)
+		pending_arrow_recharges[entity] =  task.delay(BOW_RECHARGE_DELAY, inventory_util.give_item, entity, "arrow", 1, 9)
 	end
 
 	const function start(initial_teams: { { registry.entity } }): ()
@@ -348,6 +357,7 @@ const function new(this_match: match.match): match.hooks
 		table.insert(connections, registry.character_added:Connect(on_character_added))
 		table.insert(connections, inventory_util.created:Connect(on_inventory_created))
 		table.insert(connections, bow_shot_event:Connect(on_bow_shot))
+		table.insert(connections, registry.died:Connect(on_entity_died))
 		for index, entities in initial_teams do
 			for _, entity in entities do
 				setup_entity(entity, teams[index])

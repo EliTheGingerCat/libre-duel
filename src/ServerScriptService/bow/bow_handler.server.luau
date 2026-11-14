@@ -120,11 +120,6 @@ const function on_invoke(player: Player, origin: unknown, direction: unknown, dt
 		return false
 	end
 
-	if (origin - head.Position).Magnitude > MAX_ORIGIN_DISTANCE then
-		debug_print("Bow origin is too far from the shooter.")
-		return false
-	end
-
 	if not inventory_util.has_behaviour(player, "bow") then
 		return false
 	end
@@ -151,6 +146,12 @@ const function on_invoke(player: Player, origin: unknown, direction: unknown, dt
 		add_cooldown(player, "attack_bow", BOW_COOLDOWN_SERVER)
 		bow_shot_event:Fire(player)
 		return inventory_util.consume_item(player, "arrow")
+	end
+
+	-- putting this after the bow boosting thing because its lowkey annoying when falling and trying to bb
+	if (origin - head.Position).Magnitude > MAX_ORIGIN_DISTANCE then
+		debug_print("Bow origin is too far from the shooter.")
+		return false
 	end
 
 	const cast_params = RaycastParams.new()
