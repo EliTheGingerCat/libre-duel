@@ -4,6 +4,7 @@ const ServerScriptService = game:GetService("ServerScriptService")
 const Teams = game:GetService("Teams")
 const Workspace = game:GetService("Workspace")
 
+local bow_shot_event = require(ServerScriptService.bow.bow_shot_event)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const debug_print = require(script.Parent.Parent.util.debug_print)
 const generate_bridge = require(ServerScriptService.cube.generate_bridge)
@@ -13,12 +14,15 @@ const map_data = require(ReplicatedStorage.shared.maps.map_data)
 const match = require(ServerScriptService.match.match)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
+const BOW_RECHARGE_DELAY = 4
+
 const LOADOUT: { [number]: inventory_types.item_id } = {
 	[1] = "sword",
 	[2] = "pickaxe",
 	-- where the team clay will go (i couldn't think of anything better :broken_heart:)
 	[4] = "bow",
 	[5] = "cake",
+	[9] = "arrow"
 }
 const LOADOUT_AMOUNTS: { [inventory_types.item_id]: number } = {
 	cake = 8,
@@ -72,14 +76,9 @@ const function move_entity(entity: registry.entity, position: Vector3): ()
 end
 
 const function give_match_loadout(entity: registry.entity, team: team): ()
-	const inventory = inventory_util.get_inventory(entity)
-	if inventory then
-		inventory_util.clear_inventory(inventory)
-		inventory_util.give_loadout(inventory, LOADOUT, LOADOUT_AMOUNTS)
-		--TODO: find a better approach for this. Even though the player *just* spawned, I don't know how I feel about directly overriding a slot.
-		inventory[CLAY_SLOT] = { item_id = TEAM_CLAYS[team.index], amount = LOADOUT_AMOUNTS.clay }
-		inventory_util.replicate(entity)
-	end
+	inventory_util.clear_inventory(entity)
+	inventory_util.give_loadout(entity, LOADOUT, LOADOUT_AMOUNTS)
+	inventory_util.set_slot(entity, CLAY_SLOT, { item_id = TEAM_CLAYS[team.index], amount = LOADOUT_AMOUNTS.clay })
 end
 
 const function create_teams(info: map_data.map_data): { team }
@@ -309,6 +308,10 @@ const function new(this_match: match.match): match.hooks
 		end
 	end
 
+	const function on_bow_shot(entity: registry.entity)
+		task.delay(BOW_RECHARGE_DELAY, inventory_util.give_item, entity, "arrow", 1, 9)
+	end
+
 	const function start(initial_teams: { { registry.entity } }): ()
 		assert(#initial_teams <= #teams, "Bridge maps do not have that many teams.")
 		for _, team in teams do
@@ -316,6 +319,7 @@ const function new(this_match: match.match): match.hooks
 		end
 		table.insert(connections, registry.character_added:Connect(on_character_added))
 		table.insert(connections, inventory_util.created:Connect(on_inventory_created))
+		table.insert(connections, bow_shot_event:Connect(on_bow_shot))
 		for index, entities in initial_teams do
 			for _, entity in entities do
 				setup_entity(entity, teams[index])

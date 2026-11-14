@@ -2,9 +2,11 @@ const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const get_aim_target = require(ReplicatedStorage.client.aim.get_aim_target)
+const client_inventory_util = require(ReplicatedStorage.client.inventory.client_inventory_util)
 const TOOL_USE_WALKSPEED_MODIFIER = require(ReplicatedStorage.client.tools.TOOL_USE_WALKSPEED_MODIFIER)
 const bow_state = require(script.Parent.bow_state)
 const walkspeed = require(ReplicatedStorage.client.util.walkspeed)
+const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
 
 const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
@@ -19,6 +21,14 @@ const function pull_bow(): ()
 	if humanoid == nil or humanoid.Health <= 0 then
 		return
 	end
+	const inventory = client_inventory_util.get_inventory()
+	if not inventory then
+		return
+	end
+	if not inventory_logic.find_item(inventory, "arrow") then
+		return
+	end
+
 	walkspeed.set_modifier("bow", TOOL_USE_WALKSPEED_MODIFIER)
 	bow_state.draw_started = os.clock()
 end

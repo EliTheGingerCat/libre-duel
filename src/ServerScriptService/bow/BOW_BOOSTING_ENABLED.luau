@@ -1,0 +1,3 @@
+const BOW_BOOSTING_ENABLED = true
+
+return BOW_BOOSTING_ENABLED

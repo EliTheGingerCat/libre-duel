@@ -6,17 +6,14 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 const function on_character_added(_character: Model, entity: registry.entity): ()
 	const inventory = inventory_util.generate_inventory(entity)
 	if type(inventory) == "table" then
-		inventory_util.give_loadout(inventory)
+		-- remote events queue until the client connects, so the update arrives even if the client script loads late
+		inventory_util.give_loadout(entity)
 		inventory_util.created:Fire(entity, inventory)
-		-- remote events queue until the client connects, so this arrives even if the client script loads late
-		inventory_util.replicate(entity)
 	end
 end
 
 const function on_entity_died(_character: Model, entity: registry.entity): ()
-	if inventory_util.delete_inventory(entity) then
-		inventory_util.replicate(entity)
-	end
+	inventory_util.delete_inventory(entity)
 end
 
 -- entities removed while alive never fire died

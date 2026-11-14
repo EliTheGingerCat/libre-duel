@@ -38,6 +38,19 @@ function inventory_logic.find_free_slot(inventory: inventory_types.inventory, wh
 	return nil
 end
 
+function inventory_logic.find_item(inventory: inventory_types.inventory, looking_for_item: inventory_types.item_id): (number | false)
+	for i, slot in ipairs(inventory) do
+		-- you have to do it like this instead of `if slot == "empty"` otherwise the typechecker will be angy! 3:<
+		if type(slot) == "string" then
+			continue
+		end
+		if slot.item_id == looking_for_item then
+			return i
+		end
+	end
+	return false
+end
+
 function inventory_logic.swap_items(
 	inventory: inventory_types.inventory,
 	slot_1_index: number,

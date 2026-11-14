@@ -1,6 +1,7 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const inventory_util = require(script.Parent.inventory_util)
 
@@ -9,9 +10,9 @@ const update_inventory = ReplicatedStorage.remotes.update_inventory
 const MIN_REQUEST_INTERVAL = 0.05
 
 const ACTIONS: { [string]: (inventory_types.inventory, number, number) -> boolean } = {
-	move_item = inventory_util.move_item,
-	quick_move = inventory_util.quick_move,
-	swap_items = inventory_util.swap_items,
+	move_item = inventory_logic.move_item,
+	quick_move = inventory_logic.quick_move,
+	swap_items = inventory_logic.swap_items,
 }
 
 local last_request_times: { [Player]: number } = {}
@@ -37,6 +38,7 @@ const function on_request(player: Player, arguments: unknown): ()
 	if now - (last_request_times[player] or 0) >= MIN_REQUEST_INTERVAL then
 		last_request_times[player] = now
 		-- slot validation happens inside the action, on failure the unchanged inventory is resent
+		-- replies directly instead of mark_dirty because the client needs the id to settle its prediction
 		action(inventory, request.from :: number, request.to :: number)
 		inventory_util.changed:Fire(player)
 	end

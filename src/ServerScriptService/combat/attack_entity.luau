@@ -6,7 +6,6 @@ const apply_hit_highlight = require(script.Parent.apply_hit_highlight)
 const apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
 const BLOCKING_DAMAGE_MULTIPLIER = require(ServerScriptService.blocking.BLOCKING_DAMAGE_MULTIPLIER)
 const get_blocking_state = require(ServerScriptService.blocking.get_blocking_state)
-const BOW_DAMAGE = require(ServerScriptService.bow.BOW_DAMAGE)
 local kill_log_util = require(ServerScriptService.kill_logging.kill_log_util)
 const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(script.Parent.ENTITY_RANGE_SERVER)
@@ -117,7 +116,7 @@ const function attack_entity(attacker: registry.entity, target: registry.entity,
 	if
 		is_melee
 		and attacker_player
-		and get_player_cps(attacker_player, "attack") >= MITIGATION_CONFIG.cps_treshold
+		and get_player_cps(attacker_player) >= MITIGATION_CONFIG.cps_treshold
 		and math.random(1, 100) <= MITIGATION_CONFIG.rejection_chance
 	then
 		add_cooldown(attacker, "attack_melee_mitigation", MITIGATION_CONFIG.duration)

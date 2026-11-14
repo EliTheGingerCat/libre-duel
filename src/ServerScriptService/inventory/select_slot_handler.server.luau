@@ -1,12 +1,13 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
 const inventory_util = require(script.Parent.inventory_util)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
 const select_slot = ReplicatedStorage.remotes.select_slot
 
 const function on_select_slot(player: Player, slot: unknown): ()
-	if type(slot) ~= "number" or not inventory_util.is_hotbar_slot(slot) then
+	if type(slot) ~= "number" or not inventory_logic.is_hotbar_slot(slot) then
 		return
 	end
 	inventory_util.set_selected_slot(player, slot)

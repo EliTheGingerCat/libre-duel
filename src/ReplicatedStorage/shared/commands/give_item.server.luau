@@ -1,4 +1,3 @@
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
@@ -24,12 +23,12 @@ conch.register("give_item", {
 			conch.args.number("amount", "The quantity of the item to give.")
 	end,
 	callback = function(player, item, amount) -- typechecked!
-        const inventory = inventory_util.get_inventory(player)
-        if not inventory then
-            return `{player} is missing an inventory! :/`
-        end
-		inventory_util.give_item(inventory, item, amount)
-		inventory_util.replicate(player)
+		if not inventory_util.get_inventory(player) then
+			return `{player} is missing an inventory! :/`
+		end
+		if not inventory_util.give_item(player, item, amount) then
+			return `{player} has no free slot for {item}`
+		end
 		return `Successfully gave {player} {amount or "a"} {item}{if amount == 1 then "" else "s"}`
 	end,
 })
