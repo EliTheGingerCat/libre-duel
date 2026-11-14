@@ -33,6 +33,7 @@ const added: event<entity> = signal.new()
 const removed: event<entity> = signal.new()
 const character_added: event<Model, entity> = signal.new()
 const died: event<Model, entity> = signal.new()
+const state_changed: event<Model, entity, Enum.HumanoidStateType, Enum.HumanoidStateType> = signal.new()
 const changed: event<> = signal.new()
 const members: { [entity]: boolean? } = {}
 const bots: { [string]: Model? } = {}
@@ -228,21 +229,30 @@ const function on_player_removing(player: Player): ()
 	changed:Fire()
 end
 
-const function watch_death(character: Model, entity: entity): ()
+const function watch_humanoid(character: Model, entity: entity): ()
 	const humanoid = character:WaitForChild("Humanoid", 10)
 	if humanoid == nil or not humanoid:IsA("Humanoid") then
 		return
 	end
+	-- a replacement bot can reuse the ID while its old character is still around
+	const function is_current_character(): boolean
+		return get_character(entity) == character
+	end
 	const function on_died(): ()
-		-- a replacement bot can reuse the ID while its old character is still around
-		if get_character(entity) == character then
+		if is_current_character() then
 			died:Fire(character, entity)
 		end
 	end
+	const function on_state_changed(old_state: Enum.HumanoidStateType, new_state: Enum.HumanoidStateType): ()
+		if is_current_character() then
+			state_changed:Fire(character, entity, old_state, new_state)
+		end
+	end
 	humanoid.Died:Once(on_died)
+	humanoid.StateChanged:Connect(on_state_changed)
 end
 
-character_added:Connect(watch_death)
+character_added:Connect(watch_humanoid)
 CollectionService:GetInstanceAddedSignal(BOT_TAG):Connect(on_bot_added)
 CollectionService:GetInstanceRemovedSignal(BOT_TAG):Connect(on_bot_removed)
 Players.PlayerAdded:Connect(on_player_added)
@@ -270,5 +280,6 @@ return {
 	register_bot = register_bot,
 	removed = removed,
 	set_team = set_team,
+	state_changed = state_changed,
 	unregister_bot = unregister_bot,
 }
