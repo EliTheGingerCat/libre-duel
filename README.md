@@ -230,22 +230,49 @@ License: [CC BY-SA 4.0](<https://creativecommons.org/licenses/by-sa/4.0/>)
 Used for: Retrieving Roblox server location.  
 Relevant files: [`IPinfo.luau`](./src/ServerScriptService/modules/IPinfo.luau), [`server_location.server.luau`](./src/ServerScriptService/server_location.server.luau)
 
-### Half Life 2 Grenade Tick
+### Sword Hit
 
-Author: [@the1oler](https://www.roblox.com/users/87456522/profile)  
+Author: [qubodup](https://freesound.org/people/qubodup/)  
 Type: Sound effect  
-Link: https://create.roblox.com/store/asset/2164165859
+Link: https://freesound.org/people/qubodup/sounds/442769/
 
-Used for: Cube placed  
+Used for: When a player blocks a hit
 Relvant files: [`play_sound_local.luau`](./src/ReplicatedStorage/client/modules/play_sound_local.luau)
 
-### cartoon_pop
+### UI Button Click
 
-Author: [@Schnogrind](https://www.roblox.com/users/52134822/profile)  
+Author: [benzix2](https://freesound.org/people/benzix2/)  
 Type: Sound effect  
-Link: https://create.roblox.com/store/asset/6586979979
+Link: https://freesound.org/people/benzix2/sounds/467951/
 
-Used for: Nothing yet, but will be used for player damaged.  
+Used for: When an item has been picked up  
+Relvant files: [`play_sound_local.luau`](./src/ReplicatedStorage/client/modules/play_sound_local.luau)
+
+### Bullets Passing by
+
+Author: [@FXsoundwarehouse](https://www.youtube.com/@FXsoundwarehouse)
+Type: Sound effect
+Link: https://www.youtube.com/watch?v=pRmn_dqi_XA
+
+Used for: When an arrow passed right past you
+Relvant files: [`play_sound_local.luau`](./src/ReplicatedStorage/client/modules/play_sound_local.luau)
+
+### Landing_Stone_1.wav
+
+Author: [KieranKeegan](https://freesound.org/people/KieranKeegan/)
+Type: Sound effect
+Link: https://freesound.org/people/KieranKeegan/sounds/422753/
+
+Used for: When a cube has been placed
+Relvant files: [`play_sound_local.luau`](./src/ReplicatedStorage/client/modules/play_sound_local.luau)
+
+### Landing_Stone_1.wav
+
+Author: [Vilkas_Sound](https://freesound.org/people/Vilkas_Sound/)
+Type: Sound effect
+Link: https://freesound.org/people/Vilkas_Sound/sounds/463395/
+
+Used for: When a player has been damaged
 Relvant files: [`play_sound_local.luau`](./src/ReplicatedStorage/client/modules/play_sound_local.luau)
 
 ### Signal

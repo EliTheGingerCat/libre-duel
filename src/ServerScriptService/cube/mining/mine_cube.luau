@@ -8,6 +8,7 @@ const debug_print = require(ServerScriptService.util.debug_print)
 const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 const match = require(ServerScriptService.match.match)
+const play_sound = require(ServerScriptService.util.play_sound)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
 type mining = {
@@ -58,6 +59,7 @@ const function mine_finished(mining: mining): ()
 		return
 	end
 	const cube = mining.cube
+	play_sound("block_mined", cube.Position)
 	cube:Destroy()
 	registry.fire_client(mining.entity, ReplicatedStorage.remotes.mine_finished, mining.id)
 end

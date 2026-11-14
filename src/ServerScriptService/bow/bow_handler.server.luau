@@ -167,7 +167,12 @@ const function on_invoke(player: Player, origin: unknown, direction: unknown, dt
 	}
 
 	add_cooldown(player, "attack_bow", BOW_COOLDOWN_SERVER)
-	caster:RaycastFire(head.Position, direction.Unit, dt * BEHAVIOUR.SPEED, shot_behaviour)
+	const cast = caster:RaycastFire(head.Position, direction.Unit, dt * BEHAVIOUR.SPEED, shot_behaviour)
+	const bullet = cast.RayInfo.CosmeticBulletObject
+	if bullet then
+		-- lets clients skip flyby sounds for their own arrows
+		bullet:SetAttribute("shooter_user_id", player.UserId)
+	end
 	bow_shot_event:Fire(player)
 	inventory_util.consume_item(player, "arrow")
 	return true
