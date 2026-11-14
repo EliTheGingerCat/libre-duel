@@ -1,5 +1,5 @@
 const CUBE_HEALTH = 1
-const PICKAXE_STRENGTH = 1 -- health / second
+const PICKAXE_STRENGTH = 2.5 -- health / second
 
 const CUBE_MINE_TIME = CUBE_HEALTH / PICKAXE_STRENGTH
 
