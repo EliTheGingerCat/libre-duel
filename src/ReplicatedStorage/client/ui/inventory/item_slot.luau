@@ -4,6 +4,7 @@ const INVENTORY_LAYOUT = require(script.Parent.INVENTORY_LAYOUT)
 local React = require(ReplicatedStorage.Packages.react)
 local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local item_amount = require(script.Parent.item_amount)
+local use_receive_bounce = require(script.Parent.use_receive_bounce)
 
 local create_element = React.createElement
 
@@ -14,15 +15,18 @@ const COLOUR_SELECTED = Color3.fromRGB(100, 100, 100)
 -- A single slot. `image` is nil for an empty slot, `selected` highlights it (such as the active hotbar slot).
 -- `amount` shows as a counter when there's more than one.
 -- With `on_click` the slot is a button, which also stops the click from reaching the game.
+-- `inventory_slot` makes the icon bounce when that inventory slot receives items.
 const function item_slot(props: {
 	name: string,
 	image: string?,
 	amount: number?,
 	layout_order: number,
+	inventory_slot: number?,
 	selected: boolean?,
 	on_click: (() -> ())?,
 })
 	const clickable = props.on_click ~= nil
+	const bounce_scale = use_receive_bounce(props.inventory_slot)
 	return create_element(if clickable then "TextButton" else "Frame", {
 		[React.Event.Activated] = props.on_click,
 		AutoButtonColor = if clickable then false else nil,
@@ -43,6 +47,8 @@ const function item_slot(props: {
 			Position = UDim2.fromScale(0.5, 0.5),
 			ScaleType = Enum.ScaleType.Fit,
 			Size = UDim2.fromScale(INVENTORY_LAYOUT.ICON_SCALE, INVENTORY_LAYOUT.ICON_SCALE),
+		}, {
+			bounce = create_element("UIScale", { Scale = bounce_scale }),
 		}),
 		amount = create_element(item_amount, { amount = props.amount }),
 		stroke = props.selected and create_element(gradient_stroke),

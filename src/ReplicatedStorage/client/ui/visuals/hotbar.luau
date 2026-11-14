@@ -324,6 +324,7 @@ const function slots_container(props: { preview: boolean? })
 			image = if tool ~= nil then tool.image else nil,
 			amount = get_slot_amount(id),
 			layout_order = id,
+			inventory_slot = id,
 			selected = id == active_slot,
 			on_click = if props.preview then nil else on_clicks[id],
 		})

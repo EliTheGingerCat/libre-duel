@@ -82,6 +82,7 @@ const function inventory_slots(props: { first: number, last: number, hidden_slot
 			image = get_slot_image(slot, props.hidden_slots),
 			amount = if props.hidden_slots[slot] then nil else get_slot_amount(slot),
 			layout_order = slot,
+			inventory_slot = slot,
 		})
 	end
 	return create_element(React.Fragment, {}, slots)
