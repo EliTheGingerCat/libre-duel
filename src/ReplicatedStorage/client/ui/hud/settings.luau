@@ -2,7 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
-local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
 local registry = require(script.Parent.registry)
 

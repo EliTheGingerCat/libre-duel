@@ -8,6 +8,7 @@ local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 local scale = require(script.Parent.scale)
 local shadow = require(script.Parent.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
+const use_game_is_active = require(script.Parent.Parent.match.use_game_is_active)
 
 local create_element = React.createElement
 local use_effect = React.useEffect
@@ -70,28 +71,6 @@ end
 const COLOUR_BLUE = "#0da2dd"
 const COLOUR_GREEN = "#5bd34c"
 const COLOUR_RED = "#b14c4e"
-
-const function use_game_is_active(): boolean
-	local game_is_active, set_game_is_active = use_state(false)
-
-	const function effect_game_is_active()
-		const function on_event(incoming_game_is_active: boolean): ()
-			set_game_is_active(incoming_game_is_active)
-		end
-
-		local connection = ReplicatedStorage.remotes.game_is_active.OnClientEvent:Connect(on_event)
-
-		const function disconnect(): ()
-			connection:Disconnect()
-		end
-
-		return disconnect
-	end
-
-	use_effect(effect_game_is_active, {})
-
-	return game_is_active
-end
 
 const function use_kills(): number
 	local kills, set_kills = use_state(0)

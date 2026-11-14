@@ -129,7 +129,7 @@ const function new(this_match: match.match): match.hooks
 	const connections: { RBXScriptConnection | registry.connection } = {}
 	local cages_are_closed = false
 
-	local pending_arrow_recharges: {[registry.entity]: thread} = {}
+	local pending_arrow_recharges: { [registry.entity]: thread } = {}
 
 	const function find_team_by_entity(entity: registry.entity): team?
 		for _, team in teams do
@@ -345,7 +345,8 @@ const function new(this_match: match.match): match.hooks
 	end
 
 	const function on_bow_shot(entity: registry.entity)
-		pending_arrow_recharges[entity] =  task.delay(BOW_RECHARGE_DELAY, inventory_util.give_item, entity, "arrow", 1, 9)
+		pending_arrow_recharges[entity] =
+			task.delay(BOW_RECHARGE_DELAY, inventory_util.give_item, entity, "arrow", 1, 9)
 	end
 
 	const function start(initial_teams: { { registry.entity } }): ()

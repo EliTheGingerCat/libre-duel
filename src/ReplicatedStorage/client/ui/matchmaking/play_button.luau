@@ -14,6 +14,7 @@ const use_gamepad_glyph_image = require(script.Parent.Parent.glyphs.use_gamepad_
 const use_input_device = require(script.Parent.Parent.visuals.use_input_device)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_editor_enabled = require(script.Parent.Parent.hud.use_editor_enabled)
+const use_game_is_active = require(script.Parent.Parent.match.use_game_is_active)
 local use_queue_status = require(script.Parent.use_queue_status)
 local use_viewport_scale = require(script.Parent.Parent.visuals.use_viewport_scale)
 
@@ -48,6 +49,7 @@ const function play_button(props: use_editable_hud.props)
 	local content_ref = use_editable_hud(play_button, props)
 	local state = use_queue_status()
 	local editor_enabled = use_editor_enabled()
+	const game_is_active = use_game_is_active()
 	local factor = use_viewport_scale()
 	-- the glyph is white, so the button tints it green like the normal icon
 	const play_glyph_image = use_gamepad_glyph_image(GAMEPAD_KEYBINDS.play)
@@ -67,11 +69,8 @@ const function play_button(props: use_editable_hud.props)
 	end
 	React.useEffect(subscribe, {})
 
-	const available = not props.preview
-		and not editor_enabled
-		and not IS_RESERVED
-		and state.mode == nil
-		and not inventory_open
+	const hidden_by_game_state = IS_RESERVED or game_is_active or state.mode ~= nil or inventory_open
+	const available = not props.preview and not editor_enabled and not hidden_by_game_state
 
 	const function bind_gamepad_play(): (() -> ())?
 		if not available then
@@ -98,7 +97,7 @@ const function play_button(props: use_editable_hud.props)
 		hud_screen,
 		{
 			Name = "PlayButton",
-			Enabled = editor_enabled or (not IS_RESERVED and state.mode == nil and not inventory_open),
+			Enabled = editor_enabled or not hidden_by_game_state,
 			ResetOnSpawn = false,
 			preview = props.preview,
 		},

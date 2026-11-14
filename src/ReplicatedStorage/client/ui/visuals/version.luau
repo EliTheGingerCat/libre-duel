@@ -2,7 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
-local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 local create_element = React.createElement

@@ -1,4 +1,3 @@
-local MatchmakingService = game:GetService("MatchmakingService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const ADJECTIVES = require(ReplicatedStorage.shared.common_words.ADJECTIVES)
