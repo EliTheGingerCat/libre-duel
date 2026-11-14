@@ -207,17 +207,19 @@ end
 const function load_map(match: match): Instance
 	const folder = ServerStorage.maps:FindFirstChild(match.definition.game)
 	assert(folder, `No maps folder for "{match.definition.game}"`)
-	const maps = folder:GetChildren()
-	assert(#maps > 0, `No maps available for "{match.definition.game}"`)
-	local map_candidate
-	repeat
-		map_candidate = maps[math.random(1, #maps)]
-	until map_candidate.Name ~= "example"
-	const map = map_candidate
+	const playable_maps: { Instance } = {}
+	for _, map_candidate in folder:GetChildren() do
+		if map_candidate.Name ~= "example" then
+			table.insert(playable_maps, map_candidate)
+		end
+	end
+	assert(#playable_maps > 0, `No maps available for "{match.definition.game}"`)
+	const map = playable_maps[math.random(1, #playable_maps)]:Clone()
 	-- i wanna give it some spacing by default
 	move(map, Vector3.new(SLOT_SPACING, 0, 0))
 	if match.slot ~= 0 then
-		move(map, Vector3.new(if match.slot % 2 == 0 then -1 else 1 * (match.slot + 1) * SLOT_SPACING, 0, 0))
+		const slot_direction = if match.slot % 2 == 0 then -1 else 1
+		move(map, Vector3.new(slot_direction * (match.slot + 1) * SLOT_SPACING, 0, 0))
 	end
 	if match.map then
 		match.map:Destroy()

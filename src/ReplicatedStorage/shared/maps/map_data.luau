@@ -1,5 +1,4 @@
 export type team_data = {
-	CAGE: Instance,
 	GOAL: BasePart,
 	SPAWN: BasePart,
 }

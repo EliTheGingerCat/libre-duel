@@ -7,9 +7,12 @@ const Workspace = game:GetService("Workspace")
 local bow_shot_event = require(ServerScriptService.bow.bow_shot_event)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const debug_print = require(script.Parent.Parent.util.debug_print)
+const DEFAULT_CAGE_NAME = require(ServerScriptService.cosmetics.cages.DEFAULT_CAGE_NAME)
 const generate_bridge = require(ServerScriptService.cube.generate_bridge)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
+const is_position_inside_part = require(ServerScriptService.util.is_position_inside_part)
+const load_cage = require(ServerScriptService.cosmetics.cages.load_cage)
 const map_data = require(ReplicatedStorage.shared.maps.map_data)
 const match = require(ServerScriptService.match.match)
 const registry = require(ReplicatedStorage.shared.entity.registry)
@@ -33,6 +36,8 @@ const TEAM_CLAYS = { "red_clay", "blue_clay" } -- team1, team2
 
 type team = {
 	cage: Instance,
+	cage_spawn: BasePart,
+	cage_bounds: BasePart,
 	index: number,
 	goal: BasePart,
 	name: string,
@@ -95,8 +100,12 @@ const function create_teams(info: map_data.map_data): { team }
 		data.SPAWN.CanCollide = false
 		data.GOAL.CanCollide = false
 
+		const cage = load_cage(DEFAULT_CAGE_NAME, data.SPAWN.CFrame)
+
 		teams[index] = {
-			cage = data.CAGE,
+			cage = cage.root,
+			cage_spawn = cage.spawn,
+			cage_bounds = cage.bounds,
 			index = index,
 			goal = data.GOAL,
 			name = `team #{index}`,
@@ -164,10 +173,29 @@ const function new(this_match: match.match): match.hooks
 		for _, team in teams do
 			team.cage.Parent = map
 
-			const spawn_location = team.spawn_part.Position
+			const spawn_location = team.cage_spawn.Position
 
 			for _, entity in team.entities do
 				move_entity(entity, spawn_location)
+			end
+		end
+	end
+
+	const function return_escaped_entities_to_cages(): ()
+		if not cages_are_closed then
+			return
+		end
+
+		for _, team in teams do
+			for _, entity in team.entities do
+				const character = registry.get_character(entity)
+				if character == nil then
+					continue
+				end
+
+				if not is_position_inside_part(character:GetPivot().Position, team.cage_bounds) then
+					move_entity(entity, team.cage_spawn.Position)
+				end
 			end
 		end
 	end
@@ -317,6 +345,7 @@ const function new(this_match: match.match): match.hooks
 		for _, team in teams do
 			watch_goal(team)
 		end
+		table.insert(connections, RunService.Heartbeat:Connect(return_escaped_entities_to_cages))
 		table.insert(connections, registry.character_added:Connect(on_character_added))
 		table.insert(connections, inventory_util.created:Connect(on_inventory_created))
 		table.insert(connections, bow_shot_event:Connect(on_bow_shot))

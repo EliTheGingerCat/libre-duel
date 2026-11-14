@@ -15,12 +15,10 @@ const MAP_DATA: map_data.map_data = {
 	},
 	BRIDGE = MAP_ROOT.bridge,
 	TEAM1 = {
-		CAGE = MAP_ROOT.team1_base.Cage1,
 		GOAL = MAP_ROOT.team1_base.Goal1,
 		SPAWN = MAP_ROOT.team1_base.Spawn1,
 	},
 	TEAM2 = {
-		CAGE = MAP_ROOT.team2_base.Cage2,
 		GOAL = MAP_ROOT.team2_base.Goal2,
 		SPAWN = MAP_ROOT.team2_base.Spawn2,
 	},
