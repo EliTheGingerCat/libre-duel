@@ -1,20 +1,26 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+
 const registry = require(ReplicatedStorage.shared.entity.registry)
 
-const BLACKLISTED_STATES = {
-    Enum.HumanoidStateType.FallingDown
+const DISABLED_STATES: { Enum.HumanoidStateType } = {
+	Enum.HumanoidStateType.FallingDown,
+	Enum.HumanoidStateType.Ragdoll,
 }
 
-const function on_state_changed(character, _entity, _old_state, new_state)
-    const humanoid = character.Humanoid or nil
-    if not humanoid then
-        return
-    end
-    if not table.find(BLACKLISTED_STATES, new_state) then
-        return
-    end
-    humanoid:ChangeState(Enum.HumanoidStateType.Running)
+const local_player = Players.LocalPlayer
+
+const function on_character_added(character: Model, entity: registry.entity): ()
+	if entity ~= local_player then
+		return
+	end
+	const humanoid = character:WaitForChild("Humanoid", 10)
+	if humanoid == nil or not humanoid:IsA("Humanoid") then
+		return
+	end
+	for _, state in DISABLED_STATES do
+		humanoid:SetStateEnabled(state, false)
+	end
 end
 
-registry.state_changed:Connect(on_state_changed)
+registry.character_added:Connect(on_character_added)
