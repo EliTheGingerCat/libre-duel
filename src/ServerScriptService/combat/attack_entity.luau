@@ -24,11 +24,14 @@ type projectile_hit = {
 }
 
 -- Projectile hits must come from a server cast, rather than a client-supplied target.
+-- melee swings resolved with lag compensation pass reach_already_checked, since the current positions
+-- used by the range check here can be further apart than the rewound ones the swing actually hit
 const function attack_entity(
 	attacker: registry.entity,
 	target: registry.entity,
 	damage: number,
-	hit: projectile_hit?
+	hit: projectile_hit?,
+	reach_already_checked: boolean?
 ): boolean
 	const is_melee = hit == nil
 	const target_character = registry.get_character(target)
@@ -119,7 +122,7 @@ const function attack_entity(
 	end
 
 	const distance = (target_position - attacker_position).Magnitude
-	if is_melee and distance > ENTITY_RANGE_SERVER then
+	if is_melee and not reach_already_checked and distance > ENTITY_RANGE_SERVER then
 		debug_print("Too far.")
 		return false
 	end

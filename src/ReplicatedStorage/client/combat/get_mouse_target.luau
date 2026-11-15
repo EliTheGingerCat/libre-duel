@@ -1,12 +1,11 @@
 local Players = game:GetService("Players")
 
+const get_melee_ray = require(script.Parent.get_melee_ray)
+
 local local_player = Players.LocalPlayer
 
 const function get_mouse_target(): BasePart?
-	local local_camera = workspace.CurrentCamera
-	local screen_center = local_camera.ViewportSize / 2
-
-	local unit_ray = local_camera:ScreenPointToRay(screen_center.X, screen_center.Y)
+	local unit_ray = get_melee_ray()
 
 	if not (local_player.Character and local_player.Character.PrimaryPart) then
 		return nil
