@@ -46,7 +46,8 @@ const function shoot_bow_f(character: Model, dt: number): ()
 
 	const origin = head.Position
 	local direction = (get_aim_target().position - origin).Unit
-	shoot_bow:InvokeServer(origin, direction, dt)
+	-- Sending origin is not needed because the server checks it authoritatively using Chrono. :3
+	shoot_bow:InvokeServer(direction, dt)
 end
 
 const function release_bow(was_released: boolean): ()

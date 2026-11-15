@@ -3,7 +3,6 @@ const ServerScriptService = game:GetService("ServerScriptService")
 
 const add_cooldown = require(ReplicatedStorage.shared.cooldown.add_cooldown)
 const apply_hit_highlight = require(script.Parent.apply_hit_highlight)
-const apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
 const BLOCKING_DAMAGE_MULTIPLIER = require(ServerScriptService.blocking.BLOCKING_DAMAGE_MULTIPLIER)
 const get_blocking_state = require(ServerScriptService.blocking.get_blocking_state)
 local kill_log_util = require(ServerScriptService.kill_logging.kill_log_util)
@@ -17,6 +16,7 @@ const MELEE_COOLDOWN_SERVER = require(script.Parent.MELEE_COOLDOWN_SERVER)
 const MITIGATION_CONFIG = require(ServerScriptService.mitigation.MITIGATION_CONFIG)
 const play_sound = require(ServerScriptService.util.play_sound)
 const registry = require(ReplicatedStorage.shared.entity.registry)
+const send_knockback = require(script.Parent.send_knockback)
 
 type projectile_hit = {
 	direction: Vector3,
@@ -139,7 +139,7 @@ const function attack_entity(
 	end
 
 	const direction = if hit_no_y then hit_no_y else attacker_root.CFrame.LookVector
-	apply_knockback(direction, target_root, knockback_multiplier.X, knockback_multiplier.Y)
+	send_knockback(target, target_root, direction, knockback_multiplier.X, knockback_multiplier.Y)
 
 	apply_hit_highlight(target_character, 0.6)
 
