@@ -12,7 +12,7 @@ const function on_character_added(_character: Model, entity: registry.entity): (
 	const player = registry.get_player(entity)
 	const spawn_location = if player then player.RespawnLocation else nil
 	if spawn_location then
-		move_entity(entity, (spawn_location.CFrame * SPAWN_PIVOT_OFFSET).Position)
+		move_entity(entity, (spawn_location.CFrame * SPAWN_PIVOT_OFFSET).Position, spawn_location.CFrame)
 	end
 end
 

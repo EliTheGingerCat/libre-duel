@@ -10,6 +10,7 @@ const create_spawn_location = require(ServerScriptService.spawning.create_spawn_
 const debug_print = require(script.Parent.Parent.util.debug_print)
 const DEFAULT_CAGE_NAME = require(ServerScriptService.cosmetics.cages.DEFAULT_CAGE_NAME)
 const generate_bridge = require(ServerScriptService.cube.generate_bridge)
+const get_spawn_frame_facing_point = require(ServerScriptService.spawning.get_spawn_frame_facing_point)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
 const is_position_inside_part = require(ServerScriptService.util.is_position_inside_part)
@@ -73,6 +74,7 @@ end
 
 const function create_teams(info: map_data.map_data, map: Instance): { team }
 	const teams: { team } = {}
+	const map_centre = (info.TEAM1.SPAWN.Position + info.TEAM2.SPAWN.Position) / 2
 
 	for index, data in { info.TEAM1, info.TEAM2 } do
 		const colour = TEAM_COLOURS[index]
@@ -85,11 +87,13 @@ const function create_teams(info: map_data.map_data, map: Instance): { team }
 		data.SPAWN.CanCollide = false
 		data.GOAL.CanCollide = false
 
-		const cage = load_cage(DEFAULT_CAGE_NAME, data.SPAWN.CFrame)
+		-- spawn part rotation is ignored so every map faces its players towards the other base without setup
+		const spawn_frame = get_spawn_frame_facing_point(data.SPAWN.Position, map_centre)
+
+		const cage = load_cage(DEFAULT_CAGE_NAME, spawn_frame)
 
 		-- without this roblox respawns team members at the lobby SpawnLocation, overriding any CharacterAdded move
-		const spawn_location =
-			create_spawn_location(CFrame.new(data.SPAWN.Position), SPAWN_LOCATION_FOOTPRINT, Roblox_team.TeamColor)
+		const spawn_location = create_spawn_location(spawn_frame, SPAWN_LOCATION_FOOTPRINT, Roblox_team.TeamColor)
 		spawn_location.Name = `team #{index} spawn`
 		spawn_location.Parent = map
 
@@ -167,10 +171,10 @@ const function new(this_match: match.match): match.hooks
 		for _, team in teams do
 			team.cage.Parent = map
 
-			const spawn_location = team.cage_spawn.Position
+			const cage_spawn_frame = team.cage_spawn.CFrame
 
 			for _, entity in team.entities do
-				move_entity(entity, spawn_location)
+				move_entity(entity, cage_spawn_frame.Position, cage_spawn_frame)
 			end
 		end
 	end
@@ -311,7 +315,7 @@ const function new(this_match: match.match): match.hooks
 		table.insert(team.entities, entity)
 		registry.set_team(entity, team.Roblox_team)
 		set_respawn_location(entity, team.spawn_location)
-		move_entity(entity, team.spawn_part.Position)
+		move_entity(entity, team.spawn_part.Position, team.spawn_location.CFrame)
 		give_match_loadout(entity, team)
 		registry.fire_client(entity, ReplicatedStorage.remotes.map_name, info.MAP_NAME)
 	end

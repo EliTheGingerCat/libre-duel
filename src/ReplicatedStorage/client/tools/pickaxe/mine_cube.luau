@@ -17,6 +17,7 @@ local id = 0
 -- While waiting for the server's response.
 type state_pending = {
 	connection_destroying: RBXScriptConnection,
+	cube_parent: Instance?,
 	cube_target: Part,
 	id: number,
 }
@@ -25,6 +26,7 @@ type state_pending = {
 type state_local = {
 	connection_destroying: RBXScriptConnection,
 	connection_heartbeat: RBXScriptConnection,
+	cube_parent: Instance?,
 	cube_target: Part,
 	id: number,
 	last_fail: string?,
@@ -50,7 +52,7 @@ end
 const function remove_by_id(id: number): ()
 	for index, state in minings do
 		if state.id == id then
-			minings[index] = nil
+			table.remove(minings, index)
 			return
 		end
 	end
@@ -66,6 +68,7 @@ const function cleanup_local(state: state_local): state_pending
 
 	local state_pending = {
 		connection_destroying = state.connection_destroying,
+		cube_parent = state.cube_parent,
 		cube_target = state.cube_target,
 		id = state.id,
 	}
@@ -229,6 +232,7 @@ function mine_start(cube: BasePart, aim_position: Vector3): ()
 	local state: state_local = {
 		connection_destroying = connection_destroying,
 		connection_heartbeat = connection_heartbeat,
+		cube_parent = cube.Parent,
 		cube_target = cube_target,
 		id = id,
 		last_fail = nil,
@@ -259,10 +263,20 @@ const function on_mine_failed(id: number): ()
 		return
 	end
 
+	-- the server rejects right away, so this usually lands while the client is still mining locally
+	const was_mining_locally = local_mining ~= nil and local_mining == state
+	if local_mining ~= nil and was_mining_locally then
+		cleanup_local(local_mining)
+	end
+
 	set_mining_display(state, 0)
-	state.cube_target.Parent = workspace
+	state.cube_target.Parent = state.cube_parent
 	debug_print("Server reported failure. Local cube was returned.")
 	cleanup_pending(state)
+
+	if was_mining_locally then
+		activate_heartbeat_passive()
+	end
 end
 
 ReplicatedStorage.remotes.mine_finished.OnClientEvent:Connect(on_mine_suceeded)
