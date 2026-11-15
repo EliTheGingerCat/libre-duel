@@ -37,6 +37,8 @@ Never use anonymous functions.
 
 Prefer long variable and function names to vague ones.
 
+When moving or creating files, never strip a prefix from a file name just because the folder name repeats it. `disable_native_roblox_features/disable_native_roblox_backpack.client.luau` is correct, `disable_native_roblox_features/backpack.client.luau` is not. Script names show up alone in Studio and in errors, so they have to make sense without their folder.
+
 Use types.
 
 Avoid monolithic modules as much as possible.

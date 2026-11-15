@@ -1,3 +1,3 @@
-local StarterGui = game:GetService("StarterGui")
-StarterGui:SetCoreGuiEnabled("Health", false)
+const StarterGui = game:GetService("StarterGui")
+
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
