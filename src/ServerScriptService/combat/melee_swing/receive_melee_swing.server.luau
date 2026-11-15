@@ -35,7 +35,7 @@ const function on_melee_swing(player: Player, origin: unknown, direction: unknow
 
 	const sword = tool.behaviours.sword
 	const damage = if sword ~= nil then sword.damage or SWORD_DAMAGE else NON_SWORD_DAMAGE
-	attack_entity(player, melee_hit.entity, damage, nil, true)
+	attack_entity(player, melee_hit.entity, damage)
 end
 
 ReplicatedStorage.remotes.melee_swing.OnServerEvent:Connect(on_melee_swing)

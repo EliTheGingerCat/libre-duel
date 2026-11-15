@@ -1,3 +1,3 @@
-const ENTITY_RANGE = 13
+const ENTITY_RANGE = 12
 
 return ENTITY_RANGE

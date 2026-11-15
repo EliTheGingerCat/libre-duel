@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 local set_cube_transparency = require(ReplicatedStorage.shared.cube.set_cube_transparency)
 const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
+const get_aim_ray = require(ReplicatedStorage.client.aim.get_aim_ray)
 const get_aim_target = require(ReplicatedStorage.client.aim.get_aim_target)
 const get_mining_fail_reason = require(script.Parent.get_mining_fail_reason)
 const TRANSPARENCY_MAXIMUM = require(ReplicatedStorage.client.cube.mining.TRANSPARENCY_MAXIMUM)
@@ -99,17 +100,18 @@ const function mine_stop(state: state_local): ()
 end
 
 local mine_start
-const function mine_new_cube(state: state_local, cube: BasePart): ()
+const function mine_new_cube(state: state_local, cube: BasePart, aim_position: Vector3): ()
 	mine_stop(state)
-	mine_start(cube)
+	mine_start(cube, aim_position)
 end
 
 const function on_heartbeat_passive(): ()
-	const cube = get_aim_target().instance
+	const aim_target = get_aim_target()
+	const cube = aim_target.instance
 	if cube == nil then
 		return
 	end
-	mine_start(cube)
+	mine_start(cube, aim_target.position)
 end
 
 const function activate_heartbeat_passive(): ()
@@ -146,8 +148,9 @@ const function on_heartbeat_active(): ()
 		return
 	end
 
-	local cube_now = get_aim_target().instance
-	local fail_message = get_mining_fail_reason(cube_now)
+	const aim_target = get_aim_target()
+	local cube_now = aim_target.instance
+	local fail_message = get_mining_fail_reason(cube_now, aim_target.position)
 	local fail = fail_message ~= nil
 	if fail == true then
 		-- As this runs every Heartbeat, do not spam the fail message nor the pausing.
@@ -173,13 +176,13 @@ const function on_heartbeat_active(): ()
 	-- An example of when this would be `true` is if the player starts mining a cube, moves their mouse away from it, and then moves it back on. During the time that the mouse was away, `get_mining_fail_reason` reported a specific fail message and the mining was paused.
 	local unpaused = state.last_fail ~= nil
 	if unpaused then
-		mine_new_cube(state, cube_now)
+		mine_new_cube(state, cube_now, aim_target.position)
 		return
 	end
 	state.last_fail = nil
 
 	if cube_now ~= state.cube_target then
-		mine_new_cube(state, cube_now)
+		mine_new_cube(state, cube_now, aim_target.position)
 		return
 	end
 
@@ -194,8 +197,8 @@ const function on_heartbeat_active(): ()
 	end
 end
 
-function mine_start(cube: BasePart): ()
-	local fail_message = get_mining_fail_reason(cube)
+function mine_start(cube: BasePart, aim_position: Vector3): ()
+	local fail_message = get_mining_fail_reason(cube, aim_position)
 	local failed = fail_message ~= nil
 	if failed == true then
 		debug_print(`Failed to start mining: {fail_message}`)
@@ -236,7 +239,9 @@ function mine_start(cube: BasePart): ()
 
 	local_mining = state
 
-	ReplicatedStorage.remotes.mine_cube:FireServer(id, cube)
+	-- the server checks this aim really lands on the cube before mining it
+	const aim_ray = get_aim_ray()
+	ReplicatedStorage.remotes.mine_cube:FireServer(id, cube, aim_ray.Origin, aim_ray.Direction)
 end
 
 const function on_mine_suceeded(id: number): ()

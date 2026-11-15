@@ -8,7 +8,6 @@ const BLOCKING_DAMAGE_MULTIPLIER = require(ServerScriptService.blocking.BLOCKING
 const get_blocking_state = require(ServerScriptService.blocking.get_blocking_state)
 local kill_log_util = require(ServerScriptService.kill_logging.kill_log_util)
 const debug_print = require(ServerScriptService.util.debug_print)
-const ENTITY_RANGE_SERVER = require(script.Parent.ENTITY_RANGE_SERVER)
 const get_player_cps = require(ServerScriptService.cps.get_player_cps)
 const god_mode = require(script.Parent.god_mode)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
@@ -24,14 +23,13 @@ type projectile_hit = {
 }
 
 -- Projectile hits must come from a server cast, rather than a client-supplied target.
--- melee swings resolved with lag compensation pass reach_already_checked, since the current positions
--- used by the range check here can be further apart than the rewound ones the swing actually hit
+-- reach isn't checked here, melee callers have to resolve the target with lag compensation first
+-- (see melee_swing), since current positions can be further apart than the rewound ones that were hit
 const function attack_entity(
 	attacker: registry.entity,
 	target: registry.entity,
 	damage: number,
-	hit: projectile_hit?,
-	reach_already_checked: boolean?
+	hit: projectile_hit?
 ): boolean
 	const is_melee = hit == nil
 	const target_character = registry.get_character(target)
@@ -87,8 +85,6 @@ const function attack_entity(
 		return false
 	end
 
-	const attacker_position = attacker_root.CFrame.Position
-
 	if is_melee and is_on_cooldown(attacker, "attack_melee") then
 		debug_print("Attacker is on cooldown.")
 		return false
@@ -118,12 +114,6 @@ const function attack_entity(
 
 	if match.get_match_of(attacker) ~= match.get_match_of(target) then
 		debug_print("Attacker and target are not in the same match.")
-		return false
-	end
-
-	const distance = (target_position - attacker_position).Magnitude
-	if is_melee and not reach_already_checked and distance > ENTITY_RANGE_SERVER then
-		debug_print("Too far.")
 		return false
 	end
 

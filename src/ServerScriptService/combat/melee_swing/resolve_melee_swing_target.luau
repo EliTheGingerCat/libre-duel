@@ -104,7 +104,7 @@ const function resolve_melee_swing_target(
 	end
 
 	const hit_position = aim.origin + aim.direction * closest_candidate.ray_distance
-	const reach, is_in_reach = get_reach(aim, hit_position)
+	const reach, is_in_reach = get_reach(aim.eye_position, hit_position)
 	if not is_in_reach then
 		debug_print("Too far:", reach)
 		return nil

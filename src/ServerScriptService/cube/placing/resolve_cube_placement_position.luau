@@ -40,7 +40,7 @@ const function resolve_cube_placement_position(aim: validate_aim_ray.validated_a
 		return nil
 	end
 
-	const reach, is_in_reach = get_reach(aim, ray_result.Position)
+	const reach, is_in_reach = get_reach(aim.eye_position, ray_result.Position)
 	if not is_in_reach then
 		debug_print("Too far:", reach)
 		return nil

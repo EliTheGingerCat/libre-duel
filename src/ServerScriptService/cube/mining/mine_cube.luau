@@ -5,11 +5,14 @@ const ServerScriptService = game:GetService("ServerScriptService")
 
 const CUBE_MINE_TIME = require(ReplicatedStorage.shared.cube.CUBE_MINE_TIME)
 const debug_print = require(ServerScriptService.util.debug_print)
-const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
-const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
+const get_closest_point_on_box = require(ReplicatedStorage.shared.geometry.get_closest_point_on_box)
+const get_eye_position = require(ServerScriptService.aim_validation.get_eye_position)
+const get_reach = require(ServerScriptService.aim_validation.get_reach)
+const is_aiming_at_cube = require(script.Parent.is_aiming_at_cube)
 const match = require(ServerScriptService.match.match)
 const play_sound = require(ServerScriptService.util.play_sound)
 const registry = require(ReplicatedStorage.shared.entity.registry)
+const validate_aim_ray = require(ServerScriptService.aim_validation.validate_aim_ray)
 
 type mining = {
 	cube: Part,
@@ -85,16 +88,19 @@ const function mine_fail(mining: mining): ()
 	mine_progress(mining, 0)
 end
 
+-- the aim is only checked when mining starts, so while it continues the nearest point of the cube
+-- has to stay in reach, which is never further than the point the client is actually aiming at
 const function should_fail(mining: mining): boolean
-	const entity_position = get_entity_position(mining.entity)
-	if entity_position == nil then
+	const eye_position = get_eye_position(mining.entity)
+	if eye_position == nil then
 		debug_print("Entity has no position.")
 		return true
 	end
 
-	const distance = (mining.cube.Position - entity_position).Magnitude
-	if distance > ENTITY_RANGE_SERVER then
-		debug_print("Entity moved too far away.")
+	const closest_point = get_closest_point_on_box(eye_position, mining.cube.CFrame, mining.cube.Size)
+	const reach, is_in_reach = get_reach(eye_position, closest_point)
+	if not is_in_reach then
+		debug_print("Entity moved too far away:", reach)
 		return true
 	end
 
@@ -178,7 +184,7 @@ const function start_mining(entity: registry.entity, id: number, cube: Part): ()
 	activate_heartbeat()
 end
 
-const function try_start(entity: registry.entity, id: unknown, cube: unknown): boolean
+const function try_start(player: Player, id: unknown, cube: unknown, origin: unknown, direction: unknown): boolean
 	-- When dealing with high lag, this can happen if the player places a cube and then immediately begins to mine it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
 	if cube == nil then
 		debug_print("Not enough arguments. This is likely because the cube does does not exist on the server yet.")
@@ -206,27 +212,20 @@ const function try_start(entity: registry.entity, id: unknown, cube: unknown): b
 	end
 
 	const cube_match = match.get_match_of_cube(cube)
-	if cube_match and not cube_match.stopped and cube_match ~= match.get_match_of(entity) then
+	if cube_match and not cube_match.stopped and cube_match ~= match.get_match_of(player) then
 		debug_print("Cube belongs to another match.")
 		return false
 	end
 
-	const entity_position = get_entity_position(entity)
-	if entity_position == nil then
-		debug_print("Entity has no position.")
+	const aim = validate_aim_ray(player, origin, direction)
+	if aim == nil or not is_aiming_at_cube(aim, cube) then
 		return false
 	end
 
-	const distance = (cube.Position - entity_position).Magnitude
-	if distance > ENTITY_RANGE_SERVER then
-		debug_print("Too far.")
+	if find_mining(player, id) ~= nil then
 		return false
 	end
-
-	if find_mining(entity, id) ~= nil then
-		return false
-	end
-	start_mining(entity, id, cube)
+	start_mining(player, id, cube)
 	return true
 end
 

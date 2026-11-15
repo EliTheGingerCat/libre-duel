@@ -2,12 +2,14 @@ const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
+const EYE_OFFSET = require(ReplicatedStorage.shared.aim.EYE_OFFSET)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 
 const local_player = Players.LocalPlayer
 
 -- nil means the cube can be mined
-const function get_mining_fail_reason(cube: Instance?): string?
+-- reach is measured from the eyes to the aimed point, the same way the server checks it
+const function get_mining_fail_reason(cube: Instance?, aim_position: Vector3): string?
 	if cube == nil then
 		return "Mouse is not pointing at anything."
 	end
@@ -25,7 +27,7 @@ const function get_mining_fail_reason(cube: Instance?): string?
 		return "Local position is missing."
 	end
 
-	const distance = (cube.Position - local_position).Magnitude
+	const distance = (aim_position - (local_position + EYE_OFFSET)).Magnitude
 	if distance > ENTITY_RANGE then
 		return "Too far."
 	end

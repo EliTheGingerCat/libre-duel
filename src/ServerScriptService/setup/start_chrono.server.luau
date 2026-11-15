@@ -3,7 +3,9 @@ const ServerScriptService = game:GetService("ServerScriptService")
 const debug_print = require(ServerScriptService.util.debug_print)
 
 if Workspace.AuthorityMode == Enum.AuthorityMode.Server then
-    debug_print("Libre Duel wasn't properly tested on Server Authority and it is guaranteed that you will find an issue. Chrono will also be disabled for this session.")
+	debug_print(
+		"Libre Duel wasn't properly tested on Server Authority and it is guaranteed that you will find an issue. Chrono will also be disabled for this session."
+	)
 end
 
 const ReplicatedStorage = game:GetService("ReplicatedStorage")

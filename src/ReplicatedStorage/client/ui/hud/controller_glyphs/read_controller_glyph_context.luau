@@ -38,8 +38,11 @@ end
 
 -- the raycasts only run for tools that can act on what they hit, since this is read every frame
 const function get_attack_label(tool: tool_types.tool): string?
-	if tool_registry.has_behaviour(tool, "pickaxe") and get_mining_fail_reason(get_aim_target().instance) == nil then
-		return "Mine"
+	if tool_registry.has_behaviour(tool, "pickaxe") then
+		const aim_target = get_aim_target()
+		if get_mining_fail_reason(aim_target.instance, aim_target.position) == nil then
+			return "Mine"
+		end
 	end
 	if get_melee_target() ~= nil then
 		return "Attack"

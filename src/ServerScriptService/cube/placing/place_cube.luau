@@ -6,9 +6,7 @@ const create_cube = require(ReplicatedStorage.shared.cube.create_cube)
 const cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 const cube_in_hitbox = require(ReplicatedStorage.shared.cube.cube_in_hitbox)
 const debug_print = require(ServerScriptService.util.debug_print)
-const ENTITY_RANGE_SERVER = require(ServerScriptService.combat.ENTITY_RANGE_SERVER)
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
-const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 const is_building_allowed = require(ServerScriptService.cube.building_restrictions.is_building_allowed)
 const get_player_cps = require(ServerScriptService.cps.get_player_cps)
 const match = require(ServerScriptService.match.match)
@@ -28,19 +26,8 @@ const function verify_position(position: Vector3): boolean
 	return (verify_coordinate(position.X) and verify_coordinate(position.Y) and verify_coordinate(position.Z))
 end
 
+-- reach isn't checked here, the position has to come from resolve_cube_placement_position
 const function place_cube(entity: registry.entity, cube_position: Vector3, appearance: tool_types.cube_params): boolean
-	const entity_position = get_entity_position(entity)
-	if entity_position == nil then
-		debug_print("Entity has no position.")
-		return false
-	end
-
-	const distance = (cube_position - entity_position).Magnitude
-	if distance > ENTITY_RANGE_SERVER then
-		debug_print("Too far.")
-		return false
-	end
-
 	if not verify_position(cube_position) then
 		debug_print("Invalid position.")
 		return false
