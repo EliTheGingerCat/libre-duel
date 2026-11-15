@@ -6,25 +6,18 @@ local create_cube = require(ReplicatedStorage.shared.cube.create_cube)
 local cube_cache = require(ReplicatedStorage.shared.cube.cube_cache)
 local cube_in_hitbox = require(ReplicatedStorage.shared.cube.cube_in_hitbox)
 const get_aim_ray = require(ReplicatedStorage.client.aim.get_aim_ray)
-const CUBE_SIZE = require(ReplicatedStorage.shared.cube.CUBE_SIZE)
+const get_cube_placement_position = require(ReplicatedStorage.shared.cube.get_cube_placement_position)
 local debug_print = require(ReplicatedStorage.client.util.debug_print)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
+const EYE_OFFSET = require(ReplicatedStorage.shared.aim.EYE_OFFSET)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
-local snap_coordinate = require(ReplicatedStorage.shared.cube.snap_coordinate)
 local tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 local local_player = Players.LocalPlayer
 
-const CUBE_SIZE_HALF = CUBE_SIZE / 2
-const CUBE_SIZE_HALF_SOFT = CUBE_SIZE_HALF * 0.9
-
 -- Create params once
 local build_ray_params = RaycastParams.new()
 build_ray_params.FilterType = Enum.RaycastFilterType.Exclude
-
-const function snap_position(position: Vector3): Vector3
-	return Vector3.new(snap_coordinate(position.X), snap_coordinate(position.Y), snap_coordinate(position.Z))
-end
 
 const function place_cube(tool: tool_types.tool): ()
 	local ignore_list = { local_player.Character }
@@ -49,15 +42,15 @@ const function place_cube(tool: tool_types.tool): ()
 	end
 
 	local hit_position = ray_result.Position
-	local distance = (hit_position - local_position).Magnitude
+	local distance = (hit_position - (local_position + EYE_OFFSET)).Magnitude
 
 	if distance > ENTITY_RANGE then
 		debug_print("Too far.")
 		return
 	end
 
-	local offset = ray_result.Normal * CUBE_SIZE_HALF_SOFT
-	local snapped = snap_position(hit_position + offset)
+	-- only for the local checks and preview, the server casts the same aim and picks the cell itself
+	local snapped = get_cube_placement_position(hit_position, ray_result.Normal)
 
 	if cube_cache.is_occupied(snapped) then
 		debug_print("Occupied by cube.")
@@ -74,7 +67,7 @@ const function place_cube(tool: tool_types.tool): ()
 	cube_temporary.Position = snapped
 	cube_temporary.Parent = workspace.runtime_instances.cubes
 
-	ReplicatedStorage.remotes.place_cube:InvokeServer(snapped)
+	ReplicatedStorage.remotes.place_cube:InvokeServer(aim_ray.Origin, aim_ray.Direction)
 
 	cube_temporary:Destroy()
 end

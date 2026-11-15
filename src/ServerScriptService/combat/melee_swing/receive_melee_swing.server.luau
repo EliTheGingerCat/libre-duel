@@ -8,13 +8,10 @@ const NON_SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.NON_SWORD_DAMAG
 const resolve_melee_swing_target = require(script.Parent.resolve_melee_swing_target)
 const sanitise_render_times = require(script.Parent.sanitise_render_times)
 const SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.SWORD_DAMAGE)
+const validate_aim_ray = require(ServerScriptService.aim_validation.validate_aim_ray)
 
 -- the client only says where it aimed and when it was seeing everyone, what got hit is decided here
 const function on_melee_swing(player: Player, origin: unknown, direction: unknown, raw_render_times: unknown): ()
-	if typeof(origin) ~= "Vector3" or typeof(direction) ~= "Vector3" then
-		return
-	end
-
 	-- an empty hand can't attack, which keeps the lobby peaceful since nobody holds anything there
 	const tool = inventory_util.get_selected_tool(player)
 	if tool == nil then
@@ -26,7 +23,12 @@ const function on_melee_swing(player: Player, origin: unknown, direction: unknow
 		return
 	end
 
-	const melee_hit = resolve_melee_swing_target(player, origin, direction, sanitise_render_times(raw_render_times))
+	const aim = validate_aim_ray(player, origin, direction)
+	if aim == nil then
+		return
+	end
+
+	const melee_hit = resolve_melee_swing_target(player, aim, sanitise_render_times(raw_render_times))
 	if melee_hit == nil then
 		return
 	end
