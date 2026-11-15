@@ -68,7 +68,8 @@
     "Workspace": {
       "$properties": {
         "FilteringEnabled": true,
-        "Gravity": 100.0
+        "Gravity": 100.0,
+        "FallenPartsDestroyHeight": 0
       },
       "$path": "./src/Workspace",
       "Terrain": {}
