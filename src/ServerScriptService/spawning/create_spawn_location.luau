@@ -9,7 +9,7 @@ const function create_spawn_location(pivot_frame: CFrame, footprint: Vector3, te
 	spawn_location.CFrame = pivot_frame * SPAWN_PIVOT_OFFSET:Inverse()
 	spawn_location.Anchored = true
 	spawn_location.Transparency = 1
-	-- roblox ignores a RespawnLocation it can't collide with or query
+	spawn_location.CanCollide = false
 	spawn_location.CanTouch = false
 	spawn_location.Neutral = false
 	spawn_location.TeamColor = team_colour

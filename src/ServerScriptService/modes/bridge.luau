@@ -6,6 +6,7 @@ const Workspace = game:GetService("Workspace")
 
 local bow_shot_event = require(ServerScriptService.bow.bow_shot_event)
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const create_spawn_location = require(ServerScriptService.spawning.create_spawn_location)
 const debug_print = require(script.Parent.Parent.util.debug_print)
 const DEFAULT_CAGE_NAME = require(ServerScriptService.cosmetics.cages.DEFAULT_CAGE_NAME)
 const generate_bridge = require(ServerScriptService.cube.generate_bridge)
@@ -15,7 +16,9 @@ const is_position_inside_part = require(ServerScriptService.util.is_position_ins
 const load_cage = require(ServerScriptService.cosmetics.cages.load_cage)
 const map_data = require(ReplicatedStorage.shared.maps.map_data)
 const match = require(ServerScriptService.match.match)
+const move_entity = require(ServerScriptService.util.move_entity)
 const registry = require(ReplicatedStorage.shared.entity.registry)
+const set_respawn_location = require(ServerScriptService.spawning.set_respawn_location)
 
 const BOW_RECHARGE_DELAY = 4
 
@@ -44,9 +47,11 @@ type team = {
 	entities: { registry.entity },
 	points: number,
 	spawn_part: BasePart,
+	spawn_location: SpawnLocation,
 	Roblox_team: Team,
 }
 
+const SPAWN_LOCATION_FOOTPRINT = Vector3.new(2, 0, 2)
 const CAGE_TIME = 3
 const WIN_POINTS = 5
 
@@ -60,32 +65,13 @@ const COLOUR3_TO_BRICKCOLOUR = {
 	[COLOURS.red] = BrickColor.new("Bright red"),
 }
 
--- EliTheGingerCat: I do not like how there are so many overloads for `CFrame.new`.
-const function CFrame_from_position(position: Vector3): CFrame
-	return CFrame.new(position)
-end
-
-const function move_entity(entity: registry.entity, position: Vector3): ()
-	const character = registry.get_character(entity)
-	if character == nil then
-		return
-	end
-
-	const current_pivot = character:GetPivot()
-	const current_rotation = current_pivot.Rotation
-	const new_position_frame = CFrame_from_position(position)
-	const new_pivot = new_position_frame * current_rotation
-
-	character:PivotTo(new_pivot)
-end
-
 const function give_match_loadout(entity: registry.entity, team: team): ()
 	inventory_util.clear_inventory(entity)
 	inventory_util.give_loadout(entity, LOADOUT, LOADOUT_AMOUNTS)
 	inventory_util.set_slot(entity, CLAY_SLOT, { item_id = TEAM_CLAYS[team.index], amount = LOADOUT_AMOUNTS.clay })
 end
 
-const function create_teams(info: map_data.map_data): { team }
+const function create_teams(info: map_data.map_data, map: Instance): { team }
 	const teams: { team } = {}
 
 	for index, data in { info.TEAM1, info.TEAM2 } do
@@ -101,6 +87,12 @@ const function create_teams(info: map_data.map_data): { team }
 
 		const cage = load_cage(DEFAULT_CAGE_NAME, data.SPAWN.CFrame)
 
+		-- without this roblox respawns team members at the lobby SpawnLocation, overriding any CharacterAdded move
+		const spawn_location =
+			create_spawn_location(CFrame.new(data.SPAWN.Position), SPAWN_LOCATION_FOOTPRINT, Roblox_team.TeamColor)
+		spawn_location.Name = `team #{index} spawn`
+		spawn_location.Parent = map
+
 		teams[index] = {
 			cage = cage.root,
 			cage_spawn = cage.spawn,
@@ -111,6 +103,7 @@ const function create_teams(info: map_data.map_data): { team }
 			entities = {},
 			points = 0,
 			spawn_part = data.SPAWN,
+			spawn_location = spawn_location,
 			Roblox_team = Roblox_team,
 		}
 	end
@@ -124,7 +117,7 @@ const function new(this_match: match.match): match.hooks
 	assert(info_module and info_module:IsA("ModuleScript"), "Map is missing MAP_INFO")
 	const load_info: (ModuleScript) -> map_data.map_data = require
 	const info = load_info(info_module)
-	const teams = create_teams(info)
+	const teams = create_teams(info, map)
 	generate_bridge(info.BRIDGE, info.TEAM1.SPAWN.Position, this_match)
 	const connections: { RBXScriptConnection | registry.connection } = {}
 	local cages_are_closed = false
@@ -317,16 +310,10 @@ const function new(this_match: match.match): match.hooks
 		end
 		table.insert(team.entities, entity)
 		registry.set_team(entity, team.Roblox_team)
+		set_respawn_location(entity, team.spawn_location)
 		move_entity(entity, team.spawn_part.Position)
 		give_match_loadout(entity, team)
 		registry.fire_client(entity, ReplicatedStorage.remotes.map_name, info.MAP_NAME)
-	end
-
-	const function on_character_added(_character: Model, entity: registry.entity): ()
-		const team = find_team_by_entity(entity)
-		if team then
-			move_entity(entity, team.spawn_part.Position)
-		end
 	end
 
 	-- not character_added, signals fire newest first so the inventory wouldn't exist yet
@@ -355,7 +342,6 @@ const function new(this_match: match.match): match.hooks
 			watch_goal(team)
 		end
 		table.insert(connections, RunService.Heartbeat:Connect(return_escaped_entities_to_cages))
-		table.insert(connections, registry.character_added:Connect(on_character_added))
 		table.insert(connections, inventory_util.created:Connect(on_inventory_created))
 		table.insert(connections, bow_shot_event:Connect(on_bow_shot))
 		table.insert(connections, registry.died:Connect(on_entity_died))
@@ -379,6 +365,7 @@ const function new(this_match: match.match): match.hooks
 				table.remove(team.entities, index)
 			end
 			registry.set_team(entity, nil)
+			set_respawn_location(entity, nil)
 		end
 	end
 
@@ -391,9 +378,11 @@ const function new(this_match: match.match): match.hooks
 		for _, team in teams do
 			for _, entity in team.entities do
 				registry.set_team(entity, nil)
+				set_respawn_location(entity, nil)
 			end
 
 			team.cage:Destroy()
+			team.spawn_location:Destroy()
 			team.Roblox_team:Destroy()
 		end
 	end
