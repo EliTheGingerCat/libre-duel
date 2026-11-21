@@ -34,6 +34,9 @@ end
 
 -- banner with a big rounded icon and a name overlapping its bottom edge
 const function profile_header(props: props)
+	-- the icon sits on top of the banner, so the banner gets no MouseLeave when the cursor moves onto the icon
+	const banner_hovered, set_banner_hovered = React.useState(false)
+	const icon_hovered, set_icon_hovered = React.useState(false)
 	const function limit_name_length(box: TextBox): ()
 		const truncated = truncate_to(box.Text, props.name_max_length)
 		if truncated ~= box.Text then
@@ -71,6 +74,8 @@ const function profile_header(props: props)
 			}, {
 				edit = props.on_banner_activated and create_element(editable_image_overlay, {
 					hint = "Change banner",
+					shaded = banner_hovered and not icon_hovered,
+					on_hover_changed = set_banner_hovered,
 					on_activated = props.on_banner_activated,
 				}),
 			}),
@@ -88,6 +93,8 @@ const function profile_header(props: props)
 				edit = props.on_icon_activated and create_element(editable_image_overlay, {
 					hint = "Change icon",
 					corner_radius = ICON_CORNER,
+					shaded = icon_hovered,
+					on_hover_changed = set_icon_hovered,
 					on_activated = props.on_icon_activated,
 				}),
 			}),

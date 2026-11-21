@@ -16,20 +16,22 @@ const function label_transparency(value: number): number
 	return 1 - value
 end
 
--- an invisible button over an image that darkens it and shows a hint on hover, for images the viewer may change
+-- an invisible button over an image that darkens it and shows a hint when shaded, for images the viewer may change
 -- give corner_radius the image's own corner so the shade doesn't poke out of it
+-- the owner decides when it is shaded, since overlapping images have to agree on which one the cursor is on
 const function editable_image_overlay(props: {
 	hint: string,
 	corner_radius: UDim?,
+	shaded: boolean,
+	on_hover_changed: (hovered: boolean) -> (),
 	on_activated: () -> (),
 })
-	const hovered, set_hovered = React.useState(false)
-	const motion = use_ui_motion(if hovered then 1 else 0)
+	const motion = use_ui_motion(if props.shaded then 1 else 0)
 	const function enter(): ()
-		set_hovered(true)
+		props.on_hover_changed(true)
 	end
 	const function leave(): ()
-		set_hovered(false)
+		props.on_hover_changed(false)
 	end
 	return create_element("TextButton", {
 		Name = "edit_overlay",
