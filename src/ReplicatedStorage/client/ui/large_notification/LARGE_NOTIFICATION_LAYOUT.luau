@@ -1,0 +1,15 @@
+const LARGE_NOTIFICATION_LAYOUT = {
+	WIDTH = 448,
+	HEIGHT = 128,
+	PADDING = 10,
+	CORNER_RADIUS = 8,
+	TEXT_SIZE = 24,
+	-- share of the text column the text gets when there are buttons below it
+	TEXT_HEIGHT_WITH_BUTTONS = 0.6,
+	CLOSE_BUTTON_SIZE = 42,
+	CLOSE_BUTTON_IMAGE = "rbxassetid://72160170469319",
+	SCREEN_MARGIN = 15,
+	DISPLAY_ORDER = 20,
+}
+
+return LARGE_NOTIFICATION_LAYOUT

@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
+local large_notification_container = require(script.Parent.Parent.large_notification.large_notification_container)
 local component_showcase = require(script.Parent.components_showcase)
 local crosshair = require(script.Parent.crosshair)
 local gameplay_hud = require(script.Parent.gameplay_hud)
@@ -20,6 +21,7 @@ const function main()
 	return create_element(
 		React.Fragment,
 		{},
+		create_element(large_notification_container),
 		create_element(component_showcase),
 		create_element(crosshair),
 		create_element(gameplay_hud),
