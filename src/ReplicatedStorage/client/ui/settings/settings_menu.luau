@@ -1,8 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local about = require(script.Parent.about)
+const empty_state_text = require(script.Parent.Parent.visuals.empty_state_text)
+const entrance_animation = require(script.Parent.Parent.effects.entrance_animation)
 local menu_window = require(script.Parent.Parent.visuals.menu_window)
 local scrolling_content = require(script.Parent.Parent.visuals.scrolling_content)
 local setting_reveal = require(script.Parent.setting_reveal)
@@ -40,14 +41,14 @@ const function settings_menu(props: { enabled: boolean, on_close: () -> () })
 		set_selected(category)
 		set_query("")
 	end
+	const padding = React.createElement("UIPadding", {
+		PaddingTop = UDim.new(0, 12),
+		PaddingBottom = UDim.new(0, 12),
+		PaddingLeft = UDim.new(0, 48),
+		PaddingRight = UDim.new(0, 48),
+	})
 	local children = {
 		layout = React.createElement("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
-		padding = React.createElement("UIPadding", {
-			PaddingTop = UDim.new(0, 12),
-			PaddingBottom = UDim.new(0, 12),
-			PaddingLeft = UDim.new(0, 48),
-			PaddingRight = UDim.new(0, 48),
-		}),
 	}
 	local count = 0
 	local search = query:lower()
@@ -67,13 +68,9 @@ const function settings_menu(props: { enabled: boolean, on_close: () -> () })
 	if selected == "about" and search == "" then
 		children.about = React.createElement(about)
 	elseif count == 0 then
-		children.empty = React.createElement("TextLabel", {
-			Size = UDim2.new(1, 0, 0, 64),
-			BackgroundTransparency = 1,
-			Text = if search ~= "" then "No settings found." else "No settings here yet.",
-			TextSize = 30,
-			TextColor3 = Color3.new(1, 1, 1),
-			FontFace = FONTS.regular,
+		children.empty = React.createElement(empty_state_text, {
+			text = if search ~= "" then "No settings found." else "No settings here yet.",
+			text_size = 30,
 		})
 	end
 	return React.createElement(menu_window, {
@@ -91,7 +88,16 @@ const function settings_menu(props: { enabled: boolean, on_close: () -> () })
 			position = UDim2.new(0.28, 0, 0, 76),
 			size = UDim2.new(0.72, -12, 1, -96),
 			reset_key = selected .. query,
-		}, children),
+		}, {
+			padding = padding,
+			layout = React.createElement("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
+			-- keyed on the category and not the query, so typing in the search bar doesn't replay it every keystroke
+			page = React.createElement(
+				entrance_animation,
+				{ key = if search == "" then selected else "search" },
+				children
+			),
+		}),
 	})
 end
 

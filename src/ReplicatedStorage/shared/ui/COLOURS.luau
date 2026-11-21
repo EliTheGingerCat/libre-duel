@@ -258,6 +258,7 @@ COLOURS.error = COLOURS.red_400
 COLOURS.info = COLOURS.blue_400
 COLOURS.success = COLOURS.green_400
 COLOURS.danger = Color3.new(177 / 255, 76 / 255, 78 / 255)
+COLOURS.danger_text = Color3.fromRGB(255, 87, 87)
 COLOURS.surface = Color3.new(17 / 255, 17 / 255, 17 / 255)
 
 return COLOURS
