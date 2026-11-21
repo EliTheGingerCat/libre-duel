@@ -1,15 +1,15 @@
 const ServerScriptService = game:GetService("ServerScriptService")
 
-const INITIAL_PLAYER_DATA = require(ServerScriptService.player_data.schema.INITIAL_PLAYER_DATA)
+const add_total_playtime = require(ServerScriptService.player_data.schema.migrations.add_total_playtime)
 
-export type with_total_playtime = INITIAL_PLAYER_DATA.base_player_data & {
-	playtime: number, -- seconds
+export type with_player_banner = add_total_playtime.with_total_playtime & {
+	equipped_banner: string,
 }
 
-const function add_total_playtime(data: INITIAL_PLAYER_DATA.base_player_data): with_total_playtime
-	const new_data = table.clone(data) :: with_total_playtime
-	new_data.playtime = 0
+const function add_player_banners(data: add_total_playtime.with_total_playtime): with_player_banner
+	const new_data = table.clone(data) :: with_player_banner
+	new_data.equipped_banner = "default"
 	return new_data
 end
 
-return add_total_playtime
+return add_player_banners
