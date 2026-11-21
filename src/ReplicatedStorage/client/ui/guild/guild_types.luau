@@ -7,7 +7,22 @@ export type member = player_row_types.player_summary & {
 	stats: { profile_types.stat_group },
 }
 
+export type banned_member = player_row_types.player_summary & {
+	banned: string,
+}
+
+export type incoming_invite = {
+	guild_id: string,
+	name: string,
+	tag: string,
+	icon: string,
+	banner: string,
+	inviter_username: string,
+	member_count: number,
+}
+
 export type guild = {
+	id: string,
 	name: string,
 	tag: string,
 	icon: string,
@@ -17,6 +32,7 @@ export type guild = {
 	rank_history: { profile_types.rank_point },
 	about: string,
 	members: { member },
+	banned: { banned_member },
 }
 
 export type page = "info" | "members" | "invites" | "manage"

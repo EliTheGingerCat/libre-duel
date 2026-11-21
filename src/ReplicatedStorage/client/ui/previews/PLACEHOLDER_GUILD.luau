@@ -7,6 +7,7 @@ const create_placeholder_rank_history = require(script.Parent.create_placeholder
 const guild_types = require(script.Parent.Parent.guild.guild_types)
 
 const PLACEHOLDER_GUILD: guild_types.guild = {
+	id = "00000000-0000-0000-0000-000000000000",
 	name = "The Ok Association",
 	tag = "TOA",
 	icon = PLACEHOLDER_ASSETS.headshot,
@@ -74,6 +75,16 @@ const PLACEHOLDER_GUILD: guild_types.guild = {
 			joined = "Nov 21, 2026",
 			is_owner = false,
 			stats = PLACEHOLDER_STAT_GROUPS,
+		},
+	},
+	banned = {
+		{
+			user_id = 3,
+			display_name = "NOT miau",
+			username = "breter98",
+			headshot = PLACEHOLDER_ASSETS.headshot,
+			banner = PLACEHOLDER_ASSETS.member_banner,
+			banned = "Nov 21, 2026",
 		},
 	},
 }
