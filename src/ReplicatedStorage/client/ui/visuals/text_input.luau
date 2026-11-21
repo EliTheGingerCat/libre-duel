@@ -9,6 +9,8 @@ const function text_input(props: {
 	text: string?,
 	placeholder: string?,
 	icon: string?,
+	radius: number?,
+	layout_order: number?,
 	on_changed: ((string) -> ())?,
 })
 	const function changed(box: TextBox): ()
@@ -18,11 +20,12 @@ const function text_input(props: {
 	end
 	local inset = if props.icon then 54 else 20
 	return React.createElement("Frame", {
+		LayoutOrder = props.layout_order,
 		Size = UDim2.new(1, 0, 0, 50),
 		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,
 	}, {
-		surface = React.createElement(surface),
+		surface = React.createElement(surface, { radius = props.radius }),
 		icon = props.icon and React.createElement("ImageLabel", {
 			BackgroundTransparency = 1,
 			Position = UDim2.fromOffset(14, 10),
