@@ -8,17 +8,23 @@ const guild_store = require(ServerScriptService.guild.data.guild_store)
 
 const SECONDS_PER_DAY = 86400
 
--- one point per UTC day, every server with the guild's session may call this but only the first one each day adds a point
+-- one point per UTC day, later calls on the same day move that day's point to the newest rank
+-- every server with the guild's session may call this, they all land on the same point
 const function record_guild_rank_history(guild_id: string, rank: number): ()
 	const today = os.time() // SECONDS_PER_DAY
 	const function append_point(data: guild_schema.guild_data): guild_schema.guild_data
 		const last_point = data.rank_history[#data.rank_history]
-		if data.deleted or (last_point and last_point.time // SECONDS_PER_DAY == today) then
+		const is_today = last_point ~= nil and last_point.time // SECONDS_PER_DAY == today
+		if data.deleted or (is_today and last_point.rank == rank) then
 			return data
 		end
 		const new_data = table.clone(data)
 		const history = table.clone(data.rank_history)
-		table.insert(history, { time = today * SECONDS_PER_DAY, rank = rank })
+		if is_today then
+			history[#history] = { time = last_point.time, rank = rank }
+		else
+			table.insert(history, { time = os.time(), rank = rank })
+		end
 		while #history > GUILD_LIMITS.MAX_RANK_HISTORY_POINTS do
 			table.remove(history, 1)
 		end

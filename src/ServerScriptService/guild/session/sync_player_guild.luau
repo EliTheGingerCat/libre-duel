@@ -1,5 +1,6 @@
 const ServerScriptService = game:GetService("ServerScriptService")
 
+const dirty_guild_scores = require(ServerScriptService.guild.ranking.dirty_guild_scores)
 const drop = require(ServerScriptService.ServerPackages.drop)
 const get_cached_player_data = require(ServerScriptService.player_data.get_cached_player_data)
 const guild_playtime = require(ServerScriptService.guild.stats.guild_playtime)
@@ -70,6 +71,8 @@ const function sync_once(player: Player): ()
 			end
 			player_guild_ids[player] = hint
 			guild_playtime.start(player, hint)
+			-- new guilds and guilds without wins have no leaderboard entry yet, and without one they never get a rank
+			dirty_guild_scores[hint] = true
 		end
 	end
 

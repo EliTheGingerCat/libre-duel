@@ -7,9 +7,8 @@ const guild_leaderboard_store = require(ServerScriptService.guild.ranking.guild_
 const PAGE_SIZE = 100
 
 -- pages through the top of the leaderboard, nil when any read fails so a half read never replaces good ranks
--- guilds with a score of 0 are skipped, otherwise every new guild would be "ranked"
 const function fetch_guild_ranks(): { [string]: number }?
-	const ok, pages = pcall(guild_leaderboard_store.GetSortedAsync, guild_leaderboard_store, false, PAGE_SIZE, 1)
+	const ok, pages = pcall(guild_leaderboard_store.GetSortedAsync, guild_leaderboard_store, false, PAGE_SIZE)
 	if not ok then
 		warn(`Could not read guild ranks: {pages}`)
 		return nil
