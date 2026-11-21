@@ -4,8 +4,8 @@ const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
 
 const definition: tool_types.definition = {
 	name = "Arrow",
-	image = "rbxassetid://89657284108555",
-	mesh = "rbxassetid://94949850596151",
+	image = "rbxassetid://102461617513391",
+	mesh = "rbxassetid://131375476557394",
 	behaviours = {},
 }
 
