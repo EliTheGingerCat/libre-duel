@@ -1,6 +1,7 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
+const award_guild_mode_stat = require(ServerScriptService.guild.stats.award_guild_mode_stat)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 const player_schema = require(ServerScriptService.player_data.schema.player_schema)
 const update_player_data = require(script.Parent.update_player_data)
@@ -25,6 +26,10 @@ const function award_mode_stat(
 		return new_data
 	end
 	update_player_data(entity, add_to_mode_stat)
+	const player = registry.get_player(entity)
+	if player then
+		award_guild_mode_stat(player, mode, stat, amount)
+	end
 end
 
 return award_mode_stat
