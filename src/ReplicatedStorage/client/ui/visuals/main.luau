@@ -5,6 +5,7 @@ local large_notification_container = require(script.Parent.Parent.large_notifica
 local component_showcase = require(script.Parent.components_showcase)
 local crosshair = require(script.Parent.crosshair)
 local gameplay_hud = require(script.Parent.gameplay_hud)
+const guild_menu_controller = require(script.Parent.Parent.guild.guild_menu_controller)
 local guild_menu_preview = require(script.Parent.Parent.previews.guild_menu_preview)
 local hotbar = require(script.Parent.hotbar)
 local infoboard = require(script.Parent.infoboard)
@@ -27,6 +28,7 @@ const function main()
 		create_element(component_showcase),
 		create_element(crosshair),
 		create_element(gameplay_hud),
+		create_element(guild_menu_controller),
 		create_element(guild_menu_preview),
 		create_element(hotbar),
 		create_element(infoboard),

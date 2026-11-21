@@ -7,7 +7,8 @@ const member_columns = require(script.Parent.member_columns)
 const create_element = React.createElement
 const SEPARATOR_COLOUR = Color3.fromRGB(200, 200, 200)
 
-const function member_header_row(props: { layout_order: number? })
+-- date_label names the last column, "Joined" for members and "Banned" for the ban list
+const function member_header_row(props: { layout_order: number?, date_label: string? })
 	const headshot_size = PLAYER_ROW_LAYOUT.height - PLAYER_ROW_LAYOUT.padding * 2
 	return create_element("Frame", {
 		Name = "header_row",
@@ -41,7 +42,7 @@ const function member_header_row(props: { layout_order: number? })
 				layout_order = 2,
 				display_name = "Display name",
 				username = "Username",
-				joined = "Joined",
+				joined = props.date_label or "Joined",
 			}),
 		}),
 		separator = create_element("Frame", {

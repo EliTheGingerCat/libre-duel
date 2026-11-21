@@ -1,3 +1,6 @@
+const ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
 const player_row_types = require(script.Parent.Parent.player_row.player_row_types)
 const profile_types = require(script.Parent.Parent.profile_card.profile_types)
 
@@ -35,7 +38,8 @@ export type guild = {
 	banned: { banned_member },
 }
 
-export type page = "info" | "members" | "invites" | "manage"
+-- "create" and "incoming_invites" are what players without a guild see
+export type page = "info" | "members" | "invites" | "manage" | "create" | "incoming_invites"
 
 -- whoever is showing the menu owns the search and the invite list, the menu only displays them
 export type invites = {
@@ -45,6 +49,25 @@ export type invites = {
 	on_search: (query: string) -> (),
 	on_invite: (player: player_row_types.player_summary) -> (),
 	on_cancel: (player: player_row_types.player_summary) -> (),
+}
+
+export type member_action = "view_profile" | "kick" | "ban"
+export type banned_member_action = "view_profile" | "unban"
+
+-- everything the menu can ask for, whoever shows the menu talks to the server
+-- these must not yield, the menu calls them straight from input events
+export type actions = {
+	on_create: (info: guild_snapshot_types.guild_info_input) -> (),
+	on_leave: () -> (),
+	on_delete: () -> (),
+	on_member_action: (action: member_action, member: member) -> (),
+	on_banned_member_action: (action: banned_member_action, banned_member: banned_member) -> (),
+	on_accept_invite: (invite: incoming_invite) -> (),
+	on_decline_invite: (invite: incoming_invite) -> (),
+	on_view_guild_info: (invite: incoming_invite) -> (),
+	on_block_guild: (invite: incoming_invite) -> (),
+	-- leaves the read only view of another guild
+	on_close_viewed_guild: () -> (),
 }
 
 return {}
