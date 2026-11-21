@@ -29,7 +29,7 @@ const function large_notification_button(props: {
 		[React.Event.Activated] = props.on_activated,
 	}, {
 		motion = create_element(button_motion),
-		surface = create_element(surface, { radius = LARGE_NOTIFICATION_LAYOUT.CORNER_RADIUS }),
+		surface = create_element(surface, { radius = LARGE_NOTIFICATION_LAYOUT.BUTTON_CORNER_RADIUS }),
 	})
 end
 

@@ -2,7 +2,9 @@ const LARGE_NOTIFICATION_LAYOUT = {
 	WIDTH = 448,
 	HEIGHT = 128,
 	PADDING = 10,
-	CORNER_RADIUS = 8,
+	CARD_CORNER_RADIUS = 32,
+	ICON_CORNER_RADIUS = 22,
+	BUTTON_CORNER_RADIUS = 16,
 	TEXT_SIZE = 24,
 	-- share of the text column the text gets when there are buttons below it
 	TEXT_HEIGHT_WITH_BUTTONS = 0.6,

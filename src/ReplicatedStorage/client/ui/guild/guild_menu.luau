@@ -22,7 +22,7 @@ const create_element = React.createElement
 
 const INFO_ENTRY: sidebar_types.entry = { id = "info", text = "Info", icon = "rbxassetid://75711772548687" }
 const MEMBERS_ENTRY: sidebar_types.entry = { id = "members", text = "Members", icon = "rbxassetid://100734044686485" }
-const INVITES_ENTRY: sidebar_types.entry = { id = "invites", text = "Invites", icon = "rbxassetid://126059733701198" }
+const INVITES_ENTRY: sidebar_types.entry = { id = "invites", text = "Invites", icon = "rbxassetid://125391154286649" }
 const MANAGE_ENTRY: sidebar_types.entry =
 	{ id = "manage", text = "Manage", icon = "rbxassetid://104330757164550", bottom = true }
 const CREATE_ENTRY: sidebar_types.entry = { id = "create", text = "Create", icon = "rbxassetid://127844573570900" }

@@ -85,7 +85,7 @@ const function large_notification_card(props: {
 		BackgroundColor3 = COLOURS.surface,
 		BackgroundTransparency = 0.5,
 	}, {
-		surface = create_element(surface, { radius = LARGE_NOTIFICATION_LAYOUT.CORNER_RADIUS }),
+		surface = create_element(surface, { radius = LARGE_NOTIFICATION_LAYOUT.CARD_CORNER_RADIUS }),
 		close_button = create_element(large_notification_close_button, { on_activated = on_close_activated }),
 		content = create_element("Frame", {
 			Name = "content",
@@ -108,7 +108,7 @@ const function large_notification_card(props: {
 				ScaleType = Enum.ScaleType.Crop,
 			}, {
 				corner = create_element("UICorner", {
-					CornerRadius = UDim.new(0, LARGE_NOTIFICATION_LAYOUT.CORNER_RADIUS),
+					CornerRadius = UDim.new(0, LARGE_NOTIFICATION_LAYOUT.ICON_CORNER_RADIUS),
 				}),
 			}),
 			text_column = create_element("Frame", {
