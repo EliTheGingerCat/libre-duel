@@ -6,8 +6,9 @@ const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapsh
 const GUILD_ID_PATTERN = "^%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$"
 const MAX_INPUT_LENGTH = 40000
 
+-- negative ids are allowed since studio test players have them
 const function parse_user_id(value: unknown): number?
-	if typeof(value) ~= "number" or value ~= value or value <= 0 or value % 1 ~= 0 then
+	if typeof(value) ~= "number" or value ~= value or value == 0 or value % 1 ~= 0 then
 		return nil
 	end
 	return value
