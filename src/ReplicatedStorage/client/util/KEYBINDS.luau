@@ -2,6 +2,7 @@ const KEYBINDS = {
 	components_showcase = Enum.KeyCode.C,
 	debug_local = Enum.KeyCode.P,
 	debug_server = Enum.KeyCode.M,
+	guild_menu_preview = Enum.KeyCode.G,
 	hud_editor = Enum.KeyCode.RightShift,
 	inventory = Enum.KeyCode.E,
 	slot = {
@@ -19,6 +20,7 @@ const KEYBINDS = {
 	tool_switch = Enum.KeyCode.E,
 	tool_attack = Enum.UserInputType.MouseButton1,
 	tool_use = Enum.UserInputType.MouseButton2,
+	player_profile_preview = Enum.KeyCode.J,
 	player_sneak = Enum.KeyCode.LeftShift,
 }
 
