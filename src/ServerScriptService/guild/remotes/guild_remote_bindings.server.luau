@@ -15,6 +15,7 @@ const kick_guild_member = require(ServerScriptService.guild.actions.kick_guild_m
 const leave_guild = require(ServerScriptService.guild.actions.leave_guild)
 const parse_guild_remote_arguments = require(script.Parent.parse_guild_remote_arguments)
 const request_guild_deletion = require(ServerScriptService.guild.actions.request_guild_deletion)
+const request_guild_image_change = require(ServerScriptService.guild.actions.request_guild_image_change)
 const search_guild_invite_candidate = require(ServerScriptService.guild.search.search_guild_invite_candidate)
 const unban_guild_member = require(ServerScriptService.guild.actions.unban_guild_member)
 
@@ -50,8 +51,13 @@ const function run_create_guild(player: Player, value: unknown): string?
 end
 
 const function run_edit_guild_info(player: Player, value: unknown): string?
-	const info = parse_guild_remote_arguments.parse_guild_info_input(value)
-	return if info then edit_guild_info(player, info) else INVALID_REQUEST
+	const changes = parse_guild_remote_arguments.parse_guild_info_changes(value)
+	return if changes then edit_guild_info(player, changes) else INVALID_REQUEST
+end
+
+const function run_request_guild_image_change(player: Player, value: unknown): string?
+	const kind: request_guild_image_change.image_kind? = parse_guild_remote_arguments.parse_image_kind(value)
+	return if kind then request_guild_image_change(player, kind) else INVALID_REQUEST
 end
 
 const function run_search(_player: Player, value: unknown): unknown
@@ -67,6 +73,7 @@ end
 bind_guild_action_remote(guild_remotes.create_guild, run_create_guild)
 bind_guild_action_remote(guild_remotes.edit_guild_info, run_edit_guild_info)
 bind_guild_action_remote(guild_remotes.delete_guild, request_guild_deletion)
+bind_guild_action_remote(guild_remotes.request_guild_image_change, run_request_guild_image_change)
 bind_guild_action_remote(guild_remotes.leave_guild, leave_guild)
 bind_guild_action_remote(guild_remotes.invite_to_guild, with_user_id(invite_to_guild))
 bind_guild_action_remote(guild_remotes.cancel_guild_invite, with_user_id(cancel_guild_invite))

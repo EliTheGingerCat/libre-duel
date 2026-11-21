@@ -70,4 +70,14 @@ export type guild_info_input = {
 	discord_invite: string,
 }
 
+-- for editing, only the fields that are set get changed
+export type guild_info_changes = {
+	name: string?,
+	tag: string?,
+	description: string?,
+	icon: string?,
+	banner: string?,
+	discord_invite: string?,
+}
+
 return {}

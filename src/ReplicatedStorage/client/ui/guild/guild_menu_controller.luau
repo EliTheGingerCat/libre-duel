@@ -134,6 +134,18 @@ const function guild_menu_controller()
 		-- the server answers with a confirmation popup, nothing is deleted yet
 		run_action("delete_guild")
 	end
+	const function rename(name: string): ()
+		run_action("edit_guild_info", { name = name })
+	end
+	const function edit_description(description: string): ()
+		run_action("edit_guild_info", { description = description })
+	end
+	const function change_icon(): ()
+		run_action("request_guild_image_change", "icon")
+	end
+	const function change_banner(): ()
+		run_action("request_guild_image_change", "banner")
+	end
 	-- TODO: blocking guilds isn't designed yet
 	const function block_guild(_invite: guild_types.incoming_invite): () end
 	const function close_viewed_guild(): ()
@@ -164,6 +176,10 @@ const function guild_menu_controller()
 			on_create = create,
 			on_leave = leave,
 			on_delete = delete,
+			on_rename = rename,
+			on_edit_description = edit_description,
+			on_change_icon = change_icon,
+			on_change_banner = change_banner,
 			on_member_action = member_action,
 			on_banned_member_action = banned_member_action,
 			on_accept_invite = accept_invite,

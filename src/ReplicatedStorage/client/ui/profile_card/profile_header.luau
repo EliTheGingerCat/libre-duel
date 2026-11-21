@@ -2,11 +2,13 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
+const editable_image_overlay = require(script.Parent.editable_image_overlay)
 
 const create_element = React.createElement
 const BANNER_ASPECT_RATIO = 5
 -- room under the banner for the icon and name, which hang below it
 const OVERHANG_HEIGHT = 100
+const ICON_CORNER = UDim.new(0.4, 0)
 
 export type props = {
 	banner: string,
@@ -14,10 +16,39 @@ export type props = {
 	name: string,
 	subtitle: string,
 	layout_order: number?,
+	-- each one makes its part editable, leave them out for headers only meant to be looked at
+	on_banner_activated: (() -> ())?,
+	on_icon_activated: (() -> ())?,
+	-- turns the name into a textbox, called with the new name when the viewer presses enter or clicks away
+	on_name_changed: ((name: string) -> ())?,
+	name_max_length: number?,
 }
+
+const function truncate_to(text: string, max_length: number?): string
+	if max_length == nil or (utf8.len(text) or #text) <= max_length then
+		return text
+	end
+	const cut_at = utf8.offset(text, max_length + 1)
+	return if cut_at then string.sub(text, 1, cut_at - 1) else text
+end
 
 -- banner with a big rounded icon and a name overlapping its bottom edge
 const function profile_header(props: props)
+	const function limit_name_length(box: TextBox): ()
+		const truncated = truncate_to(box.Text, props.name_max_length)
+		if truncated ~= box.Text then
+			box.Text = truncated
+		end
+	end
+	const function submit_name(box: TextBox): ()
+		const new_name = box.Text
+		if props.on_name_changed == nil or new_name == props.name or string.match(new_name, "^%s*$") then
+			box.Text = props.name
+			return
+		end
+		props.on_name_changed(new_name)
+	end
+	const name_is_editable = props.on_name_changed ~= nil
 	return create_element("Frame", {
 		Name = "profile_header",
 		LayoutOrder = props.layout_order,
@@ -37,6 +68,11 @@ const function profile_header(props: props)
 				BackgroundTransparency = 1,
 				Image = props.banner,
 				ScaleType = Enum.ScaleType.Crop,
+			}, {
+				edit = props.on_banner_activated and create_element(editable_image_overlay, {
+					hint = "Change banner",
+					on_activated = props.on_banner_activated,
+				}),
 			}),
 			icon = create_element("ImageLabel", {
 				AnchorPoint = Vector2.new(0, 0.5),
@@ -48,7 +84,12 @@ const function profile_header(props: props)
 				ZIndex = 2,
 			}, {
 				aspect = create_element("UIAspectRatioConstraint"),
-				corner = create_element("UICorner", { CornerRadius = UDim.new(0.4, 0) }),
+				corner = create_element("UICorner", { CornerRadius = ICON_CORNER }),
+				edit = props.on_icon_activated and create_element(editable_image_overlay, {
+					hint = "Change icon",
+					corner_radius = ICON_CORNER,
+					on_activated = props.on_icon_activated,
+				}),
 			}),
 			name_container = create_element("Frame", {
 				AnchorPoint = Vector2.new(1, 0),
@@ -65,8 +106,11 @@ const function profile_header(props: props)
 					PaddingLeft = UDim.new(0, 5),
 					PaddingRight = UDim.new(0, 5),
 				}),
-				name = create_element("TextLabel", {
+				name = create_element(if name_is_editable then "TextBox" else "TextLabel", {
 					LayoutOrder = 1,
+					ClearTextOnFocus = if name_is_editable then false else nil,
+					[React.Change.Text] = if name_is_editable then limit_name_length else nil,
+					[React.Event.FocusLost] = if name_is_editable then submit_name else nil,
 					Size = UDim2.new(1, 0, 0, 42),
 					AutomaticSize = Enum.AutomaticSize.Y,
 					BackgroundTransparency = 1,

@@ -1,7 +1,7 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
-const filter_guild_info = require(ServerScriptService.guild.text.filter_guild_info)
+const filter_guild_text = require(ServerScriptService.guild.text.filter_guild_text)
 const get_player_guild = require(ServerScriptService.guild.membership.get_player_guild)
 const guild_schema = require(ServerScriptService.guild.data.schema.guild_schema)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
@@ -13,26 +13,47 @@ const validate_guild_asset = require(ServerScriptService.guild.assets.validate_g
 const validate_guild_info = require(ReplicatedStorage.shared.guild.validate_guild_info)
 
 type tag_index = { guild_id: string }
+type text_field = "name" | "tag" | "description" | "discord_invite"
 
-const function edit_guild_info(player: Player, requested_info: guild_snapshot_types.guild_info_input): string?
+const TEXT_FIELDS: { text_field } = { "name", "tag", "description", "discord_invite" }
+
+-- merges the changes onto the saved info, so two quick edits of different fields never undo each other
+const function edit_guild_info(player: Player, changes: guild_snapshot_types.guild_info_changes): string?
 	const player_guild = get_player_guild(player)
 	if player_guild == nil or not player_guild.is_owner then
 		return "Only the guild owner can do that."
 	end
-	const invalid_reason = validate_guild_info(requested_info)
+	const current = player_guild.data
+	const info: guild_snapshot_types.guild_info_input = {
+		name = changes.name or current.name,
+		tag = changes.tag or current.tag,
+		description = changes.description or current.description,
+		icon = changes.icon or current.icon,
+		banner = changes.banner or current.banner,
+		discord_invite = changes.discord_invite or current.discord_invite,
+	}
+	const invalid_reason = validate_guild_info(info)
 	if invalid_reason then
 		return invalid_reason
 	end
-	const current = player_guild.data
 	if
-		(requested_info.icon ~= current.icon and not validate_guild_asset(requested_info.icon))
-		or (requested_info.banner ~= current.banner and not validate_guild_asset(requested_info.banner))
+		(info.icon ~= current.icon and not validate_guild_asset(info.icon))
+		or (info.banner ~= current.banner and not validate_guild_asset(info.banner))
 	then
-		return "Icons and banners must be image ids, not decal ids."
+		return "That isn't an image id. Decal ids don't work, use the image id behind the decal."
 	end
-	const info, filter_error = filter_guild_info(player, requested_info)
-	if info == nil then
-		return filter_error
+	-- only changed text gets filtered, the saved text already was
+	for _, field in TEXT_FIELDS do
+		if info[field] ~= current[field] then
+			const filtered = filter_guild_text(player, info[field])
+			if filtered == nil then
+				return "Couldn't check your text right now, try again in a bit."
+			end
+			if field == "tag" and filtered ~= info.tag then
+				return "That tag isn't allowed."
+			end
+			info[field] = filtered
+		end
 	end
 
 	const guild_id = player_guild.id

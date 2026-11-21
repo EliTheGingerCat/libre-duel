@@ -60,6 +60,11 @@ export type actions = {
 	on_create: (info: guild_snapshot_types.guild_info_input) -> (),
 	on_leave: () -> (),
 	on_delete: () -> (),
+	on_rename: (name: string) -> (),
+	on_edit_description: (description: string) -> (),
+	-- the server asks for the new image in a popup
+	on_change_icon: () -> (),
+	on_change_banner: () -> (),
 	on_member_action: (action: member_action, member: member) -> (),
 	on_banned_member_action: (action: banned_member_action, banned_member: banned_member) -> (),
 	on_accept_invite: (invite: incoming_invite) -> (),

@@ -4,6 +4,7 @@ export type action_name =
 	"create_guild"
 	| "edit_guild_info"
 	| "delete_guild"
+	| "request_guild_image_change"
 	| "leave_guild"
 	| "invite_to_guild"
 	| "cancel_guild_invite"

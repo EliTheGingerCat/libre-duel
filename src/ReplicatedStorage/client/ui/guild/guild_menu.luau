@@ -212,7 +212,17 @@ const function guild_menu(props: props)
 		})
 	else
 		page_key = "info"
-		page = create_element(guild_info_page, { guild = props.guild })
+		page = create_element(guild_info_page, {
+			guild = props.guild,
+			edit = if props.viewer_is_owner
+				then {
+					on_rename = props.actions.on_rename,
+					on_edit_description = props.actions.on_edit_description,
+					on_change_icon = props.actions.on_change_icon,
+					on_change_banner = props.actions.on_change_banner,
+				}
+				else nil,
+		})
 	end
 
 	const content_position = UDim2.new(0.28, 0, 0, 76)

@@ -52,7 +52,51 @@ const function parse_guild_info_input(value: unknown): guild_snapshot_types.guil
 	}
 end
 
+const function parse_optional_string(value: unknown): (boolean, string?)
+	if value == nil then
+		return true, nil
+	end
+	const parsed = parse_short_string(value)
+	return parsed ~= nil, parsed
+end
+
+-- every field is optional, but a field that is set has to be a string
+const function parse_guild_info_changes(value: unknown): guild_snapshot_types.guild_info_changes?
+	if typeof(value) ~= "table" then
+		return nil
+	end
+	const raw = value :: { [unknown]: unknown }
+	const name_ok, name = parse_optional_string(raw.name)
+	const tag_ok, tag = parse_optional_string(raw.tag)
+	const description_ok, description = parse_optional_string(raw.description)
+	const icon_ok, icon = parse_optional_string(raw.icon)
+	const banner_ok, banner = parse_optional_string(raw.banner)
+	const discord_ok, discord_invite = parse_optional_string(raw.discord_invite)
+	if not (name_ok and tag_ok and description_ok and icon_ok and banner_ok and discord_ok) then
+		return nil
+	end
+	return {
+		name = name,
+		tag = tag,
+		description = description,
+		icon = icon,
+		banner = banner,
+		discord_invite = discord_invite,
+	}
+end
+
+const function parse_image_kind(value: unknown): ("icon" | "banner")?
+	if value == "icon" then
+		return "icon"
+	elseif value == "banner" then
+		return "banner"
+	end
+	return nil
+end
+
 return {
+	parse_guild_info_changes = parse_guild_info_changes,
+	parse_image_kind = parse_image_kind,
 	parse_user_id = parse_user_id,
 	parse_guild_id = parse_guild_id,
 	parse_short_string = parse_short_string,
