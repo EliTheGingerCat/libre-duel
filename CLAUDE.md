@@ -42,3 +42,5 @@ When moving or creating files, never strip a prefix from a file name just becaus
 Use types.
 
 Avoid monolithic modules as much as possible.
+
+If something is not absolutely 100% clear, ask the user for clarification instead of continuing with false assumptions.
