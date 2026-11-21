@@ -2,10 +2,10 @@ const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const React = require(ReplicatedStorage.Packages.react)
-const create_player_summary = require(script.Parent.format.create_player_summary)
+const create_player_summary = require(script.Parent.Parent.format.create_player_summary)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
-const guild_types = require(script.Parent.guild_types)
-const player_row_types = require(script.Parent.Parent.player_row.player_row_types)
+const guild_types = require(script.Parent.Parent.guild_types)
+const player_row_types = require(script.Parent.Parent.Parent.player_row.player_row_types)
 const request_guild_action = require(ReplicatedStorage.client.guild.request_guild_action)
 const user_info_cache = require(ReplicatedStorage.client.guild.user_info_cache)
 
@@ -30,7 +30,7 @@ const function cancel_invite(player: player_row_types.player_summary): ()
 end
 
 -- the invites page for owners, searching asks the server for an exact username
-const function use_guild_invites(guild: guild_snapshot_types.guild_snapshot?): guild_types.invites
+const function use_outgoing_guild_invites(guild: guild_snapshot_types.guild_snapshot?): guild_types.invites
 	const query, set_query = React.useState("")
 	const search_results, set_search_results = React.useState({} :: { guild_snapshot_types.player_search_result })
 
@@ -90,4 +90,4 @@ const function use_guild_invites(guild: guild_snapshot_types.guild_snapshot?): g
 	}
 end
 
-return use_guild_invites
+return use_outgoing_guild_invites
