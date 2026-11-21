@@ -1,10 +1,14 @@
+const first_person_item_transforms = require(script.Parent.first_person.first_person_item_transforms)
 const sword_state = require(script.Parent.Parent.tools.sword.sword_state)
-const VIEWMODEL_CONSTANTS = require(script.Parent.VIEWMODEL_CONSTANTS)
+const viewmodel_types = require(script.Parent.viewmodel_types)
 
-const function get_offset(): CFrame
-	return if sword_state.blocking then VIEWMODEL_CONSTANTS.block_pose else CFrame.identity
+const function is_using(): boolean
+	return sword_state.blocking
 end
 
-return {
-	get_offset = get_offset,
+const block_animation: viewmodel_types.use_animation = {
+	is_using = is_using,
+	apply_after_hold = first_person_item_transforms.do_block_transformations,
 }
+
+return block_animation

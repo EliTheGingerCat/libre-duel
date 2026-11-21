@@ -19,6 +19,7 @@ const open_mode_selector = require(script.Parent.mode_selector.open_mode_selecto
 const place_cube = require(script.Parent.cube.place_cube)
 const pull_bow = require(script.Parent.bow.pull_bow)
 const STARTING_LOADOUT = require(ReplicatedStorage.shared.inventory.STARTING_LOADOUT)
+const sword_state = require(script.Parent.sword.sword_state)
 const table_flip = require(ReplicatedStorage.client.util.table_flip)
 const tool_state = require(script.Parent.tool_state)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
@@ -94,6 +95,10 @@ end
 
 const function press_button(button: string): ()
 	if editor_state.enabled or inventory_state.enabled or mode_selector_state.enabled then
+		return
+	end
+	-- raising the sword to block replaces swinging it
+	if button == "attack" and sword_state.blocking then
 		return
 	end
 	const tool_button = TOOL_BUTTONS[button]

@@ -2,6 +2,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
 const attack_entity = require(ServerScriptService.combat.attack_entity)
+const get_blocking_state = require(ServerScriptService.blocking.get_blocking_state)
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const NON_SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.NON_SWORD_DAMAGE)
@@ -15,6 +16,11 @@ const function on_melee_swing(player: Player, origin: unknown, direction: unknow
 	-- an empty hand can't attack, which keeps the lobby peaceful since nobody holds anything there
 	const tool = inventory_util.get_selected_tool(player)
 	if tool == nil then
+		return
+	end
+
+	-- a raised sword blocks instead of swinging
+	if get_blocking_state(player) then
 		return
 	end
 
