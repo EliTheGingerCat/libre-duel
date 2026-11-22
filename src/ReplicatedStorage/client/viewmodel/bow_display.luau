@@ -26,7 +26,7 @@ const function preload(draw_frames: { tool_types.bow_draw_frame }): ()
 	task.spawn(ContentProvider.PreloadAsync, ContentProvider, assets)
 end
 
--- the pulling_0, pulling_1 and pulling_2 thresholds of ItemBow.getModel
+-- the draw ticks at which the bow switches to each pulling frame
 const function get_draw_frame(
 	draw_frames: { tool_types.bow_draw_frame },
 	draw_started: number

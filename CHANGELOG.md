@@ -46,4 +46,3 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - The server now rejects public keys that are not buffers.
 - The hitbox outline no longer shows in first person.
 - Swords can no longer swing while blocking.
-- The Conch console no longer stops opening after respawning.
