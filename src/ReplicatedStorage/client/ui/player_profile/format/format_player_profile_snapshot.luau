@@ -20,7 +20,8 @@ const SECONDS_PER_HOUR = 3600
 const ONLINE_GRACE = PLAYER_PROFILE_LIMITS.LAST_ONLINE_INTERVAL * 2.5
 
 const function format_last_online(snapshot: player_profile_snapshot_types.player_profile_snapshot): string
-	const now = os.time()
+	-- the device clock can be off, the server's clock is what wrote last_online
+	const now = math.floor(workspace:GetServerTimeNow())
 	if Players:GetPlayerByUserId(snapshot.user_id) or now - snapshot.last_online < ONLINE_GRACE then
 		return "Online now"
 	end
