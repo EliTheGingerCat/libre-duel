@@ -2,7 +2,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
-const use_ui_motion = require(script.Parent.Parent.visuals.use_ui_motion)
+const use_ui_motion = require(script.Parent.Parent.components.hooks.use_ui_motion)
 
 const create_element = React.createElement
 

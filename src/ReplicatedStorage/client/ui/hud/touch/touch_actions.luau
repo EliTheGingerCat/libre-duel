@@ -1,0 +1,72 @@
+-- What each on-screen touch button does when pressed and released.
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+local inventory_state = require(script.Parent.Parent.Parent.inventory.inventory_state)
+local tablist_state = require(script.Parent.Parent.Parent.tablist.tablist_state)
+local tool_state = require(ReplicatedStorage.client.tools.tool_state)
+
+export type action = { press: () -> (), release: () -> () }
+
+local local_player = Players.LocalPlayer
+
+const function nothing(): () end
+
+const JUMP_BIND = "touch_jump"
+
+local jumping = false
+
+-- Holding keeps jumping, like the stock button.
+const function press_jump(): ()
+	if jumping then
+		return
+	end
+	jumping = true
+	const function jump(): ()
+		local character = local_player.Character
+		local humanoid = if character then character:FindFirstChildOfClass("Humanoid") else nil
+		if humanoid then
+			humanoid.Jump = true
+		end
+	end
+	-- The ControlModule overwrites Humanoid.Jump every frame at Input priority, so this has to run right after it.
+	RunService:BindToRenderStep(JUMP_BIND, Enum.RenderPriority.Input.Value + 1, jump)
+end
+
+const function release_jump(): ()
+	if jumping then
+		jumping = false
+		RunService:UnbindFromRenderStep(JUMP_BIND)
+	end
+end
+
+const function tool_button(button: string, click_type: string): action
+	const function press(): ()
+		-- counts towards the server's cps check like a mouse click would
+		ReplicatedStorage.remotes.mouse_click:FireServer(click_type)
+		tool_state.on_button_requested:Fire(button, true)
+	end
+	const function release(): ()
+		tool_state.on_button_requested:Fire(button, false)
+	end
+	return { press = press, release = release }
+end
+
+const function toggle_inventory(): ()
+	inventory_state.set_enabled(not inventory_state.enabled)
+end
+
+const function toggle_tablist(): ()
+	tablist_state.set_pinned(not tablist_state.pinned)
+end
+
+const TOUCH_ACTIONS: { [string]: action } = {
+	JumpButton = { press = press_jump, release = release_jump },
+	AttackButton = tool_button("attack", "attack"),
+	UseItemButton = tool_button("use", "use"),
+	InventoryButton = { press = toggle_inventory, release = nothing },
+	TablistButton = { press = toggle_tablist, release = nothing },
+}
+
+return TOUCH_ACTIONS

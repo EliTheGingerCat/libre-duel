@@ -1,7 +1,7 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const React = require(ReplicatedStorage.Packages.react)
-const empty_state_text = require(script.Parent.Parent.Parent.visuals.empty_state_text)
+const empty_state_text = require(script.Parent.Parent.Parent.components.text.empty_state_text)
 const guild_incoming_invite_card = require(script.Parent.guild_incoming_invite_card)
 const guild_types = require(script.Parent.Parent.guild_types)
 

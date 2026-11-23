@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-local main = require(script.Parent.visuals.main)
+local main = require(script.Parent.main)
 
 local local_player = Players.LocalPlayer
 local player_gui = local_player:WaitForChild("PlayerGui") :: PlayerGui

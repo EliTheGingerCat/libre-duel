@@ -3,7 +3,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const POPUP_LAYOUT = require(script.Parent.Parent.POPUP_LAYOUT)
 const React = require(ReplicatedStorage.Packages.react)
 const popup_types = require(ReplicatedStorage.shared.popup.popup_types)
-const text_input = require(script.Parent.Parent.Parent.visuals.text_input)
+const text_input = require(script.Parent.Parent.Parent.components.inputs.text_input)
 
 const create_element = React.createElement
 

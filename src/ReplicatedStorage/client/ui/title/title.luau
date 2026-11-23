@@ -1,0 +1,202 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+local React = require(ReplicatedStorage.Packages.react)
+local fade = require(script.Parent.Parent.effects.fade)
+local shadow = require(script.Parent.Parent.components.decoration.shadow)
+
+local create_element = React.createElement
+
+const REFERENCE_HEIGHT = 1080
+
+const function get_scale(viewport_size: Vector2): number
+	return viewport_size.Y / REFERENCE_HEIGHT
+end
+
+type title_text = {
+	top_text: string,
+	bottom_text: string?,
+	colour: Color3?,
+}
+
+const function background_transparency(transparency: number): number
+	return 0.5 + transparency * 0.5
+end
+
+const function stroke_gradient()
+	return create_element("UIGradient", {
+		Color = ColorSequence.new(Color3.new(1, 1, 1)),
+		Rotation = -90,
+		Transparency = NumberSequence.new(0, 1),
+	})
+end
+
+const function title_label(
+	props: {
+		text: string,
+		top: boolean,
+		colour: Color3?,
+		-- a number binding, typed loosely because the package link does not export React's types
+		transparency: unknown,
+	}
+)
+	const transparency = props.transparency :: any
+	local padding = if props.top then 30 else 20
+	return create_element("TextLabel", {
+		Name = if props.top then "TopText" else "BottomText",
+		AnchorPoint = Vector2.new(0.5, if props.top then 1 else 0),
+		AutomaticSize = Enum.AutomaticSize.XY,
+		BackgroundColor3 = COLOURS.surface,
+		BackgroundTransparency = transparency:map(background_transparency),
+		BorderSizePixel = 0,
+		FontFace = FONTS.semi_bold,
+		Position = UDim2.new(0.5, 0, 0.5, if props.top then 0 else 10),
+		RichText = true,
+		Size = UDim2.fromOffset(0, 0),
+		Text = props.text,
+		TextColor3 = props.colour or Color3.new(1, 1, 1),
+		TextSize = if props.top then 100 else 50,
+		TextTransparency = transparency,
+		TextWrapped = false,
+		Visible = props.text ~= "",
+	}, {
+		corner = create_element("UICorner", {
+			CornerRadius = UDim.new(0.4, 0),
+		}),
+		padding = create_element("UIPadding", {
+			PaddingLeft = UDim.new(0, padding),
+			PaddingRight = UDim.new(0, padding),
+			PaddingTop = UDim.new(0, 5),
+		}),
+		shadow = create_element(shadow, {
+			BlurRadius = UDim.new(0, 8),
+			ShowBehindParent = false,
+			Transparency = transparency:map(background_transparency),
+		}),
+		border_stroke = create_element("UIStroke", {
+			Name = "BorderStroke",
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+			Color = Color3.new(1, 1, 1),
+			Thickness = 1,
+			Transparency = transparency,
+		}, {
+			gradient = create_element(stroke_gradient),
+		}),
+		text_stroke = create_element("UIStroke", {
+			Name = "TextStroke",
+			ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
+			Color = Color3.new(1, 1, 1),
+			Thickness = 1,
+			Transparency = transparency,
+		}, {
+			gradient = create_element(stroke_gradient),
+		}),
+	})
+end
+
+const function title()
+	local current_title: title_text?, set_current_title: (title_text?) -> () = React.useState(nil :: title_text?)
+	local transparency, set_transparency = React.useBinding(1)
+
+	const function effect_titles()
+		local animation: thread? = nil
+
+		const function cancel_animation(): ()
+			if animation ~= nil and coroutine.status(animation) ~= "dead" then
+				task.cancel(animation)
+			end
+		end
+
+		const function on_title(
+			fade_in: number,
+			stay: number,
+			fade_out: number,
+			top_text: string,
+			bottom_text: string?,
+			colour: Color3?
+		): ()
+			local replacing = animation ~= nil and coroutine.status(animation) ~= "dead"
+			cancel_animation()
+			set_transparency(if replacing then 0 else 1)
+			set_current_title({ top_text = top_text, bottom_text = bottom_text, colour = colour })
+
+			const function animate(): ()
+				if not replacing then
+					fade(1, 0, fade_in, set_transparency)
+				end
+				if stay > 0 then
+					task.wait(stay)
+				end
+				fade(0, 1, fade_out, set_transparency)
+				set_current_title(nil)
+			end
+
+			animation = task.spawn(animate)
+		end
+
+		local connection = ReplicatedStorage.remotes.show_title.OnClientEvent:Connect(on_title)
+
+		const function disconnect(): ()
+			connection:Disconnect()
+			cancel_animation()
+		end
+
+		return disconnect
+	end
+
+	React.useEffect(effect_titles, {})
+
+	local scale, set_scale = React.useBinding(1)
+
+	const function effect_scale()
+		local camera = Workspace.CurrentCamera
+
+		const function update_scale(): ()
+			set_scale(get_scale(camera.ViewportSize))
+		end
+
+		update_scale()
+		local connection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(update_scale)
+
+		const function disconnect(): ()
+			connection:Disconnect()
+		end
+
+		return disconnect
+	end
+
+	React.useEffect(effect_scale, {})
+
+	if current_title == nil then
+		return nil
+	end
+	local bottom_text = current_title.bottom_text
+
+	return create_element("ScreenGui", {
+		Name = "Title",
+		ResetOnSpawn = false,
+		ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+	}, {
+		scale = create_element("UIScale", {
+			Scale = scale,
+		}),
+		top_text = create_element(title_label, {
+			text = current_title.top_text,
+			top = true,
+			colour = current_title.colour,
+			transparency = transparency,
+		}),
+		bottom_text = if bottom_text ~= nil and bottom_text ~= ""
+			then create_element(title_label, {
+				text = bottom_text,
+				top = false,
+				colour = current_title.colour,
+				transparency = transparency,
+			})
+			else nil,
+	})
+end
+
+return title

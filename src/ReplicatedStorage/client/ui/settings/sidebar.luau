@@ -3,7 +3,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const React = require(ReplicatedStorage.Packages.react)
 const menu_sidebar = require(script.Parent.Parent.sidebar.menu_sidebar)
 const settings_registry = require(script.Parent.settings_registry)
-const text_input = require(script.Parent.Parent.visuals.text_input)
+const text_input = require(script.Parent.Parent.components.inputs.text_input)
 
 const function sidebar(
 	props: { selected: string, query: string, on_selected: (string) -> (), on_search: (string) -> () }

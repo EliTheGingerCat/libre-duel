@@ -1,0 +1,127 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
+local React = require(ReplicatedStorage.Packages.react)
+local big_button = require(script.Parent.buttons.big_button)
+local button = require(script.Parent.buttons.button)
+local check_box = require(script.Parent.inputs.check_box)
+local colour_preview = require(script.Parent.colour_picker.colour_preview)
+local danger_text = require(script.Parent.text.danger_text)
+local dangerous_button = require(script.Parent.buttons.dangerous_button)
+local dropdown = require(script.Parent.inputs.dropdown)
+local hue_slider = require(script.Parent.colour_picker.hue_slider)
+local information_text = require(script.Parent.text.information_text)
+local menu_window = require(script.Parent.layout.menu_window)
+local saturation_slider = require(script.Parent.colour_picker.saturation_slider)
+local slider = require(script.Parent.inputs.slider)
+local switch = require(script.Parent.inputs.switch)
+local text_input = require(script.Parent.inputs.text_input)
+local use_if_key_held = require(script.Parent.hooks.use_if_key_held)
+local value_slider = require(script.Parent.colour_picker.value_slider)
+local warning_text = require(script.Parent.text.warning_text)
+
+local create_element = React.createElement
+
+const function components_showcase()
+	local held = use_if_key_held(KEYBINDS.components_showcase)
+	local dismissed, set_dismissed = React.useState(false)
+	const function reset_dismissed()
+		set_dismissed(false)
+	end
+	React.useEffect(reset_dismissed, { held })
+
+	const function close(): ()
+		set_dismissed(true)
+	end
+
+	return create_element(
+		menu_window,
+		{
+			name = "Components Showcase",
+			title = "Menu",
+			enabled = held and not dismissed,
+			on_close = close,
+		},
+		create_element(
+			"CanvasGroup",
+			{
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale(0.5, 0.5),
+				BackgroundTransparency = 1,
+				Size = UDim2.fromScale(0.8, 1),
+			},
+			create_element("UICorner", {
+				CornerRadius = UDim.new(0, 55),
+			}),
+			create_element(
+				"ScrollingFrame",
+				{
+					AnchorPoint = Vector2.new(0.5, 1),
+					BackgroundTransparency = 1,
+					Position = UDim2.fromScale(0.5, 1),
+					Size = UDim2.new(1, -20, 1, -76),
+					AutomaticCanvasSize = Enum.AutomaticSize.Y,
+					CanvasSize = UDim2.fromOffset(0, 0),
+					ClipsDescendants = true,
+					ScrollBarThickness = 0,
+				},
+				create_element("UIListLayout", {
+					SortOrder = "LayoutOrder",
+					Padding = UDim.new(0, 20),
+				}),
+				create_element("UIPadding", {
+					PaddingBottom = UDim.new(0, 20),
+					PaddingLeft = UDim.new(0, 40),
+					PaddingRight = UDim.new(0, 40),
+					PaddingTop = UDim.new(0, 12),
+				}),
+				create_element(information_text),
+				create_element(warning_text),
+				create_element(danger_text),
+				create_element(text_input),
+				create_element(slider),
+				create_element(hue_slider),
+				create_element(saturation_slider),
+				create_element(value_slider),
+				create_element(colour_preview),
+				create_element(button, {
+					is_pressed = false,
+				}),
+				create_element(button, {
+					is_pressed = true,
+				}),
+				create_element(dangerous_button),
+				create_element(big_button),
+				create_element(check_box, {
+					active = false,
+					round = false,
+					text = "Blud didnt select ts.. 💔",
+				}),
+				create_element(check_box, {
+					active = true,
+					round = false,
+					text = "Blud selected ts.. 💔",
+				}),
+				create_element(check_box, {
+					active = false,
+					round = true,
+					text = "Blud didnt select ts.. 💔",
+				}),
+				create_element(check_box, {
+					active = true,
+					round = true,
+					text = "Blud selected ts.. 💔",
+				}),
+				create_element(switch, {
+					active = true,
+				}),
+				create_element(switch, {
+					active = false,
+				}),
+				create_element(dropdown)
+			)
+		)
+	)
+end
+
+return components_showcase

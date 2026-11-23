@@ -2,8 +2,8 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const POPUP_LAYOUT = require(script.Parent.POPUP_LAYOUT)
 const React = require(ReplicatedStorage.Packages.react)
-const animated_button = require(script.Parent.Parent.visuals.animated_button)
-const button_motion = require(script.Parent.Parent.visuals.button_motion)
+const animated_button = require(script.Parent.Parent.components.buttons.animated_button)
+const button_motion = require(script.Parent.Parent.components.buttons.button_motion)
 
 const create_element = React.createElement
 

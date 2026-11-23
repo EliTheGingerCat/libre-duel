@@ -2,16 +2,16 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const React = require(ReplicatedStorage.Packages.react)
 const SECTION_CARD_LAYOUT = require(script.Parent.Parent.Parent.profile_card.SECTION_CARD_LAYOUT)
-const empty_state_text = require(script.Parent.Parent.Parent.visuals.empty_state_text)
+const empty_state_text = require(script.Parent.Parent.Parent.components.text.empty_state_text)
 const entrance_animation = require(script.Parent.Parent.Parent.effects.entrance_animation)
 const guild_types = require(script.Parent.Parent.guild_types)
 const player_banner_row = require(script.Parent.Parent.Parent.player_row.player_banner_row)
 const player_name_label = require(script.Parent.Parent.Parent.player_row.player_name_label)
 const player_row_card = require(script.Parent.Parent.Parent.player_row.player_row_card)
 const player_row_types = require(script.Parent.Parent.Parent.player_row.player_row_types)
-const scrolling_content = require(script.Parent.Parent.Parent.visuals.scrolling_content)
+const scrolling_content = require(script.Parent.Parent.Parent.components.layout.scrolling_content)
 const section_card = require(script.Parent.Parent.Parent.profile_card.section_card)
-const text_input = require(script.Parent.Parent.Parent.visuals.text_input)
+const text_input = require(script.Parent.Parent.Parent.components.inputs.text_input)
 
 const create_element = React.createElement
 

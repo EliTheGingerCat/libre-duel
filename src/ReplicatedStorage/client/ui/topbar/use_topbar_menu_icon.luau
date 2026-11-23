@@ -4,7 +4,7 @@ const UserInputService = game:GetService("UserInputService")
 
 const GAMEPAD_KEYBINDS = require(ReplicatedStorage.client.util.GAMEPAD_KEYBINDS)
 const React = require(ReplicatedStorage.Packages.react)
-const editor_state = require(script.Parent.Parent.hud.editor_state)
+const editor_state = require(script.Parent.Parent.hud.editor.editor_state)
 const topbarplus = require(ReplicatedStorage.Packages.topbarplus)
 
 type icon_handle = {

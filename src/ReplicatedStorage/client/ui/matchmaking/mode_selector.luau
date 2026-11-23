@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 local React = require(ReplicatedStorage.Packages.react)
-local menu_window = require(script.Parent.Parent.visuals.menu_window)
+local menu_window = require(script.Parent.Parent.components.layout.menu_window)
 local mode_option = require(script.Parent.mode_option)
 local use_mode_selector = require(script.Parent.use_mode_selector)
 const input_device = require(ReplicatedStorage.client.util.input_device)

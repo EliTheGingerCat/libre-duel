@@ -5,10 +5,10 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 const get_mode_definition = require(ReplicatedStorage.shared.modes.get_mode_definition)
 local React = require(ReplicatedStorage.Packages.react)
-local animated_button = require(script.Parent.Parent.visuals.animated_button)
-local button_motion = require(script.Parent.Parent.visuals.button_motion)
-local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
-local shadow = require(script.Parent.Parent.visuals.shadow)
+local animated_button = require(script.Parent.Parent.components.buttons.animated_button)
+local button_motion = require(script.Parent.Parent.components.buttons.button_motion)
+local gradient_stroke = require(script.Parent.Parent.components.decoration.gradient_stroke)
+local shadow = require(script.Parent.Parent.components.decoration.shadow)
 
 local create_element = React.createElement
 

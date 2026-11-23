@@ -2,10 +2,10 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const PLAYER_ROW_LAYOUT = require(script.Parent.PLAYER_ROW_LAYOUT)
 const React = require(ReplicatedStorage.Packages.react)
-const animated_button = require(script.Parent.Parent.visuals.animated_button)
-const button_motion = require(script.Parent.Parent.visuals.button_motion)
+const animated_button = require(script.Parent.Parent.components.buttons.animated_button)
+const button_motion = require(script.Parent.Parent.components.buttons.button_motion)
 const player_row_types = require(script.Parent.player_row_types)
-const use_ui_motion = require(script.Parent.Parent.visuals.use_ui_motion)
+const use_ui_motion = require(script.Parent.Parent.components.hooks.use_ui_motion)
 
 const create_element = React.createElement
 

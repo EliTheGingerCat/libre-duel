@@ -1,4 +1,4 @@
-local editor_state = require(script.Parent.Parent.hud.editor_state)
+local editor_state = require(script.Parent.Parent.hud.editor.editor_state)
 local settings_registry = require(script.Parent.settings_registry)
 
 const function open_hud_editor(): ()

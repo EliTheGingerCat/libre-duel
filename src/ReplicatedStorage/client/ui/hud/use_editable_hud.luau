@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage.Packages.react)
 local ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
-local registry = require(script.Parent.registry)
+local hud_registry = require(script.Parent.registry.hud_registry)
 
 type content_ref = { current: GuiObject? }
 export type props = { on_remove: (() -> ())?, preview: boolean? }
@@ -48,7 +48,7 @@ const function use_editable_hud(component: (props) -> unknown, props: props, def
 		const function render_preview()
 			return React.createElement(component, { preview = true })
 		end
-		return registry.register(
+		return hud_registry.register(
 			content,
 			screen,
 			create,

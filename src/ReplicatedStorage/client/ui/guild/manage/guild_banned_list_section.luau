@@ -2,10 +2,10 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const React = require(ReplicatedStorage.Packages.react)
 const banned_member_row = require(script.Parent.banned_member_row)
-const empty_state_text = require(script.Parent.Parent.Parent.visuals.empty_state_text)
+const empty_state_text = require(script.Parent.Parent.Parent.components.text.empty_state_text)
 const guild_types = require(script.Parent.Parent.guild_types)
 const member_header_row = require(script.Parent.Parent.members.member_header_row)
-const scrolling_content = require(script.Parent.Parent.Parent.visuals.scrolling_content)
+const scrolling_content = require(script.Parent.Parent.Parent.components.layout.scrolling_content)
 const section_card = require(script.Parent.Parent.Parent.profile_card.section_card)
 
 const create_element = React.createElement

@@ -4,7 +4,7 @@ const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
 const format_number = require(script.Parent.Parent.Parent.format.format_number)
-const surface = require(script.Parent.Parent.Parent.visuals.controls.surface)
+const surface = require(script.Parent.Parent.Parent.components.controls.surface)
 
 const create_element = React.createElement
 

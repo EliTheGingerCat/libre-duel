@@ -4,9 +4,9 @@ const LARGE_NOTIFICATION_LAYOUT = require(script.Parent.LARGE_NOTIFICATION_LAYOU
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
-const animated_button = require(script.Parent.Parent.visuals.animated_button)
-const button_motion = require(script.Parent.Parent.visuals.button_motion)
-const surface = require(script.Parent.Parent.visuals.controls.surface)
+const animated_button = require(script.Parent.Parent.components.buttons.animated_button)
+const button_motion = require(script.Parent.Parent.components.buttons.button_motion)
+const surface = require(script.Parent.Parent.components.controls.surface)
 
 const create_element = React.createElement
 

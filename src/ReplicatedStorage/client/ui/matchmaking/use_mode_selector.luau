@@ -6,9 +6,9 @@ local UserInputService = game:GetService("UserInputService")
 const GAMEPAD_KEYBINDS = require(ReplicatedStorage.client.util.GAMEPAD_KEYBINDS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 local React = require(ReplicatedStorage.Packages.react)
-local editor_state = require(script.Parent.Parent.hud.editor_state)
+local editor_state = require(script.Parent.Parent.hud.editor.editor_state)
 local mode_selector_state = require(script.Parent.mode_selector_state)
-local notification_management = require(script.Parent.Parent.notification_management)
+local notification_management = require(script.Parent.Parent.notification.notification_management)
 
 const GAMEPAD_CLOSE_ACTION = "mode_selector_gamepad_close"
 

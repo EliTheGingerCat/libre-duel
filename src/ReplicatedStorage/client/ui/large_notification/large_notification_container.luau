@@ -4,7 +4,7 @@ const LARGE_NOTIFICATION_LAYOUT = require(script.Parent.LARGE_NOTIFICATION_LAYOU
 const React = require(ReplicatedStorage.Packages.react)
 const large_notification_card = require(script.Parent.large_notification_card)
 const large_notification_management = require(script.Parent.large_notification_management)
-const scale = require(script.Parent.Parent.visuals.scale)
+const scale = require(script.Parent.Parent.components.layout.scale)
 
 const create_element = React.createElement
 

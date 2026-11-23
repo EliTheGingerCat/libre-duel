@@ -9,9 +9,9 @@ const popup_close_button = require(script.Parent.popup_close_button)
 const popup_management = require(script.Parent.popup_management)
 const popup_text_inputs = require(script.Parent.text_inputs.popup_text_inputs)
 const popup_types = require(ReplicatedStorage.shared.popup.popup_types)
-const surface = require(script.Parent.Parent.visuals.controls.surface)
-const use_ui_motion = require(script.Parent.Parent.visuals.use_ui_motion)
-const use_viewport_scale = require(script.Parent.Parent.visuals.use_viewport_scale)
+const surface = require(script.Parent.Parent.components.controls.surface)
+const use_ui_motion = require(script.Parent.Parent.components.hooks.use_ui_motion)
+const use_viewport_scale = require(script.Parent.Parent.components.hooks.use_viewport_scale)
 
 const create_element = React.createElement
 

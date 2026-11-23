@@ -1,6 +1,6 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const nametag = require(script.Parent.Parent.visuals.nametag)
+const nametag = require(script.Parent.nametag)
 const React = require(ReplicatedStorage.Packages.react)
 const ReactRoblox = require(ReplicatedStorage.Packages["react-roblox"])
 const registry = require(ReplicatedStorage.shared.entity.registry)

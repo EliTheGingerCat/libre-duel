@@ -7,7 +7,7 @@ const React = require(ReplicatedStorage.Packages.react)
 const large_notification_button = require(script.Parent.large_notification_button)
 const large_notification_close_button = require(script.Parent.large_notification_close_button)
 const large_notification_management = require(script.Parent.large_notification_management)
-const surface = require(script.Parent.Parent.visuals.controls.surface)
+const surface = require(script.Parent.Parent.components.controls.surface)
 
 const create_element = React.createElement
 

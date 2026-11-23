@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const INVENTORY_LAYOUT = require(script.Parent.INVENTORY_LAYOUT)
 local React = require(ReplicatedStorage.Packages.react)
-local gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
+local gradient_stroke = require(script.Parent.Parent.components.decoration.gradient_stroke)
 local item_amount = require(script.Parent.item_amount)
 local use_receive_bounce = require(script.Parent.use_receive_bounce)
 

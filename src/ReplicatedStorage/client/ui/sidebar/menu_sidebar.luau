@@ -2,7 +2,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const React = require(ReplicatedStorage.Packages.react)
-const shadow = require(script.Parent.Parent.visuals.shadow)
+const shadow = require(script.Parent.Parent.components.decoration.shadow)
 const sidebar_button = require(script.Parent.sidebar_button)
 const sidebar_types = require(script.Parent.sidebar_types)
 

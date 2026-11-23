@@ -2,11 +2,11 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
-const animated_button = require(script.Parent.Parent.visuals.animated_button)
-const button_motion = require(script.Parent.Parent.visuals.button_motion)
-const gradient_stroke = require(script.Parent.Parent.visuals.gradient_stroke)
+const animated_button = require(script.Parent.Parent.components.buttons.animated_button)
+const button_motion = require(script.Parent.Parent.components.buttons.button_motion)
+const gradient_stroke = require(script.Parent.Parent.components.decoration.gradient_stroke)
 const sidebar_types = require(script.Parent.sidebar_types)
-const use_ui_motion = require(script.Parent.Parent.visuals.use_ui_motion)
+const use_ui_motion = require(script.Parent.Parent.components.hooks.use_ui_motion)
 
 const function transparency(value: number): number
 	return 1 - 0.5 * value

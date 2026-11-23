@@ -2,7 +2,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const GUILD_LIMITS = require(ReplicatedStorage.shared.guild.GUILD_LIMITS)
 const React = require(ReplicatedStorage.Packages.react)
-const button = require(script.Parent.Parent.Parent.visuals.button)
+const button = require(script.Parent.Parent.Parent.components.buttons.button)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
 const guild_text_field = require(script.Parent.guild_text_field)
 const validate_guild_info = require(ReplicatedStorage.shared.guild.validate_guild_info)

@@ -4,11 +4,11 @@ const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const POPUP_LAYOUT = require(script.Parent.Parent.POPUP_LAYOUT)
 const React = require(ReplicatedStorage.Packages.react)
-const animated_button = require(script.Parent.Parent.Parent.visuals.animated_button)
-const button_motion = require(script.Parent.Parent.Parent.visuals.button_motion)
+const animated_button = require(script.Parent.Parent.Parent.components.buttons.animated_button)
+const button_motion = require(script.Parent.Parent.Parent.components.buttons.button_motion)
 const popup_button_hold_progress = require(script.Parent.popup_button_hold_progress)
 const popup_types = require(ReplicatedStorage.shared.popup.popup_types)
-const surface = require(script.Parent.Parent.Parent.visuals.controls.surface)
+const surface = require(script.Parent.Parent.Parent.components.controls.surface)
 
 const create_element = React.createElement
 

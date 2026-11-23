@@ -4,7 +4,7 @@ const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
 const guild_context_menu_types = require(script.Parent.guild_context_menu_types)
-const use_ui_motion = require(script.Parent.Parent.Parent.visuals.use_ui_motion)
+const use_ui_motion = require(script.Parent.Parent.Parent.components.hooks.use_ui_motion)
 
 const create_element = React.createElement
 

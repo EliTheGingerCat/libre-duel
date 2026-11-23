@@ -1,0 +1,65 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
+local React = require(ReplicatedStorage.Packages.react)
+local animated_button = require(script.Parent.Parent.Parent.components.buttons.animated_button)
+local button_motion = require(script.Parent.Parent.Parent.components.buttons.button_motion)
+local gradient_stroke = require(script.Parent.Parent.Parent.components.decoration.gradient_stroke)
+local hud_registry = require(script.Parent.Parent.registry.hud_registry)
+
+local create_element = React.createElement
+
+const CONFIRM_SECONDS = 3
+-- A confirmation this soon after arming comes from the same click, not a second one.
+const MINIMUM_CONFIRM_DELAY = 0.2
+
+-- There is no undo, so resetting takes a second click.
+const function editor_reset_button(props: { LayoutOrder: number? })
+	local armed, set_armed = React.useState(false)
+	local armed_at = React.useRef(0)
+	const function disarm_later()
+		if not armed then
+			return
+		end
+		local active = true
+		const function disarm(): ()
+			if active then
+				set_armed(false)
+			end
+		end
+		task.delay(CONFIRM_SECONDS, disarm)
+		const function cancel(): ()
+			active = false
+		end
+		return cancel
+	end
+	React.useEffect(disarm_later, { armed })
+	const function on_activated(): ()
+		if not armed then
+			armed_at.current = os.clock()
+			set_armed(true)
+		elseif os.clock() - armed_at.current >= MINIMUM_CONFIRM_DELAY then
+			set_armed(false)
+			hud_registry.reset()
+		end
+	end
+	return create_element(animated_button, {
+		LayoutOrder = props.LayoutOrder,
+		Size = UDim2.fromOffset(130, 44),
+		BackgroundColor3 = COLOURS.surface,
+		BackgroundTransparency = 0.5,
+		BorderSizePixel = 0,
+		Text = if armed then "Sure?" else "Reset",
+		TextSize = 24,
+		TextColor3 = COLOURS.red_400,
+		FontFace = FONTS.regular,
+		[React.Event.Activated] = on_activated,
+	}, {
+		feedback = create_element(button_motion),
+		corner = create_element("UICorner", { CornerRadius = UDim.new(1, 0) }),
+		stroke = create_element(gradient_stroke, { colour = COLOURS.red_400, rotation = -90 }),
+	})
+end
+
+return editor_reset_button

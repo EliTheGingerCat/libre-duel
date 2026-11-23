@@ -2,7 +2,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const React = require(ReplicatedStorage.Packages.react)
-const button = require(script.Parent.Parent.Parent.visuals.button)
+const button = require(script.Parent.Parent.Parent.components.buttons.button)
 const guild_banned_list_section = require(script.Parent.guild_banned_list_section)
 const guild_types = require(script.Parent.Parent.guild_types)
 const section_card = require(script.Parent.Parent.Parent.profile_card.section_card)
