@@ -47,7 +47,9 @@ const function settings_menu(props: { enabled: boolean, on_close: () -> () })
 		PaddingLeft = UDim.new(0, 48),
 		PaddingRight = UDim.new(0, 48),
 	})
+	-- the padding lives inside the entrance animation's CanvasGroup so tugged buttons have room before it clips them
 	local children = {
+		padding = padding,
 		layout = React.createElement("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
 	}
 	local count = 0
@@ -89,7 +91,6 @@ const function settings_menu(props: { enabled: boolean, on_close: () -> () })
 			size = UDim2.new(0.72, -12, 1, -96),
 			reset_key = selected .. query,
 		}, {
-			padding = padding,
 			layout = React.createElement("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
 			-- keyed on the category and not the query, so typing in the search bar doesn't replay it every keystroke
 			page = React.createElement(
