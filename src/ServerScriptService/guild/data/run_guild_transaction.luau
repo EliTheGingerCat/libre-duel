@@ -1,5 +1,7 @@
 const ServerScriptService = game:GetService("ServerScriptService")
 
+const broadcast_guild_data_change =
+	require(ServerScriptService.guild.replication.cross_server.broadcast_guild_data_change)
 const drop = require(ServerScriptService.ServerPackages.drop)
 
 export type transaction_step = {
@@ -29,6 +31,7 @@ const function run_guild_transaction(steps: { transaction_step }): boolean
 		if step.refresh_after then
 			pcall(drop.viewasync, step.store, step.key)
 		end
+		broadcast_guild_data_change(step.store, step.key)
 	end
 	return true
 end

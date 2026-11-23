@@ -114,7 +114,9 @@ const function guild_invites_page(props: { invites: guild_types.invites })
 				}, {
 					list = create_player_list(
 						invites.search_results,
-						if invites.query == "" then "Search for a player to invite." else "No players found.",
+						if invites.query == ""
+							then "Nobody else is here, search for a player to invite."
+							else "No players found.",
 						INVITE_ICON,
 						invites.on_invite,
 						invites.query
