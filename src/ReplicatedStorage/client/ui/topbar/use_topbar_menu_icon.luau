@@ -15,6 +15,7 @@ type icon_handle = {
 
 export type topbar_menu_icon = {
 	enabled: boolean,
+	open: () -> (),
 	close: () -> (),
 }
 
@@ -73,6 +74,12 @@ const function use_topbar_menu_icon(name: string, image: string): topbar_menu_ic
 	end
 	React.useEffect(mount, {})
 
+	const function open(): ()
+		if icon_ref.current then
+			icon_ref.current:select()
+		end
+	end
+
 	const function close(): ()
 		if icon_ref.current then
 			icon_ref.current:deselect()
@@ -108,7 +115,7 @@ const function use_topbar_menu_icon(name: string, image: string): topbar_menu_ic
 	end
 	React.useEffect(bind_gamepad_close, { enabled })
 
-	return { enabled = enabled, close = close }
+	return { enabled = enabled, open = open, close = close }
 end
 
 return use_topbar_menu_icon

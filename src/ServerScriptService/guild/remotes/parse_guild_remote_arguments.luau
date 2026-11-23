@@ -1,18 +1,12 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
+const parse_user_id = require(ServerScriptService.remotes.parse_user_id)
 
 -- HttpService:GenerateGUID(false), 36 characters of hex and dashes
 const GUILD_ID_PATTERN = "^%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$"
 const MAX_INPUT_LENGTH = 40000
-
--- negative ids are allowed since studio test players have them
-const function parse_user_id(value: unknown): number?
-	if typeof(value) ~= "number" or value ~= value or value == 0 or value % 1 ~= 0 then
-		return nil
-	end
-	return value
-end
 
 const function parse_guild_id(value: unknown): string?
 	if typeof(value) ~= "string" or string.match(value, GUILD_ID_PATTERN) == nil then

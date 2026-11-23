@@ -4,6 +4,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const React = require(ReplicatedStorage.Packages.react)
 const format_guild_snapshot = require(script.Parent.format.format_guild_snapshot)
 const guild_menu = require(script.Parent.guild_menu)
+const menu_navigation = require(script.Parent.Parent.navigation.menu_navigation)
 const use_can_see_discord_links = require(ReplicatedStorage.client.guild.use_can_see_discord_links)
 const use_guild_menu_actions = require(script.Parent.hooks.use_guild_menu_actions)
 const use_guild_state = require(ReplicatedStorage.client.guild.use_guild_state)
@@ -26,6 +27,25 @@ const function guild_menu_root()
 	const menu_actions = use_guild_menu_actions(viewed_guild)
 	const outgoing_invites = use_outgoing_guild_invites(state.guild)
 	const incoming_invites = use_incoming_guild_invites(state.incoming_invites)
+	const own_guild_id_ref = React.useRef(nil :: string?)
+	own_guild_id_ref.current = if state.guild then state.guild.id else nil
+
+	const function follow_navigation(): () -> ()
+		const function navigate(destination: menu_navigation.destination): ()
+			if destination.kind ~= "guild" then
+				menu_icon.close()
+				return
+			end
+			menu_icon.open()
+			if destination.guild_id == own_guild_id_ref.current then
+				viewed_guild.close()
+			else
+				viewed_guild.view(destination.guild_id)
+			end
+		end
+		return menu_navigation.subscribe(navigate)
+	end
+	React.useEffect(follow_navigation, {})
 
 	return React.createElement(guild_menu, {
 		enabled = menu_icon.enabled,

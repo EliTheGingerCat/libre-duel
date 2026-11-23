@@ -2,7 +2,7 @@ const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const React = require(ReplicatedStorage.Packages.react)
-const create_player_summary = require(script.Parent.Parent.format.create_player_summary)
+const create_player_summary = require(script.Parent.Parent.Parent.player_row.create_player_summary)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
 const guild_types = require(script.Parent.Parent.guild_types)
 const player_row_types = require(script.Parent.Parent.Parent.player_row.player_row_types)

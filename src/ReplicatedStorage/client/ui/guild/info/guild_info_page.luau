@@ -2,7 +2,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const GUILD_LIMITS = require(ReplicatedStorage.shared.guild.GUILD_LIMITS)
 const React = require(ReplicatedStorage.Packages.react)
-const editable_guild_description = require(script.Parent.editable_guild_description)
+const editable_rich_text_description = require(script.Parent.Parent.Parent.profile_card.editable_rich_text_description)
 const guild_types = require(script.Parent.Parent.guild_types)
 const highlight_stats = require(script.Parent.Parent.Parent.profile_card.highlight_stats)
 const info_fields = require(script.Parent.Parent.Parent.profile_card.info_fields)
@@ -12,6 +12,7 @@ const rich_text_description = require(script.Parent.Parent.Parent.profile_card.r
 const section_card = require(script.Parent.Parent.Parent.profile_card.section_card)
 
 const create_element = React.createElement
+const DESCRIPTION_PLACEHOLDER = "Click to write a description. Rich text works here."
 
 export type edit_actions = {
 	on_rename: (name: string) -> (),
@@ -46,8 +47,9 @@ const function guild_info_page(props: { guild: guild_types.guild, edit: edit_act
 		}),
 		about = create_element(section_card, { name = "about", title = "About", layout_order = 4 }, {
 			description = if edit
-				then create_element(editable_guild_description, {
+				then create_element(editable_rich_text_description, {
 					text = guild.about,
+					placeholder = DESCRIPTION_PLACEHOLDER,
 					max_length = GUILD_LIMITS.MAX_DESCRIPTION_LENGTH,
 					on_changed = edit.on_edit_description,
 				})

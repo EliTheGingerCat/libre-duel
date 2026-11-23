@@ -1,8 +1,7 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
-const format_labelled_value = require(script.Parent.format_labelled_value)
+const info_field_label = require(script.Parent.info_field_label)
 const profile_types = require(script.Parent.profile_types)
 
 const create_element = React.createElement
@@ -11,19 +10,7 @@ const create_element = React.createElement
 const function info_fields(props: { fields: { profile_types.info_field } })
 	const labels = {}
 	for index, field in props.fields do
-		labels[field.id] = create_element("TextLabel", {
-			LayoutOrder = index,
-			Size = UDim2.fromScale(0.33, 0),
-			AutomaticSize = Enum.AutomaticSize.Y,
-			BackgroundTransparency = 1,
-			FontFace = FONTS.regular,
-			RichText = true,
-			Text = format_labelled_value(field.label, field.value),
-			TextSize = 24,
-			TextColor3 = Color3.new(1, 1, 1),
-			TextXAlignment = Enum.TextXAlignment.Left,
-			TextWrapped = true,
-		})
+		labels[field.id] = create_element(info_field_label, { field = field, layout_order = index })
 	end
 	return create_element(React.Fragment, nil, labels)
 end

@@ -12,12 +12,12 @@ const guild_info_page = require(script.Parent.info.guild_info_page)
 const guild_invites_page = require(script.Parent.invites.guild_invites_page)
 const guild_manage_page = require(script.Parent.manage.guild_manage_page)
 const guild_members_page = require(script.Parent.members.guild_members_page)
-const guild_stats_page = require(script.Parent.stats.guild_stats_page)
 const guild_types = require(script.Parent.guild_types)
 const menu_sidebar = require(script.Parent.Parent.sidebar.menu_sidebar)
 const menu_window = require(script.Parent.Parent.visuals.menu_window)
 const scrolling_content = require(script.Parent.Parent.visuals.scrolling_content)
 const sidebar_types = require(script.Parent.Parent.sidebar.sidebar_types)
+const stat_section_cards = require(script.Parent.Parent.profile_card.stat_section_cards)
 
 const create_element = React.createElement
 
@@ -202,7 +202,7 @@ const function guild_menu(props: props)
 			page = create_element(guild_create_page, { pending = props.creating, on_create = props.actions.on_create })
 		end
 	elseif selected == "stats" then
-		page = create_element(guild_stats_page, { sections = props.guild.stat_sections })
+		page = create_element(stat_section_cards, { sections = props.guild.stat_sections })
 	elseif selected == "members" then
 		page =
 			create_element(guild_members_page, { members = props.guild.members, on_manage_member = open_member_menu })

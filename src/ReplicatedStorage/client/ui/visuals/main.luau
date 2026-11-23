@@ -14,6 +14,7 @@ local matchmaking = require(script.Parent.matchmaking)
 local notification_container = require(script.Parent.notification_container)
 const popup_container = require(script.Parent.Parent.popup.popup_container)
 local player_profile_preview = require(script.Parent.Parent.previews.player_profile_preview)
+const player_profile_root = require(script.Parent.Parent.player_profile.player_profile_root)
 local settings = require(script.Parent.Parent.settings.settings)
 local tablist = require(script.Parent.tablist)
 local title = require(script.Parent.title)
@@ -37,6 +38,7 @@ const function main()
 		create_element(matchmaking),
 		create_element(notification_container),
 		create_element(player_profile_preview),
+		create_element(player_profile_root),
 		create_element(popup_container),
 		create_element(settings),
 		create_element(tablist),

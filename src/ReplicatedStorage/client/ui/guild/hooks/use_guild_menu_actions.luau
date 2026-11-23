@@ -3,6 +3,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const React = require(ReplicatedStorage.Packages.react)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
 const guild_types = require(script.Parent.Parent.guild_types)
+const menu_navigation = require(script.Parent.Parent.Parent.navigation.menu_navigation)
 const request_guild_action = require(ReplicatedStorage.client.guild.request_guild_action)
 const use_viewed_guild = require(script.Parent.use_viewed_guild)
 
@@ -17,8 +18,9 @@ const function run_action(name: request_guild_action.action_name, argument: unkn
 end
 
 const function member_action(action: guild_types.member_action, member: guild_types.member): ()
-	-- TODO: open the player profile once profiles load real data
-	if action == "kick" then
+	if action == "view_profile" then
+		menu_navigation.open_player_profile(member.user_id)
+	elseif action == "kick" then
 		run_action("kick_guild_member", member.user_id)
 	elseif action == "ban" then
 		run_action("ban_guild_member", member.user_id)
@@ -29,8 +31,9 @@ const function banned_member_action(
 	action: guild_types.banned_member_action,
 	banned_member: guild_types.banned_member
 ): ()
-	-- TODO: open the player profile once profiles load real data
-	if action == "unban" then
+	if action == "view_profile" then
+		menu_navigation.open_player_profile(banned_member.user_id)
+	elseif action == "unban" then
 		run_action("unban_guild_member", banned_member.user_id)
 	end
 end

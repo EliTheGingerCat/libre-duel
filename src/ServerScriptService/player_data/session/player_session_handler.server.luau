@@ -6,6 +6,7 @@ const initialize_player_data = require(script.Parent.initialize_player_data)
 const player_store = require(ServerScriptService.player_data.player_store)
 const active_session_keys = require(script.Parent.active_session_keys)
 const run_session_stopping_callbacks = require(script.Parent.run_session_stopping_callbacks)
+const session_started_callbacks = require(script.Parent.session_started_callbacks)
 
 const function player_added(player: Player): ()
 	const key = tostring(player.UserId)
@@ -27,6 +28,13 @@ const function player_added(player: Player): ()
 	drop.waitforsession(player_store, key)
 	active_session_keys[key] = true
 	initialize_player_data(key)
+
+	const function on_error(message: unknown)
+		warn(`Session started callback failed for {key}: {message}`)
+	end
+	for _, callback in session_started_callbacks do
+		xpcall(callback, on_error, player)
+	end
 end
 
 const function player_removing(player: Player): ()

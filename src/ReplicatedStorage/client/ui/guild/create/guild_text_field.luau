@@ -3,7 +3,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 const React = require(ReplicatedStorage.Packages.react)
-const format_guild_number = require(script.Parent.Parent.format.format_guild_number)
+const format_number = require(script.Parent.Parent.Parent.format.format_number)
 const surface = require(script.Parent.Parent.Parent.visuals.controls.surface)
 
 const create_element = React.createElement
@@ -87,7 +87,7 @@ const function guild_text_field(props: {
 		}, {
 			title = create_label(label, Enum.TextXAlignment.Left),
 			counter = create_label(
-				`{format_guild_number(count_characters(props.text))}/{format_guild_number(props.max_length)}`,
+				`{format_number(count_characters(props.text))}/{format_number(props.max_length)}`,
 				Enum.TextXAlignment.Right
 			),
 		}),

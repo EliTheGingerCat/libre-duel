@@ -1,7 +1,7 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
-const filter_guild_text = require(ServerScriptService.guild.text.filter_guild_text)
+const filter_text = require(ServerScriptService.text.filter_text)
 const get_player_guild = require(ServerScriptService.guild.membership.get_player_guild)
 const guild_schema = require(ServerScriptService.guild.data.schema.guild_schema)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
@@ -9,8 +9,8 @@ const guild_store = require(ServerScriptService.guild.data.guild_store)
 const guild_tag_store = require(ServerScriptService.guild.data.guild_tag_store)
 const run_guild_transaction = require(ServerScriptService.guild.data.run_guild_transaction)
 const try_update_async = require(ServerScriptService.guild.data.try_update_async)
-const validate_guild_asset = require(ServerScriptService.guild.assets.validate_guild_asset)
 const validate_guild_info = require(ReplicatedStorage.shared.guild.validate_guild_info)
+const validate_image_asset = require(ServerScriptService.assets.validate_image_asset)
 
 type tag_index = { guild_id: string }
 type text_field = "name" | "tag" | "description" | "discord_invite"
@@ -37,15 +37,15 @@ const function edit_guild_info(player: Player, changes: guild_snapshot_types.gui
 		return invalid_reason
 	end
 	if
-		(info.icon ~= current.icon and not validate_guild_asset(info.icon))
-		or (info.banner ~= current.banner and not validate_guild_asset(info.banner))
+		(info.icon ~= current.icon and not validate_image_asset(info.icon))
+		or (info.banner ~= current.banner and not validate_image_asset(info.banner))
 	then
 		return "That isn't an image id. Decal ids don't work, use the image id behind the decal."
 	end
 	-- only changed text gets filtered, the saved text already was
 	for _, field in TEXT_FIELDS do
 		if info[field] ~= current[field] then
-			const filtered = filter_guild_text(player, info[field])
+			const filtered = filter_text(player, info[field])
 			if filtered == nil then
 				return "Couldn't check your text right now, try again in a bit."
 			end

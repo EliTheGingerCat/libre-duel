@@ -3,15 +3,16 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
 const GUILD_DEFAULT_ASSETS = require(ReplicatedStorage.shared.guild.GUILD_DEFAULT_ASSETS)
 const GUILD_LIMITS = require(ReplicatedStorage.shared.guild.GUILD_LIMITS)
-const create_player_summary = require(script.Parent.create_player_summary)
-const format_guild_date = require(script.Parent.format_guild_date)
-const format_guild_number = require(script.Parent.format_guild_number)
-const format_guild_stat_sections = require(script.Parent.format_guild_stat_sections)
-const format_member_stat_groups = require(script.Parent.format_member_stat_groups)
+const create_player_summary = require(script.Parent.Parent.Parent.player_row.create_player_summary)
+const format_date = require(script.Parent.Parent.Parent.format.format_date)
+const format_mode_stat_groups = require(script.Parent.Parent.Parent.format.format_mode_stat_groups)
+const format_number = require(script.Parent.Parent.Parent.format.format_number)
+const format_stat_sections = require(script.Parent.Parent.Parent.format.format_stat_sections)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
 const guild_types = require(script.Parent.Parent.guild_types)
+const menu_navigation = require(script.Parent.Parent.Parent.navigation.menu_navigation)
 const profile_types = require(script.Parent.Parent.Parent.profile_card.profile_types)
-const sum_guild_mode_stats = require(script.Parent.sum_guild_mode_stats)
+const sum_mode_stats = require(script.Parent.Parent.Parent.format.sum_mode_stats)
 const user_info_cache = require(ReplicatedStorage.client.guild.user_info_cache)
 
 const SECONDS_PER_HOUR = 3600
@@ -34,23 +35,31 @@ const function format_guild_snapshot(
 	const members: { guild_types.member } = {}
 	for _, member_snapshot in snapshot.members do
 		const member = create_player_summary(member_snapshot.user_id, member_snapshot.banner) :: guild_types.member
-		member.joined = format_guild_date(member_snapshot.joined)
+		member.joined = format_date(member_snapshot.joined)
 		member.is_owner = member_snapshot.user_id == snapshot.owner_id
-		member.stats = format_member_stat_groups(member_snapshot.stats, member_snapshot.playtime)
+		member.stats = format_mode_stat_groups(member_snapshot.stats, member_snapshot.playtime)
 		table.insert(members, member)
 	end
 
 	const banned: { guild_types.banned_member } = {}
 	for _, banned_snapshot in snapshot.banned do
 		const banned_member = create_player_summary(banned_snapshot.user_id, "") :: guild_types.banned_member
-		banned_member.banned = format_guild_date(banned_snapshot.banned_at)
+		banned_member.banned = format_date(banned_snapshot.banned_at)
 		table.insert(banned, banned_member)
 	end
 
 	const owner_info = user_info_cache.get(snapshot.owner_id)
+	const function open_owner_profile(): ()
+		menu_navigation.open_player_profile(snapshot.owner_id)
+	end
 	const info_fields: { profile_types.info_field } = {
-		{ id = "created", label = "Created", value = format_guild_date(snapshot.created, true) },
-		{ id = "owner", label = "Owner", value = `@{if owner_info then owner_info.username else snapshot.owner_id}` },
+		{ id = "created", label = "Created", value = format_date(snapshot.created, true) },
+		{
+			id = "owner",
+			label = "Owner",
+			value = `@{if owner_info then owner_info.username else snapshot.owner_id}`,
+			on_activated = open_owner_profile,
+		},
 		{ id = "members", label = "Members", value = `{#snapshot.members}/{GUILD_LIMITS.MAX_MEMBERS}` },
 	}
 	if show_discord and snapshot.discord_invite ~= "" then
@@ -84,18 +93,18 @@ const function format_guild_snapshot(
 				id = "playtime",
 				icon = "🕔",
 				label = "Playtime",
-				value = `{format_guild_number(snapshot.total_playtime // SECONDS_PER_HOUR)}h`,
+				value = `{format_number(snapshot.total_playtime // SECONDS_PER_HOUR)}h`,
 			},
 			{
 				id = "wins",
 				icon = "🏆",
 				label = "Wins",
-				value = format_guild_number(sum_guild_mode_stats(snapshot.totals).wins),
+				value = format_number(sum_mode_stats(snapshot.totals).wins),
 				colour = COLOURS.yellow_200,
 			},
 		},
 		rank_history = rank_history,
-		stat_sections = format_guild_stat_sections(snapshot),
+		stat_sections = format_stat_sections(snapshot.totals, snapshot.total_playtime),
 		about = snapshot.description,
 		members = members,
 		banned = banned,
