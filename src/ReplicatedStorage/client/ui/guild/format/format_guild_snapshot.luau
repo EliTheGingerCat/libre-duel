@@ -6,21 +6,15 @@ const GUILD_LIMITS = require(ReplicatedStorage.shared.guild.GUILD_LIMITS)
 const create_player_summary = require(script.Parent.create_player_summary)
 const format_guild_date = require(script.Parent.format_guild_date)
 const format_guild_number = require(script.Parent.format_guild_number)
+const format_guild_stat_sections = require(script.Parent.format_guild_stat_sections)
 const format_member_stat_groups = require(script.Parent.format_member_stat_groups)
 const guild_snapshot_types = require(ReplicatedStorage.shared.guild.guild_snapshot_types)
 const guild_types = require(script.Parent.Parent.guild_types)
 const profile_types = require(script.Parent.Parent.Parent.profile_card.profile_types)
+const sum_guild_mode_stats = require(script.Parent.sum_guild_mode_stats)
 const user_info_cache = require(ReplicatedStorage.client.guild.user_info_cache)
 
 const SECONDS_PER_HOUR = 3600
-
-const function sum_wins(snapshot: guild_snapshot_types.guild_snapshot): number
-	local wins = 0
-	for _, mode_stats in snapshot.totals do
-		wins += mode_stats.wins
-	end
-	return wins
-end
 
 -- turns what the server sent into what the guild menu shows
 -- show_discord has to come from can_see_discord_links, Roblox policy decides who may see it
@@ -96,11 +90,12 @@ const function format_guild_snapshot(
 				id = "wins",
 				icon = "🏆",
 				label = "Wins",
-				value = format_guild_number(sum_wins(snapshot)),
+				value = format_guild_number(sum_guild_mode_stats(snapshot.totals).wins),
 				colour = COLOURS.yellow_200,
 			},
 		},
 		rank_history = rank_history,
+		stat_sections = format_guild_stat_sections(snapshot),
 		about = snapshot.description,
 		members = members,
 		banned = banned,

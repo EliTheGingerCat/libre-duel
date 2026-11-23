@@ -9,6 +9,7 @@ const HUD_DEFAULTS = require(script.Parent.Parent.hud.HUD_DEFAULTS)
 const KEYBINDS = require(ReplicatedStorage.client.util.KEYBINDS)
 const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
 local React = require(ReplicatedStorage.Packages.react)
+const get_ping = require(ReplicatedStorage.client.ping.get_ping)
 local get_perceived_lightness = require(ReplicatedStorage.shared.ui.get_perceived_lightness)
 local hud_screen = require(script.Parent.Parent.hud.hud_screen)
 const registry = require(ReplicatedStorage.shared.entity.registry)
@@ -134,7 +135,7 @@ const function use_ping(): number
 
 	const function track_ping()
 		const function on_heartbeat(): ()
-			set_ping(local_player:GetNetworkPing())
+			set_ping(get_ping() or 0)
 		end
 
 		local connection = RunService.Heartbeat:Connect(on_heartbeat)

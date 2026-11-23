@@ -2,21 +2,12 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const GAME_STATS = require(ReplicatedStorage.shared.modes.GAME_STATS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
+const format_guild_mode_title = require(script.Parent.format_guild_mode_title)
 const format_guild_number = require(script.Parent.format_guild_number)
+const format_guild_ratio = require(script.Parent.format_guild_ratio)
 const profile_types = require(script.Parent.Parent.Parent.profile_card.profile_types)
 
 const SECONDS_PER_HOUR = 3600
-
-const function format_ratio(wins: number, losses: number): string
-	if losses == 0 then
-		return format_guild_number(wins)
-	end
-	return string.format("%.2f", wins / losses)
-end
-
-const function capitalise(text: string): string
-	return string.upper(string.sub(text, 1, 1)) .. string.sub(text, 2)
-end
 
 -- the stats a member earned while in the guild, an overall group then one per mode
 const function format_member_stat_groups(stats: GAME_STATS.modes, playtime: number): { profile_types.stat_group }
@@ -29,7 +20,7 @@ const function format_member_stat_groups(stats: GAME_STATS.modes, playtime: numb
 		total_losses += mode_stats.losses
 		table.insert(groups, {
 			id = definition.id :: string,
-			title = `{capitalise(definition.game)} {string.lower(definition.name)}`,
+			title = format_guild_mode_title(definition),
 			stats = {
 				{ id = "wins", icon = "🏆", label = "Wins", value = format_guild_number(mode_stats.wins) },
 				{ id = "kills", icon = "⚔️", label = "Kills", value = format_guild_number(mode_stats.kills) },
@@ -38,7 +29,7 @@ const function format_member_stat_groups(stats: GAME_STATS.modes, playtime: numb
 					id = "win_loss_ratio",
 					icon = "➗",
 					label = "W/LR",
-					value = format_ratio(mode_stats.wins, mode_stats.losses),
+					value = format_guild_ratio(mode_stats.wins, mode_stats.losses),
 				},
 			},
 		})
@@ -54,7 +45,12 @@ const function format_member_stat_groups(stats: GAME_STATS.modes, playtime: numb
 				value = `{format_guild_number(playtime // SECONDS_PER_HOUR)} hours`,
 			},
 			{ id = "wins", icon = "🏆", label = "Wins", value = format_guild_number(total_wins) },
-			{ id = "win_loss_ratio", icon = "➗", label = "W/LR", value = format_ratio(total_wins, total_losses) },
+			{
+				id = "win_loss_ratio",
+				icon = "➗",
+				label = "W/LR",
+				value = format_guild_ratio(total_wins, total_losses),
+			},
 		},
 	})
 	return groups

@@ -12,6 +12,7 @@ const guild_info_page = require(script.Parent.info.guild_info_page)
 const guild_invites_page = require(script.Parent.invites.guild_invites_page)
 const guild_manage_page = require(script.Parent.manage.guild_manage_page)
 const guild_members_page = require(script.Parent.members.guild_members_page)
+const guild_stats_page = require(script.Parent.stats.guild_stats_page)
 const guild_types = require(script.Parent.guild_types)
 const menu_sidebar = require(script.Parent.Parent.sidebar.menu_sidebar)
 const menu_window = require(script.Parent.Parent.visuals.menu_window)
@@ -21,6 +22,8 @@ const sidebar_types = require(script.Parent.Parent.sidebar.sidebar_types)
 const create_element = React.createElement
 
 const INFO_ENTRY: sidebar_types.entry = { id = "info", text = "Info", icon = "rbxassetid://75711772548687" }
+-- borrows the info icon until there is a proper stats one
+const STATS_ENTRY: sidebar_types.entry = { id = "stats", text = "Stats", icon = "rbxassetid://128265647801507" }
 const MEMBERS_ENTRY: sidebar_types.entry = { id = "members", text = "Members", icon = "rbxassetid://100734044686485" }
 const INVITES_ENTRY: sidebar_types.entry = { id = "invites", text = "Invites", icon = "rbxassetid://125391154286649" }
 const MANAGE_ENTRY: sidebar_types.entry =
@@ -30,7 +33,7 @@ const INCOMING_INVITES_ENTRY: sidebar_types.entry =
 	{ id = "incoming_invites", text = "Invites", icon = "rbxassetid://125391154286649" }
 const LEAVE_ICON = "rbxassetid://82008498319027"
 -- owners manage the guild instead of leaving it
-const OWNER_ENTRIES = { INFO_ENTRY, MEMBERS_ENTRY, INVITES_ENTRY, MANAGE_ENTRY }
+const OWNER_ENTRIES = { INFO_ENTRY, STATS_ENTRY, MEMBERS_ENTRY, INVITES_ENTRY, MANAGE_ENTRY }
 const NO_GUILD_ENTRIES = { CREATE_ENTRY, INCOMING_INVITES_ENTRY }
 -- leaving needs a second press, it resets after this long
 const LEAVE_CONFIRM_TIMEOUT = 3
@@ -198,6 +201,8 @@ const function guild_menu(props: props)
 			page_fills_content = true
 			page = create_element(guild_create_page, { pending = props.creating, on_create = props.actions.on_create })
 		end
+	elseif selected == "stats" then
+		page = create_element(guild_stats_page, { sections = props.guild.stat_sections })
 	elseif selected == "members" then
 		page =
 			create_element(guild_members_page, { members = props.guild.members, on_manage_member = open_member_menu })
@@ -230,7 +235,7 @@ const function guild_menu(props: props)
 	const entries = if props.guild == nil
 		then NO_GUILD_ENTRIES
 		elseif props.viewer_is_owner then OWNER_ENTRIES
-		else { INFO_ENTRY, MEMBERS_ENTRY, create_leave_entry(leave_armed) }
+		else { INFO_ENTRY, STATS_ENTRY, MEMBERS_ENTRY, create_leave_entry(leave_armed) }
 
 	return create_element(menu_window, {
 		name = "Guild",

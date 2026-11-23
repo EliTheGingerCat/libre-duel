@@ -203,23 +203,20 @@ const function new(this_match: match.match): match.hooks
 			return
 		end
 		close_cages()
-		for _, entity in registry.get_all() do
-			-- reset their inventories...
-			local team = find_team_by_entity(entity)
-			if not team then
-				return
+		for _, team in teams do
+			for _, entity in team.entities do
+				give_match_loadout(entity, team)
+
+				const character = registry.get_character(entity)
+				if character == nil then
+					continue
+				end
+				const humanoid = character:FindFirstChildOfClass("Humanoid")
+				if humanoid == nil then
+					continue
+				end
+				humanoid.Health = humanoid.MaxHealth
 			end
-			give_match_loadout(entity, team)
-			-- then heal 'em
-			local character = registry.get_character(entity)
-			if not character then
-				return
-			end
-			local humanoid = character:FindFirstChildOfClass("Humanoid")
-			if not humanoid then
-				return
-			end
-			humanoid.Health = 100
 		end
 		const function open_current_cages(): ()
 			for i = CAGE_TIME, 1, -1 do

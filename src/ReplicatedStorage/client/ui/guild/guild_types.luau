@@ -24,6 +24,14 @@ export type incoming_invite = {
 	member_count: number,
 }
 
+-- a titled group of numbers on the stats page
+export type stat_section = {
+	id: string,
+	title: string,
+	title_colour: Color3?,
+	stats: { profile_types.highlight_stat },
+}
+
 export type guild = {
 	id: string,
 	name: string,
@@ -33,13 +41,14 @@ export type guild = {
 	info_fields: { profile_types.info_field },
 	highlight_stats: { profile_types.highlight_stat },
 	rank_history: { profile_types.rank_point },
+	stat_sections: { stat_section },
 	about: string,
 	members: { member },
 	banned: { banned_member },
 }
 
 -- "create" and "incoming_invites" are what players without a guild see
-export type page = "info" | "members" | "invites" | "manage" | "create" | "incoming_invites"
+export type page = "info" | "stats" | "members" | "invites" | "manage" | "create" | "incoming_invites"
 
 -- whoever is showing the menu owns the search and the invite list, the menu only displays them
 export type invites = {

@@ -1,6 +1,7 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const COLOURS = require(ReplicatedStorage.shared.ui.COLOURS)
+const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 const PLACEHOLDER_ASSETS = require(script.Parent.PLACEHOLDER_ASSETS)
 const PLACEHOLDER_STAT_GROUPS = require(script.Parent.PLACEHOLDER_STAT_GROUPS)
 const create_placeholder_rank_history = require(script.Parent.create_placeholder_rank_history)
@@ -54,6 +55,68 @@ const PLACEHOLDER_GUILD: guild_types.guild = {
 		4,
 		3,
 	}),
+	stat_sections = {
+		{
+			id = "matches",
+			title = "Matches",
+			stats = {
+				{ id = "games", label = "Games played", value = "314,985" },
+				{ id = "wins", label = "Wins", value = "195,291" },
+				{ id = "losses", label = "Losses", value = "119,694" },
+				{ id = "win_rate", label = "Win rate", value = "62%" },
+				{ id = "win_loss_ratio", label = "W/LR", value = "1.63" },
+			},
+		},
+		{
+			id = "combat",
+			title = "Combat",
+			stats = {
+				{ id = "kills", label = "Kills", value = "412,870" },
+				{ id = "deaths", label = "Deaths", value = "192,930" },
+				{ id = "kill_death_ratio", label = "K/D", value = "2.14" },
+				{ id = "goals", label = "Goals", value = "288,104" },
+			},
+		},
+		{
+			id = "playtime",
+			title = "Playtime",
+			stats = {
+				{ id = "playtime", label = "Total", value = "5,704h" },
+			},
+		},
+		{
+			id = "bridge_solo",
+			title = "Bridge solo",
+			title_colour = MODE_DEFINITIONS[1].colour,
+			stats = {
+				{ id = "games", label = "Games played", value = "223,639" },
+				{ id = "wins", label = "Wins", value = "143,129" },
+				{ id = "losses", label = "Losses", value = "80,510" },
+				{ id = "win_rate", label = "Win rate", value = "64%" },
+				{ id = "win_loss_ratio", label = "W/LR", value = "1.78" },
+				{ id = "kills", label = "Kills", value = "301,522" },
+				{ id = "deaths", label = "Deaths", value = "130,529" },
+				{ id = "kill_death_ratio", label = "K/D", value = "2.31" },
+				{ id = "goals", label = "Goals", value = "214,870" },
+			},
+		},
+		{
+			id = "bridge_duos",
+			title = "Bridge duos",
+			title_colour = MODE_DEFINITIONS[2].colour,
+			stats = {
+				{ id = "games", label = "Games played", value = "91,346" },
+				{ id = "wins", label = "Wins", value = "52,162" },
+				{ id = "losses", label = "Losses", value = "39,184" },
+				{ id = "win_rate", label = "Win rate", value = "57%" },
+				{ id = "win_loss_ratio", label = "W/LR", value = "1.33" },
+				{ id = "kills", label = "Kills", value = "111,348" },
+				{ id = "deaths", label = "Deaths", value = "62,401" },
+				{ id = "kill_death_ratio", label = "K/D", value = "1.78" },
+				{ id = "goals", label = "Goals", value = "73,234" },
+			},
+		},
+	},
 	about = "Welcome to TOA guild!\n<font color='rgb(255, 84, 84)'>Rich text</font> works here too.\n<b>Pretty cool</b>, right?",
 	members = {
 		{
