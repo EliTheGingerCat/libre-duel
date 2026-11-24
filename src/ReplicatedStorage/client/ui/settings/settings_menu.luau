@@ -47,7 +47,7 @@ const function settings_menu(props: { enabled: boolean, on_close: () -> () })
 		PaddingLeft = UDim.new(0, 48),
 		PaddingRight = UDim.new(0, 48),
 	})
-	-- the padding lives inside the entrance animation's CanvasGroup so tugged buttons have room before it clips them
+	-- the padding lives inside the entrance animation's CanvasGroup so components n shi have room before it clips them
 	local children = {
 		padding = padding,
 		layout = React.createElement("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
