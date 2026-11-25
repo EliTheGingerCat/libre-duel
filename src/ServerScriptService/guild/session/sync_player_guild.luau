@@ -1,5 +1,9 @@
 const ServerScriptService = game:GetService("ServerScriptService")
 
+const clear_guild_hint_if_not_member_async =
+	require(ServerScriptService.guild.membership.clear_guild_hint_if_not_member_async)
+const create_clear_guild_hint_transform =
+	require(ServerScriptService.guild.membership.create_clear_guild_hint_transform)
 const dirty_guild_scores = require(ServerScriptService.guild.ranking.dirty_guild_scores)
 const drop = require(ServerScriptService.ServerPackages.drop)
 const get_cached_player_data = require(ServerScriptService.player_data.get_cached_player_data)
@@ -8,7 +12,6 @@ const guild_schema = require(ServerScriptService.guild.data.schema.guild_schema)
 const guild_session_refcount = require(script.Parent.guild_session_refcount)
 const guild_store = require(ServerScriptService.guild.data.guild_store)
 const player_guild_ids = require(script.Parent.player_guild_ids)
-const player_schema = require(ServerScriptService.player_data.schema.player_schema)
 const player_store = require(ServerScriptService.player_data.player_store)
 const push_guild_state = require(ServerScriptService.guild.replication.push_guild_state)
 
@@ -25,16 +28,8 @@ const function stop_tracking(player: Player): ()
 	guild_session_refcount.release(guild_id)
 end
 
-const function clear_guild_hint(player: Player, stale_guild_id: string): ()
-	const function clear_hint(data: player_schema.player_data): player_schema.player_data
-		if data.guild_id ~= stale_guild_id then
-			return data
-		end
-		const new_data = table.clone(data)
-		new_data.guild_id = ""
-		return new_data
-	end
-	drop.update(player_store, tostring(player.UserId), clear_hint)
+const function clear_deleted_guild_hint(player: Player, deleted_guild_id: string): ()
+	drop.update(player_store, tostring(player.UserId), create_clear_guild_hint_transform(deleted_guild_id))
 end
 
 const function copy_banner_to_member(player: Player, guild_id: string, banner: string): ()
@@ -80,9 +75,14 @@ const function sync_once(player: Player): ()
 	if guild_id ~= nil then
 		const guild_data = drop.view(guild_store, guild_id)
 		const member = guild_data.members[tostring(player.UserId)]
-		if guild_data.deleted or member == nil then
+		if guild_data.deleted then
+			-- a deletion never gets undone, so even a stale read is enough to act on
 			stop_tracking(player)
-			clear_guild_hint(player, guild_id)
+			clear_deleted_guild_hint(player, guild_id)
+		elseif member == nil then
+			-- usually just a cache that hasn't caught up with a join, the session stays held so the
+			-- guild refresh that brings the member in syncs again
+			clear_guild_hint_if_not_member_async(player.UserId, guild_id)
 		elseif member.banner ~= player_data.player_banner_id then
 			copy_banner_to_member(player, guild_id, player_data.player_banner_id)
 		end
@@ -90,8 +90,9 @@ const function sync_once(player: Player): ()
 	push_guild_state(player)
 end
 
--- makes this server's view of the player's guild match their data, can yield while a guild session starts
--- the hint is cleared when the guild disagrees, which is how kicks and deletions reach offline players
+-- makes this server's view of the player's guild match their data
+-- can yield while a guild session starts or while a hint the guild disagrees with gets checked
+-- removals clear the hint themselves, deletions reach members here the next time they sync
 const function sync_player_guild(player: Player): ()
 	if syncing_players[player] ~= nil then
 		syncing_players[player] = true

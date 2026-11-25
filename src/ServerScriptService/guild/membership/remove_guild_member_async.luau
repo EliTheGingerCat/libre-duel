@@ -1,10 +1,14 @@
+const Players = game:GetService("Players")
 const ServerScriptService = game:GetService("ServerScriptService")
 
+const create_clear_guild_hint_transform = require(script.Parent.create_clear_guild_hint_transform)
 const guild_schema = require(ServerScriptService.guild.data.schema.guild_schema)
 const guild_store = require(ServerScriptService.guild.data.guild_store)
-const try_update_async = require(ServerScriptService.guild.data.try_update_async)
+const player_store = require(ServerScriptService.player_data.player_store)
+const run_guild_transaction = require(ServerScriptService.guild.data.run_guild_transaction)
 
--- shared by leaving, kicking and banning, the removed player's hint gets cleared by sync_player_guild wherever they are
+-- shared by leaving, kicking and banning
+-- the hint is cleared in the same transaction because a cached guild missing the player can't prove they were removed
 -- totals keep what the member earned, only their own entry goes
 const function remove_guild_member_async(guild_id: string, user_id: number, ban: boolean): boolean
 	const key = tostring(user_id)
@@ -26,7 +30,15 @@ const function remove_guild_member_async(guild_id: string, user_id: number, ban:
 		end
 		return new_data
 	end
-	return try_update_async(guild_store, guild_id, remove_member)
+	return run_guild_transaction({
+		{ store = guild_store, key = guild_id, transform = remove_member, refresh_after = true },
+		{
+			store = player_store,
+			key = key,
+			transform = create_clear_guild_hint_transform(guild_id),
+			refresh_after = Players:GetPlayerByUserId(user_id) ~= nil,
+		},
+	})
 end
 
 return remove_guild_member_async
