@@ -312,6 +312,11 @@ assert(reliable:IsA("RemoteEvent"), "Expected LIBRE_DUEL_RELIABLE to be a Remote
 
 local unreliable = { remotes:WaitForChild("LIBRE_DUEL_UNRELIABLE_0") }
 assert(unreliable[1]:IsA("UnreliableRemoteEvent"), "Expected LIBRE_DUEL_UNRELIABLE_0 to be an UnreliableRemoteEvent")
+export type guild_id = (string)
+export type action_result = ({
+	["ok"]: (boolean),
+	["error"]: ((string)?),
+})
 export type mode_stats = ({
 	["wins"]: (number),
 	["goals"]: (number),
@@ -319,19 +324,7 @@ export type mode_stats = ({
 	["losses"]: (number),
 	["deaths"]: (number),
 })
-export type action_result = ({
-	["ok"]: (boolean),
-	["error"]: ((string)?),
-})
-export type inventory_action = ("swap_items" | "move_item" | "quick_move")
-export type guild_info_input = ({
-	["name"]: (string),
-	["tag"]: (string),
-	["description"]: (string),
-	["icon"]: (string),
-	["banner"]: (string),
-	["discord_invite"]: (string),
-})
+export type user_id = (number)
 export type guild_info_changes = ({
 	["name"]: ((string)?),
 	["tag"]: ((string)?),
@@ -339,27 +332,6 @@ export type guild_info_changes = ({
 	["icon"]: ((string)?),
 	["banner"]: ((string)?),
 	["discord_invite"]: ((string)?),
-})
-export type network_inventory = ({ ({
-	["kind"]: "empty",
-} | {
-	["kind"]: "item",
-	["item_id"]: (string),
-	["amount"]: (number),
-	["data"]: ((unknown)),
-}) })
-export type rank_point = ({
-	["time"]: (number),
-	["rank"]: (number),
-})
-export type user_id = (number)
-export type network_inventory_slot = ({
-	["kind"]: "empty",
-} | {
-	["kind"]: "item",
-	["item_id"]: (string),
-	["amount"]: (number),
-	["data"]: ((unknown)),
 })
 export type guild_snapshot = ({
 	["id"]: (string),
@@ -406,7 +378,35 @@ export type guild_snapshot = ({
 		["rank"]: (number),
 	}) }),
 })
-export type guild_id = (string)
+export type rank_point = ({
+	["time"]: (number),
+	["rank"]: (number),
+})
+export type network_inventory_slot = ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
+})
+export type inventory_action = ("swap_items" | "move_item" | "quick_move")
+export type guild_info_input = ({
+	["name"]: (string),
+	["tag"]: (string),
+	["description"]: (string),
+	["icon"]: (string),
+	["banner"]: (string),
+	["discord_invite"]: (string),
+})
+export type network_inventory = ({ ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
+}) })
 
 local function send_events()
 	if outgoing_used ~= 0 then
