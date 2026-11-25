@@ -4,7 +4,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const bow_state = require(script.Parent.Parent.tools.bow.bow_state)
 const mesh_display = require(script.Parent.mesh_display)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
-const VIEWMODEL_CONSTANTS = require(script.Parent.VIEWMODEL_CONSTANTS)
+const FIRST_PERSON = require(script.Parent.FIRST_PERSON_VIEWMODEL)
 
 const preloaded: { [{ tool_types.bow_draw_frame }]: true } = {}
 
@@ -26,12 +26,17 @@ const function preload(draw_frames: { tool_types.bow_draw_frame }): ()
 	task.spawn(ContentProvider.PreloadAsync, ContentProvider, assets)
 end
 
+-- the draw ticks at which the bow switches to each pulling frame
 const function get_draw_frame(
 	draw_frames: { tool_types.bow_draw_frame },
 	draw_started: number
-): tool_types.bow_draw_frame
-	const progress = math.min((os.clock() - draw_started) / VIEWMODEL_CONSTANTS.bow_full_draw_seconds + 0.3, 1)
-	return draw_frames[math.floor(progress * (#draw_frames - 1)) + 1]
+): tool_types.bow_draw_frame?
+	const drawn_ticks = math.floor((os.clock() - draw_started) * FIRST_PERSON.ticks_per_second)
+	const pull = if drawn_ticks >= 18 then 3 elseif drawn_ticks > 13 then 2 elseif drawn_ticks > 0 then 1 else 0
+	if pull == 0 then
+		return nil
+	end
+	return draw_frames[math.min(pull, #draw_frames)]
 end
 
 const function show(tool: tool_types.tool): ()
@@ -69,7 +74,7 @@ end
 return {
 	show = show,
 	hide = mesh_display.hide,
-	get_part = mesh_display.get_part,
+	set_pose = mesh_display.set_pose,
 	set_transparency = mesh_display.set_transparency,
 	update = update,
 }

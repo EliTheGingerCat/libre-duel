@@ -1,20 +1,26 @@
+const FIRST_PERSON = require(script.Parent.FIRST_PERSON_VIEWMODEL)
 const cake_state = require(script.Parent.Parent.tools.cake.cake_state)
-const VIEWMODEL_CONSTANTS = require(script.Parent.VIEWMODEL_CONSTANTS)
+const gl_transform = require(script.Parent.first_person.gl_transform)
+const first_person_item_transforms = require(script.Parent.first_person.first_person_item_transforms)
+const viewmodel_types = require(script.Parent.viewmodel_types)
 
-const TWO_PI = 2 * math.pi
-
-local phase = 0
-local amount = 0
-
-const function get_offset(delta_time: number): CFrame
-	const target = if cake_state.eating then 1 else 0
-	amount += (target - amount) * (1 - math.exp(-VIEWMODEL_CONSTANTS.eat_smoothing * delta_time))
-	phase = (phase + VIEWMODEL_CONSTANTS.eat_bob_speed * delta_time) % TWO_PI
-
-	return CFrame.identity:Lerp(VIEWMODEL_CONSTANTS.eat_pose, amount)
-		* CFrame.new(0, math.sin(phase) * VIEWMODEL_CONSTANTS.eat_bob_height * amount, 0)
+const function is_using(): boolean
+	return cake_state.eating and cake_state.eat_started ~= nil
 end
 
-return {
-	get_offset = get_offset,
+const function apply_before_hold(transform: gl_transform.gl_transform): ()
+	const started = cake_state.eat_started
+	if started == nil then
+		return
+	end
+	const elapsed_ticks = (os.clock() - started) * FIRST_PERSON.ticks_per_second
+	const remaining_ticks = math.max(FIRST_PERSON.eat_duration_ticks - elapsed_ticks, 0) + 1
+	first_person_item_transforms.perform_drinking(transform, remaining_ticks, FIRST_PERSON.eat_duration_ticks)
+end
+
+const eat_animation: viewmodel_types.use_animation = {
+	is_using = is_using,
+	apply_before_hold = apply_before_hold,
 }
+
+return eat_animation

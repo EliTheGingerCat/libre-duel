@@ -85,6 +85,11 @@ const function attack_entity(
 		return false
 	end
 
+	if is_melee and get_blocking_state(attacker) then
+		debug_print("Attacker is blocking.")
+		return false
+	end
+
 	if is_melee and is_on_cooldown(attacker, "attack_melee") then
 		debug_print("Attacker is on cooldown.")
 		return false

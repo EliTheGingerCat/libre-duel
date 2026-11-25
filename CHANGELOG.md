@@ -27,6 +27,8 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Play button above the hotbar that opens the mode selector.
 - Selected tools are now visible in third person, held in the character's right hand.
 - UI animation scale setting.
+- First person viewmodel, with swing, equip, bobbing and arm sway animations.
+- Pressing R toggles between first person and third person. The camera is locked to first person otherwise.
 
 ### Changed
 
@@ -34,6 +36,7 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Opening a menu now stops whatever tool is being used.
 - Shared UI fonts and colours live in `FONTS.luau` and `COLOURS.luau`.
 - Keystrokes and mousestrokes start hidden and are added from the HUD selector.
+- Eating a golden apple takes 32 ticks.
 
 ### Fixed
 
@@ -41,3 +44,5 @@ This project does **not** adhere to [Semantic Versioning](https://semver.org/spe
 - Blocking no longer sticks after losing window focus.
 - The infoboard now scales on small displays.
 - The server now rejects public keys that are not buffers.
+- The hitbox outline no longer shows in first person.
+- Swords can no longer swing while blocking.

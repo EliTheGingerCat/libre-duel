@@ -2,9 +2,6 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const Workspace = game:GetService("Workspace")
 
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
-const VIEWMODEL_CONSTANTS = require(script.Parent.VIEWMODEL_CONSTANTS)
-
-const SIZE = VIEWMODEL_CONSTANTS.cube_size
 
 local part: Part? = nil
 local textures: { Texture } = {}
@@ -21,21 +18,18 @@ const function add_textures(cube: Part, texture_id: string): ()
 	for _, face in Enum.NormalId:GetEnumItems() do
 		const texture = Instance.new("Texture")
 		texture.Face = face
-		texture.StudsPerTileU = SIZE
-		texture.StudsPerTileV = SIZE
 		texture.Texture = texture_id
 		texture.Parent = cube
 		table.insert(textures, texture)
 	end
 end
 
--- not using create_cube because this must not get the "cube" tag, and textures need to fit this size
+-- not using create_cube because this must not get the "cube" tag, and its size changes with the fov
 const function show(tool: tool_types.tool): ()
 	hide()
 
 	const appearance: tool_types.cube_params = tool.behaviours.cube or {}
 	const cube = Instance.new("Part")
-	cube.Size = Vector3.one * SIZE
 	cube.Anchored = true
 	cube.CanCollide = false
 	cube.CanQuery = false
@@ -57,8 +51,17 @@ const function show(tool: tool_types.tool): ()
 	part = cube
 end
 
-const function get_part(): BasePart?
-	return part
+-- the block model is a 1 unit cube
+const function set_pose(cframe: CFrame, studs_per_unit: number): ()
+	if part == nil then
+		return
+	end
+	part.CFrame = cframe
+	part.Size = Vector3.one * studs_per_unit
+	for _, texture in textures do
+		texture.StudsPerTileU = studs_per_unit
+		texture.StudsPerTileV = studs_per_unit
+	end
 end
 
 -- textures don't inherit this from their part
@@ -75,6 +78,6 @@ end
 return {
 	show = show,
 	hide = hide,
-	get_part = get_part,
+	set_pose = set_pose,
 	set_transparency = set_transparency,
 }
