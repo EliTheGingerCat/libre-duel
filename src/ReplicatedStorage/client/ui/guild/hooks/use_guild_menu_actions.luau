@@ -63,6 +63,10 @@ const function change_banner(): ()
 	run_action("request_guild_image_change", "banner")
 end
 
+const function view_guild_info(invite: guild_types.incoming_invite): ()
+	menu_navigation.open_guild(invite.guild_id)
+end
+
 -- TODO: blocking guilds isn't designed yet
 const function block_guild(_invite: guild_types.incoming_invite): () end
 
@@ -98,10 +102,6 @@ const function use_guild_menu_actions(viewed_guild: use_viewed_guild.viewed_guil
 		answer_invite(invite, "decline_guild_invite")
 	end
 
-	const function view_guild_info(invite: guild_types.incoming_invite): ()
-		viewed_guild.view(invite.guild_id)
-	end
-
 	return {
 		creating = creating,
 		answering_invite_guild_id = answering_invite_guild_id,
@@ -119,7 +119,7 @@ const function use_guild_menu_actions(viewed_guild: use_viewed_guild.viewed_guil
 			on_decline_invite = decline_invite,
 			on_view_guild_info = view_guild_info,
 			on_block_guild = block_guild,
-			on_close_viewed_guild = viewed_guild.close,
+			on_select_viewed_page = viewed_guild.select_page,
 		},
 	}
 end

@@ -26,7 +26,7 @@ const PLACEHOLDER_ACTIONS: guild_types.actions = {
 	on_decline_invite = do_nothing,
 	on_view_guild_info = do_nothing,
 	on_block_guild = do_nothing,
-	on_close_viewed_guild = do_nothing,
+	on_select_viewed_page = do_nothing,
 }
 
 const function guild_menu_preview()
@@ -47,6 +47,7 @@ const function guild_menu_preview()
 		enabled = enabled,
 		on_close = close,
 		guild = if has_guild then PLACEHOLDER_GUILD else nil,
+		viewed_page = "info",
 		viewer_is_owner = true,
 		invites = invites,
 		incoming_invites = PLACEHOLDER_INCOMING_INVITES,

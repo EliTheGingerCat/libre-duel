@@ -41,6 +41,8 @@ export type guild = {
 
 -- "create" and "incoming_invites" are what players without a guild see
 export type page = "info" | "stats" | "members" | "invites" | "manage" | "create" | "incoming_invites"
+-- another guild is read only, so only these are shown for it
+export type viewed_page = "info" | "stats" | "members"
 
 -- whoever is showing the menu owns the search and the invite list, the menu only displays them
 export type invites = {
@@ -72,8 +74,8 @@ export type actions = {
 	on_decline_invite: (invite: incoming_invite) -> (),
 	on_view_guild_info: (invite: incoming_invite) -> (),
 	on_block_guild: (invite: incoming_invite) -> (),
-	-- leaves the read only view of another guild
-	on_close_viewed_guild: () -> (),
+	-- switches tabs while another guild is showing
+	on_select_viewed_page: (page: viewed_page) -> (),
 }
 
 return {}

@@ -9,12 +9,14 @@ const use_can_see_discord_links = require(ReplicatedStorage.client.guild.use_can
 const use_guild_menu_actions = require(script.Parent.hooks.use_guild_menu_actions)
 const use_guild_state = require(ReplicatedStorage.client.guild.use_guild_state)
 const use_incoming_guild_invites = require(script.Parent.hooks.use_incoming_guild_invites)
+const use_menu_navigation_history = require(script.Parent.Parent.navigation.use_menu_navigation_history)
 const use_outgoing_guild_invites = require(script.Parent.hooks.use_outgoing_guild_invites)
 const use_topbar_menu_icon = require(script.Parent.Parent.topbar.use_topbar_menu_icon)
 const use_user_info_version = require(ReplicatedStorage.client.guild.use_user_info_version)
 const use_viewed_guild = require(script.Parent.hooks.use_viewed_guild)
 
 const GUILD_ICON = "rbxassetid://127844573570900"
+const OWN_GUILD_DESTINATION: menu_navigation.destination = { kind = "guild" }
 
 -- shows the real guild menu, everything it needs comes from the server through guild_state
 const function guild_menu_root()
@@ -23,7 +25,7 @@ const function guild_menu_root()
 	const show_discord = use_can_see_discord_links()
 	-- member names inside the formatted guild come from user_info_cache
 	use_user_info_version()
-	const viewed_guild = use_viewed_guild(menu_icon.enabled)
+	const viewed_guild = use_viewed_guild()
 	const menu_actions = use_guild_menu_actions(viewed_guild)
 	const outgoing_invites = use_outgoing_guild_invites(state.guild)
 	const incoming_invites = use_incoming_guild_invites(state.incoming_invites)
@@ -31,29 +33,35 @@ const function guild_menu_root()
 	own_guild_id_ref.current = if state.guild then state.guild.id else nil
 
 	const function follow_navigation(): () -> ()
-		const function navigate(destination: menu_navigation.destination): ()
-			if destination.kind ~= "guild" then
+		const function navigate(event: menu_navigation.navigation_event): ()
+			if event.kind ~= "guild" then
+				-- a guild left behind on the way to another menu stays viewed, so going back still shows it
+				if event.kind == "closed" then
+					viewed_guild.close()
+				end
 				menu_icon.close()
 				return
 			end
 			menu_icon.open()
-			if destination.guild_id == own_guild_id_ref.current then
+			if event.guild_id == nil or event.guild_id == own_guild_id_ref.current then
 				viewed_guild.close()
 			else
-				viewed_guild.view(destination.guild_id)
+				viewed_guild.view(event.guild_id)
 			end
 		end
 		return menu_navigation.subscribe(navigate)
 	end
 	React.useEffect(follow_navigation, {})
+	use_menu_navigation_history(menu_icon.enabled, "guild", OWN_GUILD_DESTINATION)
 
 	return React.createElement(guild_menu, {
 		enabled = menu_icon.enabled,
-		on_close = menu_icon.close,
+		on_close = menu_navigation.go_back,
 		guild = if state.guild then format_guild_snapshot(state.guild, show_discord) else nil,
 		viewed_guild = if viewed_guild.snapshot
 			then format_guild_snapshot(viewed_guild.snapshot, show_discord)
 			else nil,
+		viewed_page = viewed_guild.page,
 		viewer_is_owner = state.guild ~= nil and state.guild.owner_id == Players.LocalPlayer.UserId,
 		invites = outgoing_invites,
 		incoming_invites = incoming_invites,

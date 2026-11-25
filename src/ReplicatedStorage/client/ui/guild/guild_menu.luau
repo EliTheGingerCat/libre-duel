@@ -35,6 +35,7 @@ const LEAVE_ICON = "rbxassetid://82008498319027"
 -- owners manage the guild instead of leaving it
 const OWNER_ENTRIES = { INFO_ENTRY, STATS_ENTRY, MEMBERS_ENTRY, INVITES_ENTRY, MANAGE_ENTRY }
 const NO_GUILD_ENTRIES = { CREATE_ENTRY, INCOMING_INVITES_ENTRY }
+const VIEWED_GUILD_ENTRIES = { INFO_ENTRY, STATS_ENTRY, MEMBERS_ENTRY }
 -- leaving needs a second press, it resets after this long
 const LEAVE_CONFIRM_TIMEOUT = 3
 
@@ -49,8 +50,9 @@ export type props = {
 	on_close: () -> (),
 	-- nil when the viewer isn't in a guild, which shows the create and incoming invites pages instead
 	guild: guild_types.guild?,
-	-- another guild opened from an invite, shown read only over everything else
+	-- another guild opened from an invite or a profile, shown read only over everything else
 	viewed_guild: guild_types.guild?,
+	viewed_page: guild_types.viewed_page,
 	viewer_is_owner: boolean,
 	invites: guild_types.invites,
 	incoming_invites: { guild_types.incoming_invite },
@@ -121,7 +123,8 @@ const function guild_menu(props: props)
 	const function select_entry(id: string): ()
 		set_context_menu(nil)
 		if props.viewed_guild then
-			props.actions.on_close_viewed_guild()
+			props.actions.on_select_viewed_page(id :: guild_types.viewed_page)
+			return
 		end
 		if id == "leave" then
 			if leave_armed then
@@ -180,14 +183,16 @@ const function guild_menu(props: props)
 		end
 	end
 
+	-- the pages below are the same for both, another guild just gets no owner controls
+	const shown_guild = props.viewed_guild or props.guild
+	const shown_page: guild_types.page = if props.viewed_guild then props.viewed_page else selected :: guild_types.page
+	const viewer_owns_shown_guild = props.viewer_is_owner and props.viewed_guild == nil
+
 	local page: unknown = nil
-	local page_key: string = selected
+	local page_key: string = shown_page
 	-- pages that scroll themselves or center their content get a fixed frame instead of the scrolling page
 	local page_fills_content = false
-	if props.viewed_guild then
-		page = create_element(guild_info_page, { guild = props.viewed_guild })
-		page_key = `viewed_{props.viewed_guild.id}`
-	elseif props.guild == nil then
+	if shown_guild == nil then
 		if selected == "incoming_invites" then
 			page = create_element(guild_incoming_invites_page, {
 				invites = props.incoming_invites,
@@ -201,25 +206,25 @@ const function guild_menu(props: props)
 			page_fills_content = true
 			page = create_element(guild_create_page, { pending = props.creating, on_create = props.actions.on_create })
 		end
-	elseif selected == "stats" then
-		page = create_element(stat_section_cards, { sections = props.guild.stat_sections })
-	elseif selected == "members" then
+	elseif shown_page == "stats" then
+		page = create_element(stat_section_cards, { sections = shown_guild.stat_sections })
+	elseif shown_page == "members" then
 		page =
-			create_element(guild_members_page, { members = props.guild.members, on_manage_member = open_member_menu })
-	elseif selected == "invites" and props.viewer_is_owner then
+			create_element(guild_members_page, { members = shown_guild.members, on_manage_member = open_member_menu })
+	elseif shown_page == "invites" and viewer_owns_shown_guild then
 		page_fills_content = true
 		page = create_element(guild_invites_page, { invites = props.invites })
-	elseif selected == "manage" and props.viewer_is_owner then
+	elseif shown_page == "manage" and viewer_owns_shown_guild then
 		page = create_element(guild_manage_page, {
-			banned = props.guild.banned,
+			banned = shown_guild.banned,
 			on_manage_banned = open_banned_member_menu,
 			on_delete_guild = props.actions.on_delete,
 		})
 	else
 		page_key = "info"
 		page = create_element(guild_info_page, {
-			guild = props.guild,
-			edit = if props.viewer_is_owner
+			guild = shown_guild,
+			edit = if viewer_owns_shown_guild
 				then {
 					on_rename = props.actions.on_rename,
 					on_edit_description = props.actions.on_edit_description,
@@ -232,8 +237,11 @@ const function guild_menu(props: props)
 
 	const content_position = UDim2.new(0.28, 0, 0, 76)
 	const content_size = UDim2.new(0.72, -32, 1, -96)
-	const entries = if props.guild == nil
-		then NO_GUILD_ENTRIES
+	-- keyed by guild too so switching between two guilds on the same tab still plays the entrance animation
+	const animation_key = if props.viewed_guild then `viewed_{props.viewed_guild.id}_{page_key}` else page_key
+	const entries = if props.viewed_guild
+		then VIEWED_GUILD_ENTRIES
+		elseif props.guild == nil then NO_GUILD_ENTRIES
 		elseif props.viewer_is_owner then OWNER_ENTRIES
 		else { INFO_ENTRY, STATS_ENTRY, MEMBERS_ENTRY, create_leave_entry(leave_armed) }
 
@@ -245,7 +253,7 @@ const function guild_menu(props: props)
 	}, props.enabled and {
 		sidebar = create_element(menu_sidebar, {
 			entries = entries,
-			selected = if props.viewed_guild then "" else page_key,
+			selected = page_key,
 			on_selected = select_entry,
 		}),
 		content = if page_fills_content
@@ -254,15 +262,15 @@ const function guild_menu(props: props)
 				Size = content_size,
 				BackgroundTransparency = 1,
 			}, {
-				page = create_element(entrance_animation, { key = page_key, fill = true }, { page = page }),
+				page = create_element(entrance_animation, { key = animation_key, fill = true }, { page = page }),
 			})
 			else create_element(scrolling_content, {
 				position = content_position,
 				size = content_size,
-				reset_key = page_key,
+				reset_key = animation_key,
 			}, {
 				layout = create_element("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
-				page = create_element(entrance_animation, { key = page_key }, {
+				page = create_element(entrance_animation, { key = animation_key }, {
 					layout = create_element(
 						"UIListLayout",
 						{ Padding = UDim.new(0, 10), SortOrder = Enum.SortOrder.LayoutOrder }
@@ -287,7 +295,7 @@ const function guild_menu(props: props)
 			menu = create_element(guild_context_menu, {
 				key = context_menu.key .. tostring(context_menu.position),
 				position = context_menu.position + UDim2.fromOffset(8, 0),
-				options = get_context_menu_options(context_menu.target, props.viewer_is_owner),
+				options = get_context_menu_options(context_menu.target, viewer_owns_shown_guild),
 				on_action = run_context_menu_action,
 			}),
 		}),

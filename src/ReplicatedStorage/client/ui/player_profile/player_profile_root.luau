@@ -5,6 +5,7 @@ const React = require(ReplicatedStorage.Packages.react)
 const format_player_profile_snapshot = require(script.Parent.format.format_player_profile_snapshot)
 const menu_navigation = require(script.Parent.Parent.navigation.menu_navigation)
 const player_profile_menu = require(script.Parent.player_profile_menu)
+const use_menu_navigation_history = require(script.Parent.Parent.navigation.use_menu_navigation_history)
 const use_player_profile_actions = require(script.Parent.hooks.use_player_profile_actions)
 const use_topbar_menu_icon = require(script.Parent.Parent.topbar.use_topbar_menu_icon)
 const use_user_info_version = require(ReplicatedStorage.client.guild.use_user_info_version)
@@ -13,6 +14,7 @@ const user_info_cache = require(ReplicatedStorage.client.guild.user_info_cache)
 
 const LOCAL_USER_ID = Players.LocalPlayer.UserId
 const PROFILE_ICON = `rbxthumb://type=AvatarHeadShot&id={LOCAL_USER_ID}&w=150&h=150`
+const OWN_PROFILE_DESTINATION: menu_navigation.destination = { kind = "player_profile", user_id = LOCAL_USER_ID }
 
 -- the topbar button opens the viewer's own profile, other menus can open anyone's through menu_navigation
 const function player_profile_root()
@@ -25,9 +27,9 @@ const function player_profile_root()
 	const actions = use_player_profile_actions(viewed_user_id)
 
 	const function follow_navigation(): () -> ()
-		const function navigate(destination: menu_navigation.destination): ()
-			if destination.kind == "player_profile" then
-				set_viewed_user_id(destination.user_id)
+		const function navigate(event: menu_navigation.navigation_event): ()
+			if event.kind == "player_profile" then
+				set_viewed_user_id(event.user_id)
 				menu_icon.open()
 			else
 				menu_icon.close()
@@ -36,6 +38,7 @@ const function player_profile_root()
 		return menu_navigation.subscribe(navigate)
 	end
 	React.useEffect(follow_navigation, {})
+	use_menu_navigation_history(menu_icon.enabled, "player_profile", OWN_PROFILE_DESTINATION)
 
 	const function show_own_profile_when_closed(): ()
 		if not menu_icon.enabled then
@@ -46,7 +49,7 @@ const function player_profile_root()
 
 	return React.createElement(player_profile_menu, {
 		enabled = menu_icon.enabled,
-		on_close = menu_icon.close,
+		on_close = menu_navigation.go_back,
 		profile = if viewed.snapshot then format_player_profile_snapshot(viewed.snapshot) else nil,
 		failed = viewed.failed,
 		viewer_is_self = viewed_user_id == LOCAL_USER_ID,
