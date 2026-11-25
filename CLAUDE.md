@@ -46,3 +46,5 @@ Avoid monolithic modules as much as possible.
 Do not colour UI unless the color plays an important role (such as a warning or danger), or if the user asked to have it colored.
 
 If something is not absolutely 100% clear, ask the user for clarification instead of continuing with false assumptions.
+
+ALWAYS internally question whether the current code is a good implementation or not. You shouldn't build onto ass implementations or slap band aids on them. If you find a design smell, let the user know 
