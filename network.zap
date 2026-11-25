@@ -577,7 +577,7 @@ funct fetch_player_profile = {
 	args: user_id,
 	rets: struct {
 		user_id: f64,
-		first_joined: f64,
+		first_joined: f64?,
 		last_online: f64,
 		banner: string.binary,
 		bio: string.binary,

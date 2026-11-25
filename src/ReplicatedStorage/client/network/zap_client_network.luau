@@ -312,10 +312,15 @@ assert(reliable:IsA("RemoteEvent"), "Expected LIBRE_DUEL_RELIABLE to be a Remote
 
 local unreliable = { remotes:WaitForChild("LIBRE_DUEL_UNRELIABLE_0") }
 assert(unreliable[1]:IsA("UnreliableRemoteEvent"), "Expected LIBRE_DUEL_UNRELIABLE_0 to be an UnreliableRemoteEvent")
-export type guild_id = (string)
-export type action_result = ({
-	["ok"]: (boolean),
-	["error"]: ((string)?),
+export type user_id = (number)
+export type inventory_action = ("swap_items" | "move_item" | "quick_move")
+export type network_inventory_slot = ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
 })
 export type mode_stats = ({
 	["wins"]: (number),
@@ -324,14 +329,10 @@ export type mode_stats = ({
 	["losses"]: (number),
 	["deaths"]: (number),
 })
-export type user_id = (number)
-export type guild_info_changes = ({
-	["name"]: ((string)?),
-	["tag"]: ((string)?),
-	["description"]: ((string)?),
-	["icon"]: ((string)?),
-	["banner"]: ((string)?),
-	["discord_invite"]: ((string)?),
+export type guild_id = (string)
+export type rank_point = ({
+	["time"]: (number),
+	["rank"]: (number),
 })
 export type guild_snapshot = ({
 	["id"]: (string),
@@ -378,27 +379,6 @@ export type guild_snapshot = ({
 		["rank"]: (number),
 	}) }),
 })
-export type rank_point = ({
-	["time"]: (number),
-	["rank"]: (number),
-})
-export type network_inventory_slot = ({
-	["kind"]: "empty",
-} | {
-	["kind"]: "item",
-	["item_id"]: (string),
-	["amount"]: (number),
-	["data"]: ((unknown)),
-})
-export type inventory_action = ("swap_items" | "move_item" | "quick_move")
-export type guild_info_input = ({
-	["name"]: (string),
-	["tag"]: (string),
-	["description"]: (string),
-	["icon"]: (string),
-	["banner"]: (string),
-	["discord_invite"]: (string),
-})
 export type network_inventory = ({ ({
 	["kind"]: "empty",
 } | {
@@ -407,6 +387,26 @@ export type network_inventory = ({ ({
 	["amount"]: (number),
 	["data"]: ((unknown)),
 }) })
+export type guild_info_changes = ({
+	["name"]: ((string)?),
+	["tag"]: ((string)?),
+	["description"]: ((string)?),
+	["icon"]: ((string)?),
+	["banner"]: ((string)?),
+	["discord_invite"]: ((string)?),
+})
+export type guild_info_input = ({
+	["name"]: (string),
+	["tag"]: (string),
+	["description"]: (string),
+	["icon"]: (string),
+	["banner"]: (string),
+	["discord_invite"]: (string),
+})
+export type action_result = ({
+	["ok"]: (boolean),
+	["error"]: ((string)?),
+})
 
 local function send_events()
 	if outgoing_used ~= 0 then
@@ -1209,7 +1209,11 @@ reliable.OnClientEvent:Connect(function(buff, inst)
 			if bit32.btest(bool_26, 0b0000000000000001) then
 				value = {  }
 				value["user_id"] = buffer.readf64(incoming_buff, read(8))
-				value["first_joined"] = buffer.readf64(incoming_buff, read(8))
+				if bit32.btest(bool_26, 0b0000000000000010) then
+					value["first_joined"] = buffer.readf64(incoming_buff, read(8))
+				else
+					value["first_joined"] = nil
+				end
 				value["last_online"] = buffer.readf64(incoming_buff, read(8))
 				local len_52 = buffer.readu16(incoming_buff, read(2))
 				value["banner"] = buffer.readstring(incoming_buff, read(len_52), len_52)
@@ -1217,7 +1221,7 @@ reliable.OnClientEvent:Connect(function(buff, inst)
 				value["bio"] = buffer.readstring(incoming_buff, read(len_53), len_53)
 				value["playtime"] = buffer.readf64(incoming_buff, read(8))
 				value["stats"] = {  }
-				if not bit32.btest(bool_26, 0b0000000000000010) then
+				if not bit32.btest(bool_26, 0b0000000000000100) then
 					for _ = 1, buffer.readu16(incoming_buff, read(2)) + 1 do
 						local key_3
 						local val_14
@@ -1234,7 +1238,7 @@ reliable.OnClientEvent:Connect(function(buff, inst)
 						value["stats"][key_3] = val_14
 					end
 				end
-				if bit32.btest(bool_26, 0b0000000000000100) then
+				if bit32.btest(bool_26, 0b0000000000001000) then
 					value["rank"] = buffer.readu32(incoming_buff, read(4))
 				else
 					value["rank"] = nil
@@ -1248,7 +1252,7 @@ reliable.OnClientEvent:Connect(function(buff, inst)
 					val_15["rank"] = buffer.readu32(incoming_buff, read(4))
 					value["rank_history"][i_12] = val_15
 				end
-				if bit32.btest(bool_26, 0b0000000000001000) then
+				if bit32.btest(bool_26, 0b0000000000010000) then
 					value["guild"] = {  }
 					local len_56 = buffer.readu16(incoming_buff, read(2))
 					value["guild"]["id"] = buffer.readstring(incoming_buff, read(len_56), len_56)
@@ -2463,7 +2467,7 @@ local returns = {
 	fetch_player_profile = {
 		call = function(value: (number)): ((({
 			["user_id"]: (number),
-			["first_joined"]: (number),
+			["first_joined"]: ((number)?),
 			["last_online"]: (number),
 			["banner"]: (string),
 			["bio"]: (string),

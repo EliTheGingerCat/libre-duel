@@ -429,10 +429,15 @@ end
 Players.PlayerRemoving:Connect(function(player)
 	player_map[player] = nil
 end)
-export type guild_id = (string)
-export type action_result = ({
-	["ok"]: (boolean),
-	["error"]: ((string)?),
+export type user_id = (number)
+export type inventory_action = ("swap_items" | "move_item" | "quick_move")
+export type network_inventory_slot = ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
 })
 export type mode_stats = ({
 	["wins"]: (number),
@@ -441,14 +446,10 @@ export type mode_stats = ({
 	["losses"]: (number),
 	["deaths"]: (number),
 })
-export type user_id = (number)
-export type guild_info_changes = ({
-	["name"]: ((string)?),
-	["tag"]: ((string)?),
-	["description"]: ((string)?),
-	["icon"]: ((string)?),
-	["banner"]: ((string)?),
-	["discord_invite"]: ((string)?),
+export type guild_id = (string)
+export type rank_point = ({
+	["time"]: (number),
+	["rank"]: (number),
 })
 export type guild_snapshot = ({
 	["id"]: (string),
@@ -495,27 +496,6 @@ export type guild_snapshot = ({
 		["rank"]: (number),
 	}) }),
 })
-export type rank_point = ({
-	["time"]: (number),
-	["rank"]: (number),
-})
-export type network_inventory_slot = ({
-	["kind"]: "empty",
-} | {
-	["kind"]: "item",
-	["item_id"]: (string),
-	["amount"]: (number),
-	["data"]: ((unknown)),
-})
-export type inventory_action = ("swap_items" | "move_item" | "quick_move")
-export type guild_info_input = ({
-	["name"]: (string),
-	["tag"]: (string),
-	["description"]: (string),
-	["icon"]: (string),
-	["banner"]: (string),
-	["discord_invite"]: (string),
-})
 export type network_inventory = ({ ({
 	["kind"]: "empty",
 } | {
@@ -524,6 +504,26 @@ export type network_inventory = ({ ({
 	["amount"]: (number),
 	["data"]: ((unknown)),
 }) })
+export type guild_info_changes = ({
+	["name"]: ((string)?),
+	["tag"]: ((string)?),
+	["description"]: ((string)?),
+	["icon"]: ((string)?),
+	["banner"]: ((string)?),
+	["discord_invite"]: ((string)?),
+})
+export type guild_info_input = ({
+	["name"]: (string),
+	["tag"]: (string),
+	["description"]: (string),
+	["icon"]: (string),
+	["banner"]: (string),
+	["discord_invite"]: (string),
+})
+export type action_result = ({
+	["ok"]: (boolean),
+	["error"]: ((string)?),
+})
 
 local function send_events()
 	for player, outgoing in player_map do
@@ -1101,8 +1101,11 @@ reliable.OnServerEvent:Connect(function(player, buff, inst)
 						bool_23 = bit32.bor(bool_23, 0b0000000000000001)
 						alloc(8)
 						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["user_id"])
-						alloc(8)
-						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["first_joined"])
+						if ret_1["first_joined"] ~= nil then
+							bool_23 = bit32.bor(bool_23, 0b0000000000000010)
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, ret_1["first_joined"])
+						end
 						alloc(8)
 						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["last_online"])
 						local len_17 = #ret_1["banner"]
@@ -1145,10 +1148,10 @@ reliable.OnServerEvent:Connect(function(player, buff, inst)
 						if len_pos_1 then
 							buffer.writeu16(outgoing_buff, len_pos_1, len_19 - 1)
 						else
-							bool_23 = bit32.bor(bool_23, 0b0000000000000010)
+							bool_23 = bit32.bor(bool_23, 0b0000000000000100)
 						end
 						if ret_1["rank"] ~= nil then
-							bool_23 = bit32.bor(bool_23, 0b0000000000000100)
+							bool_23 = bit32.bor(bool_23, 0b0000000000001000)
 							alloc(4)
 							buffer.writeu32(outgoing_buff, outgoing_apos, ret_1["rank"])
 						end
@@ -1163,7 +1166,7 @@ reliable.OnServerEvent:Connect(function(player, buff, inst)
 							buffer.writeu32(outgoing_buff, outgoing_apos, val_4["rank"])
 						end
 						if ret_1["guild"] ~= nil then
-							bool_23 = bit32.bor(bool_23, 0b0000000000001000)
+							bool_23 = bit32.bor(bool_23, 0b0000000000010000)
 							local len_22 = #ret_1["guild"]["id"]
 							alloc(2)
 							buffer.writeu16(outgoing_buff, outgoing_apos, len_22)
@@ -5976,7 +5979,7 @@ local returns = {
 	fetch_player_profile = {
 		set_callback = function(callback: (player: Player, value: (number)) -> ((({
 			["user_id"]: (number),
-			["first_joined"]: (number),
+			["first_joined"]: ((number)?),
 			["last_online"]: (number),
 			["banner"]: (string),
 			["bio"]: (string),
