@@ -9,9 +9,17 @@ const resolve_melee_swing_target = require(script.Parent.resolve_melee_swing_tar
 const sanitise_render_times = require(script.Parent.sanitise_render_times)
 const SWORD_DAMAGE = require(ReplicatedStorage.shared.combat.SWORD_DAMAGE)
 const validate_aim_ray = require(ServerScriptService.aim_validation.validate_aim_ray)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
+
+type melee_swing_packet = {
+	origin: Vector3,
+	direction: Vector3,
+	render_times: { sanitise_render_times.render_time_packet_entry },
+}
 
 -- the client only says where it aimed and when it was seeing everyone, what got hit is decided here
-const function on_melee_swing(player: Player, origin: unknown, direction: unknown, raw_render_times: unknown): ()
+-- zap already checked the shape and types, the values themselves still need validating
+const function on_melee_swing(player: Player, packet: melee_swing_packet): ()
 	-- an empty hand can't attack, which keeps the lobby peaceful since nobody holds anything there
 	const tool = inventory_util.get_selected_tool(player)
 	if tool == nil then
@@ -23,12 +31,12 @@ const function on_melee_swing(player: Player, origin: unknown, direction: unknow
 		return
 	end
 
-	const aim = validate_aim_ray(player, origin, direction)
+	const aim = validate_aim_ray(player, packet.origin, packet.direction)
 	if aim == nil then
 		return
 	end
 
-	const melee_hit = resolve_melee_swing_target(player, aim, sanitise_render_times(raw_render_times))
+	const melee_hit = resolve_melee_swing_target(player, aim, sanitise_render_times(packet.render_times))
 	if melee_hit == nil then
 		return
 	end
@@ -38,4 +46,4 @@ const function on_melee_swing(player: Player, origin: unknown, direction: unknow
 	attack_entity(player, melee_hit.entity, damage)
 end
 
-ReplicatedStorage.remotes.melee_swing.OnServerEvent:Connect(on_melee_swing)
+zap_server_network.melee_swing.set_callback(on_melee_swing)

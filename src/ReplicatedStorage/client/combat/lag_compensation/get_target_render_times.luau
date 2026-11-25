@@ -4,6 +4,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const chrono = require(ReplicatedStorage.Packages.chrono)
 const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 const get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
+const MAXIMUM_RENDER_TIME_ENTRIES = require(ReplicatedStorage.shared.combat.MAXIMUM_RENDER_TIME_ENTRIES)
 const melee_swing_types = require(ReplicatedStorage.shared.combat.melee_swing_types)
 
 -- players further than this can't be swung at, so they're left out to keep the packet small
@@ -20,6 +21,9 @@ const function get_target_render_times(): { melee_swing_types.render_time_entry 
 	end
 
 	for _, player in Players:GetPlayers() do
+		if #entries >= MAXIMUM_RENDER_TIME_ENTRIES then
+			break
+		end
 		if player == local_player then
 			continue
 		end
