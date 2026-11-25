@@ -2,6 +2,7 @@ const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
+const normalize_mode_stats = require(ServerScriptService.guild.data.normalize_mode_stats)
 const player_profile_snapshot_types = require(ReplicatedStorage.shared.player_profile.player_profile_snapshot_types)
 const player_rank_cache = require(ServerScriptService.player_ranking.player_rank_cache)
 const read_guild_data = require(ServerScriptService.guild.data.read_guild_data)
@@ -44,7 +45,8 @@ const function fetch_player_profile(user_id: number): player_profile_snapshot_ty
 		banner = data.player_banner_id or "",
 		bio = data.bio or "",
 		playtime = playtime,
-		stats = data.stats,
+		-- zap errors on modes that no longer exist and on missing stats, so it gets normalized
+		stats = normalize_mode_stats(data.stats),
 		rank = player_rank_cache[tostring(user_id)],
 		rank_history = data.rank_history or {},
 		guild = read_profile_guild(user_id, data.guild_id or ""),

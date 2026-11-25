@@ -9,6 +9,7 @@ local React = require(ReplicatedStorage.Packages.react)
 local editor_state = require(script.Parent.Parent.hud.editor.editor_state)
 local mode_selector_state = require(script.Parent.mode_selector_state)
 local notification_management = require(script.Parent.Parent.notification.notification_management)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 const GAMEPAD_CLOSE_ACTION = "mode_selector_gamepad_close"
 
@@ -90,11 +91,10 @@ const function use_mode_selector(): {
 		end
 		pending.current = true
 		set_busy(true)
-		local remote = ReplicatedStorage.remotes.join_queue
-		local ok, joined = pcall(remote.InvokeServer, remote, mode)
+		local joined = zap_client_network.join_queue.call(mode)
 		pending.current = false
 		set_busy(false)
-		if ok and joined == true then
+		if joined then
 			close()
 		else
 			notification_management.add("Could not join the queue. Please try again.")

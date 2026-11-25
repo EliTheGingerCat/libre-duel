@@ -1,10 +1,11 @@
 -- This is the pong side
 
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
-const ping_pong = ReplicatedStorage.remotes.ping_pong
+const ServerScriptService = game:GetService("ServerScriptService")
 
-const function on_server_event(player): ()
-	ping_pong:FireClient(player)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
+
+const function on_ping(player: Player): ()
+	zap_server_network.pong.fire(player)
 end
 
-ping_pong.OnServerEvent:Connect(on_server_event)
+zap_server_network.ping.set_callback(on_ping)

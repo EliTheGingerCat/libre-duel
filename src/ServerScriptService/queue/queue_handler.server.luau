@@ -1,18 +1,20 @@
 const MessagingService = game:GetService("MessagingService")
 const Players = game:GetService("Players")
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
+const ServerScriptService = game:GetService("ServerScriptService")
 const TeleportService = game:GetService("TeleportService")
 
 const QUEUE_CONFIG = require(script.Parent.QUEUE_CONFIG)
 const match_host = require(script.Parent.match_host)
 const queue_lobby = require(script.Parent.queue_lobby)
 const queue_record = require(script.Parent.queue_record)
+const create_protected_remote_handler = require(ServerScriptService.remotes.create_protected_remote_handler)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const IS_RESERVED = game.PrivateServerId ~= "" and game.PrivateServerOwnerId == 0
 const next_join: { [Player]: number } = {}
 
-const function on_join(player: Player, requested_mode: unknown): boolean
+const function on_join(player: Player, requested_mode: queue_record.mode): boolean
 	const mode: queue_record.mode? = queue_record.parse_mode(requested_mode)
 	if RunService:IsStudio() or mode == nil or os.clock() < (next_join[player] or 0) then
 		return false
@@ -77,8 +79,8 @@ const function run(): ()
 	end
 end
 
-ReplicatedStorage.remotes.join_queue.OnServerInvoke = on_join
-ReplicatedStorage.remotes.leave_queue.OnServerInvoke = on_leave
+zap_server_network.join_queue.set_callback(create_protected_remote_handler("join_queue", false, on_join))
+zap_server_network.leave_queue.set_callback(create_protected_remote_handler("leave_queue", false, on_leave))
 
 -- Studio cannot perform live teleports
 if RunService:IsStudio() then

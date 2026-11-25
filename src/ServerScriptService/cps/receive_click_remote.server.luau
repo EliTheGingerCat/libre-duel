@@ -1,6 +1,7 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
 local cps_dictionary = require(script.Parent.cps_dictionary)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const function add_and_remove(player: Player): ()
 	cps_dictionary[player] = cps_dictionary[player] or 0
@@ -14,4 +15,5 @@ const function add_and_remove(player: Player): ()
 	end
 end
 
-ReplicatedStorage.remotes.mouse_click.OnServerEvent:Connect(add_and_remove)
+-- SingleAsync in network.zap, so the wait in here doesn't hold up other events
+zap_server_network.mouse_click.set_callback(add_and_remove)

@@ -22,8 +22,7 @@ const STARTING_LOADOUT = require(ReplicatedStorage.shared.inventory.STARTING_LOA
 const table_flip = require(ReplicatedStorage.client.util.table_flip)
 const tool_state = require(script.Parent.tool_state)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
-
-const select_slot = ReplicatedStorage.remotes.select_slot
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 const local_player = Players.LocalPlayer
 
@@ -64,7 +63,7 @@ const function set_tool(slot: number): ()
 	-- the server only lets us use the tool in the slot it thinks is selected
 	if slot ~= slot_sent then
 		slot_sent = slot
-		select_slot:FireServer(slot)
+		zap_client_network.select_slot.fire(slot)
 	end
 	tool_state.current = slot
 	tool_state.on_change:Fire(slot)

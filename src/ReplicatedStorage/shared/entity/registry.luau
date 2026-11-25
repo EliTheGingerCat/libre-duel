@@ -52,13 +52,6 @@ const function get_player(entity: entity): Player?
 	return if type(entity) == "string" then nil else entity
 end
 
--- Bots have no client, so firing to one does nothing.
-const function fire_client(entity: entity, remote: RemoteEvent, ...: unknown): ()
-	if type(entity) ~= "string" then
-		remote:FireClient(entity, ...)
-	end
-end
-
 const function from_character(character: Model): entity?
 	return Players:GetPlayerFromCharacter(character) or bot_ids[character]
 end
@@ -270,7 +263,6 @@ return {
 	changed = changed,
 	character_added = character_added,
 	died = died,
-	fire_client = fire_client,
 	from_character = from_character,
 	get_all = get_all,
 	get_character = get_character,

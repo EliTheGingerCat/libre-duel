@@ -2,8 +2,10 @@
 -- pure operations on a bare inventory table live in shared/inventory/inventory_logic
 
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const STARTING_LOADOUT = require(ReplicatedStorage.shared.inventory.STARTING_LOADOUT)
+const encode_network_inventory = require(script.Parent.encode_network_inventory)
 const entity_inventories = require(script.Parent.entity_inventories)
 const entity_selected_slots = require(script.Parent.entity_selected_slots)
 const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
@@ -12,8 +14,7 @@ const registry = require(ReplicatedStorage.shared.entity.registry)
 const signal = require(ReplicatedStorage.Packages.signal)
 const tool_registry = require(ReplicatedStorage.shared.tools.registry)
 const tool_types = require(ReplicatedStorage.shared.tools.tool_types)
-
-const update_inventory = ReplicatedStorage.remotes.update_inventory
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 local inventory_util = {
 	created = signal.new(),
@@ -30,7 +31,12 @@ const function replicate(entity: registry.entity): ()
 		return
 	end
 	inventory_util.changed:Fire(entity)
-	registry.fire_client(entity, update_inventory, { inventory = entity_inventories[entity] })
+	if type(entity) ~= "string" then
+		zap_server_network.update_inventory.fire(
+			entity,
+			{ inventory = encode_network_inventory(entity_inventories[entity]) }
+		)
+	end
 end
 
 -- batches every change made this frame into a single update

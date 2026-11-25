@@ -15,6 +15,7 @@ const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const is_on_cooldown = require(ReplicatedStorage.shared.cooldown.is_on_cooldown)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 local inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 type active_cast = {
 	UserData: {
@@ -37,8 +38,6 @@ type caster_api = {
 	},
 	RaycastFire: (self: unknown, Vector3, Vector3, number, typeof(FastCast2.newBehavior())) -> active_cast,
 }
-
-const shoot_bow = ReplicatedStorage.remotes.shoot_bow
 
 const behaviour = FastCast2.newBehavior()
 behaviour.MaxDistance = BEHAVIOUR.MAX_PROJ_DISTANCE
@@ -90,53 +89,53 @@ const function is_finite_vector(vector: Vector3): boolean
 	return math.abs(vector.X) < math.huge and math.abs(vector.Y) < math.huge and math.abs(vector.Z) < math.huge
 end
 
-const function on_invoke(player: Player, direction: unknown, dt: number): boolean
+const function on_shoot_bow(player: Player, direction: Vector3, dt: number): ()
 	const origin = get_eye_position(player)
 
-	if typeof(origin) ~= "Vector3" or typeof(direction) ~= "Vector3" then
-		return false
+	if typeof(origin) ~= "Vector3" then
+		return
 	end
 
 	if not is_finite_vector(origin) or not is_finite_vector(direction) then
-		return false
+		return
 	end
 
 	const magnitude = direction.Magnitude
 	if magnitude <= 0 or magnitude >= math.huge then
-		return false
+		return
 	end
 
 	const character = player.Character
 	if player.Parent ~= Players or character == nil or not character:IsDescendantOf(workspace) then
-		return false
+		return
 	end
 
 	const humanoid = character:FindFirstChildOfClass("Humanoid")
 	if humanoid == nil or humanoid.Health <= 0 then
-		return false
+		return
 	end
 
 	const head = character:FindFirstChild("Head")
 	if head == nil or not head:IsA("BasePart") then
-		return false
+		return
 	end
 
 	if not inventory_util.has_behaviour(player, "bow") then
-		return false
+		return
 	end
 
 	const inventory = inventory_util.get_inventory(player)
 	if inventory and not inventory_logic.find_item(inventory, "arrow") then
-		return false
+		return
 	end
 
 	if is_on_cooldown(player, "attack_bow") then
-		return false
+		return
 	end
 
 	const root = character:FindFirstChild("HumanoidRootPart")
 	if root == nil or not root:IsA("BasePart") then
-		return false
+		return
 	end
 
 	-- bow boosting
@@ -146,7 +145,8 @@ const function on_invoke(player: Player, direction: unknown, dt: number): boolea
 		})
 		add_cooldown(player, "attack_bow", BOW_COOLDOWN_SERVER)
 		bow_shot_event:Fire(player)
-		return inventory_util.consume_item(player, "arrow")
+		inventory_util.consume_item(player, "arrow")
+		return
 	end
 
 	const cast_params = RaycastParams.new()
@@ -171,9 +171,8 @@ const function on_invoke(player: Player, direction: unknown, dt: number): boolea
 	end
 	bow_shot_event:Fire(player)
 	inventory_util.consume_item(player, "arrow")
-	return true
 end
 
 caster.Hit:Connect(on_hit)
 caster.CastTerminating:Connect(on_cast_terminating)
-shoot_bow.OnServerInvoke = on_invoke
+zap_server_network.shoot_bow.set_callback(on_shoot_bow)

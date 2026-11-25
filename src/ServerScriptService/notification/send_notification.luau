@@ -1,16 +1,13 @@
-const Players = game:GetService("Players")
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
-const send_notification_remote = ReplicatedStorage.remotes.send_notification
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const function send_notification(player: Player | "all", message: string): ()
 	if player == "all" then
-		for _, player in Players:GetPlayers() do
-			send_notification_remote:FireClient(player, message)
-		end
+		zap_server_network.send_notification.fire_all(message)
 		return
 	end
-	send_notification_remote:FireClient(player, message)
+	zap_server_network.send_notification.fire(player, message)
 end
 
 return send_notification

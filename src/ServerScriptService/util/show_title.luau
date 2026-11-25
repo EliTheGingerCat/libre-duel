@@ -1,6 +1,6 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local remote = ReplicatedStorage.remotes.show_title
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const function show_title(
 	player: Player | "all",
@@ -12,7 +12,7 @@ const function show_title(
 	colour: Color3?
 ): ()
 	if typeof(player) == "Instance" then
-		remote:FireClient(
+		zap_server_network.show_title.fire(
 			player,
 			math.max(0, fade_in),
 			math.max(0, stay),
@@ -22,7 +22,7 @@ const function show_title(
 			colour
 		)
 	elseif player == "all" then
-		remote:FireAllClients(
+		zap_server_network.show_title.fire_all(
 			math.max(0, fade_in),
 			math.max(0, stay),
 			math.max(0, fade_out),

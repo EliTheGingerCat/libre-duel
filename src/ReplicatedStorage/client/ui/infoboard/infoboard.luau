@@ -9,6 +9,7 @@ local scale = require(script.Parent.Parent.components.layout.scale)
 local shadow = require(script.Parent.Parent.components.decoration.shadow)
 local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 const use_game_is_active = require(script.Parent.Parent.match.use_game_is_active)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local create_element = React.createElement
 local use_effect = React.useEffect
@@ -91,13 +92,7 @@ const function use_kills(): number
 			set_kills(updater)
 		end
 
-		local connection = ReplicatedStorage.remotes.kills.OnClientEvent:Connect(on_event)
-
-		const function disconnect(): ()
-			connection:Disconnect()
-		end
-
-		return disconnect
+		return zap_client_network.kills.on(on_event)
 	end
 
 	use_effect(effect_kills, { game_is_active })
@@ -113,13 +108,7 @@ const function use_map(): string
 			set_map(incoming_map)
 		end
 
-		local connection = ReplicatedStorage.remotes.map_name.OnClientEvent:Connect(on_event)
-
-		const function disconnect(): ()
-			connection:Disconnect()
-		end
-
-		return disconnect
+		return zap_client_network.map_name.on(on_event)
 	end
 
 	use_effect(effect_map, {})
@@ -145,13 +134,7 @@ const function use_points_self(): number
 			set_points_self(updater)
 		end
 
-		local connection = ReplicatedStorage.remotes.score_self.OnClientEvent:Connect(on_event)
-
-		const function disconnect(): ()
-			connection:Disconnect()
-		end
-
-		return disconnect
+		return zap_client_network.score_self.on(on_event)
 	end
 
 	use_effect(effect_points_self, { game_is_active })
@@ -179,13 +162,7 @@ const function use_points_teams(): { number }
 			set_points_teams(updater)
 		end
 
-		local connection = ReplicatedStorage.remotes.score_team.OnClientEvent:Connect(on_event)
-
-		const function disconnect(): ()
-			connection:Disconnect()
-		end
-
-		return disconnect
+		return zap_client_network.score_team.on(on_event)
 	end
 
 	use_effect(effect_points_teams, { game_is_active })

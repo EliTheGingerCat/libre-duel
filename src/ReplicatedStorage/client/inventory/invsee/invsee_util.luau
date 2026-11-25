@@ -6,8 +6,7 @@ const client_inventory = require(script.Parent.Parent.client_inventory)
 const INVENTORY_ACTIONS = require(ReplicatedStorage.shared.inventory.INVENTORY_ACTIONS)
 const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const invsee_state = require(script.Parent.invsee_state)
-
-const invsee = ReplicatedStorage.remotes.invsee
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local invsee_util = {}
 
@@ -56,8 +55,7 @@ function invsee_util.stop(): ()
 	if invsee_state.target == nil then
 		return
 	end
-	const request: inventory_types.invsee_request = { action = "stop" }
-	invsee:FireServer(request)
+	zap_client_network.stop_invsee.fire()
 	invsee_util.apply_update({})
 end
 
@@ -84,7 +82,7 @@ const function request_action(
 		to = to_slot_index,
 		id = invsee_state.request_id,
 	}
-	invsee:FireServer(request)
+	zap_client_network.request_invsee_action.fire(request)
 	invsee_state.on_change:Fire()
 	return true
 end

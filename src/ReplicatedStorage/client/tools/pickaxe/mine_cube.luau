@@ -8,6 +8,7 @@ const get_aim_ray = require(ReplicatedStorage.client.aim.get_aim_ray)
 const get_aim_target = require(ReplicatedStorage.client.aim.get_aim_target)
 const get_mining_fail_reason = require(script.Parent.get_mining_fail_reason)
 const TRANSPARENCY_MAXIMUM = require(ReplicatedStorage.client.cube.mining.TRANSPARENCY_MAXIMUM)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local connection_heartbeat_passive: RBXScriptConnection?
 
@@ -94,7 +95,7 @@ end
 
 const function mine_pause(state: state_local): ()
 	set_mining_display(state, 0)
-	ReplicatedStorage.remotes.mine_stop:FireServer(state.id)
+	zap_client_network.mine_stop.fire(state.id)
 end
 
 const function mine_stop(state: state_local): ()
@@ -245,7 +246,7 @@ function mine_start(cube: BasePart, aim_position: Vector3): ()
 
 	-- the server checks this aim really lands on the cube before mining it
 	const aim_ray = get_aim_ray()
-	ReplicatedStorage.remotes.mine_cube:FireServer(id, cube, aim_ray.Origin, aim_ray.Direction)
+	zap_client_network.mine_cube.fire(id, cube_target, aim_ray.Origin, aim_ray.Direction)
 end
 
 const function on_mine_suceeded(id: number): ()
@@ -279,8 +280,8 @@ const function on_mine_failed(id: number): ()
 	end
 end
 
-ReplicatedStorage.remotes.mine_finished.OnClientEvent:Connect(on_mine_suceeded)
-ReplicatedStorage.remotes.mine_failed.OnClientEvent:Connect(on_mine_failed)
+zap_client_network.mine_finished.set_callback(on_mine_suceeded)
+zap_client_network.mine_failed.set_callback(on_mine_failed)
 
 return {
 	start = activate_heartbeat_passive,

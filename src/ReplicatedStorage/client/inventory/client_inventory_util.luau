@@ -7,8 +7,7 @@ const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_typ
 const registry = require(ReplicatedStorage.shared.entity.registry)
 const remote_id = require(script.Parent.remote_id)
 const signal = require(ReplicatedStorage.Packages.signal)
-
-const update_inventory = ReplicatedStorage.remotes.update_inventory
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local inventory_util = {
 	-- fires after every change to the local inventory, including predictions
@@ -43,13 +42,12 @@ const function request_action(
 	if not inventory or not predict(inventory, from_slot_index, to_slot_index) then
 		return false
 	end
-	const request: inventory_types.inventory_request = {
+	zap_client_network.request_inventory_action.fire({
 		action = action,
 		from = from_slot_index,
 		to = to_slot_index,
 		id = remote_id.next_id(),
-	}
-	update_inventory:FireServer(request)
+	})
 	inventory_util.on_change:Fire()
 	return inventory
 end

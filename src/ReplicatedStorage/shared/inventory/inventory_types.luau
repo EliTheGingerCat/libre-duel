@@ -16,10 +16,8 @@ export type inventory_request = { action: inventory_action, from: number, to: nu
 export type inventory_update = { inventory: inventory?, id: number? }
 
 -- invsee is looking into the inventory of another player
--- `target` guards against a request that was made for a previous session
-export type invsee_request =
-	{ action: inventory_action, target: Player, from: number, to: number, id: number }
-	| { action: "stop" }
+-- `target` guards against a request that was made for a previous session, nil when that player already left
+export type invsee_request = { action: inventory_action, target: Player?, from: number, to: number, id: number }
 -- like inventory_update, target is nil once the session has ended
 export type invsee_update = { target: Player?, inventory: inventory?, id: number? }
 

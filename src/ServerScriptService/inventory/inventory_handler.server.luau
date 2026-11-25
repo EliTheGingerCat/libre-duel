@@ -1,26 +1,18 @@
 const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const INVENTORY_ACTIONS = require(ReplicatedStorage.shared.inventory.INVENTORY_ACTIONS)
+const encode_network_inventory = require(script.Parent.encode_network_inventory)
+const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
 const inventory_util = require(script.Parent.inventory_util)
-
-const update_inventory = ReplicatedStorage.remotes.update_inventory
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const MIN_REQUEST_INTERVAL = 0.05
 
 local last_request_times: { [Player]: number } = {}
 
-const function on_request(player: Player, arguments: unknown): ()
-	if type(arguments) ~= "table" then
-		return
-	end
-	const request = arguments :: { [any]: unknown }
-	const action = INVENTORY_ACTIONS[request.action :: any]
-	const id = request.id
-	if not action or type(id) ~= "number" then
-		return
-	end
-
+const function on_request(player: Player, request: inventory_types.inventory_request): ()
 	const inventory = inventory_util.get_inventory(player)
 	if not inventory then
 		return
@@ -32,15 +24,18 @@ const function on_request(player: Player, arguments: unknown): ()
 		last_request_times[player] = now
 		-- slot validation happens inside the action, on failure the unchanged inventory is resent
 		-- replies directly instead of mark_dirty because the client needs the id to settle its prediction
-		action(inventory, request.from :: number, request.to :: number)
+		INVENTORY_ACTIONS[request.action](inventory, request.from, request.to)
 		inventory_util.changed:Fire(player)
 	end
-	update_inventory:FireClient(player, { inventory = inventory, id = id })
+	zap_server_network.update_inventory.fire(
+		player,
+		{ inventory = encode_network_inventory(inventory), id = request.id }
+	)
 end
 
 const function on_player_removing(player: Player): ()
 	last_request_times[player] = nil
 end
 
-update_inventory.OnServerEvent:Connect(on_request)
+zap_server_network.request_inventory_action.set_callback(on_request)
 Players.PlayerRemoving:Connect(on_player_removing)

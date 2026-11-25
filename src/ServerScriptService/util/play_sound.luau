@@ -1,12 +1,9 @@
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
-local remote = ReplicatedStorage.remotes.play_sound
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const function play_sound(name: string, position: Vector3): ()
-	for _, player in Players:GetPlayers() do
-		remote:FireClient(player, name, position)
-	end
+	zap_server_network.play_sound.fire_all(name, position)
 end
 
 return play_sound

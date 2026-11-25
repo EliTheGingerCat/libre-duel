@@ -15,6 +15,7 @@ local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local use_editor_enabled = require(script.Parent.Parent.hud.editor.use_editor_enabled)
 local use_queue_status = require(script.Parent.use_queue_status)
 local use_viewport_scale = require(script.Parent.Parent.components.hooks.use_viewport_scale)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local create_element = React.createElement
 
@@ -34,11 +35,10 @@ const function queue_status(props: use_editable_hud.props)
 		end
 		pending.current = true
 		set_busy(true)
-		local remote = ReplicatedStorage.remotes.leave_queue
-		local ok, left = pcall(remote.InvokeServer, remote)
+		local left = zap_client_network.leave_queue.call()
 		pending.current = false
 		set_busy(false)
-		if not ok or left ~= true then
+		if not left then
 			notification_management.add("Could not cancel the queue. Please try again.")
 		end
 	end

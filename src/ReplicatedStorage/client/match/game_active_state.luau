@@ -1,6 +1,7 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const Signal = require(ReplicatedStorage.Packages.signal)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 -- listens from require time so ui mounted after the remote fires still knows whether a match is running
 const game_active_state = {
@@ -16,6 +17,6 @@ const function set_active(active: boolean): ()
 	game_active_state.on_change:Fire()
 end
 
-ReplicatedStorage.remotes.game_is_active.OnClientEvent:Connect(set_active)
+zap_client_network.game_is_active.set_callback(set_active)
 
 return game_active_state

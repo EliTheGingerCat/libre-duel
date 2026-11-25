@@ -1,4 +1,3 @@
-const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const RunService = game:GetService("RunService")
 const ServerScriptService = game:GetService("ServerScriptService")
@@ -13,6 +12,7 @@ const match = require(ServerScriptService.match.match)
 const play_sound = require(ServerScriptService.util.play_sound)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 const validate_aim_ray = require(ServerScriptService.aim_validation.validate_aim_ray)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 type mining = {
 	cube: Part,
@@ -64,19 +64,20 @@ const function mine_finished(mining: mining): ()
 	const cube = mining.cube
 	play_sound("block_mined", cube.Position)
 	cube:Destroy()
-	registry.fire_client(mining.entity, ReplicatedStorage.remotes.mine_finished, mining.id)
-end
-
-const function fire_excluding(remote: RemoteEvent, entity: registry.entity, cube: Part, time_fraction: number): ()
-	for _, recipient in Players:GetPlayers() do
-		if recipient ~= entity then
-			remote:FireClient(recipient, cube, time_fraction)
-		end
+	const player = registry.get_player(mining.entity)
+	if player then
+		zap_server_network.mine_finished.fire(player, mining.id)
 	end
 end
 
+-- the miner's own client already shows its progress
 const function mine_progress(mining: mining, time_fraction: number): ()
-	fire_excluding(ReplicatedStorage.remotes.mine_progress, mining.entity, mining.cube, time_fraction)
+	const player = registry.get_player(mining.entity)
+	if player then
+		zap_server_network.mine_progress.fire_except(player, mining.cube, time_fraction)
+	else
+		zap_server_network.mine_progress.fire_all(mining.cube, time_fraction)
+	end
 end
 
 const function mine_fail(mining: mining): ()
@@ -84,7 +85,10 @@ const function mine_fail(mining: mining): ()
 	if not mine_ceased(mining) then
 		return
 	end
-	registry.fire_client(mining.entity, ReplicatedStorage.remotes.mine_failed, mining.id)
+	const player = registry.get_player(mining.entity)
+	if player then
+		zap_server_network.mine_failed.fire(player, mining.id)
+	end
 	mine_progress(mining, 0)
 end
 
@@ -184,25 +188,10 @@ const function start_mining(entity: registry.entity, id: number, cube: Part): ()
 	activate_heartbeat()
 end
 
-const function try_start(player: Player, id: unknown, cube: unknown, origin: unknown, direction: unknown): boolean
+const function try_start(player: Player, id: number, cube: Part?, origin: Vector3, direction: Vector3): boolean
 	-- When dealing with high lag, this can happen if the player places a cube and then immediately begins to mine it. The cube does not exist on the server yet, so the player is simply firing the remote with their local cube.
 	if cube == nil then
-		debug_print("Not enough arguments. This is likely because the cube does does not exist on the server yet.")
-		return false
-	end
-
-	if type(id) ~= "number" then
-		debug_print("Invalid arguments. Id is not a number.")
-		return false
-	end
-
-	if typeof(cube) ~= "Instance" then
-		debug_print("Invalid arguments. Cube is not an instance.")
-		return false
-	end
-
-	if not cube:IsA("Part") then
-		debug_print("Invalid arguments. Cube is not a Part.")
+		debug_print("The cube is missing. This is likely because the cube does does not exist on the server yet.")
 		return false
 	end
 

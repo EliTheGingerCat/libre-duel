@@ -2,6 +2,7 @@ const Players = game:GetService("Players")
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 const apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 const local_player = Players.LocalPlayer
 
@@ -14,4 +15,4 @@ const function on_knockback(vector: Vector3, strength_x: number, strength_y: num
 	apply_knockback(vector, root, strength_x, strength_y)
 end
 
-ReplicatedStorage.remotes.knockback.OnClientEvent:Connect(on_knockback)
+zap_client_network.knockback.set_callback(on_knockback)

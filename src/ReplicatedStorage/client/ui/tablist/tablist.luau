@@ -19,6 +19,7 @@ local use_editable_hud = require(script.Parent.Parent.hud.use_editable_hud)
 local tablist_state = require(script.Parent.tablist_state)
 local use_if_key_held = require(script.Parent.Parent.components.hooks.use_if_key_held)
 local use_viewport_scale = require(script.Parent.Parent.components.hooks.use_viewport_scale)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local create_element = React.createElement
 local local_player = Players.LocalPlayer
@@ -181,7 +182,7 @@ const function use_location(): LOCATION_DEFAULT.location
 	const function load_location()
 		if location_saved.status == "loading" then
 			-- I know this is a side effect but Womp womp.
-			location_saved = ReplicatedStorage.remotes.server_location:InvokeServer()
+			location_saved = zap_client_network.server_location.call()
 			set_location(location_saved)
 		end
 	end

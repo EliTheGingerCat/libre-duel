@@ -1,23 +1,22 @@
 const Players = game:GetService("Players")
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const pending_popups = require(script.Parent.pending_popups)
 const sanitise_popup_text_input_values = require(script.Parent.sanitise_popup_text_input_values)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
-const respond_to_popup = ReplicatedStorage.remotes.respond_to_popup
-
-const function is_valid_button_index(button_index: unknown, button_count: number): boolean
-	return type(button_index) == "number"
-		and button_index % 1 == 0
-		and button_index >= 1
-		and button_index <= button_count
+-- zap guarantees a whole number, only the range is left to check
+const function is_valid_button_index(button_index: number?, button_count: number): boolean
+	return button_index ~= nil and button_index >= 1 and button_index <= button_count
 end
 
 -- button_index is nil when the player closed the popup without pressing a button
-const function on_response(player: Player, id: unknown, button_index: unknown, text_input_values: unknown): ()
-	if type(id) ~= "number" then
-		return
-	end
+const function on_response(
+	player: Player,
+	id: number,
+	button_index: number?,
+	text_input_values: { [string]: string }
+): ()
 	const pending_popup = pending_popups[id]
 	if pending_popup == nil or pending_popup.player ~= player then
 		return
@@ -41,5 +40,5 @@ const function on_player_removing(player: Player): ()
 	end
 end
 
-respond_to_popup.OnServerEvent:Connect(on_response)
+zap_server_network.respond_to_popup.set_callback(on_response)
 Players.PlayerRemoving:Connect(on_player_removing)

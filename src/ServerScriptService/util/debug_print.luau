@@ -1,5 +1,7 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local ServerScriptService = game:GetService("ServerScriptService")
+
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const CREATOR_ID = game.CreatorId
 const IS_STUDIO = RunService:IsStudio()
@@ -28,6 +30,6 @@ const function on_event(player: Player): ()
 	end
 end
 
-ReplicatedStorage.remotes.debug_server.OnServerEvent:Connect(on_event)
+zap_server_network.debug_server.set_callback(on_event)
 
 return debug_print

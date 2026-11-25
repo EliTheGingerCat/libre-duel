@@ -20,6 +20,7 @@ const match = require(ServerScriptService.match.match)
 const move_entity = require(ServerScriptService.util.move_entity)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 const set_respawn_location = require(ServerScriptService.spawning.set_respawn_location)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const BOW_RECHARGE_DELAY = 4
 
@@ -245,7 +246,10 @@ const function new(this_match: match.match): match.hooks
 		team.points += 1
 		match.award(this_match, entity, "goals")
 
-		registry.fire_client(entity, ReplicatedStorage.remotes.score_self)
+		const scoring_player = registry.get_player(entity)
+		if scoring_player then
+			zap_server_network.score_self.fire(scoring_player)
+		end
 
 		if team.points >= WIN_POINTS then
 			const opposing_team = get_opposing_team(team)
@@ -272,7 +276,7 @@ const function new(this_match: match.match): match.hooks
 			return
 		else
 			debug_print(`Team "{team.name}" scored. They have {team.points} points.`)
-			match.fire_all(this_match, ReplicatedStorage.remotes.score_team, team.index)
+			zap_server_network.score_team.fire_list(match.get_players(this_match), team.index)
 		end
 
 		-- ~ investigate: It might be too slow to only set `cages_are_closed` at this point, since `cages_are_closed` is also used to debounce scoring.
@@ -332,7 +336,10 @@ const function new(this_match: match.match): match.hooks
 		set_respawn_location(entity, team.spawn_location)
 		move_entity(entity, team.spawn_part.Position, team.spawn_location.CFrame)
 		give_match_loadout(entity, team)
-		registry.fire_client(entity, ReplicatedStorage.remotes.map_name, info.MAP_NAME)
+		const player = registry.get_player(entity)
+		if player then
+			zap_server_network.map_name.fire(player, info.MAP_NAME)
+		end
 	end
 
 	-- not character_added, signals fire newest first so the inventory wouldn't exist yet

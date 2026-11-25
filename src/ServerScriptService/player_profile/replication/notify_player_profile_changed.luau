@@ -1,10 +1,10 @@
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
-const player_profile_changed_remote = ReplicatedStorage.remotes.player_profile.player_profile_changed
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 -- tells the player their own profile changed so an open profile menu fetches it again
 const function notify_player_profile_changed(player: Player): ()
-	player_profile_changed_remote:FireClient(player)
+	zap_server_network.player_profile_changed.fire(player)
 end
 
 return notify_player_profile_changed

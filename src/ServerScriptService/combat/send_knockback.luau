@@ -1,7 +1,9 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const apply_knockback = require(ReplicatedStorage.shared.combat.apply_knockback)
 const registry = require(ReplicatedStorage.shared.entity.registry)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 -- players simulate their own character, so their knockback is applied on their client
 -- bots are simulated by the server, so theirs is applied here
@@ -17,7 +19,7 @@ const function send_knockback(
 		apply_knockback(vector, target_root, strength_x, strength_y)
 		return
 	end
-	ReplicatedStorage.remotes.knockback:FireClient(target_player, vector, strength_x, strength_y)
+	zap_server_network.knockback.fire(target_player, vector, strength_x, strength_y)
 end
 
 return send_knockback

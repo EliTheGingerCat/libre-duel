@@ -6,6 +6,7 @@ local RunService = game:GetService("RunService")
 local inventory_state = require(script.Parent.Parent.Parent.inventory.inventory_state)
 local tablist_state = require(script.Parent.Parent.Parent.tablist.tablist_state)
 local tool_state = require(ReplicatedStorage.client.tools.tool_state)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 export type action = { press: () -> (), release: () -> () }
 
@@ -41,10 +42,10 @@ const function release_jump(): ()
 	end
 end
 
-const function tool_button(button: string, click_type: string): action
+const function tool_button(button: string, click_type: "attack" | "use"): action
 	const function press(): ()
 		-- counts towards the server's cps check like a mouse click would
-		ReplicatedStorage.remotes.mouse_click:FireServer(click_type)
+		zap_client_network.mouse_click.fire(click_type)
 		tool_state.on_button_requested:Fire(button, true)
 	end
 	const function release(): ()

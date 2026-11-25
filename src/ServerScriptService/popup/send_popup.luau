@@ -1,9 +1,9 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const pending_popups = require(script.Parent.pending_popups)
 const popup_types = require(ReplicatedStorage.shared.popup.popup_types)
-
-const send_popup_remote = ReplicatedStorage.remotes.send_popup
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 local current_id = 0
 
@@ -36,7 +36,7 @@ const function send_popup(
 		text_input_ids = get_text_input_ids(params),
 		on_button_pressed = on_button_pressed,
 	}
-	send_popup_remote:FireClient(player, current_id, params)
+	zap_server_network.send_popup.fire(player, current_id, params)
 end
 
 return send_popup

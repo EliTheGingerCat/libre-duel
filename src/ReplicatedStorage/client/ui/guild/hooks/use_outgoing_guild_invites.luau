@@ -9,10 +9,9 @@ const player_row_types = require(script.Parent.Parent.Parent.player_row.player_r
 const request_guild_action = require(ReplicatedStorage.client.guild.request_guild_action)
 const use_server_players = require(script.Parent.use_server_players)
 const user_info_cache = require(ReplicatedStorage.client.guild.user_info_cache)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 const SEARCH_DELAY = 0.5
-
-const search_remote = ReplicatedStorage.remotes.guild.search_guild_invite_candidate
 
 const function request_invite(user_id: number): ()
 	request_guild_action("invite_to_guild", user_id)
@@ -50,9 +49,10 @@ const function use_outgoing_guild_invites(guild: guild_snapshot_types.guild_snap
 			if query == "" then
 				return
 			end
-			const ok, results = pcall(search_remote.InvokeServer, search_remote, query)
-			if ok and typeof(results) == "table" then
-				set_search_results(results :: { guild_snapshot_types.player_search_result })
+			-- nil when rate limited
+			const results = zap_client_network.search_guild_invite_candidate.call(query)
+			if results then
+				set_search_results(results)
 			end
 		end
 		const thread = task.delay(SEARCH_DELAY, search)

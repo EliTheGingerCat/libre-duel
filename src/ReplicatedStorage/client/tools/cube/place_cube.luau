@@ -12,6 +12,7 @@ const ENTITY_RANGE = require(ReplicatedStorage.shared.combat.ENTITY_RANGE)
 const EYE_OFFSET = require(ReplicatedStorage.shared.aim.EYE_OFFSET)
 local get_entity_position = require(ReplicatedStorage.shared.entity.get_entity_position)
 local tool_types = require(ReplicatedStorage.shared.tools.tool_types)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local local_player = Players.LocalPlayer
 
@@ -67,7 +68,7 @@ const function place_cube(tool: tool_types.tool): ()
 	cube_temporary.Position = snapped
 	cube_temporary.Parent = workspace.runtime_instances.cubes
 
-	ReplicatedStorage.remotes.place_cube:InvokeServer(aim_ray.Origin, aim_ray.Direction)
+	zap_client_network.place_cube.call(aim_ray.Origin, aim_ray.Direction)
 
 	cube_temporary:Destroy()
 end

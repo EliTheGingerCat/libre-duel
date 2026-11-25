@@ -4,6 +4,7 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const React = require(ReplicatedStorage.Packages.react)
 const fetch_player_profile = require(ReplicatedStorage.client.player_profile.fetch_player_profile)
 const player_profile_snapshot_types = require(ReplicatedStorage.shared.player_profile.player_profile_snapshot_types)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 type snapshot = player_profile_snapshot_types.player_profile_snapshot
 
@@ -12,8 +13,6 @@ export type viewed_player_profile = {
 	snapshot: snapshot?,
 	failed: boolean,
 }
-
-const player_profile_changed_remote = ReplicatedStorage.remotes.player_profile.player_profile_changed
 
 const function increment(value: number): number
 	return value + 1
@@ -31,11 +30,7 @@ const function use_viewed_player_profile(menu_enabled: boolean, user_id: number)
 				set_refresh_count(increment)
 			end
 		end
-		const connection = player_profile_changed_remote.OnClientEvent:Connect(on_changed)
-		const function disconnect(): ()
-			connection:Disconnect()
-		end
-		return disconnect
+		return zap_client_network.player_profile_changed.on(on_changed)
 	end
 	React.useEffect(refetch_when_own_profile_changes, { user_id })
 

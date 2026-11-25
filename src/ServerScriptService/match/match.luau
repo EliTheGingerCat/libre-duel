@@ -9,6 +9,7 @@ const GAME_STATS = require(ReplicatedStorage.shared.modes.GAME_STATS)
 const MODE_DEFINITIONS = require(ReplicatedStorage.shared.modes.MODE_DEFINITIONS)
 const registry = require(ReplicatedStorage.shared.entity.registry)
 const show_title_to = require(ServerScriptService.util.show_title)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 -- What a mode implements. `start` receives the initial entities grouped by team, while `entity_added` is only for entities that join afterwards.
 export type hooks = {
@@ -55,10 +56,16 @@ const function get_match_of_cube(cube: BasePart): match?
 	return cube_matches[cube]
 end
 
-const function fire_all(match: match, remote: RemoteEvent, ...: unknown): ()
+-- bots have no client, so they're left out
+const function get_players(match: match): { Player }
+	const players = {}
 	for _, entity in match.entities do
-		registry.fire_client(entity, remote, ...)
+		const player = registry.get_player(entity)
+		if player then
+			table.insert(players, player)
+		end
 	end
+	return players
 end
 
 const function show_title(
@@ -89,7 +96,10 @@ end
 const function register(match: match, entity: registry.entity): ()
 	entity_matches[entity] = match
 	table.insert(match.entities, entity)
-	registry.fire_client(entity, ReplicatedStorage.remotes.game_is_active, true)
+	const player = registry.get_player(entity)
+	if player then
+		zap_server_network.game_is_active.fire(player, true)
+	end
 end
 
 const function unregister(match: match, entity: registry.entity): ()
@@ -98,7 +108,10 @@ const function unregister(match: match, entity: registry.entity): ()
 	if index then
 		table.remove(match.entities, index)
 	end
-	registry.fire_client(entity, ReplicatedStorage.remotes.game_is_active, false)
+	const player = registry.get_player(entity)
+	if player then
+		zap_server_network.game_is_active.fire(player, false)
+	end
 end
 
 const function add_entity(match: match, entity: registry.entity): ()
@@ -270,9 +283,9 @@ return {
 	add_entity = add_entity,
 	award = award,
 	create = create,
-	fire_all = fire_all,
 	get_match_of = get_match_of,
 	get_match_of_cube = get_match_of_cube,
+	get_players = get_players,
 	load_map = load_map,
 	on_stop = on_stop,
 	remove_entity = remove_entity,

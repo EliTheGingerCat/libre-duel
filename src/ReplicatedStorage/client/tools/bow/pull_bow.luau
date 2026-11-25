@@ -7,8 +7,7 @@ const TOOL_USE_WALKSPEED_MODIFIER = require(ReplicatedStorage.client.tools.TOOL_
 const bow_state = require(script.Parent.bow_state)
 const walkspeed = require(ReplicatedStorage.client.util.walkspeed)
 const inventory_logic = require(ReplicatedStorage.shared.inventory.inventory_logic)
-
-const shoot_bow = ReplicatedStorage.remotes.shoot_bow
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 const player = Players.LocalPlayer
 
@@ -33,8 +32,7 @@ const function pull_bow(): ()
 	bow_state.draw_started = os.clock()
 end
 
--- i added "f" to stop lua from thinking i'm reffering to the remote (short for function)
-const function shoot_bow_f(character: Model, dt: number): ()
+const function shoot_bow(character: Model, dt: number): ()
 	const head = character:FindFirstChild("Head")
 	if head == nil or not head:IsA("BasePart") then
 		return
@@ -47,7 +45,7 @@ const function shoot_bow_f(character: Model, dt: number): ()
 	const origin = head.Position
 	local direction = (get_aim_target().position - origin).Unit
 	-- Sending origin is not needed because the server checks it authoritatively using Chrono. :3
-	shoot_bow:InvokeServer(direction, dt)
+	zap_client_network.shoot_bow.fire(direction, dt)
 end
 
 const function release_bow(was_released: boolean): ()
@@ -57,7 +55,7 @@ const function release_bow(was_released: boolean): ()
 	walkspeed.set_modifier("bow", nil)
 	bow_state.draw_started = nil
 	if was_released and draw_started ~= nil and character ~= nil then
-		shoot_bow_f(character, os.clock() - draw_started)
+		shoot_bow(character, os.clock() - draw_started)
 	end
 end
 

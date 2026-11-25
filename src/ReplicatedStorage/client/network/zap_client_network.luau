@@ -132,8 +132,176 @@ if not RunService:IsRunning() then
 	local noop = function() end
 	return table.freeze({
 		send_events = noop,
+		update_invsee = table.freeze({
+			set_callback = noop
+		}),
+		update_inventory = table.freeze({
+			set_callback = noop
+		}),
+		update_blocking = table.freeze({
+			fire = noop
+		}),
+		unban_guild_member = table.freeze({
+			call = noop
+		}),
+		stop_invsee = table.freeze({
+			fire = noop
+		}),
+		show_title = table.freeze({
+			on = noop
+		}),
+		shoot_bow = table.freeze({
+			fire = noop
+		}),
+		set_cake_state = table.freeze({
+			call = noop
+		}),
+		server_location = table.freeze({
+			call = noop
+		}),
+		send_popup = table.freeze({
+			set_callback = noop
+		}),
+		send_notification = table.freeze({
+			set_callback = noop
+		}),
+		send_large_notification = table.freeze({
+			set_callback = noop
+		}),
+		select_slot = table.freeze({
+			fire = noop
+		}),
+		search_guild_invite_candidate = table.freeze({
+			call = noop
+		}),
+		score_team = table.freeze({
+			on = noop
+		}),
+		score_self = table.freeze({
+			on = noop
+		}),
+		respond_to_popup = table.freeze({
+			fire = noop
+		}),
+		respond_to_large_notification = table.freeze({
+			fire = noop
+		}),
+		request_player_banner_change = table.freeze({
+			call = noop
+		}),
+		request_invsee_action = table.freeze({
+			fire = noop
+		}),
+		request_inventory_action = table.freeze({
+			fire = noop
+		}),
+		request_guild_image_change = table.freeze({
+			call = noop
+		}),
+		report_player = table.freeze({
+			call = noop
+		}),
+		pong = table.freeze({
+			set_callback = noop
+		}),
+		player_profile_changed = table.freeze({
+			on = noop
+		}),
+		play_sound = table.freeze({
+			set_callback = noop
+		}),
+		place_cube = table.freeze({
+			call = noop
+		}),
+		ping = table.freeze({
+			fire = noop
+		}),
+		mouse_click = table.freeze({
+			fire = noop
+		}),
+		mine_stop = table.freeze({
+			fire = noop
+		}),
+		mine_progress = table.freeze({
+			set_callback = noop
+		}),
+		mine_finished = table.freeze({
+			set_callback = noop
+		}),
+		mine_failed = table.freeze({
+			set_callback = noop
+		}),
+		mine_cube = table.freeze({
+			fire = noop
+		}),
 		melee_swing = table.freeze({
 			fire = noop
+		}),
+		map_name = table.freeze({
+			on = noop
+		}),
+		leave_queue = table.freeze({
+			call = noop
+		}),
+		leave_guild = table.freeze({
+			call = noop
+		}),
+		knockback = table.freeze({
+			set_callback = noop
+		}),
+		kills = table.freeze({
+			on = noop
+		}),
+		kick_guild_member = table.freeze({
+			call = noop
+		}),
+		join_queue = table.freeze({
+			call = noop
+		}),
+		invite_to_guild = table.freeze({
+			call = noop
+		}),
+		incoming_guild_invites = table.freeze({
+			set_callback = noop
+		}),
+		guild_state = table.freeze({
+			set_callback = noop
+		}),
+		game_is_active = table.freeze({
+			set_callback = noop
+		}),
+		fetch_player_profile = table.freeze({
+			call = noop
+		}),
+		fetch_guild_info = table.freeze({
+			call = noop
+		}),
+		edit_player_bio = table.freeze({
+			call = noop
+		}),
+		edit_guild_info = table.freeze({
+			call = noop
+		}),
+		delete_guild = table.freeze({
+			call = noop
+		}),
+		decline_guild_invite = table.freeze({
+			call = noop
+		}),
+		debug_server = table.freeze({
+			fire = noop
+		}),
+		create_guild = table.freeze({
+			call = noop
+		}),
+		cancel_guild_invite = table.freeze({
+			call = noop
+		}),
+		ban_guild_member = table.freeze({
+			call = noop
+		}),
+		accept_guild_invite = table.freeze({
+			call = noop
 		}),
 	}) :: Events
 end
@@ -142,6 +310,103 @@ local remotes = ReplicatedStorage:WaitForChild("ZAP")
 local reliable = remotes:WaitForChild("LIBRE_DUEL_RELIABLE")
 assert(reliable:IsA("RemoteEvent"), "Expected LIBRE_DUEL_RELIABLE to be a RemoteEvent")
 
+local unreliable = { remotes:WaitForChild("LIBRE_DUEL_UNRELIABLE_0") }
+assert(unreliable[1]:IsA("UnreliableRemoteEvent"), "Expected LIBRE_DUEL_UNRELIABLE_0 to be an UnreliableRemoteEvent")
+export type mode_stats = ({
+	["wins"]: (number),
+	["goals"]: (number),
+	["kills"]: (number),
+	["losses"]: (number),
+	["deaths"]: (number),
+})
+export type action_result = ({
+	["ok"]: (boolean),
+	["error"]: ((string)?),
+})
+export type inventory_action = ("swap_items" | "move_item" | "quick_move")
+export type guild_info_input = ({
+	["name"]: (string),
+	["tag"]: (string),
+	["description"]: (string),
+	["icon"]: (string),
+	["banner"]: (string),
+	["discord_invite"]: (string),
+})
+export type guild_info_changes = ({
+	["name"]: ((string)?),
+	["tag"]: ((string)?),
+	["description"]: ((string)?),
+	["icon"]: ((string)?),
+	["banner"]: ((string)?),
+	["discord_invite"]: ((string)?),
+})
+export type network_inventory = ({ ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
+}) })
+export type rank_point = ({
+	["time"]: (number),
+	["rank"]: (number),
+})
+export type user_id = (number)
+export type network_inventory_slot = ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
+})
+export type guild_snapshot = ({
+	["id"]: (string),
+	["owner_id"]: (number),
+	["created"]: (number),
+	["name"]: (string),
+	["tag"]: (string),
+	["description"]: (string),
+	["icon"]: (string),
+	["banner"]: (string),
+	["discord_invite"]: (string),
+	["members"]: ({ ({
+		["user_id"]: (number),
+		["joined"]: (number),
+		["banner"]: (string),
+		["playtime"]: (number),
+		["stats"]: ({ [(string)]: ({
+			["wins"]: (number),
+			["goals"]: (number),
+			["kills"]: (number),
+			["losses"]: (number),
+			["deaths"]: (number),
+		}) }),
+	}) }),
+	["banned"]: ({ ({
+		["user_id"]: (number),
+		["banned_at"]: (number),
+	}) }),
+	["outgoing_invites"]: ({ ({
+		["user_id"]: (number),
+		["invited_at"]: (number),
+	}) }),
+	["totals"]: ({ [(string)]: ({
+		["wins"]: (number),
+		["goals"]: (number),
+		["kills"]: (number),
+		["losses"]: (number),
+		["deaths"]: (number),
+	}) }),
+	["total_playtime"]: (number),
+	["rank"]: ((number)?),
+	["rank_history"]: ({ ({
+		["time"]: (number),
+		["rank"]: (number),
+	}) }),
+})
+export type guild_id = (string)
 
 local function send_events()
 	if outgoing_used ~= 0 then
@@ -159,11 +424,1769 @@ end
 
 RunService.Heartbeat:Connect(send_events)
 
+local reliable_events = table.create(42)
+local reliable_event_queue: { [number]: { any } } = table.create(42)
+local unreliable_events = table.create(1)
+local unreliable_event_queue: { [number]: { any } } = table.create(1)
+local function_call_id = 0
+reliable_event_queue[4] = {}
+reliable_event_queue[3] = {}
+reliable_events[11] = {}
+reliable_event_queue[11] = {}
+reliable_event_queue[12] = {}
+reliable_event_queue[10] = {}
+reliable_event_queue[13] = {}
+reliable_events[9] = {}
+reliable_event_queue[9] = {}
+reliable_events[8] = {}
+reliable_event_queue[8] = 0
+reliable_event_queue[15] = 0
+reliable_events[18] = {}
+reliable_event_queue[18] = 0
+reliable_event_queue[14] = {}
+reliable_event_queue[2] = {}
+reliable_event_queue[0] = {}
+reliable_event_queue[1] = {}
+reliable_events[6] = {}
+reliable_event_queue[6] = {}
+unreliable_event_queue[0] = {}
+reliable_events[7] = {}
+reliable_event_queue[7] = {}
+reliable_event_queue[17] = {}
+reliable_event_queue[16] = {}
+reliable_event_queue[5] = {}
+reliable_event_queue[33] = table.create(255)
+reliable_event_queue[19] = table.create(255)
+reliable_event_queue[23] = table.create(255)
+reliable_event_queue[36] = table.create(255)
+reliable_event_queue[40] = table.create(255)
+reliable_event_queue[27] = table.create(255)
+reliable_event_queue[41] = table.create(255)
+reliable_event_queue[20] = table.create(255)
+reliable_event_queue[22] = table.create(255)
+reliable_event_queue[28] = table.create(255)
+reliable_event_queue[31] = table.create(255)
+reliable_event_queue[21] = table.create(255)
+reliable_event_queue[29] = table.create(255)
+reliable_event_queue[38] = table.create(255)
+reliable_event_queue[37] = table.create(255)
+reliable_event_queue[39] = table.create(255)
+reliable_event_queue[25] = table.create(255)
+reliable_event_queue[26] = table.create(255)
+reliable_event_queue[35] = table.create(255)
+reliable_event_queue[24] = table.create(255)
+reliable_event_queue[30] = table.create(255)
+reliable_event_queue[32] = table.create(255)
+reliable_event_queue[34] = table.create(255)
+reliable.OnClientEvent:Connect(function(buff, inst)
+	incoming_buff = buff
+	incoming_inst = inst
+	incoming_read = 0
+	incoming_ipos = 0
+	local len = buffer.len(buff)
+	while incoming_read < len do
+		local id = buffer.readu8(buff, read(1))
+		if id == 4 then -- update_invsee
+			local value
+			local bool_1 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			if bit32.btest(bool_1, 0b0000000000000001) then
+				incoming_ipos = incoming_ipos + 1
+				value["target"] = incoming_inst[incoming_ipos]
+				assert(value["target"] == nil or value["target"]:IsA("Player"), "received instance is not of the Player class!")
+			else
+				value["target"] = nil
+			end
+			if bit32.btest(bool_1, 0b0000000000000010) then
+				local len_1 = buffer.readu8(incoming_buff, read(1))
+				assert(len_1 <= 64, "value is more than 64!")
+				value["inventory"] = table.create(len_1)
+				for i_1 = 1, len_1 do
+					local bool_2 = buffer.readu8(incoming_buff, read(1))
+					local val_1
+					if bit32.btest(bool_2, 0b0000000000000001) then
+						val_1 = { ["kind"] = "empty" }
+					else
+						val_1 = { ["kind"] = "item" }
+						local len_2 = buffer.readu16(incoming_buff, read(2))
+						val_1["item_id"] = buffer.readstring(incoming_buff, read(len_2), len_2)
+						val_1["amount"] = buffer.readu16(incoming_buff, read(2))
+						if bit32.btest(bool_2, 0b0000000000000010) then
+							incoming_ipos = incoming_ipos + 1
+							val_1["data"] = incoming_inst[incoming_ipos]
+						else
+							val_1["data"] = nil
+						end
+					end
+					value["inventory"][i_1] = val_1
+				end
+			else
+				value["inventory"] = nil
+			end
+			if bit32.btest(bool_1, 0b0000000000000100) then
+				value["id"] = buffer.readu32(incoming_buff, read(4))
+			else
+				value["id"] = nil
+			end
+			if reliable_events[4] then
+				reliable_events[4](value)
+			else
+				table.insert(reliable_event_queue[4], value)
+				if #reliable_event_queue[4] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[4]} events in queue for update_invsee. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 3 then -- update_inventory
+			local value
+			local bool_3 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			if bit32.btest(bool_3, 0b0000000000000001) then
+				local len_3 = buffer.readu8(incoming_buff, read(1))
+				assert(len_3 <= 64, "value is more than 64!")
+				value["inventory"] = table.create(len_3)
+				for i_2 = 1, len_3 do
+					local bool_4 = buffer.readu8(incoming_buff, read(1))
+					local val_2
+					if bit32.btest(bool_4, 0b0000000000000001) then
+						val_2 = { ["kind"] = "empty" }
+					else
+						val_2 = { ["kind"] = "item" }
+						local len_4 = buffer.readu16(incoming_buff, read(2))
+						val_2["item_id"] = buffer.readstring(incoming_buff, read(len_4), len_4)
+						val_2["amount"] = buffer.readu16(incoming_buff, read(2))
+						if bit32.btest(bool_4, 0b0000000000000010) then
+							incoming_ipos = incoming_ipos + 1
+							val_2["data"] = incoming_inst[incoming_ipos]
+						else
+							val_2["data"] = nil
+						end
+					end
+					value["inventory"][i_2] = val_2
+				end
+			else
+				value["inventory"] = nil
+			end
+			if bit32.btest(bool_3, 0b0000000000000010) then
+				value["id"] = buffer.readu32(incoming_buff, read(4))
+			else
+				value["id"] = nil
+			end
+			if reliable_events[3] then
+				reliable_events[3](value)
+			else
+				table.insert(reliable_event_queue[3], value)
+				if #reliable_event_queue[3] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[3]} events in queue for update_inventory. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 11 then -- show_title
+			local value, value2, value3, value4, value5, value6
+			local bool_5 = buffer.readu8(incoming_buff, read(1))
+			value = buffer.readf32(incoming_buff, read(4))
+			value2 = buffer.readf32(incoming_buff, read(4))
+			value3 = buffer.readf32(incoming_buff, read(4))
+			local len_5 = buffer.readu16(incoming_buff, read(2))
+			value4 = buffer.readstring(incoming_buff, read(len_5), len_5)
+			if bit32.btest(bool_5, 0b0000000000000001) then
+				local len_6 = buffer.readu16(incoming_buff, read(2))
+				value5 = buffer.readstring(incoming_buff, read(len_6), len_6)
+			else
+				value5 = nil
+			end
+			if bit32.btest(bool_5, 0b0000000000000010) then
+				value6 = Color3.fromRGB(buffer.readu8(incoming_buff, read(1)), buffer.readu8(incoming_buff, read(1)), buffer.readu8(incoming_buff, read(1)))
+			else
+				value6 = nil
+			end
+			if reliable_events[11][1] then
+				for _, cb in reliable_events[11] do
+					cb(value, value2, value3, value4, value5, value6)
+				end
+			else
+				table.insert(reliable_event_queue[11], { value, value2, value3, value4, value5, value6 })
+				if #reliable_event_queue[11] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[11]} events in queue for show_title. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 12 then -- send_popup
+			local value, value2
+			local bool_6 = buffer.readu8(incoming_buff, read(1))
+			value = buffer.readu32(incoming_buff, read(4))
+			value2 = {  }
+			local len_7 = buffer.readu16(incoming_buff, read(2))
+			value2["icon"] = buffer.readstring(incoming_buff, read(len_7), len_7)
+			local len_8 = buffer.readu16(incoming_buff, read(2))
+			value2["text"] = buffer.readstring(incoming_buff, read(len_8), len_8)
+			if bit32.btest(bool_6, 0b0000000000000001) then
+				local len_9 = buffer.readu16(incoming_buff, read(2))
+				value2["text_inputs"] = table.create(len_9)
+				for i_3 = 1, len_9 do
+					local val_3
+					val_3 = {  }
+					local len_10 = buffer.readu16(incoming_buff, read(2))
+					val_3["id"] = buffer.readstring(incoming_buff, read(len_10), len_10)
+					local len_11 = buffer.readu16(incoming_buff, read(2))
+					val_3["placeholder_text"] = buffer.readstring(incoming_buff, read(len_11), len_11)
+					value2["text_inputs"][i_3] = val_3
+				end
+			else
+				value2["text_inputs"] = nil
+			end
+			if bit32.btest(bool_6, 0b0000000000000010) then
+				local len_12 = buffer.readu16(incoming_buff, read(2))
+				value2["buttons"] = table.create(len_12)
+				for i_4 = 1, len_12 do
+					local bool_7 = buffer.readu8(incoming_buff, read(1))
+					local val_4
+					val_4 = {  }
+					local len_13 = buffer.readu16(incoming_buff, read(2))
+					val_4["text"] = buffer.readstring(incoming_buff, read(len_13), len_13)
+					val_4["colour"] = Color3.fromRGB(buffer.readu8(incoming_buff, read(1)), buffer.readu8(incoming_buff, read(1)), buffer.readu8(incoming_buff, read(1)))
+					if bit32.btest(bool_7, 0b0000000000000001) then
+						val_4["button_progress_time"] = buffer.readf32(incoming_buff, read(4))
+					else
+						val_4["button_progress_time"] = nil
+					end
+					value2["buttons"][i_4] = val_4
+				end
+			else
+				value2["buttons"] = nil
+			end
+			if reliable_events[12] then
+				reliable_events[12](value, value2)
+			else
+				table.insert(reliable_event_queue[12], { value, value2 })
+				if #reliable_event_queue[12] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[12]} events in queue for send_popup. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 10 then -- send_notification
+			local value
+			local len_14 = buffer.readu16(incoming_buff, read(2))
+			value = buffer.readstring(incoming_buff, read(len_14), len_14)
+			if reliable_events[10] then
+				reliable_events[10](value)
+			else
+				table.insert(reliable_event_queue[10], value)
+				if #reliable_event_queue[10] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[10]} events in queue for send_notification. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 13 then -- send_large_notification
+			local value, value2
+			local bool_8 = buffer.readu8(incoming_buff, read(1))
+			value = buffer.readu32(incoming_buff, read(4))
+			value2 = {  }
+			local len_15 = buffer.readu16(incoming_buff, read(2))
+			value2["icon"] = buffer.readstring(incoming_buff, read(len_15), len_15)
+			local len_16 = buffer.readu16(incoming_buff, read(2))
+			value2["text"] = buffer.readstring(incoming_buff, read(len_16), len_16)
+			if bit32.btest(bool_8, 0b0000000000000001) then
+				local len_17 = buffer.readu16(incoming_buff, read(2))
+				value2["buttons"] = table.create(len_17)
+				for i_5 = 1, len_17 do
+					local val_5
+					val_5 = {  }
+					local len_18 = buffer.readu16(incoming_buff, read(2))
+					val_5["text"] = buffer.readstring(incoming_buff, read(len_18), len_18)
+					val_5["text_colour"] = Color3.fromRGB(buffer.readu8(incoming_buff, read(1)), buffer.readu8(incoming_buff, read(1)), buffer.readu8(incoming_buff, read(1)))
+					value2["buttons"][i_5] = val_5
+				end
+			else
+				value2["buttons"] = nil
+			end
+			if reliable_events[13] then
+				reliable_events[13](value, value2)
+			else
+				table.insert(reliable_event_queue[13], { value, value2 })
+				if #reliable_event_queue[13] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[13]} events in queue for send_large_notification. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 9 then -- score_team
+			local value
+			value = buffer.readu8(incoming_buff, read(1))
+			if reliable_events[9][1] then
+				for _, cb in reliable_events[9] do
+					cb(value)
+				end
+			else
+				table.insert(reliable_event_queue[9], value)
+				if #reliable_event_queue[9] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[9]} events in queue for score_team. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 8 then -- score_self
+			local value
+			if reliable_events[8][1] then
+				for _, cb in reliable_events[8] do
+					cb(value)
+				end
+			else
+				reliable_event_queue[8] += 1
+				if reliable_event_queue[8] > 16 then
+					warn(`[ZAP] {reliable_event_queue[8]} events in queue for score_self. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 15 then -- pong
+			local value
+			if reliable_events[15] then
+				reliable_events[15](value)
+			else
+				reliable_event_queue[15] += 1
+				if reliable_event_queue[15] > 16 then
+					warn(`[ZAP] {reliable_event_queue[15]} events in queue for pong. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 18 then -- player_profile_changed
+			local value
+			if reliable_events[18][1] then
+				for _, cb in reliable_events[18] do
+					cb(value)
+				end
+			else
+				reliable_event_queue[18] += 1
+				if reliable_event_queue[18] > 16 then
+					warn(`[ZAP] {reliable_event_queue[18]} events in queue for player_profile_changed. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 14 then -- play_sound
+			local value, value2
+			local len_19 = buffer.readu16(incoming_buff, read(2))
+			value = buffer.readstring(incoming_buff, read(len_19), len_19)
+			value2 = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
+			if reliable_events[14] then
+				reliable_events[14](value, value2)
+			else
+				table.insert(reliable_event_queue[14], { value, value2 })
+				if #reliable_event_queue[14] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[14]} events in queue for play_sound. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 2 then -- mine_progress
+			local value, value2
+			local bool_9 = buffer.readu8(incoming_buff, read(1))
+			if bit32.btest(bool_9, 0b0000000000000001) then
+				incoming_ipos = incoming_ipos + 1
+				value = incoming_inst[incoming_ipos]
+				assert(value == nil or value:IsA("Part"), "received instance is not of the Part class!")
+			else
+				value = nil
+			end
+			value2 = buffer.readf32(incoming_buff, read(4))
+			if reliable_events[2] then
+				reliable_events[2](value, value2)
+			else
+				table.insert(reliable_event_queue[2], { value, value2 })
+				if #reliable_event_queue[2] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[2]} events in queue for mine_progress. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 0 then -- mine_finished
+			local value
+			value = buffer.readu32(incoming_buff, read(4))
+			if reliable_events[0] then
+				reliable_events[0](value)
+			else
+				table.insert(reliable_event_queue[0], value)
+				if #reliable_event_queue[0] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[0]} events in queue for mine_finished. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 1 then -- mine_failed
+			local value
+			value = buffer.readu32(incoming_buff, read(4))
+			if reliable_events[1] then
+				reliable_events[1](value)
+			else
+				table.insert(reliable_event_queue[1], value)
+				if #reliable_event_queue[1] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[1]} events in queue for mine_failed. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 6 then -- map_name
+			local value
+			local len_20 = buffer.readu16(incoming_buff, read(2))
+			value = buffer.readstring(incoming_buff, read(len_20), len_20)
+			if reliable_events[6][1] then
+				for _, cb in reliable_events[6] do
+					cb(value)
+				end
+			else
+				table.insert(reliable_event_queue[6], value)
+				if #reliable_event_queue[6] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[6]} events in queue for map_name. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 7 then -- kills
+			local value
+			value = buffer.readu16(incoming_buff, read(2))
+			if reliable_events[7][1] then
+				for _, cb in reliable_events[7] do
+					cb(value)
+				end
+			else
+				table.insert(reliable_event_queue[7], value)
+				if #reliable_event_queue[7] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[7]} events in queue for kills. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 17 then -- incoming_guild_invites
+			local value
+			local len_21 = buffer.readu16(incoming_buff, read(2))
+			value = table.create(len_21)
+			for i_6 = 1, len_21 do
+				local val_6
+				val_6 = {  }
+				local len_22 = buffer.readu16(incoming_buff, read(2))
+				val_6["guild_id"] = buffer.readstring(incoming_buff, read(len_22), len_22)
+				local len_23 = buffer.readu16(incoming_buff, read(2))
+				val_6["guild_name"] = buffer.readstring(incoming_buff, read(len_23), len_23)
+				local len_24 = buffer.readu16(incoming_buff, read(2))
+				val_6["guild_tag"] = buffer.readstring(incoming_buff, read(len_24), len_24)
+				local len_25 = buffer.readu16(incoming_buff, read(2))
+				val_6["guild_icon"] = buffer.readstring(incoming_buff, read(len_25), len_25)
+				local len_26 = buffer.readu16(incoming_buff, read(2))
+				val_6["guild_banner"] = buffer.readstring(incoming_buff, read(len_26), len_26)
+				val_6["member_count"] = buffer.readu32(incoming_buff, read(4))
+				val_6["inviter_id"] = buffer.readf64(incoming_buff, read(8))
+				val_6["invited_at"] = buffer.readf64(incoming_buff, read(8))
+				value[i_6] = val_6
+			end
+			if reliable_events[17] then
+				reliable_events[17](value)
+			else
+				table.insert(reliable_event_queue[17], value)
+				if #reliable_event_queue[17] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[17]} events in queue for incoming_guild_invites. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 16 then -- guild_state
+			local value
+			local bool_10 = buffer.readu8(incoming_buff, read(1))
+			if bit32.btest(bool_10, 0b0000000000000001) then
+				value = {  }
+				local len_27 = buffer.readu16(incoming_buff, read(2))
+				value["id"] = buffer.readstring(incoming_buff, read(len_27), len_27)
+				value["owner_id"] = buffer.readf64(incoming_buff, read(8))
+				value["created"] = buffer.readf64(incoming_buff, read(8))
+				local len_28 = buffer.readu16(incoming_buff, read(2))
+				value["name"] = buffer.readstring(incoming_buff, read(len_28), len_28)
+				local len_29 = buffer.readu16(incoming_buff, read(2))
+				value["tag"] = buffer.readstring(incoming_buff, read(len_29), len_29)
+				local len_30 = buffer.readu16(incoming_buff, read(2))
+				value["description"] = buffer.readstring(incoming_buff, read(len_30), len_30)
+				local len_31 = buffer.readu16(incoming_buff, read(2))
+				value["icon"] = buffer.readstring(incoming_buff, read(len_31), len_31)
+				local len_32 = buffer.readu16(incoming_buff, read(2))
+				value["banner"] = buffer.readstring(incoming_buff, read(len_32), len_32)
+				local len_33 = buffer.readu16(incoming_buff, read(2))
+				value["discord_invite"] = buffer.readstring(incoming_buff, read(len_33), len_33)
+				local len_34 = buffer.readu16(incoming_buff, read(2))
+				value["members"] = table.create(len_34)
+				for i_7 = 1, len_34 do
+					local bool_11 = buffer.readu8(incoming_buff, read(1))
+					local val_7
+					val_7 = {  }
+					val_7["user_id"] = buffer.readf64(incoming_buff, read(8))
+					val_7["joined"] = buffer.readf64(incoming_buff, read(8))
+					local len_35 = buffer.readu16(incoming_buff, read(2))
+					val_7["banner"] = buffer.readstring(incoming_buff, read(len_35), len_35)
+					val_7["playtime"] = buffer.readf64(incoming_buff, read(8))
+					val_7["stats"] = {  }
+					if not bit32.btest(bool_11, 0b0000000000000001) then
+						for _ = 1, buffer.readu16(incoming_buff, read(2)) + 1 do
+							local key_1
+							local val_8
+							local len_36 = buffer.readu8(incoming_buff, read(1))
+							assert(len_36 <= 128, "value is more than 128!")
+							key_1 = buffer.readstring(incoming_buff, read(len_36), len_36)
+							assert(utf8.len(key_1) ~= nil, "value is not valid utf-8")
+							val_8 = {  }
+							val_8["wins"] = buffer.readu32(incoming_buff, read(4))
+							val_8["goals"] = buffer.readu32(incoming_buff, read(4))
+							val_8["kills"] = buffer.readu32(incoming_buff, read(4))
+							val_8["losses"] = buffer.readu32(incoming_buff, read(4))
+							val_8["deaths"] = buffer.readu32(incoming_buff, read(4))
+							val_7["stats"][key_1] = val_8
+						end
+					end
+					value["members"][i_7] = val_7
+				end
+				local len_37 = buffer.readu16(incoming_buff, read(2))
+				value["banned"] = table.create(len_37)
+				for i_8 = 1, len_37 do
+					local val_9
+					val_9 = {  }
+					val_9["user_id"] = buffer.readf64(incoming_buff, read(8))
+					val_9["banned_at"] = buffer.readf64(incoming_buff, read(8))
+					value["banned"][i_8] = val_9
+				end
+				local len_38 = buffer.readu16(incoming_buff, read(2))
+				value["outgoing_invites"] = table.create(len_38)
+				for i_9 = 1, len_38 do
+					local val_10
+					val_10 = {  }
+					val_10["user_id"] = buffer.readf64(incoming_buff, read(8))
+					val_10["invited_at"] = buffer.readf64(incoming_buff, read(8))
+					value["outgoing_invites"][i_9] = val_10
+				end
+				value["totals"] = {  }
+				if not bit32.btest(bool_10, 0b0000000000000010) then
+					for _ = 1, buffer.readu16(incoming_buff, read(2)) + 1 do
+						local key_2
+						local val_11
+						local len_39 = buffer.readu8(incoming_buff, read(1))
+						assert(len_39 <= 128, "value is more than 128!")
+						key_2 = buffer.readstring(incoming_buff, read(len_39), len_39)
+						assert(utf8.len(key_2) ~= nil, "value is not valid utf-8")
+						val_11 = {  }
+						val_11["wins"] = buffer.readu32(incoming_buff, read(4))
+						val_11["goals"] = buffer.readu32(incoming_buff, read(4))
+						val_11["kills"] = buffer.readu32(incoming_buff, read(4))
+						val_11["losses"] = buffer.readu32(incoming_buff, read(4))
+						val_11["deaths"] = buffer.readu32(incoming_buff, read(4))
+						value["totals"][key_2] = val_11
+					end
+				end
+				value["total_playtime"] = buffer.readf64(incoming_buff, read(8))
+				if bit32.btest(bool_10, 0b0000000000000100) then
+					value["rank"] = buffer.readu32(incoming_buff, read(4))
+				else
+					value["rank"] = nil
+				end
+				local len_40 = buffer.readu16(incoming_buff, read(2))
+				value["rank_history"] = table.create(len_40)
+				for i_10 = 1, len_40 do
+					local val_12
+					val_12 = {  }
+					val_12["time"] = buffer.readf64(incoming_buff, read(8))
+					val_12["rank"] = buffer.readu32(incoming_buff, read(4))
+					value["rank_history"][i_10] = val_12
+				end
+			else
+				value = nil
+			end
+			if reliable_events[16] then
+				reliable_events[16](value)
+			else
+				table.insert(reliable_event_queue[16], value)
+				if #reliable_event_queue[16] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[16]} events in queue for guild_state. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 5 then -- game_is_active
+			local value
+			local bool_12 = buffer.readu8(incoming_buff, read(1))
+			value = bit32.btest(bool_12, 0b0000000000000001)
+			if reliable_events[5] then
+				reliable_events[5](value)
+			else
+				table.insert(reliable_event_queue[5], value)
+				if #reliable_event_queue[5] > 64 then
+					warn(`[ZAP] {#reliable_event_queue[5]} events in queue for game_is_active. Did you forget to attach a listener?`)
+				end
+			end
+		elseif id == 33 then -- unban_guild_member
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_13 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_13, 0b0000000000000001)
+			if bit32.btest(bool_13, 0b0000000000000010) then
+				local len_41 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_41), len_41)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[33][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[33][call_id] = nil
+		elseif id == 19 then -- set_cake_state
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_14 = buffer.readu8(incoming_buff, read(1))
+			value = bit32.btest(bool_14, 0b0000000000000001)
+			local thread = reliable_event_queue[19][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[19][call_id] = nil
+		elseif id == 23 then -- server_location
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_15 = buffer.readu8(incoming_buff, read(1))
+			if bit32.btest(bool_15, 0b0000000000000001) then
+				value = { ["status"] = "loading" }
+			elseif bit32.btest(bool_15, 0b0000000000000010) then
+				value = { ["status"] = "fail" }
+			elseif bit32.btest(bool_15, 0b0000000000000100) then
+				value = { ["status"] = "success" }
+				local len_42 = buffer.readu16(incoming_buff, read(2))
+				value["result"] = buffer.readstring(incoming_buff, read(len_42), len_42)
+			end
+			local thread = reliable_event_queue[23][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[23][call_id] = nil
+		elseif id == 36 then -- search_guild_invite_candidate
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_16 = buffer.readu8(incoming_buff, read(1))
+			if bit32.btest(bool_16, 0b0000000000000001) then
+				local len_43 = buffer.readu16(incoming_buff, read(2))
+				value = table.create(len_43)
+				for i_11 = 1, len_43 do
+					local val_13
+					val_13 = {  }
+					val_13["user_id"] = buffer.readf64(incoming_buff, read(8))
+					local len_44 = buffer.readu16(incoming_buff, read(2))
+					val_13["username"] = buffer.readstring(incoming_buff, read(len_44), len_44)
+					local len_45 = buffer.readu16(incoming_buff, read(2))
+					val_13["display_name"] = buffer.readstring(incoming_buff, read(len_45), len_45)
+					value[i_11] = val_13
+				end
+			else
+				value = nil
+			end
+			local thread = reliable_event_queue[36][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[36][call_id] = nil
+		elseif id == 40 then -- request_player_banner_change
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_17 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_17, 0b0000000000000001)
+			if bit32.btest(bool_17, 0b0000000000000010) then
+				local len_46 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_46), len_46)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[40][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[40][call_id] = nil
+		elseif id == 27 then -- request_guild_image_change
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_18 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_18, 0b0000000000000001)
+			if bit32.btest(bool_18, 0b0000000000000010) then
+				local len_47 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_47), len_47)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[27][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[27][call_id] = nil
+		elseif id == 41 then -- report_player
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_19 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_19, 0b0000000000000001)
+			if bit32.btest(bool_19, 0b0000000000000010) then
+				local len_48 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_48), len_48)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[41][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[41][call_id] = nil
+		elseif id == 20 then -- place_cube
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_20 = buffer.readu8(incoming_buff, read(1))
+			value = bit32.btest(bool_20, 0b0000000000000001)
+			local thread = reliable_event_queue[20][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[20][call_id] = nil
+		elseif id == 22 then -- leave_queue
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_21 = buffer.readu8(incoming_buff, read(1))
+			value = bit32.btest(bool_21, 0b0000000000000001)
+			local thread = reliable_event_queue[22][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[22][call_id] = nil
+		elseif id == 28 then -- leave_guild
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_22 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_22, 0b0000000000000001)
+			if bit32.btest(bool_22, 0b0000000000000010) then
+				local len_49 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_49), len_49)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[28][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[28][call_id] = nil
+		elseif id == 31 then -- kick_guild_member
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_23 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_23, 0b0000000000000001)
+			if bit32.btest(bool_23, 0b0000000000000010) then
+				local len_50 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_50), len_50)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[31][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[31][call_id] = nil
+		elseif id == 21 then -- join_queue
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_24 = buffer.readu8(incoming_buff, read(1))
+			value = bit32.btest(bool_24, 0b0000000000000001)
+			local thread = reliable_event_queue[21][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[21][call_id] = nil
+		elseif id == 29 then -- invite_to_guild
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_25 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_25, 0b0000000000000001)
+			if bit32.btest(bool_25, 0b0000000000000010) then
+				local len_51 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_51), len_51)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[29][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[29][call_id] = nil
+		elseif id == 38 then -- fetch_player_profile
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_26 = buffer.readu8(incoming_buff, read(1))
+			if bit32.btest(bool_26, 0b0000000000000001) then
+				value = {  }
+				value["user_id"] = buffer.readf64(incoming_buff, read(8))
+				value["first_joined"] = buffer.readf64(incoming_buff, read(8))
+				value["last_online"] = buffer.readf64(incoming_buff, read(8))
+				local len_52 = buffer.readu16(incoming_buff, read(2))
+				value["banner"] = buffer.readstring(incoming_buff, read(len_52), len_52)
+				local len_53 = buffer.readu16(incoming_buff, read(2))
+				value["bio"] = buffer.readstring(incoming_buff, read(len_53), len_53)
+				value["playtime"] = buffer.readf64(incoming_buff, read(8))
+				value["stats"] = {  }
+				if not bit32.btest(bool_26, 0b0000000000000010) then
+					for _ = 1, buffer.readu16(incoming_buff, read(2)) + 1 do
+						local key_3
+						local val_14
+						local len_54 = buffer.readu8(incoming_buff, read(1))
+						assert(len_54 <= 128, "value is more than 128!")
+						key_3 = buffer.readstring(incoming_buff, read(len_54), len_54)
+						assert(utf8.len(key_3) ~= nil, "value is not valid utf-8")
+						val_14 = {  }
+						val_14["wins"] = buffer.readu32(incoming_buff, read(4))
+						val_14["goals"] = buffer.readu32(incoming_buff, read(4))
+						val_14["kills"] = buffer.readu32(incoming_buff, read(4))
+						val_14["losses"] = buffer.readu32(incoming_buff, read(4))
+						val_14["deaths"] = buffer.readu32(incoming_buff, read(4))
+						value["stats"][key_3] = val_14
+					end
+				end
+				if bit32.btest(bool_26, 0b0000000000000100) then
+					value["rank"] = buffer.readu32(incoming_buff, read(4))
+				else
+					value["rank"] = nil
+				end
+				local len_55 = buffer.readu16(incoming_buff, read(2))
+				value["rank_history"] = table.create(len_55)
+				for i_12 = 1, len_55 do
+					local val_15
+					val_15 = {  }
+					val_15["time"] = buffer.readf64(incoming_buff, read(8))
+					val_15["rank"] = buffer.readu32(incoming_buff, read(4))
+					value["rank_history"][i_12] = val_15
+				end
+				if bit32.btest(bool_26, 0b0000000000001000) then
+					value["guild"] = {  }
+					local len_56 = buffer.readu16(incoming_buff, read(2))
+					value["guild"]["id"] = buffer.readstring(incoming_buff, read(len_56), len_56)
+					local len_57 = buffer.readu16(incoming_buff, read(2))
+					value["guild"]["name"] = buffer.readstring(incoming_buff, read(len_57), len_57)
+					local len_58 = buffer.readu16(incoming_buff, read(2))
+					value["guild"]["tag"] = buffer.readstring(incoming_buff, read(len_58), len_58)
+				else
+					value["guild"] = nil
+				end
+			else
+				value = nil
+			end
+			local thread = reliable_event_queue[38][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[38][call_id] = nil
+		elseif id == 37 then -- fetch_guild_info
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_27 = buffer.readu8(incoming_buff, read(1))
+			if bit32.btest(bool_27, 0b0000000000000001) then
+				value = {  }
+				local len_59 = buffer.readu16(incoming_buff, read(2))
+				value["id"] = buffer.readstring(incoming_buff, read(len_59), len_59)
+				value["owner_id"] = buffer.readf64(incoming_buff, read(8))
+				value["created"] = buffer.readf64(incoming_buff, read(8))
+				local len_60 = buffer.readu16(incoming_buff, read(2))
+				value["name"] = buffer.readstring(incoming_buff, read(len_60), len_60)
+				local len_61 = buffer.readu16(incoming_buff, read(2))
+				value["tag"] = buffer.readstring(incoming_buff, read(len_61), len_61)
+				local len_62 = buffer.readu16(incoming_buff, read(2))
+				value["description"] = buffer.readstring(incoming_buff, read(len_62), len_62)
+				local len_63 = buffer.readu16(incoming_buff, read(2))
+				value["icon"] = buffer.readstring(incoming_buff, read(len_63), len_63)
+				local len_64 = buffer.readu16(incoming_buff, read(2))
+				value["banner"] = buffer.readstring(incoming_buff, read(len_64), len_64)
+				local len_65 = buffer.readu16(incoming_buff, read(2))
+				value["discord_invite"] = buffer.readstring(incoming_buff, read(len_65), len_65)
+				local len_66 = buffer.readu16(incoming_buff, read(2))
+				value["members"] = table.create(len_66)
+				for i_13 = 1, len_66 do
+					local bool_28 = buffer.readu8(incoming_buff, read(1))
+					local val_16
+					val_16 = {  }
+					val_16["user_id"] = buffer.readf64(incoming_buff, read(8))
+					val_16["joined"] = buffer.readf64(incoming_buff, read(8))
+					local len_67 = buffer.readu16(incoming_buff, read(2))
+					val_16["banner"] = buffer.readstring(incoming_buff, read(len_67), len_67)
+					val_16["playtime"] = buffer.readf64(incoming_buff, read(8))
+					val_16["stats"] = {  }
+					if not bit32.btest(bool_28, 0b0000000000000001) then
+						for _ = 1, buffer.readu16(incoming_buff, read(2)) + 1 do
+							local key_4
+							local val_17
+							local len_68 = buffer.readu8(incoming_buff, read(1))
+							assert(len_68 <= 128, "value is more than 128!")
+							key_4 = buffer.readstring(incoming_buff, read(len_68), len_68)
+							assert(utf8.len(key_4) ~= nil, "value is not valid utf-8")
+							val_17 = {  }
+							val_17["wins"] = buffer.readu32(incoming_buff, read(4))
+							val_17["goals"] = buffer.readu32(incoming_buff, read(4))
+							val_17["kills"] = buffer.readu32(incoming_buff, read(4))
+							val_17["losses"] = buffer.readu32(incoming_buff, read(4))
+							val_17["deaths"] = buffer.readu32(incoming_buff, read(4))
+							val_16["stats"][key_4] = val_17
+						end
+					end
+					value["members"][i_13] = val_16
+				end
+				local len_69 = buffer.readu16(incoming_buff, read(2))
+				value["banned"] = table.create(len_69)
+				for i_14 = 1, len_69 do
+					local val_18
+					val_18 = {  }
+					val_18["user_id"] = buffer.readf64(incoming_buff, read(8))
+					val_18["banned_at"] = buffer.readf64(incoming_buff, read(8))
+					value["banned"][i_14] = val_18
+				end
+				local len_70 = buffer.readu16(incoming_buff, read(2))
+				value["outgoing_invites"] = table.create(len_70)
+				for i_15 = 1, len_70 do
+					local val_19
+					val_19 = {  }
+					val_19["user_id"] = buffer.readf64(incoming_buff, read(8))
+					val_19["invited_at"] = buffer.readf64(incoming_buff, read(8))
+					value["outgoing_invites"][i_15] = val_19
+				end
+				value["totals"] = {  }
+				if not bit32.btest(bool_27, 0b0000000000000010) then
+					for _ = 1, buffer.readu16(incoming_buff, read(2)) + 1 do
+						local key_5
+						local val_20
+						local len_71 = buffer.readu8(incoming_buff, read(1))
+						assert(len_71 <= 128, "value is more than 128!")
+						key_5 = buffer.readstring(incoming_buff, read(len_71), len_71)
+						assert(utf8.len(key_5) ~= nil, "value is not valid utf-8")
+						val_20 = {  }
+						val_20["wins"] = buffer.readu32(incoming_buff, read(4))
+						val_20["goals"] = buffer.readu32(incoming_buff, read(4))
+						val_20["kills"] = buffer.readu32(incoming_buff, read(4))
+						val_20["losses"] = buffer.readu32(incoming_buff, read(4))
+						val_20["deaths"] = buffer.readu32(incoming_buff, read(4))
+						value["totals"][key_5] = val_20
+					end
+				end
+				value["total_playtime"] = buffer.readf64(incoming_buff, read(8))
+				if bit32.btest(bool_27, 0b0000000000000100) then
+					value["rank"] = buffer.readu32(incoming_buff, read(4))
+				else
+					value["rank"] = nil
+				end
+				local len_72 = buffer.readu16(incoming_buff, read(2))
+				value["rank_history"] = table.create(len_72)
+				for i_16 = 1, len_72 do
+					local val_21
+					val_21 = {  }
+					val_21["time"] = buffer.readf64(incoming_buff, read(8))
+					val_21["rank"] = buffer.readu32(incoming_buff, read(4))
+					value["rank_history"][i_16] = val_21
+				end
+			else
+				value = nil
+			end
+			local thread = reliable_event_queue[37][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[37][call_id] = nil
+		elseif id == 39 then -- edit_player_bio
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_29 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_29, 0b0000000000000001)
+			if bit32.btest(bool_29, 0b0000000000000010) then
+				local len_73 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_73), len_73)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[39][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[39][call_id] = nil
+		elseif id == 25 then -- edit_guild_info
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_30 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_30, 0b0000000000000001)
+			if bit32.btest(bool_30, 0b0000000000000010) then
+				local len_74 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_74), len_74)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[25][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[25][call_id] = nil
+		elseif id == 26 then -- delete_guild
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_31 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_31, 0b0000000000000001)
+			if bit32.btest(bool_31, 0b0000000000000010) then
+				local len_75 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_75), len_75)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[26][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[26][call_id] = nil
+		elseif id == 35 then -- decline_guild_invite
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_32 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_32, 0b0000000000000001)
+			if bit32.btest(bool_32, 0b0000000000000010) then
+				local len_76 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_76), len_76)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[35][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[35][call_id] = nil
+		elseif id == 24 then -- create_guild
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_33 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_33, 0b0000000000000001)
+			if bit32.btest(bool_33, 0b0000000000000010) then
+				local len_77 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_77), len_77)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[24][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[24][call_id] = nil
+		elseif id == 30 then -- cancel_guild_invite
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_34 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_34, 0b0000000000000001)
+			if bit32.btest(bool_34, 0b0000000000000010) then
+				local len_78 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_78), len_78)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[30][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[30][call_id] = nil
+		elseif id == 32 then -- ban_guild_member
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_35 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_35, 0b0000000000000001)
+			if bit32.btest(bool_35, 0b0000000000000010) then
+				local len_79 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_79), len_79)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[32][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[32][call_id] = nil
+		elseif id == 34 then -- accept_guild_invite
+			local call_id = buffer.readu8(incoming_buff, read(1))
+			local value
+			local bool_36 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			value["ok"] = bit32.btest(bool_36, 0b0000000000000001)
+			if bit32.btest(bool_36, 0b0000000000000010) then
+				local len_80 = buffer.readu16(incoming_buff, read(2))
+				value["error"] = buffer.readstring(incoming_buff, read(len_80), len_80)
+			else
+				value["error"] = nil
+			end
+			local thread = reliable_event_queue[34][call_id]
+			-- When using actors it's possible for multiple Zap clients to exist, but only one called the Zap remote function.
+			if thread then
+				task.spawn(thread, value)
+			end
+			reliable_event_queue[34][call_id] = nil
+		else
+			error("Unknown event id")
+		end
+	end
+end)
+unreliable[1].OnClientEvent:Connect(function(buff, inst) -- knockback
+	incoming_buff = buff
+	incoming_inst = inst
+	incoming_read = 0
+	incoming_ipos = 0
+	local value, value2, value3
+	value = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
+	value2 = buffer.readf32(incoming_buff, read(4))
+	value3 = buffer.readf32(incoming_buff, read(4))
+	if unreliable_events[0] then
+		unreliable_events[0](value, value2, value3)
+	else
+		table.insert(unreliable_event_queue[0], { value, value2, value3 })
+		if #unreliable_event_queue[0] > 64 then
+			warn(`[ZAP] {#unreliable_event_queue[0]} events in queue for knockback. Did you forget to attach a listener?`)
+		end
+	end
+end)
 table.freeze(polling_queues_reliable)
 table.freeze(polling_queues_unreliable)
 
 local returns = {
 	send_events = send_events,
+	update_invsee = {
+		set_callback = function(callback: (value: ({
+			["target"]: ((Player)?),
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		})) -> ()): () -> ()
+			reliable_events[4] = callback
+			for _, value in reliable_event_queue[4] do
+				callback(value				)
+
+			end
+			reliable_event_queue[4] = {}
+			return function()
+				reliable_events[4] = nil
+			end
+		end,
+	},
+	update_inventory = {
+		set_callback = function(callback: (value: ({
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		})) -> ()): () -> ()
+			reliable_events[3] = callback
+			for _, value in reliable_event_queue[3] do
+				callback(value				)
+
+			end
+			reliable_event_queue[3] = {}
+			return function()
+				reliable_events[3] = nil
+			end
+		end,
+	},
+	update_blocking = {
+		fire = function(value: (boolean))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 2)
+			local bool_37 = 0
+			local bool_37_pos_1 = alloc(1)
+			if value then
+				bool_37 = bit32.bor(bool_37, 0b0000000000000001)
+			end
+			buffer.writeu8(outgoing_buff, bool_37_pos_1, bool_37)
+		end,
+	},
+	unban_guild_member = {
+		call = function(value: (number)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[33][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 27)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(8)
+			buffer.writef64(outgoing_buff, outgoing_apos, value)
+			reliable_event_queue[33][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	stop_invsee = {
+		fire = function()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 8)
+		end,
+	},
+	show_title = {
+		on = function(callback: (fade_in: (number), stay: (number), fade_out: (number), top_text: (string), bottom_text: ((string)?), colour: ((Color3)?)) -> ())
+			table.insert(reliable_events[11], callback)
+			for _, value in reliable_event_queue[11] do
+				callback(unpack(value)				)
+
+			end
+			reliable_event_queue[11] = {}
+			return function()
+				table.remove(reliable_events[11], table.find(reliable_events[11], callback))
+			end
+		end,
+	},
+	shoot_bow = {
+		fire = function(direction: (Vector3), draw_time: (number))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 1)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, draw_time)
+		end,
+	},
+	set_cake_state = {
+		call = function(value: (boolean)): ((boolean))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[19][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 13)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local bool_38 = 0
+			local bool_38_pos_1 = alloc(1)
+			if value then
+				bool_38 = bit32.bor(bool_38, 0b0000000000000001)
+			end
+			buffer.writeu8(outgoing_buff, bool_38_pos_1, bool_38)
+			reliable_event_queue[19][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	server_location = {
+		call = function(): (({
+			["status"]: "loading",
+		} | {
+			["status"]: "fail",
+		} | {
+			["status"]: "success",
+			["result"]: (string),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[23][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 17)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			reliable_event_queue[23][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	send_popup = {
+		set_callback = function(callback: (popup_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["text_inputs"]: (({ ({
+				["id"]: (string),
+				["placeholder_text"]: (string),
+			}) })?),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["colour"]: (Color3),
+				["button_progress_time"]: ((number)?),
+			}) })?),
+		})) -> ()): () -> ()
+			reliable_events[12] = callback
+			for _, value in reliable_event_queue[12] do
+				callback(unpack(value)				)
+
+			end
+			reliable_event_queue[12] = {}
+			return function()
+				reliable_events[12] = nil
+			end
+		end,
+	},
+	send_notification = {
+		set_callback = function(callback: (value: (string)) -> ()): () -> ()
+			reliable_events[10] = callback
+			for _, value in reliable_event_queue[10] do
+				callback(value				)
+
+			end
+			reliable_event_queue[10] = {}
+			return function()
+				reliable_events[10] = nil
+			end
+		end,
+	},
+	send_large_notification = {
+		set_callback = function(callback: (large_notification_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["text_colour"]: (Color3),
+			}) })?),
+		})) -> ()): () -> ()
+			reliable_events[13] = callback
+			for _, value in reliable_event_queue[13] do
+				callback(unpack(value)				)
+
+			end
+			reliable_event_queue[13] = {}
+			return function()
+				reliable_events[13] = nil
+			end
+		end,
+	},
+	select_slot = {
+		fire = function(value: (number))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 5)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value)
+		end,
+	},
+	search_guild_invite_candidate = {
+		call = function(value: (string)): ((({ ({
+			["user_id"]: (number),
+			["username"]: (string),
+			["display_name"]: (string),
+		}) })?))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[36][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 30)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local len_81 = #value
+			assert(len_81 <= 40000, "value is more than 40000!")
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_81)
+			alloc(len_81)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_81)
+			reliable_event_queue[36][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	score_team = {
+		on = function(callback: (value: (number)) -> ())
+			table.insert(reliable_events[9], callback)
+			for _, value in reliable_event_queue[9] do
+				callback(value				)
+
+			end
+			reliable_event_queue[9] = {}
+			return function()
+				table.remove(reliable_events[9], table.find(reliable_events[9], callback))
+			end
+		end,
+	},
+	score_self = {
+		on = function(callback: () -> ())
+			table.insert(reliable_events[8], callback)
+			for _ = 1, reliable_event_queue[8] do
+				callback()
+			end
+			reliable_event_queue[8] = 0
+			return function()
+				table.remove(reliable_events[8], table.find(reliable_events[8], callback))
+			end
+		end,
+	},
+	respond_to_popup = {
+		fire = function(popup_id: (number), button_index: ((number)?), text_input_values: ({ [(string)]: (string) }))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 9)
+			local bool_39 = 0
+			local bool_39_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, popup_id)
+			if button_index ~= nil then
+				bool_39 = bit32.bor(bool_39, 0b0000000000000001)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, button_index)
+			end
+			local len_pos_1
+			local len_82 = 0
+			for k_1, v_1 in text_input_values do
+				if len_82 == 0 then
+					len_pos_1 = alloc(2)
+				end
+				len_82 = len_82 + 1
+				local len_83 = #k_1
+				assert(len_83 <= 800, "value is more than 800!")
+				assert(utf8.len(k_1) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_83)
+				alloc(len_83)
+				buffer.writestring(outgoing_buff, outgoing_apos, k_1, len_83)
+				local len_84 = #v_1
+				assert(len_84 <= 800, "value is more than 800!")
+				assert(utf8.len(v_1) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_84)
+				alloc(len_84)
+				buffer.writestring(outgoing_buff, outgoing_apos, v_1, len_84)
+			end
+			if len_pos_1 then
+				buffer.writeu16(outgoing_buff, len_pos_1, len_82 - 1)
+			else
+				bool_39 = bit32.bor(bool_39, 0b0000000000000010)
+			end
+			buffer.writeu8(outgoing_buff, bool_39_pos_1, bool_39)
+		end,
+	},
+	respond_to_large_notification = {
+		fire = function(large_notification_id: (number), button_index: ((number)?))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 10)
+			local bool_40 = 0
+			local bool_40_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, large_notification_id)
+			if button_index ~= nil then
+				bool_40 = bit32.bor(bool_40, 0b0000000000000001)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, button_index)
+			end
+			buffer.writeu8(outgoing_buff, bool_40_pos_1, bool_40)
+		end,
+	},
+	request_player_banner_change = {
+		call = function(): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[40][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 34)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			reliable_event_queue[40][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	request_invsee_action = {
+		fire = function(value: ({
+			["action"]: ("swap_items" | "move_item" | "quick_move"),
+			["target"]: ((Player)?),
+			["from"]: (number),
+			["to"]: (number),
+			["id"]: (number),
+		}))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 7)
+			local bool_41 = 0
+			local bool_41_pos_1 = alloc(1)
+			if value["action"] == "swap_items" then
+				bool_41 = bit32.bor(bool_41, 0b0000000000000001)
+			elseif value["action"] == "move_item" then
+				bool_41 = bit32.bor(bool_41, 0b0000000000000010)
+			elseif value["action"] == "quick_move" then
+				bool_41 = bit32.bor(bool_41, 0b0000000000000100)
+			else
+				error("Invalid enumerator")
+			end
+			if value["target"] ~= nil then
+				bool_41 = bit32.bor(bool_41, 0b0000000000001000)
+				assert(value["target"]:IsA("Player"), "received instance is not of the Player class!")
+				table.insert(outgoing_inst, value["target"])
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value["from"])
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value["to"])
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			buffer.writeu8(outgoing_buff, bool_41_pos_1, bool_41)
+		end,
+	},
+	request_inventory_action = {
+		fire = function(value: ({
+			["action"]: ("swap_items" | "move_item" | "quick_move"),
+			["from"]: (number),
+			["to"]: (number),
+			["id"]: (number),
+		}))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 6)
+			local bool_42 = 0
+			local bool_42_pos_1 = alloc(1)
+			if value["action"] == "swap_items" then
+				bool_42 = bit32.bor(bool_42, 0b0000000000000001)
+			elseif value["action"] == "move_item" then
+				bool_42 = bit32.bor(bool_42, 0b0000000000000010)
+			elseif value["action"] == "quick_move" then
+				bool_42 = bit32.bor(bool_42, 0b0000000000000100)
+			else
+				error("Invalid enumerator")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value["from"])
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value["to"])
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			buffer.writeu8(outgoing_buff, bool_42_pos_1, bool_42)
+		end,
+	},
+	request_guild_image_change = {
+		call = function(value: ("icon" | "banner")): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[27][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 21)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local bool_43 = 0
+			local bool_43_pos_1 = alloc(1)
+			if value == "icon" then
+				bool_43 = bit32.bor(bool_43, 0b0000000000000001)
+			elseif value == "banner" then
+				local _
+			else
+				error("Invalid enumerator")
+			end
+			buffer.writeu8(outgoing_buff, bool_43_pos_1, bool_43)
+			reliable_event_queue[27][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	report_player = {
+		call = function(value: (number)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[41][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 35)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(8)
+			buffer.writef64(outgoing_buff, outgoing_apos, value)
+			reliable_event_queue[41][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	pong = {
+		set_callback = function(callback: () -> ()): () -> ()
+			reliable_events[15] = callback
+			for _ = 1, reliable_event_queue[15] do
+				callback()
+			end
+			reliable_event_queue[15] = 0
+			return function()
+				reliable_events[15] = nil
+			end
+		end,
+	},
+	player_profile_changed = {
+		on = function(callback: () -> ())
+			table.insert(reliable_events[18], callback)
+			for _ = 1, reliable_event_queue[18] do
+				callback()
+			end
+			reliable_event_queue[18] = 0
+			return function()
+				table.remove(reliable_events[18], table.find(reliable_events[18], callback))
+			end
+		end,
+	},
+	play_sound = {
+		set_callback = function(callback: (name: (string), position: (Vector3)) -> ()): () -> ()
+			reliable_events[14] = callback
+			for _, value in reliable_event_queue[14] do
+				callback(unpack(value)				)
+
+			end
+			reliable_event_queue[14] = {}
+			return function()
+				reliable_events[14] = nil
+			end
+		end,
+	},
+	place_cube = {
+		call = function(origin: (Vector3), direction: (Vector3)): ((boolean))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[20][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 14)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, origin.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, origin.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, origin.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.Z)
+			reliable_event_queue[20][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	ping = {
+		fire = function()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 11)
+		end,
+	},
+	mouse_click = {
+		fire = function(value: ("attack" | "use"))
+			local saved = save()
+			load_empty()
+			local bool_44 = 0
+			local bool_44_pos_1 = alloc(1)
+			if value == "attack" then
+				bool_44 = bit32.bor(bool_44, 0b0000000000000001)
+			elseif value == "use" then
+				local _
+			else
+				error("Invalid enumerator")
+			end
+			buffer.writeu8(outgoing_buff, bool_44_pos_1, bool_44)
+			local buff = buffer.create(outgoing_used)
+			buffer.copy(buff, 0, outgoing_buff, 0, outgoing_used)
+			unreliable[1]:FireServer(buff, outgoing_inst)
+			load(saved)
+		end,
+	},
+	mine_stop = {
+		fire = function(value: (number))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 4)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+		end,
+	},
+	mine_progress = {
+		set_callback = function(callback: (cube: ((Part)?), time_fraction: (number)) -> ()): () -> ()
+			reliable_events[2] = callback
+			for _, value in reliable_event_queue[2] do
+				callback(unpack(value)				)
+
+			end
+			reliable_event_queue[2] = {}
+			return function()
+				reliable_events[2] = nil
+			end
+		end,
+	},
+	mine_finished = {
+		set_callback = function(callback: (value: (number)) -> ()): () -> ()
+			reliable_events[0] = callback
+			for _, value in reliable_event_queue[0] do
+				callback(value				)
+
+			end
+			reliable_event_queue[0] = {}
+			return function()
+				reliable_events[0] = nil
+			end
+		end,
+	},
+	mine_failed = {
+		set_callback = function(callback: (value: (number)) -> ()): () -> ()
+			reliable_events[1] = callback
+			for _, value in reliable_event_queue[1] do
+				callback(value				)
+
+			end
+			reliable_event_queue[1] = {}
+			return function()
+				reliable_events[1] = nil
+			end
+		end,
+	},
+	mine_cube = {
+		fire = function(mining_id: (number), cube: ((Part)?), origin: (Vector3), direction: (Vector3))
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 3)
+			local bool_45 = 0
+			local bool_45_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, mining_id)
+			if cube ~= nil then
+				bool_45 = bit32.bor(bool_45, 0b0000000000000001)
+				assert(cube:IsA("Part"), "received instance is not of the Part class!")
+				table.insert(outgoing_inst, cube)
+			end
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, origin.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, origin.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, origin.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, direction.Z)
+			buffer.writeu8(outgoing_buff, bool_45_pos_1, bool_45)
+		end,
+	},
 	melee_swing = {
 		fire = function(value: ({
 			["origin"]: (Vector3),
@@ -187,23 +2210,668 @@ local returns = {
 			buffer.writef32(outgoing_buff, outgoing_apos, value["direction"].Y)
 			alloc(4)
 			buffer.writef32(outgoing_buff, outgoing_apos, value["direction"].Z)
-			local len_1 = #value["render_times"]
-			assert(len_1 <= 32, "value is more than 32!")
+			local len_85 = #value["render_times"]
+			assert(len_85 <= 32, "value is more than 32!")
 			alloc(1)
-			buffer.writeu8(outgoing_buff, outgoing_apos, len_1)
-			for i_1 = 1, len_1 do
-				local bool_1 = 0
-				local bool_1_pos_1 = alloc(1)
-				local val_1 = value["render_times"][i_1]
-				if val_1["player"] ~= nil then
-					bool_1 = bit32.bor(bool_1, 0b0000000000000001)
-					assert(val_1["player"]:IsA("Player"), "received instance is not of the Player class!")
-					table.insert(outgoing_inst, val_1["player"])
+			buffer.writeu8(outgoing_buff, outgoing_apos, len_85)
+			for i_17 = 1, len_85 do
+				local bool_46 = 0
+				local bool_46_pos_1 = alloc(1)
+				local val_22 = value["render_times"][i_17]
+				if val_22["player"] ~= nil then
+					bool_46 = bit32.bor(bool_46, 0b0000000000000001)
+					assert(val_22["player"]:IsA("Player"), "received instance is not of the Player class!")
+					table.insert(outgoing_inst, val_22["player"])
 				end
 				alloc(8)
-				buffer.writef64(outgoing_buff, outgoing_apos, val_1["time"])
-				buffer.writeu8(outgoing_buff, bool_1_pos_1, bool_1)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_22["time"])
+				buffer.writeu8(outgoing_buff, bool_46_pos_1, bool_46)
 			end
+		end,
+	},
+	map_name = {
+		on = function(callback: (value: (string)) -> ())
+			table.insert(reliable_events[6], callback)
+			for _, value in reliable_event_queue[6] do
+				callback(value				)
+
+			end
+			reliable_event_queue[6] = {}
+			return function()
+				table.remove(reliable_events[6], table.find(reliable_events[6], callback))
+			end
+		end,
+	},
+	leave_queue = {
+		call = function(): ((boolean))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[22][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 16)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			reliable_event_queue[22][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	leave_guild = {
+		call = function(): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[28][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 22)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			reliable_event_queue[28][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	knockback = {
+		set_callback = function(callback: (knockback_vector: (Vector3), strength_x: (number), strength_y: (number)) -> ()): () -> ()
+			unreliable_events[0] = callback
+			for _, value in unreliable_event_queue[0] do
+				callback(unpack(value)				)
+
+			end
+			unreliable_event_queue[0] = {}
+			return function()
+				unreliable_events[0] = nil
+			end
+		end,
+	},
+	kills = {
+		on = function(callback: (value: (number)) -> ())
+			table.insert(reliable_events[7], callback)
+			for _, value in reliable_event_queue[7] do
+				callback(value				)
+
+			end
+			reliable_event_queue[7] = {}
+			return function()
+				table.remove(reliable_events[7], table.find(reliable_events[7], callback))
+			end
+		end,
+	},
+	kick_guild_member = {
+		call = function(value: (number)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[31][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 25)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(8)
+			buffer.writef64(outgoing_buff, outgoing_apos, value)
+			reliable_event_queue[31][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	join_queue = {
+		call = function(value: (string)): ((boolean))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[21][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 15)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local len_86 = #value
+			assert(len_86 <= 128, "value is more than 128!")
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, len_86)
+			alloc(len_86)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_86)
+			reliable_event_queue[21][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	invite_to_guild = {
+		call = function(value: (number)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[29][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 23)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(8)
+			buffer.writef64(outgoing_buff, outgoing_apos, value)
+			reliable_event_queue[29][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	incoming_guild_invites = {
+		set_callback = function(callback: (value: ({ ({
+			["guild_id"]: (string),
+			["guild_name"]: (string),
+			["guild_tag"]: (string),
+			["guild_icon"]: (string),
+			["guild_banner"]: (string),
+			["member_count"]: (number),
+			["inviter_id"]: (number),
+			["invited_at"]: (number),
+		}) })) -> ()): () -> ()
+			reliable_events[17] = callback
+			for _, value in reliable_event_queue[17] do
+				callback(value				)
+
+			end
+			reliable_event_queue[17] = {}
+			return function()
+				reliable_events[17] = nil
+			end
+		end,
+	},
+	guild_state = {
+		set_callback = function(callback: (value: (({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?)) -> ()): () -> ()
+			reliable_events[16] = callback
+			for _, value in reliable_event_queue[16] do
+				callback(value				)
+
+			end
+			reliable_event_queue[16] = {}
+			return function()
+				reliable_events[16] = nil
+			end
+		end,
+	},
+	game_is_active = {
+		set_callback = function(callback: (value: (boolean)) -> ()): () -> ()
+			reliable_events[5] = callback
+			for _, value in reliable_event_queue[5] do
+				callback(value				)
+
+			end
+			reliable_event_queue[5] = {}
+			return function()
+				reliable_events[5] = nil
+			end
+		end,
+	},
+	fetch_player_profile = {
+		call = function(value: (number)): ((({
+			["user_id"]: (number),
+			["first_joined"]: (number),
+			["last_online"]: (number),
+			["banner"]: (string),
+			["bio"]: (string),
+			["playtime"]: (number),
+			["stats"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+			["guild"]: (({
+				["id"]: (string),
+				["name"]: (string),
+				["tag"]: (string),
+			})?),
+		})?))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[38][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 32)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(8)
+			buffer.writef64(outgoing_buff, outgoing_apos, value)
+			reliable_event_queue[38][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	fetch_guild_info = {
+		call = function(value: (string)): ((({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[37][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 31)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local len_87 = #value
+			assert(len_87 >= 36, "value is less than 36!")
+			assert(len_87 <= 144, "value is more than 144!")
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, len_87 - 36)
+			alloc(len_87)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_87)
+			reliable_event_queue[37][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	edit_player_bio = {
+		call = function(value: (string)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[39][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 33)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local len_88 = #value
+			assert(len_88 <= 8000, "value is more than 8000!")
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_88)
+			alloc(len_88)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_88)
+			reliable_event_queue[39][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	edit_guild_info = {
+		call = function(value: ({
+			["name"]: ((string)?),
+			["tag"]: ((string)?),
+			["description"]: ((string)?),
+			["icon"]: ((string)?),
+			["banner"]: ((string)?),
+			["discord_invite"]: ((string)?),
+		})): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[25][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 19)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local bool_47 = 0
+			local bool_47_pos_1 = alloc(1)
+			if value["name"] ~= nil then
+				bool_47 = bit32.bor(bool_47, 0b0000000000000001)
+				local len_89 = #value["name"]
+				assert(len_89 <= 40000, "value is more than 40000!")
+				assert(utf8.len(value["name"]) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_89)
+				alloc(len_89)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["name"], len_89)
+			end
+			if value["tag"] ~= nil then
+				bool_47 = bit32.bor(bool_47, 0b0000000000000010)
+				local len_90 = #value["tag"]
+				assert(len_90 <= 40000, "value is more than 40000!")
+				assert(utf8.len(value["tag"]) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_90)
+				alloc(len_90)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["tag"], len_90)
+			end
+			if value["description"] ~= nil then
+				bool_47 = bit32.bor(bool_47, 0b0000000000000100)
+				local len_91 = #value["description"]
+				assert(len_91 <= 40000, "value is more than 40000!")
+				assert(utf8.len(value["description"]) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_91)
+				alloc(len_91)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["description"], len_91)
+			end
+			if value["icon"] ~= nil then
+				bool_47 = bit32.bor(bool_47, 0b0000000000001000)
+				local len_92 = #value["icon"]
+				assert(len_92 <= 40000, "value is more than 40000!")
+				assert(utf8.len(value["icon"]) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_92)
+				alloc(len_92)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["icon"], len_92)
+			end
+			if value["banner"] ~= nil then
+				bool_47 = bit32.bor(bool_47, 0b0000000000010000)
+				local len_93 = #value["banner"]
+				assert(len_93 <= 40000, "value is more than 40000!")
+				assert(utf8.len(value["banner"]) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_93)
+				alloc(len_93)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["banner"], len_93)
+			end
+			if value["discord_invite"] ~= nil then
+				bool_47 = bit32.bor(bool_47, 0b0000000000100000)
+				local len_94 = #value["discord_invite"]
+				assert(len_94 <= 40000, "value is more than 40000!")
+				assert(utf8.len(value["discord_invite"]) ~= nil, "value is not valid utf-8")
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_94)
+				alloc(len_94)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["discord_invite"], len_94)
+			end
+			buffer.writeu8(outgoing_buff, bool_47_pos_1, bool_47)
+			reliable_event_queue[25][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	delete_guild = {
+		call = function(): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[26][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 20)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			reliable_event_queue[26][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	decline_guild_invite = {
+		call = function(value: (string)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[35][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 29)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local len_95 = #value
+			assert(len_95 >= 36, "value is less than 36!")
+			assert(len_95 <= 144, "value is more than 144!")
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, len_95 - 36)
+			alloc(len_95)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_95)
+			reliable_event_queue[35][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	debug_server = {
+		fire = function()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 12)
+		end,
+	},
+	create_guild = {
+		call = function(value: ({
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+		})): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[24][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 18)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local len_96 = #value["name"]
+			assert(len_96 <= 40000, "value is more than 40000!")
+			assert(utf8.len(value["name"]) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_96)
+			alloc(len_96)
+			buffer.writestring(outgoing_buff, outgoing_apos, value["name"], len_96)
+			local len_97 = #value["tag"]
+			assert(len_97 <= 40000, "value is more than 40000!")
+			assert(utf8.len(value["tag"]) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_97)
+			alloc(len_97)
+			buffer.writestring(outgoing_buff, outgoing_apos, value["tag"], len_97)
+			local len_98 = #value["description"]
+			assert(len_98 <= 40000, "value is more than 40000!")
+			assert(utf8.len(value["description"]) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_98)
+			alloc(len_98)
+			buffer.writestring(outgoing_buff, outgoing_apos, value["description"], len_98)
+			local len_99 = #value["icon"]
+			assert(len_99 <= 40000, "value is more than 40000!")
+			assert(utf8.len(value["icon"]) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_99)
+			alloc(len_99)
+			buffer.writestring(outgoing_buff, outgoing_apos, value["icon"], len_99)
+			local len_100 = #value["banner"]
+			assert(len_100 <= 40000, "value is more than 40000!")
+			assert(utf8.len(value["banner"]) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_100)
+			alloc(len_100)
+			buffer.writestring(outgoing_buff, outgoing_apos, value["banner"], len_100)
+			local len_101 = #value["discord_invite"]
+			assert(len_101 <= 40000, "value is more than 40000!")
+			assert(utf8.len(value["discord_invite"]) ~= nil, "value is not valid utf-8")
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_101)
+			alloc(len_101)
+			buffer.writestring(outgoing_buff, outgoing_apos, value["discord_invite"], len_101)
+			reliable_event_queue[24][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	cancel_guild_invite = {
+		call = function(value: (number)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[30][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 24)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(8)
+			buffer.writef64(outgoing_buff, outgoing_apos, value)
+			reliable_event_queue[30][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	ban_guild_member = {
+		call = function(value: (number)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[32][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 26)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			alloc(8)
+			buffer.writef64(outgoing_buff, outgoing_apos, value)
+			reliable_event_queue[32][function_call_id] = coroutine.running()
+			return coroutine.yield()
+		end,
+	},
+	accept_guild_invite = {
+		call = function(value: (string)): (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))
+			function_call_id += 1
+			function_call_id %= 256
+			if reliable_event_queue[34][function_call_id] then
+				function_call_id -= 1
+				error("Zap has more than 256 calls awaiting a response, and therefore this packet has been dropped")
+			end
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 28)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, function_call_id)
+			local len_102 = #value
+			assert(len_102 >= 36, "value is less than 36!")
+			assert(len_102 <= 144, "value is more than 144!")
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, len_102 - 36)
+			alloc(len_102)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_102)
+			reliable_event_queue[34][function_call_id] = coroutine.running()
+			return coroutine.yield()
 		end,
 	},
 }

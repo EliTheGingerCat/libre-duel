@@ -1,22 +1,16 @@
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
-const mine_cube = require(script.Parent.mine_cube)
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
+const mine_cube = require(script.Parent.mine_cube)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
-const function on_start(player: Player, id: unknown, cube: unknown, origin: unknown, direction: unknown): ()
+const function on_start(player: Player, id: number, cube: Part?, origin: Vector3, direction: Vector3): ()
 	const started = inventory_util.has_behaviour(player, "pickaxe")
 		and mine_cube.start(player, id, cube, origin, direction)
-	if not started and type(id) == "number" then
-		ReplicatedStorage.remotes.mine_failed:FireClient(player, id)
+	if not started then
+		zap_server_network.mine_failed.fire(player, id)
 	end
 end
 
-const function on_stop(player: Player, id: unknown): ()
-	if type(id) == "number" then
-		mine_cube.stop(player, id)
-	end
-end
-
-ReplicatedStorage.remotes.mine_cube.OnServerEvent:Connect(on_start)
-ReplicatedStorage.remotes.mine_stop.OnServerEvent:Connect(on_stop)
+zap_server_network.mine_cube.set_callback(on_start)
+zap_server_network.mine_stop.set_callback(mine_cube.stop)

@@ -1,22 +1,16 @@
 const Players = game:GetService("Players")
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const pending_large_notifications = require(script.Parent.pending_large_notifications)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
-const respond_to_large_notification = ReplicatedStorage.remotes.respond_to_large_notification
-
-const function is_valid_button_index(button_index: unknown, button_count: number): boolean
-	return type(button_index) == "number"
-		and button_index % 1 == 0
-		and button_index >= 1
-		and button_index <= button_count
+-- zap guarantees a whole number, only the range is left to check
+const function is_valid_button_index(button_index: number?, button_count: number): boolean
+	return button_index ~= nil and button_index >= 1 and button_index <= button_count
 end
 
 -- button_index is nil when the player closed the notification without pressing a button
-const function on_response(player: Player, id: unknown, button_index: unknown): ()
-	if type(id) ~= "number" then
-		return
-	end
+const function on_response(player: Player, id: number, button_index: number?): ()
 	const pending_large_notification = pending_large_notifications[id]
 	if pending_large_notification == nil or pending_large_notification.player ~= player then
 		return
@@ -39,5 +33,5 @@ const function on_player_removing(player: Player): ()
 	end
 end
 
-respond_to_large_notification.OnServerEvent:Connect(on_response)
+zap_server_network.respond_to_large_notification.set_callback(on_response)
 Players.PlayerRemoving:Connect(on_player_removing)

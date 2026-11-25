@@ -1,14 +1,12 @@
 -- lets one player look into and rearrange the inventory of another
 -- a session can only be started from the server, so having one is the permission check
 
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
-const inventory_types = require(ReplicatedStorage.shared.inventory.inventory_types)
+const encode_network_inventory = require(ServerScriptService.inventory.encode_network_inventory)
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
 const invsee_sessions = require(script.Parent.invsee_sessions)
-
-const invsee = ReplicatedStorage.remotes.invsee
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 local invsee_util = {}
 
@@ -18,12 +16,11 @@ function invsee_util.send(viewer: Player, id: number?): ()
 	if target == nil then
 		return
 	end
-	const update: inventory_types.invsee_update = {
+	zap_server_network.update_invsee.fire(viewer, {
 		target = target,
-		inventory = inventory_util.get_inventory(target),
+		inventory = encode_network_inventory(inventory_util.get_inventory(target)),
 		id = id,
-	}
-	invsee:FireClient(viewer, update)
+	})
 end
 
 function invsee_util.get_target(viewer: Player): Player?
@@ -43,8 +40,7 @@ function invsee_util.stop(viewer: Player): ()
 	invsee_sessions[viewer] = nil
 	-- players who left can't be fired to
 	if viewer.Parent ~= nil then
-		const update: inventory_types.invsee_update = {}
-		invsee:FireClient(viewer, update)
+		zap_server_network.update_invsee.fire(viewer, {})
 	end
 end
 

@@ -1,9 +1,9 @@
 const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
 
 const large_notification_types = require(ReplicatedStorage.shared.large_notification.large_notification_types)
 const pending_large_notifications = require(script.Parent.pending_large_notifications)
-
-const send_large_notification_remote = ReplicatedStorage.remotes.send_large_notification
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 local current_id = 0
 
@@ -20,7 +20,7 @@ const function send_large_notification(
 		button_count = if params.buttons then #params.buttons else 0,
 		on_button_pressed = on_button_pressed,
 	}
-	send_large_notification_remote:FireClient(player, current_id, params)
+	zap_server_network.send_large_notification.fire(player, current_id, params)
 end
 
 return send_large_notification

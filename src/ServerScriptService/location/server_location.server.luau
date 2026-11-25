@@ -1,7 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
 const IATA_AIRPORT_CODES = require(script.Parent.IATA_AIRPORT_CODES)
 const LOCATION_DEFAULT = require(ReplicatedStorage.shared.ui.LOCATION_DEFAULT)
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 local location = LOCATION_DEFAULT
 
@@ -23,8 +25,8 @@ else
 	}
 end
 
-const function on_invoke(): LOCATION_DEFAULT.location
+const function on_invoke(_player: Player): LOCATION_DEFAULT.location
 	return location
 end
 
-ReplicatedStorage.remotes.server_location.OnServerInvoke = on_invoke
+zap_server_network.server_location.set_callback(on_invoke)

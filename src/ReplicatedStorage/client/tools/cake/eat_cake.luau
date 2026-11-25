@@ -3,13 +3,12 @@ const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const TOOL_USE_WALKSPEED_MODIFIER = require(ReplicatedStorage.client.tools.TOOL_USE_WALKSPEED_MODIFIER)
 const cake_state = require(script.Parent.cake_state)
 const walkspeed = require(ReplicatedStorage.client.util.walkspeed)
-
-const set_cake_state = ReplicatedStorage.remotes.set_cake_state
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 const function start_eating(): ()
 	cake_state.eating = true
 	walkspeed.set_modifier("cake", TOOL_USE_WALKSPEED_MODIFIER)
-	local finished = set_cake_state:InvokeServer(true)
+	local finished = zap_client_network.set_cake_state.call(true)
 	if finished then
 		cake_state.eating = false
 		walkspeed.set_modifier("cake", nil)
@@ -25,7 +24,7 @@ const function stop_eating(): ()
 	if cake_state.eating then
 		cake_state.eating = false
 		walkspeed.set_modifier("cake", nil)
-		set_cake_state:InvokeServer(false)
+		zap_client_network.set_cake_state.call(false)
 	end
 end
 

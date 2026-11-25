@@ -6,6 +6,7 @@ const FONTS = require(ReplicatedStorage.shared.ui.FONTS)
 local React = require(ReplicatedStorage.Packages.react)
 local fade = require(script.Parent.Parent.effects.fade)
 local shadow = require(script.Parent.Parent.components.decoration.shadow)
+const zap_client_network = require(ReplicatedStorage.client.network.zap_client_network)
 
 local create_element = React.createElement
 
@@ -136,10 +137,10 @@ const function title()
 			animation = task.spawn(animate)
 		end
 
-		local connection = ReplicatedStorage.remotes.show_title.OnClientEvent:Connect(on_title)
+		const disconnect_title = zap_client_network.show_title.on(on_title)
 
 		const function disconnect(): ()
-			connection:Disconnect()
+			disconnect_title()
 			cancel_animation()
 		end
 

@@ -1,10 +1,9 @@
 const Players = game:GetService("Players")
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
+const ServerScriptService = game:GetService("ServerScriptService")
+
 const blocking_entities = require(script.Parent.blocking_entities)
 const inventory_util = require(script.Parent.Parent.inventory.inventory_util)
-
--- suffixing _remote as to not confuse roblo
-const update_blocking_remote = ReplicatedStorage.remotes.update_blocking
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 const function update_blocking(player: Player, to: boolean): ()
 	if to == false then
@@ -31,4 +30,4 @@ end
 Players.PlayerAdded:Connect(player_added)
 Players.PlayerRemoving:Connect(player_removing)
 
-update_blocking_remote.OnServerInvoke = update_blocking
+zap_server_network.update_blocking.set_callback(update_blocking)

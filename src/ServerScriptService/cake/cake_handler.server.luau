@@ -1,11 +1,10 @@
 const Players = game:GetService("Players")
-const ReplicatedStorage = game:GetService("ReplicatedStorage")
 const ServerScriptService = game:GetService("ServerScriptService")
 
 const CAKE_EATING_DURATION = require(script.Parent.CAKE_EATING_DURATION)
+const create_protected_remote_handler = require(ServerScriptService.remotes.create_protected_remote_handler)
 const inventory_util = require(ServerScriptService.inventory.inventory_util)
-
-const set_cake_state = ReplicatedStorage.remotes.set_cake_state
+const zap_server_network = require(ServerScriptService.network.zap_server_network)
 
 type eating_timestamps = { [Player]: { time: number, thread: thread? } }
 local eating_timestamps: eating_timestamps = {}
@@ -53,7 +52,7 @@ const function stop_eating(player: Player): ()
 	eating_timestamps[player] = nil
 end
 
-const function on_set_cake_state(player: Player, new_state: unknown): boolean
+const function on_set_cake_state(player: Player, new_state: boolean): boolean
 	stop_eating(player)
 
 	if new_state == true then
@@ -88,4 +87,6 @@ const function on_set_cake_state(player: Player, new_state: unknown): boolean
 end
 
 Players.PlayerRemoving:Connect(stop_eating)
-set_cake_state.OnServerInvoke = on_set_cake_state
+zap_server_network.set_cake_state.set_callback(
+	create_protected_remote_handler("set_cake_state", false, on_set_cake_state)
+)

@@ -134,7 +134,255 @@ if not RunService:IsRunning() then
 	local noop = function() end
 	return table.freeze({
 		send_events = noop,
+		update_invsee = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		update_inventory = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		update_blocking = table.freeze({
+			set_callback = noop
+		}),
+		unban_guild_member = table.freeze({
+			set_callback = noop
+		}),
+		stop_invsee = table.freeze({
+			set_callback = noop
+		}),
+		show_title = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		shoot_bow = table.freeze({
+			set_callback = noop
+		}),
+		set_cake_state = table.freeze({
+			set_callback = noop
+		}),
+		server_location = table.freeze({
+			set_callback = noop
+		}),
+		send_popup = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		send_notification = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		send_large_notification = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		select_slot = table.freeze({
+			set_callback = noop
+		}),
+		search_guild_invite_candidate = table.freeze({
+			set_callback = noop
+		}),
+		score_team = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		score_self = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		respond_to_popup = table.freeze({
+			set_callback = noop
+		}),
+		respond_to_large_notification = table.freeze({
+			set_callback = noop
+		}),
+		request_player_banner_change = table.freeze({
+			set_callback = noop
+		}),
+		request_invsee_action = table.freeze({
+			set_callback = noop
+		}),
+		request_inventory_action = table.freeze({
+			set_callback = noop
+		}),
+		request_guild_image_change = table.freeze({
+			set_callback = noop
+		}),
+		report_player = table.freeze({
+			set_callback = noop
+		}),
+		pong = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		player_profile_changed = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		play_sound = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		place_cube = table.freeze({
+			set_callback = noop
+		}),
+		ping = table.freeze({
+			set_callback = noop
+		}),
+		mouse_click = table.freeze({
+			set_callback = noop
+		}),
+		mine_stop = table.freeze({
+			set_callback = noop
+		}),
+		mine_progress = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		mine_finished = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		mine_failed = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		mine_cube = table.freeze({
+			set_callback = noop
+		}),
 		melee_swing = table.freeze({
+			set_callback = noop
+		}),
+		map_name = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		leave_queue = table.freeze({
+			set_callback = noop
+		}),
+		leave_guild = table.freeze({
+			set_callback = noop
+		}),
+		knockback = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		kills = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		kick_guild_member = table.freeze({
+			set_callback = noop
+		}),
+		join_queue = table.freeze({
+			set_callback = noop
+		}),
+		invite_to_guild = table.freeze({
+			set_callback = noop
+		}),
+		incoming_guild_invites = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		guild_state = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		game_is_active = table.freeze({
+			fire = noop,
+			fire_all = noop,
+			fire_except = noop,
+			fire_list = noop,
+			fire_set = noop
+		}),
+		fetch_player_profile = table.freeze({
+			set_callback = noop
+		}),
+		fetch_guild_info = table.freeze({
+			set_callback = noop
+		}),
+		edit_player_bio = table.freeze({
+			set_callback = noop
+		}),
+		edit_guild_info = table.freeze({
+			set_callback = noop
+		}),
+		delete_guild = table.freeze({
+			set_callback = noop
+		}),
+		decline_guild_invite = table.freeze({
+			set_callback = noop
+		}),
+		debug_server = table.freeze({
+			set_callback = noop
+		}),
+		create_guild = table.freeze({
+			set_callback = noop
+		}),
+		cancel_guild_invite = table.freeze({
+			set_callback = noop
+		}),
+		ban_guild_member = table.freeze({
+			set_callback = noop
+		}),
+		accept_guild_invite = table.freeze({
 			set_callback = noop
 		}),
 	}) :: Events
@@ -154,6 +402,20 @@ if reliable == nil then
 	reliable.Parent = remotes
 end
 
+local function getOrCreateUnreliableRemote(name: string): UnreliableRemoteEvent
+	local remote = remotes:FindFirstChild(name)
+
+	if remote == nil then
+		remote = Instance.new("UnreliableRemoteEvent")
+		remote.Name = name
+		remote.Parent = remotes
+	end
+
+	return remote
+end
+
+local unreliable = { getOrCreateUnreliableRemote("LIBRE_DUEL_UNRELIABLE_0") }
+assert(unreliable[1]:IsA("UnreliableRemoteEvent"), "Expected LIBRE_DUEL_UNRELIABLE_0 to be an UnreliableRemoteEvent")
 local player_map = {}
 
 local function load_player(player: Player)
@@ -167,6 +429,101 @@ end
 Players.PlayerRemoving:Connect(function(player)
 	player_map[player] = nil
 end)
+export type mode_stats = ({
+	["wins"]: (number),
+	["goals"]: (number),
+	["kills"]: (number),
+	["losses"]: (number),
+	["deaths"]: (number),
+})
+export type action_result = ({
+	["ok"]: (boolean),
+	["error"]: ((string)?),
+})
+export type inventory_action = ("swap_items" | "move_item" | "quick_move")
+export type guild_info_input = ({
+	["name"]: (string),
+	["tag"]: (string),
+	["description"]: (string),
+	["icon"]: (string),
+	["banner"]: (string),
+	["discord_invite"]: (string),
+})
+export type guild_info_changes = ({
+	["name"]: ((string)?),
+	["tag"]: ((string)?),
+	["description"]: ((string)?),
+	["icon"]: ((string)?),
+	["banner"]: ((string)?),
+	["discord_invite"]: ((string)?),
+})
+export type network_inventory = ({ ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
+}) })
+export type rank_point = ({
+	["time"]: (number),
+	["rank"]: (number),
+})
+export type user_id = (number)
+export type network_inventory_slot = ({
+	["kind"]: "empty",
+} | {
+	["kind"]: "item",
+	["item_id"]: (string),
+	["amount"]: (number),
+	["data"]: ((unknown)),
+})
+export type guild_snapshot = ({
+	["id"]: (string),
+	["owner_id"]: (number),
+	["created"]: (number),
+	["name"]: (string),
+	["tag"]: (string),
+	["description"]: (string),
+	["icon"]: (string),
+	["banner"]: (string),
+	["discord_invite"]: (string),
+	["members"]: ({ ({
+		["user_id"]: (number),
+		["joined"]: (number),
+		["banner"]: (string),
+		["playtime"]: (number),
+		["stats"]: ({ [(string)]: ({
+			["wins"]: (number),
+			["goals"]: (number),
+			["kills"]: (number),
+			["losses"]: (number),
+			["deaths"]: (number),
+		}) }),
+	}) }),
+	["banned"]: ({ ({
+		["user_id"]: (number),
+		["banned_at"]: (number),
+	}) }),
+	["outgoing_invites"]: ({ ({
+		["user_id"]: (number),
+		["invited_at"]: (number),
+	}) }),
+	["totals"]: ({ [(string)]: ({
+		["wins"]: (number),
+		["goals"]: (number),
+		["kills"]: (number),
+		["losses"]: (number),
+		["deaths"]: (number),
+	}) }),
+	["total_playtime"]: (number),
+	["rank"]: ((number)?),
+	["rank_history"]: ({ ({
+		["time"]: (number),
+		["rank"]: (number),
+	}) }),
+})
+export type guild_id = (string)
 
 local function send_events()
 	for player, outgoing in player_map do
@@ -186,7 +543,8 @@ end
 
 RunService.Heartbeat:Connect(send_events)
 
-local reliable_events = table.create(1)
+local reliable_events = table.create(36)
+local unreliable_events = table.create(1)
 reliable.OnServerEvent:Connect(function(player, buff, inst)
 	incoming_buff = buff
 	incoming_inst = inst
@@ -195,34 +553,1153 @@ reliable.OnServerEvent:Connect(function(player, buff, inst)
 	local len = buffer.len(buff)
 	while incoming_read < len do
 		local id = buffer.readu8(buff, read(1))
-		if id == 0 then -- melee_swing
+		if id == 2 then -- update_blocking
+			local value
+			local bool_1 = buffer.readu8(incoming_buff, read(1))
+			value = bit32.btest(bool_1, 0b0000000000000001)
+			if reliable_events[2] then
+				task.spawn(reliable_events[2], player, value)
+			end
+		elseif id == 8 then -- stop_invsee
+			local value
+			if reliable_events[8] then
+				task.spawn(reliable_events[8], player, value)
+			end
+		elseif id == 1 then -- shoot_bow
+			local value, value2
+			value = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
+			value2 = buffer.readf32(incoming_buff, read(4))
+			if reliable_events[1] then
+				task.spawn(reliable_events[1], player, value, value2)
+			end
+		elseif id == 5 then -- select_slot
+			local value
+			value = buffer.readu8(incoming_buff, read(1))
+			if reliable_events[5] then
+				task.spawn(reliable_events[5], player, value)
+			end
+		elseif id == 9 then -- respond_to_popup
+			local value, value2, value3
+			local bool_2 = buffer.readu8(incoming_buff, read(1))
+			value = buffer.readu32(incoming_buff, read(4))
+			if bit32.btest(bool_2, 0b0000000000000001) then
+				value2 = buffer.readu8(incoming_buff, read(1))
+			else
+				value2 = nil
+			end
+			value3 = {  }
+			if not bit32.btest(bool_2, 0b0000000000000010) then
+				for _ = 1, buffer.readu16(incoming_buff, read(2)) + 1 do
+					local key_1
+					local val_1
+					local len_1 = buffer.readu16(incoming_buff, read(2))
+					assert(len_1 <= 800, "value is more than 800!")
+					key_1 = buffer.readstring(incoming_buff, read(len_1), len_1)
+					assert(utf8.len(key_1) ~= nil, "value is not valid utf-8")
+					local len_2 = buffer.readu16(incoming_buff, read(2))
+					assert(len_2 <= 800, "value is more than 800!")
+					val_1 = buffer.readstring(incoming_buff, read(len_2), len_2)
+					assert(utf8.len(val_1) ~= nil, "value is not valid utf-8")
+					value3[key_1] = val_1
+				end
+			end
+			if reliable_events[9] then
+				task.spawn(reliable_events[9], player, value, value2, value3)
+			end
+		elseif id == 10 then -- respond_to_large_notification
+			local value, value2
+			local bool_3 = buffer.readu8(incoming_buff, read(1))
+			value = buffer.readu32(incoming_buff, read(4))
+			if bit32.btest(bool_3, 0b0000000000000001) then
+				value2 = buffer.readu8(incoming_buff, read(1))
+			else
+				value2 = nil
+			end
+			if reliable_events[10] then
+				task.spawn(reliable_events[10], player, value, value2)
+			end
+		elseif id == 7 then -- request_invsee_action
+			local value
+			local bool_4 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			if bit32.btest(bool_4, 0b0000000000000001) then
+				value["action"] = "swap_items"
+			elseif bit32.btest(bool_4, 0b0000000000000010) then
+				value["action"] = "move_item"
+			elseif bit32.btest(bool_4, 0b0000000000000100) then
+				value["action"] = "quick_move"
+			end
+			if bit32.btest(bool_4, 0b0000000000001000) then
+				incoming_ipos = incoming_ipos + 1
+				value["target"] = incoming_inst[incoming_ipos]
+				assert(value["target"] == nil or value["target"]:IsA("Player"), "received instance is not of the Player class!")
+			else
+				value["target"] = nil
+			end
+			value["from"] = buffer.readu8(incoming_buff, read(1))
+			value["to"] = buffer.readu8(incoming_buff, read(1))
+			value["id"] = buffer.readu32(incoming_buff, read(4))
+			if reliable_events[7] then
+				task.spawn(reliable_events[7], player, value)
+			end
+		elseif id == 6 then -- request_inventory_action
+			local value
+			local bool_5 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			if bit32.btest(bool_5, 0b0000000000000001) then
+				value["action"] = "swap_items"
+			elseif bit32.btest(bool_5, 0b0000000000000010) then
+				value["action"] = "move_item"
+			elseif bit32.btest(bool_5, 0b0000000000000100) then
+				value["action"] = "quick_move"
+			end
+			value["from"] = buffer.readu8(incoming_buff, read(1))
+			value["to"] = buffer.readu8(incoming_buff, read(1))
+			value["id"] = buffer.readu32(incoming_buff, read(4))
+			if reliable_events[6] then
+				task.spawn(reliable_events[6], player, value)
+			end
+		elseif id == 11 then -- ping
+			local value
+			if reliable_events[11] then
+				task.spawn(reliable_events[11], player, value)
+			end
+		elseif id == 4 then -- mine_stop
+			local value
+			value = buffer.readu32(incoming_buff, read(4))
+			if reliable_events[4] then
+				task.spawn(reliable_events[4], player, value)
+			end
+		elseif id == 3 then -- mine_cube
+			local value, value2, value3, value4
+			local bool_6 = buffer.readu8(incoming_buff, read(1))
+			value = buffer.readu32(incoming_buff, read(4))
+			if bit32.btest(bool_6, 0b0000000000000001) then
+				incoming_ipos = incoming_ipos + 1
+				value2 = incoming_inst[incoming_ipos]
+				assert(value2 == nil or value2:IsA("Part"), "received instance is not of the Part class!")
+			else
+				value2 = nil
+			end
+			value3 = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
+			value4 = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
+			if reliable_events[3] then
+				task.spawn(reliable_events[3], player, value, value2, value3, value4)
+			end
+		elseif id == 0 then -- melee_swing
 			local value
 			value = {  }
 			value["origin"] = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
 			value["direction"] = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
-			local len_1 = buffer.readu8(incoming_buff, read(1))
-			assert(len_1 <= 32, "value is more than 32!")
-			value["render_times"] = table.create(len_1)
-			for i_1 = 1, len_1 do
-				local bool_1 = buffer.readu8(incoming_buff, read(1))
-				local val_1
-				val_1 = {  }
-				if bit32.btest(bool_1, 0b0000000000000001) then
+			local len_3 = buffer.readu8(incoming_buff, read(1))
+			assert(len_3 <= 32, "value is more than 32!")
+			value["render_times"] = table.create(len_3)
+			for i_1 = 1, len_3 do
+				local bool_7 = buffer.readu8(incoming_buff, read(1))
+				local val_2
+				val_2 = {  }
+				if bit32.btest(bool_7, 0b0000000000000001) then
 					incoming_ipos = incoming_ipos + 1
-					val_1["player"] = incoming_inst[incoming_ipos]
-					assert(val_1["player"] == nil or val_1["player"]:IsA("Player"), "received instance is not of the Player class!")
+					val_2["player"] = incoming_inst[incoming_ipos]
+					assert(val_2["player"] == nil or val_2["player"]:IsA("Player"), "received instance is not of the Player class!")
 				else
-					val_1["player"] = nil
+					val_2["player"] = nil
 				end
-				val_1["time"] = buffer.readf64(incoming_buff, read(8))
-				value["render_times"][i_1] = val_1
+				val_2["time"] = buffer.readf64(incoming_buff, read(8))
+				value["render_times"][i_1] = val_2
 			end
 			if reliable_events[0] then
 				reliable_events[0](player, value)
 			end
+		elseif id == 12 then -- debug_server
+			local value
+			if reliable_events[12] then
+				task.spawn(reliable_events[12], player, value)
+			end
+		elseif id == 27 then -- unban_guild_member
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = buffer.readf64(incoming_buff, read(8))
+			if reliable_events[27] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[27](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 33)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_8 = 0
+					local bool_8_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_8 = bit32.bor(bool_8, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_8 = bit32.bor(bool_8, 0b0000000000000010)
+						local len_4 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_4)
+						alloc(len_4)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_4)
+					end
+					buffer.writeu8(outgoing_buff, bool_8_pos_1, bool_8)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 13 then -- set_cake_state
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local bool_9 = buffer.readu8(incoming_buff, read(1))
+			value = bit32.btest(bool_9, 0b0000000000000001)
+			if reliable_events[13] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[13](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 19)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_10 = 0
+					local bool_10_pos_1 = alloc(1)
+					if ret_1 then
+						bool_10 = bit32.bor(bool_10, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_10_pos_1, bool_10)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 17 then -- server_location
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			if reliable_events[17] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[17](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 23)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_11 = 0
+					local bool_11_pos_1 = alloc(1)
+					if ret_1["status"] == "loading" then
+						bool_11 = bit32.bor(bool_11, 0b0000000000000001)
+					elseif ret_1["status"] == "fail" then
+						bool_11 = bit32.bor(bool_11, 0b0000000000000010)
+					elseif ret_1["status"] == "success" then
+						bool_11 = bit32.bor(bool_11, 0b0000000000000100)
+						local len_5 = #ret_1["result"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_5)
+						alloc(len_5)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["result"], len_5)
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_11_pos_1, bool_11)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 30 then -- search_guild_invite_candidate
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local len_6 = buffer.readu16(incoming_buff, read(2))
+			assert(len_6 <= 40000, "value is more than 40000!")
+			value = buffer.readstring(incoming_buff, read(len_6), len_6)
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			if reliable_events[30] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[30](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 36)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_12 = 0
+					local bool_12_pos_1 = alloc(1)
+					if ret_1 ~= nil then
+						bool_12 = bit32.bor(bool_12, 0b0000000000000001)
+						local len_7 = #ret_1
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_7)
+						for i_2 = 1, len_7 do
+							local val_3 = ret_1[i_2]
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_3["user_id"])
+							local len_8 = #val_3["username"]
+							alloc(2)
+							buffer.writeu16(outgoing_buff, outgoing_apos, len_8)
+							alloc(len_8)
+							buffer.writestring(outgoing_buff, outgoing_apos, val_3["username"], len_8)
+							local len_9 = #val_3["display_name"]
+							alloc(2)
+							buffer.writeu16(outgoing_buff, outgoing_apos, len_9)
+							alloc(len_9)
+							buffer.writestring(outgoing_buff, outgoing_apos, val_3["display_name"], len_9)
+						end
+					end
+					buffer.writeu8(outgoing_buff, bool_12_pos_1, bool_12)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 34 then -- request_player_banner_change
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			if reliable_events[34] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[34](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 40)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_13 = 0
+					local bool_13_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_13 = bit32.bor(bool_13, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_13 = bit32.bor(bool_13, 0b0000000000000010)
+						local len_10 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_10)
+						alloc(len_10)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_10)
+					end
+					buffer.writeu8(outgoing_buff, bool_13_pos_1, bool_13)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 21 then -- request_guild_image_change
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local bool_14 = buffer.readu8(incoming_buff, read(1))
+			if bit32.btest(bool_14, 0b0000000000000001) then
+				value = "icon"
+			else
+				value = "banner"
+			end
+			if reliable_events[21] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[21](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 27)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_15 = 0
+					local bool_15_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_15 = bit32.bor(bool_15, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_15 = bit32.bor(bool_15, 0b0000000000000010)
+						local len_11 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_11)
+						alloc(len_11)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_11)
+					end
+					buffer.writeu8(outgoing_buff, bool_15_pos_1, bool_15)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 35 then -- report_player
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = buffer.readf64(incoming_buff, read(8))
+			if reliable_events[35] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[35](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 41)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_16 = 0
+					local bool_16_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_16 = bit32.bor(bool_16, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_16 = bit32.bor(bool_16, 0b0000000000000010)
+						local len_12 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_12)
+						alloc(len_12)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_12)
+					end
+					buffer.writeu8(outgoing_buff, bool_16_pos_1, bool_16)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 14 then -- place_cube
+			local call_id = buffer.readu8(buff, read(1))
+			local value, value2
+			value = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
+			value2 = Vector3.new(buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)), buffer.readf32(incoming_buff, read(4)))
+			if reliable_events[14] then
+				task.spawn(function(player_2, call_id_2, value_1, value_2)
+					local ret_1 = reliable_events[14](player_2, value_1, value_2)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 20)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_17 = 0
+					local bool_17_pos_1 = alloc(1)
+					if ret_1 then
+						bool_17 = bit32.bor(bool_17, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_17_pos_1, bool_17)
+					player_map[player_2] = save()
+				end, player, call_id, value, value2)
+			end
+		elseif id == 16 then -- leave_queue
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			if reliable_events[16] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[16](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 22)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_18 = 0
+					local bool_18_pos_1 = alloc(1)
+					if ret_1 then
+						bool_18 = bit32.bor(bool_18, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_18_pos_1, bool_18)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 22 then -- leave_guild
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			if reliable_events[22] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[22](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 28)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_19 = 0
+					local bool_19_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_19 = bit32.bor(bool_19, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_19 = bit32.bor(bool_19, 0b0000000000000010)
+						local len_13 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_13)
+						alloc(len_13)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_13)
+					end
+					buffer.writeu8(outgoing_buff, bool_19_pos_1, bool_19)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 25 then -- kick_guild_member
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = buffer.readf64(incoming_buff, read(8))
+			if reliable_events[25] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[25](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 31)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_20 = 0
+					local bool_20_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_20 = bit32.bor(bool_20, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_20 = bit32.bor(bool_20, 0b0000000000000010)
+						local len_14 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_14)
+						alloc(len_14)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_14)
+					end
+					buffer.writeu8(outgoing_buff, bool_20_pos_1, bool_20)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 15 then -- join_queue
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local len_15 = buffer.readu8(incoming_buff, read(1))
+			assert(len_15 <= 128, "value is more than 128!")
+			value = buffer.readstring(incoming_buff, read(len_15), len_15)
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			if reliable_events[15] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[15](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 21)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_21 = 0
+					local bool_21_pos_1 = alloc(1)
+					if ret_1 then
+						bool_21 = bit32.bor(bool_21, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_21_pos_1, bool_21)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 23 then -- invite_to_guild
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = buffer.readf64(incoming_buff, read(8))
+			if reliable_events[23] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[23](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 29)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_22 = 0
+					local bool_22_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_22 = bit32.bor(bool_22, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_22 = bit32.bor(bool_22, 0b0000000000000010)
+						local len_16 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_16)
+						alloc(len_16)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_16)
+					end
+					buffer.writeu8(outgoing_buff, bool_22_pos_1, bool_22)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 32 then -- fetch_player_profile
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = buffer.readf64(incoming_buff, read(8))
+			if reliable_events[32] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[32](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 38)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_23 = 0
+					local bool_23_pos_1 = alloc(1)
+					if ret_1 ~= nil then
+						bool_23 = bit32.bor(bool_23, 0b0000000000000001)
+						alloc(8)
+						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["user_id"])
+						alloc(8)
+						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["first_joined"])
+						alloc(8)
+						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["last_online"])
+						local len_17 = #ret_1["banner"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_17)
+						alloc(len_17)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["banner"], len_17)
+						local len_18 = #ret_1["bio"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_18)
+						alloc(len_18)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["bio"], len_18)
+						alloc(8)
+						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["playtime"])
+						local len_pos_1
+						local len_19 = 0
+						for k_1, v_1 in ret_1["stats"] do
+							if len_19 == 0 then
+								len_pos_1 = alloc(2)
+							end
+							len_19 = len_19 + 1
+							local len_20 = #k_1
+							assert(len_20 <= 128, "value is more than 128!")
+							assert(utf8.len(k_1) ~= nil, "value is not valid utf-8")
+							alloc(1)
+							buffer.writeu8(outgoing_buff, outgoing_apos, len_20)
+							alloc(len_20)
+							buffer.writestring(outgoing_buff, outgoing_apos, k_1, len_20)
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_1["wins"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_1["goals"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_1["kills"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_1["losses"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_1["deaths"])
+						end
+						if len_pos_1 then
+							buffer.writeu16(outgoing_buff, len_pos_1, len_19 - 1)
+						else
+							bool_23 = bit32.bor(bool_23, 0b0000000000000010)
+						end
+						if ret_1["rank"] ~= nil then
+							bool_23 = bit32.bor(bool_23, 0b0000000000000100)
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, ret_1["rank"])
+						end
+						local len_21 = #ret_1["rank_history"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_21)
+						for i_3 = 1, len_21 do
+							local val_4 = ret_1["rank_history"][i_3]
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_4["time"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, val_4["rank"])
+						end
+						if ret_1["guild"] ~= nil then
+							bool_23 = bit32.bor(bool_23, 0b0000000000001000)
+							local len_22 = #ret_1["guild"]["id"]
+							alloc(2)
+							buffer.writeu16(outgoing_buff, outgoing_apos, len_22)
+							alloc(len_22)
+							buffer.writestring(outgoing_buff, outgoing_apos, ret_1["guild"]["id"], len_22)
+							local len_23 = #ret_1["guild"]["name"]
+							alloc(2)
+							buffer.writeu16(outgoing_buff, outgoing_apos, len_23)
+							alloc(len_23)
+							buffer.writestring(outgoing_buff, outgoing_apos, ret_1["guild"]["name"], len_23)
+							local len_24 = #ret_1["guild"]["tag"]
+							alloc(2)
+							buffer.writeu16(outgoing_buff, outgoing_apos, len_24)
+							alloc(len_24)
+							buffer.writestring(outgoing_buff, outgoing_apos, ret_1["guild"]["tag"], len_24)
+						end
+					end
+					buffer.writeu8(outgoing_buff, bool_23_pos_1, bool_23)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 31 then -- fetch_guild_info
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local len_25 = buffer.readu8(incoming_buff, read(1)) + 36
+			assert(len_25 >= 36, "value is less than 36!")
+			assert(len_25 <= 144, "value is more than 144!")
+			value = buffer.readstring(incoming_buff, read(len_25), len_25)
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			if reliable_events[31] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[31](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 37)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_24 = 0
+					local bool_24_pos_1 = alloc(1)
+					if ret_1 ~= nil then
+						bool_24 = bit32.bor(bool_24, 0b0000000000000001)
+						local len_26 = #ret_1["id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_26)
+						alloc(len_26)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["id"], len_26)
+						alloc(8)
+						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["owner_id"])
+						alloc(8)
+						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["created"])
+						local len_27 = #ret_1["name"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_27)
+						alloc(len_27)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["name"], len_27)
+						local len_28 = #ret_1["tag"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_28)
+						alloc(len_28)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["tag"], len_28)
+						local len_29 = #ret_1["description"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_29)
+						alloc(len_29)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["description"], len_29)
+						local len_30 = #ret_1["icon"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_30)
+						alloc(len_30)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["icon"], len_30)
+						local len_31 = #ret_1["banner"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_31)
+						alloc(len_31)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["banner"], len_31)
+						local len_32 = #ret_1["discord_invite"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_32)
+						alloc(len_32)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["discord_invite"], len_32)
+						local len_33 = #ret_1["members"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_33)
+						for i_4 = 1, len_33 do
+							local bool_25 = 0
+							local bool_25_pos_1 = alloc(1)
+							local val_5 = ret_1["members"][i_4]
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_5["user_id"])
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_5["joined"])
+							local len_34 = #val_5["banner"]
+							alloc(2)
+							buffer.writeu16(outgoing_buff, outgoing_apos, len_34)
+							alloc(len_34)
+							buffer.writestring(outgoing_buff, outgoing_apos, val_5["banner"], len_34)
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_5["playtime"])
+							local len_pos_2
+							local len_35 = 0
+							for k_2, v_2 in val_5["stats"] do
+								if len_35 == 0 then
+									len_pos_2 = alloc(2)
+								end
+								len_35 = len_35 + 1
+								local len_36 = #k_2
+								assert(len_36 <= 128, "value is more than 128!")
+								assert(utf8.len(k_2) ~= nil, "value is not valid utf-8")
+								alloc(1)
+								buffer.writeu8(outgoing_buff, outgoing_apos, len_36)
+								alloc(len_36)
+								buffer.writestring(outgoing_buff, outgoing_apos, k_2, len_36)
+								alloc(4)
+								buffer.writeu32(outgoing_buff, outgoing_apos, v_2["wins"])
+								alloc(4)
+								buffer.writeu32(outgoing_buff, outgoing_apos, v_2["goals"])
+								alloc(4)
+								buffer.writeu32(outgoing_buff, outgoing_apos, v_2["kills"])
+								alloc(4)
+								buffer.writeu32(outgoing_buff, outgoing_apos, v_2["losses"])
+								alloc(4)
+								buffer.writeu32(outgoing_buff, outgoing_apos, v_2["deaths"])
+							end
+							if len_pos_2 then
+								buffer.writeu16(outgoing_buff, len_pos_2, len_35 - 1)
+							else
+								bool_25 = bit32.bor(bool_25, 0b0000000000000001)
+							end
+							buffer.writeu8(outgoing_buff, bool_25_pos_1, bool_25)
+						end
+						local len_37 = #ret_1["banned"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_37)
+						for i_5 = 1, len_37 do
+							local val_6 = ret_1["banned"][i_5]
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_6["user_id"])
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_6["banned_at"])
+						end
+						local len_38 = #ret_1["outgoing_invites"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_38)
+						for i_6 = 1, len_38 do
+							local val_7 = ret_1["outgoing_invites"][i_6]
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_7["user_id"])
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_7["invited_at"])
+						end
+						local len_pos_3
+						local len_39 = 0
+						for k_3, v_3 in ret_1["totals"] do
+							if len_39 == 0 then
+								len_pos_3 = alloc(2)
+							end
+							len_39 = len_39 + 1
+							local len_40 = #k_3
+							assert(len_40 <= 128, "value is more than 128!")
+							assert(utf8.len(k_3) ~= nil, "value is not valid utf-8")
+							alloc(1)
+							buffer.writeu8(outgoing_buff, outgoing_apos, len_40)
+							alloc(len_40)
+							buffer.writestring(outgoing_buff, outgoing_apos, k_3, len_40)
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_3["wins"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_3["goals"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_3["kills"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_3["losses"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, v_3["deaths"])
+						end
+						if len_pos_3 then
+							buffer.writeu16(outgoing_buff, len_pos_3, len_39 - 1)
+						else
+							bool_24 = bit32.bor(bool_24, 0b0000000000000010)
+						end
+						alloc(8)
+						buffer.writef64(outgoing_buff, outgoing_apos, ret_1["total_playtime"])
+						if ret_1["rank"] ~= nil then
+							bool_24 = bit32.bor(bool_24, 0b0000000000000100)
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, ret_1["rank"])
+						end
+						local len_41 = #ret_1["rank_history"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_41)
+						for i_7 = 1, len_41 do
+							local val_8 = ret_1["rank_history"][i_7]
+							alloc(8)
+							buffer.writef64(outgoing_buff, outgoing_apos, val_8["time"])
+							alloc(4)
+							buffer.writeu32(outgoing_buff, outgoing_apos, val_8["rank"])
+						end
+					end
+					buffer.writeu8(outgoing_buff, bool_24_pos_1, bool_24)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 33 then -- edit_player_bio
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local len_42 = buffer.readu16(incoming_buff, read(2))
+			assert(len_42 <= 8000, "value is more than 8000!")
+			value = buffer.readstring(incoming_buff, read(len_42), len_42)
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			if reliable_events[33] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[33](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 39)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_26 = 0
+					local bool_26_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_26 = bit32.bor(bool_26, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_26 = bit32.bor(bool_26, 0b0000000000000010)
+						local len_43 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_43)
+						alloc(len_43)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_43)
+					end
+					buffer.writeu8(outgoing_buff, bool_26_pos_1, bool_26)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 19 then -- edit_guild_info
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local bool_27 = buffer.readu8(incoming_buff, read(1))
+			value = {  }
+			if bit32.btest(bool_27, 0b0000000000000001) then
+				local len_44 = buffer.readu16(incoming_buff, read(2))
+				assert(len_44 <= 40000, "value is more than 40000!")
+				value["name"] = buffer.readstring(incoming_buff, read(len_44), len_44)
+				assert(utf8.len(value["name"]) ~= nil, "value is not valid utf-8")
+			else
+				value["name"] = nil
+			end
+			if bit32.btest(bool_27, 0b0000000000000010) then
+				local len_45 = buffer.readu16(incoming_buff, read(2))
+				assert(len_45 <= 40000, "value is more than 40000!")
+				value["tag"] = buffer.readstring(incoming_buff, read(len_45), len_45)
+				assert(utf8.len(value["tag"]) ~= nil, "value is not valid utf-8")
+			else
+				value["tag"] = nil
+			end
+			if bit32.btest(bool_27, 0b0000000000000100) then
+				local len_46 = buffer.readu16(incoming_buff, read(2))
+				assert(len_46 <= 40000, "value is more than 40000!")
+				value["description"] = buffer.readstring(incoming_buff, read(len_46), len_46)
+				assert(utf8.len(value["description"]) ~= nil, "value is not valid utf-8")
+			else
+				value["description"] = nil
+			end
+			if bit32.btest(bool_27, 0b0000000000001000) then
+				local len_47 = buffer.readu16(incoming_buff, read(2))
+				assert(len_47 <= 40000, "value is more than 40000!")
+				value["icon"] = buffer.readstring(incoming_buff, read(len_47), len_47)
+				assert(utf8.len(value["icon"]) ~= nil, "value is not valid utf-8")
+			else
+				value["icon"] = nil
+			end
+			if bit32.btest(bool_27, 0b0000000000010000) then
+				local len_48 = buffer.readu16(incoming_buff, read(2))
+				assert(len_48 <= 40000, "value is more than 40000!")
+				value["banner"] = buffer.readstring(incoming_buff, read(len_48), len_48)
+				assert(utf8.len(value["banner"]) ~= nil, "value is not valid utf-8")
+			else
+				value["banner"] = nil
+			end
+			if bit32.btest(bool_27, 0b0000000000100000) then
+				local len_49 = buffer.readu16(incoming_buff, read(2))
+				assert(len_49 <= 40000, "value is more than 40000!")
+				value["discord_invite"] = buffer.readstring(incoming_buff, read(len_49), len_49)
+				assert(utf8.len(value["discord_invite"]) ~= nil, "value is not valid utf-8")
+			else
+				value["discord_invite"] = nil
+			end
+			if reliable_events[19] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[19](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 25)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_28 = 0
+					local bool_28_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_28 = bit32.bor(bool_28, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_28 = bit32.bor(bool_28, 0b0000000000000010)
+						local len_50 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_50)
+						alloc(len_50)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_50)
+					end
+					buffer.writeu8(outgoing_buff, bool_28_pos_1, bool_28)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 20 then -- delete_guild
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			if reliable_events[20] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[20](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 26)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_29 = 0
+					local bool_29_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_29 = bit32.bor(bool_29, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_29 = bit32.bor(bool_29, 0b0000000000000010)
+						local len_51 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_51)
+						alloc(len_51)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_51)
+					end
+					buffer.writeu8(outgoing_buff, bool_29_pos_1, bool_29)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 29 then -- decline_guild_invite
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local len_52 = buffer.readu8(incoming_buff, read(1)) + 36
+			assert(len_52 >= 36, "value is less than 36!")
+			assert(len_52 <= 144, "value is more than 144!")
+			value = buffer.readstring(incoming_buff, read(len_52), len_52)
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			if reliable_events[29] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[29](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 35)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_30 = 0
+					local bool_30_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_30 = bit32.bor(bool_30, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_30 = bit32.bor(bool_30, 0b0000000000000010)
+						local len_53 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_53)
+						alloc(len_53)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_53)
+					end
+					buffer.writeu8(outgoing_buff, bool_30_pos_1, bool_30)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 18 then -- create_guild
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = {  }
+			local len_54 = buffer.readu16(incoming_buff, read(2))
+			assert(len_54 <= 40000, "value is more than 40000!")
+			value["name"] = buffer.readstring(incoming_buff, read(len_54), len_54)
+			assert(utf8.len(value["name"]) ~= nil, "value is not valid utf-8")
+			local len_55 = buffer.readu16(incoming_buff, read(2))
+			assert(len_55 <= 40000, "value is more than 40000!")
+			value["tag"] = buffer.readstring(incoming_buff, read(len_55), len_55)
+			assert(utf8.len(value["tag"]) ~= nil, "value is not valid utf-8")
+			local len_56 = buffer.readu16(incoming_buff, read(2))
+			assert(len_56 <= 40000, "value is more than 40000!")
+			value["description"] = buffer.readstring(incoming_buff, read(len_56), len_56)
+			assert(utf8.len(value["description"]) ~= nil, "value is not valid utf-8")
+			local len_57 = buffer.readu16(incoming_buff, read(2))
+			assert(len_57 <= 40000, "value is more than 40000!")
+			value["icon"] = buffer.readstring(incoming_buff, read(len_57), len_57)
+			assert(utf8.len(value["icon"]) ~= nil, "value is not valid utf-8")
+			local len_58 = buffer.readu16(incoming_buff, read(2))
+			assert(len_58 <= 40000, "value is more than 40000!")
+			value["banner"] = buffer.readstring(incoming_buff, read(len_58), len_58)
+			assert(utf8.len(value["banner"]) ~= nil, "value is not valid utf-8")
+			local len_59 = buffer.readu16(incoming_buff, read(2))
+			assert(len_59 <= 40000, "value is more than 40000!")
+			value["discord_invite"] = buffer.readstring(incoming_buff, read(len_59), len_59)
+			assert(utf8.len(value["discord_invite"]) ~= nil, "value is not valid utf-8")
+			if reliable_events[18] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[18](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 24)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_31 = 0
+					local bool_31_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_31 = bit32.bor(bool_31, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_31 = bit32.bor(bool_31, 0b0000000000000010)
+						local len_60 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_60)
+						alloc(len_60)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_60)
+					end
+					buffer.writeu8(outgoing_buff, bool_31_pos_1, bool_31)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 24 then -- cancel_guild_invite
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = buffer.readf64(incoming_buff, read(8))
+			if reliable_events[24] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[24](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 30)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_32 = 0
+					local bool_32_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_32 = bit32.bor(bool_32, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_32 = bit32.bor(bool_32, 0b0000000000000010)
+						local len_61 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_61)
+						alloc(len_61)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_61)
+					end
+					buffer.writeu8(outgoing_buff, bool_32_pos_1, bool_32)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 26 then -- ban_guild_member
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			value = buffer.readf64(incoming_buff, read(8))
+			if reliable_events[26] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[26](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 32)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_33 = 0
+					local bool_33_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_33 = bit32.bor(bool_33, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_33 = bit32.bor(bool_33, 0b0000000000000010)
+						local len_62 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_62)
+						alloc(len_62)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_62)
+					end
+					buffer.writeu8(outgoing_buff, bool_33_pos_1, bool_33)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
+		elseif id == 28 then -- accept_guild_invite
+			local call_id = buffer.readu8(buff, read(1))
+			local value
+			local len_63 = buffer.readu8(incoming_buff, read(1)) + 36
+			assert(len_63 >= 36, "value is less than 36!")
+			assert(len_63 <= 144, "value is more than 144!")
+			value = buffer.readstring(incoming_buff, read(len_63), len_63)
+			assert(utf8.len(value) ~= nil, "value is not valid utf-8")
+			if reliable_events[28] then
+				task.spawn(function(player_2, call_id_2, value_1)
+					local ret_1 = reliable_events[28](player_2, value_1)
+					load_player(player_2)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, 34)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, call_id_2)
+					local bool_34 = 0
+					local bool_34_pos_1 = alloc(1)
+					if ret_1["ok"] then
+						bool_34 = bit32.bor(bool_34, 0b0000000000000001)
+					end
+					if ret_1["error"] ~= nil then
+						bool_34 = bit32.bor(bool_34, 0b0000000000000010)
+						local len_64 = #ret_1["error"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_64)
+						alloc(len_64)
+						buffer.writestring(outgoing_buff, outgoing_apos, ret_1["error"], len_64)
+					end
+					buffer.writeu8(outgoing_buff, bool_34_pos_1, bool_34)
+					player_map[player_2] = save()
+				end, player, call_id, value)
+			end
 		else
 			error("Unknown event id")
 		end
+	end
+end)
+unreliable[1].OnServerEvent:Connect(function(player, buff, inst) -- mouse_click
+	incoming_buff = buff
+	incoming_inst = inst
+	incoming_read = 0
+	incoming_ipos = 0
+	local value
+	local bool_35 = buffer.readu8(incoming_buff, read(1))
+	if bit32.btest(bool_35, 0b0000000000000001) then
+		value = "attack"
+	else
+		value = "use"
+	end
+	if unreliable_events[0] then
+		task.spawn(unreliable_events[0], player, value)
 	end
 end)
 table.freeze(polling_queues_reliable)
@@ -230,6 +1707,2483 @@ table.freeze(polling_queues_unreliable)
 
 local returns = {
 	send_events = send_events,
+	update_invsee = {
+		fire = function(player: Player, value: ({
+			["target"]: ((Player)?),
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 4)
+			local bool_36 = 0
+			local bool_36_pos_1 = alloc(1)
+			if value["target"] ~= nil then
+				bool_36 = bit32.bor(bool_36, 0b0000000000000001)
+				assert(value["target"]:IsA("Player"), "received instance is not of the Player class!")
+				table.insert(outgoing_inst, value["target"])
+			end
+			if value["inventory"] ~= nil then
+				bool_36 = bit32.bor(bool_36, 0b0000000000000010)
+				local len_65 = #value["inventory"]
+				assert(len_65 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_65)
+				for i_8 = 1, len_65 do
+					local bool_37 = 0
+					local bool_37_pos_1 = alloc(1)
+					local val_9 = value["inventory"][i_8]
+					if val_9["kind"] == "empty" then
+						bool_37 = bit32.bor(bool_37, 0b0000000000000001)
+					elseif val_9["kind"] == "item" then
+						local _
+						local len_66 = #val_9["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_66)
+						alloc(len_66)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_9["item_id"], len_66)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_9["amount"])
+						if val_9["data"] ~= nil then
+							bool_37 = bit32.bor(bool_37, 0b0000000000000010)
+							table.insert(outgoing_inst, val_9["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_37_pos_1, bool_37)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_36 = bit32.bor(bool_36, 0b0000000000000100)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_36_pos_1, bool_36)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: ({
+			["target"]: ((Player)?),
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 4)
+			local bool_38 = 0
+			local bool_38_pos_1 = alloc(1)
+			if value["target"] ~= nil then
+				bool_38 = bit32.bor(bool_38, 0b0000000000000001)
+				assert(value["target"]:IsA("Player"), "received instance is not of the Player class!")
+				table.insert(outgoing_inst, value["target"])
+			end
+			if value["inventory"] ~= nil then
+				bool_38 = bit32.bor(bool_38, 0b0000000000000010)
+				local len_67 = #value["inventory"]
+				assert(len_67 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_67)
+				for i_9 = 1, len_67 do
+					local bool_39 = 0
+					local bool_39_pos_1 = alloc(1)
+					local val_10 = value["inventory"][i_9]
+					if val_10["kind"] == "empty" then
+						bool_39 = bit32.bor(bool_39, 0b0000000000000001)
+					elseif val_10["kind"] == "item" then
+						local _
+						local len_68 = #val_10["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_68)
+						alloc(len_68)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_10["item_id"], len_68)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_10["amount"])
+						if val_10["data"] ~= nil then
+							bool_39 = bit32.bor(bool_39, 0b0000000000000010)
+							table.insert(outgoing_inst, val_10["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_39_pos_1, bool_39)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_38 = bit32.bor(bool_38, 0b0000000000000100)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_38_pos_1, bool_38)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: ({
+			["target"]: ((Player)?),
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 4)
+			local bool_40 = 0
+			local bool_40_pos_1 = alloc(1)
+			if value["target"] ~= nil then
+				bool_40 = bit32.bor(bool_40, 0b0000000000000001)
+				assert(value["target"]:IsA("Player"), "received instance is not of the Player class!")
+				table.insert(outgoing_inst, value["target"])
+			end
+			if value["inventory"] ~= nil then
+				bool_40 = bit32.bor(bool_40, 0b0000000000000010)
+				local len_69 = #value["inventory"]
+				assert(len_69 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_69)
+				for i_10 = 1, len_69 do
+					local bool_41 = 0
+					local bool_41_pos_1 = alloc(1)
+					local val_11 = value["inventory"][i_10]
+					if val_11["kind"] == "empty" then
+						bool_41 = bit32.bor(bool_41, 0b0000000000000001)
+					elseif val_11["kind"] == "item" then
+						local _
+						local len_70 = #val_11["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_70)
+						alloc(len_70)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_11["item_id"], len_70)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_11["amount"])
+						if val_11["data"] ~= nil then
+							bool_41 = bit32.bor(bool_41, 0b0000000000000010)
+							table.insert(outgoing_inst, val_11["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_41_pos_1, bool_41)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_40 = bit32.bor(bool_40, 0b0000000000000100)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_40_pos_1, bool_40)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: ({
+			["target"]: ((Player)?),
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 4)
+			local bool_42 = 0
+			local bool_42_pos_1 = alloc(1)
+			if value["target"] ~= nil then
+				bool_42 = bit32.bor(bool_42, 0b0000000000000001)
+				assert(value["target"]:IsA("Player"), "received instance is not of the Player class!")
+				table.insert(outgoing_inst, value["target"])
+			end
+			if value["inventory"] ~= nil then
+				bool_42 = bit32.bor(bool_42, 0b0000000000000010)
+				local len_71 = #value["inventory"]
+				assert(len_71 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_71)
+				for i_11 = 1, len_71 do
+					local bool_43 = 0
+					local bool_43_pos_1 = alloc(1)
+					local val_12 = value["inventory"][i_11]
+					if val_12["kind"] == "empty" then
+						bool_43 = bit32.bor(bool_43, 0b0000000000000001)
+					elseif val_12["kind"] == "item" then
+						local _
+						local len_72 = #val_12["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_72)
+						alloc(len_72)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_12["item_id"], len_72)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_12["amount"])
+						if val_12["data"] ~= nil then
+							bool_43 = bit32.bor(bool_43, 0b0000000000000010)
+							table.insert(outgoing_inst, val_12["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_43_pos_1, bool_43)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_42 = bit32.bor(bool_42, 0b0000000000000100)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_42_pos_1, bool_42)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: ({
+			["target"]: ((Player)?),
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 4)
+			local bool_44 = 0
+			local bool_44_pos_1 = alloc(1)
+			if value["target"] ~= nil then
+				bool_44 = bit32.bor(bool_44, 0b0000000000000001)
+				assert(value["target"]:IsA("Player"), "received instance is not of the Player class!")
+				table.insert(outgoing_inst, value["target"])
+			end
+			if value["inventory"] ~= nil then
+				bool_44 = bit32.bor(bool_44, 0b0000000000000010)
+				local len_73 = #value["inventory"]
+				assert(len_73 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_73)
+				for i_12 = 1, len_73 do
+					local bool_45 = 0
+					local bool_45_pos_1 = alloc(1)
+					local val_13 = value["inventory"][i_12]
+					if val_13["kind"] == "empty" then
+						bool_45 = bit32.bor(bool_45, 0b0000000000000001)
+					elseif val_13["kind"] == "item" then
+						local _
+						local len_74 = #val_13["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_74)
+						alloc(len_74)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_13["item_id"], len_74)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_13["amount"])
+						if val_13["data"] ~= nil then
+							bool_45 = bit32.bor(bool_45, 0b0000000000000010)
+							table.insert(outgoing_inst, val_13["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_45_pos_1, bool_45)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_44 = bit32.bor(bool_44, 0b0000000000000100)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_44_pos_1, bool_44)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	update_inventory = {
+		fire = function(player: Player, value: ({
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 3)
+			local bool_46 = 0
+			local bool_46_pos_1 = alloc(1)
+			if value["inventory"] ~= nil then
+				bool_46 = bit32.bor(bool_46, 0b0000000000000001)
+				local len_75 = #value["inventory"]
+				assert(len_75 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_75)
+				for i_13 = 1, len_75 do
+					local bool_47 = 0
+					local bool_47_pos_1 = alloc(1)
+					local val_14 = value["inventory"][i_13]
+					if val_14["kind"] == "empty" then
+						bool_47 = bit32.bor(bool_47, 0b0000000000000001)
+					elseif val_14["kind"] == "item" then
+						local _
+						local len_76 = #val_14["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_76)
+						alloc(len_76)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_14["item_id"], len_76)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_14["amount"])
+						if val_14["data"] ~= nil then
+							bool_47 = bit32.bor(bool_47, 0b0000000000000010)
+							table.insert(outgoing_inst, val_14["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_47_pos_1, bool_47)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_46 = bit32.bor(bool_46, 0b0000000000000010)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_46_pos_1, bool_46)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: ({
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 3)
+			local bool_48 = 0
+			local bool_48_pos_1 = alloc(1)
+			if value["inventory"] ~= nil then
+				bool_48 = bit32.bor(bool_48, 0b0000000000000001)
+				local len_77 = #value["inventory"]
+				assert(len_77 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_77)
+				for i_14 = 1, len_77 do
+					local bool_49 = 0
+					local bool_49_pos_1 = alloc(1)
+					local val_15 = value["inventory"][i_14]
+					if val_15["kind"] == "empty" then
+						bool_49 = bit32.bor(bool_49, 0b0000000000000001)
+					elseif val_15["kind"] == "item" then
+						local _
+						local len_78 = #val_15["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_78)
+						alloc(len_78)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_15["item_id"], len_78)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_15["amount"])
+						if val_15["data"] ~= nil then
+							bool_49 = bit32.bor(bool_49, 0b0000000000000010)
+							table.insert(outgoing_inst, val_15["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_49_pos_1, bool_49)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_48 = bit32.bor(bool_48, 0b0000000000000010)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_48_pos_1, bool_48)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: ({
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 3)
+			local bool_50 = 0
+			local bool_50_pos_1 = alloc(1)
+			if value["inventory"] ~= nil then
+				bool_50 = bit32.bor(bool_50, 0b0000000000000001)
+				local len_79 = #value["inventory"]
+				assert(len_79 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_79)
+				for i_15 = 1, len_79 do
+					local bool_51 = 0
+					local bool_51_pos_1 = alloc(1)
+					local val_16 = value["inventory"][i_15]
+					if val_16["kind"] == "empty" then
+						bool_51 = bit32.bor(bool_51, 0b0000000000000001)
+					elseif val_16["kind"] == "item" then
+						local _
+						local len_80 = #val_16["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_80)
+						alloc(len_80)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_16["item_id"], len_80)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_16["amount"])
+						if val_16["data"] ~= nil then
+							bool_51 = bit32.bor(bool_51, 0b0000000000000010)
+							table.insert(outgoing_inst, val_16["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_51_pos_1, bool_51)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_50 = bit32.bor(bool_50, 0b0000000000000010)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_50_pos_1, bool_50)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: ({
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 3)
+			local bool_52 = 0
+			local bool_52_pos_1 = alloc(1)
+			if value["inventory"] ~= nil then
+				bool_52 = bit32.bor(bool_52, 0b0000000000000001)
+				local len_81 = #value["inventory"]
+				assert(len_81 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_81)
+				for i_16 = 1, len_81 do
+					local bool_53 = 0
+					local bool_53_pos_1 = alloc(1)
+					local val_17 = value["inventory"][i_16]
+					if val_17["kind"] == "empty" then
+						bool_53 = bit32.bor(bool_53, 0b0000000000000001)
+					elseif val_17["kind"] == "item" then
+						local _
+						local len_82 = #val_17["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_82)
+						alloc(len_82)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_17["item_id"], len_82)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_17["amount"])
+						if val_17["data"] ~= nil then
+							bool_53 = bit32.bor(bool_53, 0b0000000000000010)
+							table.insert(outgoing_inst, val_17["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_53_pos_1, bool_53)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_52 = bit32.bor(bool_52, 0b0000000000000010)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_52_pos_1, bool_52)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: ({
+			["inventory"]: (({ ({
+				["kind"]: "empty",
+			} | {
+				["kind"]: "item",
+				["item_id"]: (string),
+				["amount"]: (number),
+				["data"]: ((unknown)),
+			}) })?),
+			["id"]: ((number)?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 3)
+			local bool_54 = 0
+			local bool_54_pos_1 = alloc(1)
+			if value["inventory"] ~= nil then
+				bool_54 = bit32.bor(bool_54, 0b0000000000000001)
+				local len_83 = #value["inventory"]
+				assert(len_83 <= 64, "value is more than 64!")
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, len_83)
+				for i_17 = 1, len_83 do
+					local bool_55 = 0
+					local bool_55_pos_1 = alloc(1)
+					local val_18 = value["inventory"][i_17]
+					if val_18["kind"] == "empty" then
+						bool_55 = bit32.bor(bool_55, 0b0000000000000001)
+					elseif val_18["kind"] == "item" then
+						local _
+						local len_84 = #val_18["item_id"]
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, len_84)
+						alloc(len_84)
+						buffer.writestring(outgoing_buff, outgoing_apos, val_18["item_id"], len_84)
+						alloc(2)
+						buffer.writeu16(outgoing_buff, outgoing_apos, val_18["amount"])
+						if val_18["data"] ~= nil then
+							bool_55 = bit32.bor(bool_55, 0b0000000000000010)
+							table.insert(outgoing_inst, val_18["data"])
+						end
+					else
+						error("Invalid variant")
+					end
+					buffer.writeu8(outgoing_buff, bool_55_pos_1, bool_55)
+				end
+			end
+			if value["id"] ~= nil then
+				bool_54 = bit32.bor(bool_54, 0b0000000000000010)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, value["id"])
+			end
+			buffer.writeu8(outgoing_buff, bool_54_pos_1, bool_54)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	update_blocking = {
+		set_callback = function(callback: (player: Player, value: (boolean)) -> ()): () -> ()
+			reliable_events[2] = callback
+			return function()
+				reliable_events[2] = nil
+			end
+		end,
+	},
+	unban_guild_member = {
+		set_callback = function(callback: (player: Player, value: (number)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[27] = callback
+			return function()
+				reliable_events[27] = nil
+			end
+		end,
+	},
+	stop_invsee = {
+		set_callback = function(callback: (player: Player) -> ()): () -> ()
+			reliable_events[8] = callback
+			return function()
+				reliable_events[8] = nil
+			end
+		end,
+	},
+	show_title = {
+		fire = function(player: Player, fade_in: (number), stay: (number), fade_out: (number), top_text: (string), bottom_text: ((string)?), colour: ((Color3)?))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 11)
+			local bool_56 = 0
+			local bool_56_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_in)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, stay)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_out)
+			local len_85 = #top_text
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_85)
+			alloc(len_85)
+			buffer.writestring(outgoing_buff, outgoing_apos, top_text, len_85)
+			if bottom_text ~= nil then
+				bool_56 = bit32.bor(bool_56, 0b0000000000000001)
+				local len_86 = #bottom_text
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_86)
+				alloc(len_86)
+				buffer.writestring(outgoing_buff, outgoing_apos, bottom_text, len_86)
+			end
+			if colour ~= nil then
+				bool_56 = bit32.bor(bool_56, 0b0000000000000010)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.R * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.G * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.B * 255)
+			end
+			buffer.writeu8(outgoing_buff, bool_56_pos_1, bool_56)
+			player_map[player] = save()
+		end,
+		fire_all = function(fade_in: (number), stay: (number), fade_out: (number), top_text: (string), bottom_text: ((string)?), colour: ((Color3)?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 11)
+			local bool_57 = 0
+			local bool_57_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_in)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, stay)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_out)
+			local len_87 = #top_text
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_87)
+			alloc(len_87)
+			buffer.writestring(outgoing_buff, outgoing_apos, top_text, len_87)
+			if bottom_text ~= nil then
+				bool_57 = bit32.bor(bool_57, 0b0000000000000001)
+				local len_88 = #bottom_text
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_88)
+				alloc(len_88)
+				buffer.writestring(outgoing_buff, outgoing_apos, bottom_text, len_88)
+			end
+			if colour ~= nil then
+				bool_57 = bit32.bor(bool_57, 0b0000000000000010)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.R * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.G * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.B * 255)
+			end
+			buffer.writeu8(outgoing_buff, bool_57_pos_1, bool_57)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, fade_in: (number), stay: (number), fade_out: (number), top_text: (string), bottom_text: ((string)?), colour: ((Color3)?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 11)
+			local bool_58 = 0
+			local bool_58_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_in)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, stay)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_out)
+			local len_89 = #top_text
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_89)
+			alloc(len_89)
+			buffer.writestring(outgoing_buff, outgoing_apos, top_text, len_89)
+			if bottom_text ~= nil then
+				bool_58 = bit32.bor(bool_58, 0b0000000000000001)
+				local len_90 = #bottom_text
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_90)
+				alloc(len_90)
+				buffer.writestring(outgoing_buff, outgoing_apos, bottom_text, len_90)
+			end
+			if colour ~= nil then
+				bool_58 = bit32.bor(bool_58, 0b0000000000000010)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.R * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.G * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.B * 255)
+			end
+			buffer.writeu8(outgoing_buff, bool_58_pos_1, bool_58)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, fade_in: (number), stay: (number), fade_out: (number), top_text: (string), bottom_text: ((string)?), colour: ((Color3)?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 11)
+			local bool_59 = 0
+			local bool_59_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_in)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, stay)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_out)
+			local len_91 = #top_text
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_91)
+			alloc(len_91)
+			buffer.writestring(outgoing_buff, outgoing_apos, top_text, len_91)
+			if bottom_text ~= nil then
+				bool_59 = bit32.bor(bool_59, 0b0000000000000001)
+				local len_92 = #bottom_text
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_92)
+				alloc(len_92)
+				buffer.writestring(outgoing_buff, outgoing_apos, bottom_text, len_92)
+			end
+			if colour ~= nil then
+				bool_59 = bit32.bor(bool_59, 0b0000000000000010)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.R * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.G * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.B * 255)
+			end
+			buffer.writeu8(outgoing_buff, bool_59_pos_1, bool_59)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, fade_in: (number), stay: (number), fade_out: (number), top_text: (string), bottom_text: ((string)?), colour: ((Color3)?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 11)
+			local bool_60 = 0
+			local bool_60_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_in)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, stay)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, fade_out)
+			local len_93 = #top_text
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_93)
+			alloc(len_93)
+			buffer.writestring(outgoing_buff, outgoing_apos, top_text, len_93)
+			if bottom_text ~= nil then
+				bool_60 = bit32.bor(bool_60, 0b0000000000000001)
+				local len_94 = #bottom_text
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_94)
+				alloc(len_94)
+				buffer.writestring(outgoing_buff, outgoing_apos, bottom_text, len_94)
+			end
+			if colour ~= nil then
+				bool_60 = bit32.bor(bool_60, 0b0000000000000010)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.R * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.G * 255)
+				alloc(1)
+				buffer.writeu8(outgoing_buff, outgoing_apos, colour.B * 255)
+			end
+			buffer.writeu8(outgoing_buff, bool_60_pos_1, bool_60)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	shoot_bow = {
+		set_callback = function(callback: (player: Player, direction: (Vector3), draw_time: (number)) -> ()): () -> ()
+			reliable_events[1] = callback
+			return function()
+				reliable_events[1] = nil
+			end
+		end,
+	},
+	set_cake_state = {
+		set_callback = function(callback: (player: Player, value: (boolean)) -> ((boolean))): () -> ()
+			reliable_events[13] = callback
+			return function()
+				reliable_events[13] = nil
+			end
+		end,
+	},
+	server_location = {
+		set_callback = function(callback: (player: Player) -> (({
+			["status"]: "loading",
+		} | {
+			["status"]: "fail",
+		} | {
+			["status"]: "success",
+			["result"]: (string),
+		}))): () -> ()
+			reliable_events[17] = callback
+			return function()
+				reliable_events[17] = nil
+			end
+		end,
+	},
+	send_popup = {
+		fire = function(player: Player, popup_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["text_inputs"]: (({ ({
+				["id"]: (string),
+				["placeholder_text"]: (string),
+			}) })?),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["colour"]: (Color3),
+				["button_progress_time"]: ((number)?),
+			}) })?),
+		}))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 12)
+			local bool_61 = 0
+			local bool_61_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, popup_id)
+			local len_95 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_95)
+			alloc(len_95)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_95)
+			local len_96 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_96)
+			alloc(len_96)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_96)
+			if params["text_inputs"] ~= nil then
+				bool_61 = bit32.bor(bool_61, 0b0000000000000001)
+				local len_97 = #params["text_inputs"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_97)
+				for i_18 = 1, len_97 do
+					local val_19 = params["text_inputs"][i_18]
+					local len_98 = #val_19["id"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_98)
+					alloc(len_98)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_19["id"], len_98)
+					local len_99 = #val_19["placeholder_text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_99)
+					alloc(len_99)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_19["placeholder_text"], len_99)
+				end
+			end
+			if params["buttons"] ~= nil then
+				bool_61 = bit32.bor(bool_61, 0b0000000000000010)
+				local len_100 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_100)
+				for i_19 = 1, len_100 do
+					local bool_62 = 0
+					local bool_62_pos_1 = alloc(1)
+					local val_20 = params["buttons"][i_19]
+					local len_101 = #val_20["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_101)
+					alloc(len_101)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_20["text"], len_101)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_20["colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_20["colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_20["colour"].B * 255)
+					if val_20["button_progress_time"] ~= nil then
+						bool_62 = bit32.bor(bool_62, 0b0000000000000001)
+						alloc(4)
+						buffer.writef32(outgoing_buff, outgoing_apos, val_20["button_progress_time"])
+					end
+					buffer.writeu8(outgoing_buff, bool_62_pos_1, bool_62)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_61_pos_1, bool_61)
+			player_map[player] = save()
+		end,
+		fire_all = function(popup_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["text_inputs"]: (({ ({
+				["id"]: (string),
+				["placeholder_text"]: (string),
+			}) })?),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["colour"]: (Color3),
+				["button_progress_time"]: ((number)?),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 12)
+			local bool_63 = 0
+			local bool_63_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, popup_id)
+			local len_102 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_102)
+			alloc(len_102)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_102)
+			local len_103 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_103)
+			alloc(len_103)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_103)
+			if params["text_inputs"] ~= nil then
+				bool_63 = bit32.bor(bool_63, 0b0000000000000001)
+				local len_104 = #params["text_inputs"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_104)
+				for i_20 = 1, len_104 do
+					local val_21 = params["text_inputs"][i_20]
+					local len_105 = #val_21["id"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_105)
+					alloc(len_105)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_21["id"], len_105)
+					local len_106 = #val_21["placeholder_text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_106)
+					alloc(len_106)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_21["placeholder_text"], len_106)
+				end
+			end
+			if params["buttons"] ~= nil then
+				bool_63 = bit32.bor(bool_63, 0b0000000000000010)
+				local len_107 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_107)
+				for i_21 = 1, len_107 do
+					local bool_64 = 0
+					local bool_64_pos_1 = alloc(1)
+					local val_22 = params["buttons"][i_21]
+					local len_108 = #val_22["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_108)
+					alloc(len_108)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_22["text"], len_108)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_22["colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_22["colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_22["colour"].B * 255)
+					if val_22["button_progress_time"] ~= nil then
+						bool_64 = bit32.bor(bool_64, 0b0000000000000001)
+						alloc(4)
+						buffer.writef32(outgoing_buff, outgoing_apos, val_22["button_progress_time"])
+					end
+					buffer.writeu8(outgoing_buff, bool_64_pos_1, bool_64)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_63_pos_1, bool_63)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, popup_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["text_inputs"]: (({ ({
+				["id"]: (string),
+				["placeholder_text"]: (string),
+			}) })?),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["colour"]: (Color3),
+				["button_progress_time"]: ((number)?),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 12)
+			local bool_65 = 0
+			local bool_65_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, popup_id)
+			local len_109 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_109)
+			alloc(len_109)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_109)
+			local len_110 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_110)
+			alloc(len_110)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_110)
+			if params["text_inputs"] ~= nil then
+				bool_65 = bit32.bor(bool_65, 0b0000000000000001)
+				local len_111 = #params["text_inputs"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_111)
+				for i_22 = 1, len_111 do
+					local val_23 = params["text_inputs"][i_22]
+					local len_112 = #val_23["id"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_112)
+					alloc(len_112)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_23["id"], len_112)
+					local len_113 = #val_23["placeholder_text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_113)
+					alloc(len_113)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_23["placeholder_text"], len_113)
+				end
+			end
+			if params["buttons"] ~= nil then
+				bool_65 = bit32.bor(bool_65, 0b0000000000000010)
+				local len_114 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_114)
+				for i_23 = 1, len_114 do
+					local bool_66 = 0
+					local bool_66_pos_1 = alloc(1)
+					local val_24 = params["buttons"][i_23]
+					local len_115 = #val_24["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_115)
+					alloc(len_115)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_24["text"], len_115)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_24["colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_24["colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_24["colour"].B * 255)
+					if val_24["button_progress_time"] ~= nil then
+						bool_66 = bit32.bor(bool_66, 0b0000000000000001)
+						alloc(4)
+						buffer.writef32(outgoing_buff, outgoing_apos, val_24["button_progress_time"])
+					end
+					buffer.writeu8(outgoing_buff, bool_66_pos_1, bool_66)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_65_pos_1, bool_65)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, popup_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["text_inputs"]: (({ ({
+				["id"]: (string),
+				["placeholder_text"]: (string),
+			}) })?),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["colour"]: (Color3),
+				["button_progress_time"]: ((number)?),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 12)
+			local bool_67 = 0
+			local bool_67_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, popup_id)
+			local len_116 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_116)
+			alloc(len_116)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_116)
+			local len_117 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_117)
+			alloc(len_117)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_117)
+			if params["text_inputs"] ~= nil then
+				bool_67 = bit32.bor(bool_67, 0b0000000000000001)
+				local len_118 = #params["text_inputs"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_118)
+				for i_24 = 1, len_118 do
+					local val_25 = params["text_inputs"][i_24]
+					local len_119 = #val_25["id"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_119)
+					alloc(len_119)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_25["id"], len_119)
+					local len_120 = #val_25["placeholder_text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_120)
+					alloc(len_120)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_25["placeholder_text"], len_120)
+				end
+			end
+			if params["buttons"] ~= nil then
+				bool_67 = bit32.bor(bool_67, 0b0000000000000010)
+				local len_121 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_121)
+				for i_25 = 1, len_121 do
+					local bool_68 = 0
+					local bool_68_pos_1 = alloc(1)
+					local val_26 = params["buttons"][i_25]
+					local len_122 = #val_26["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_122)
+					alloc(len_122)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_26["text"], len_122)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_26["colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_26["colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_26["colour"].B * 255)
+					if val_26["button_progress_time"] ~= nil then
+						bool_68 = bit32.bor(bool_68, 0b0000000000000001)
+						alloc(4)
+						buffer.writef32(outgoing_buff, outgoing_apos, val_26["button_progress_time"])
+					end
+					buffer.writeu8(outgoing_buff, bool_68_pos_1, bool_68)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_67_pos_1, bool_67)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, popup_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["text_inputs"]: (({ ({
+				["id"]: (string),
+				["placeholder_text"]: (string),
+			}) })?),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["colour"]: (Color3),
+				["button_progress_time"]: ((number)?),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 12)
+			local bool_69 = 0
+			local bool_69_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, popup_id)
+			local len_123 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_123)
+			alloc(len_123)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_123)
+			local len_124 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_124)
+			alloc(len_124)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_124)
+			if params["text_inputs"] ~= nil then
+				bool_69 = bit32.bor(bool_69, 0b0000000000000001)
+				local len_125 = #params["text_inputs"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_125)
+				for i_26 = 1, len_125 do
+					local val_27 = params["text_inputs"][i_26]
+					local len_126 = #val_27["id"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_126)
+					alloc(len_126)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_27["id"], len_126)
+					local len_127 = #val_27["placeholder_text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_127)
+					alloc(len_127)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_27["placeholder_text"], len_127)
+				end
+			end
+			if params["buttons"] ~= nil then
+				bool_69 = bit32.bor(bool_69, 0b0000000000000010)
+				local len_128 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_128)
+				for i_27 = 1, len_128 do
+					local bool_70 = 0
+					local bool_70_pos_1 = alloc(1)
+					local val_28 = params["buttons"][i_27]
+					local len_129 = #val_28["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_129)
+					alloc(len_129)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_28["text"], len_129)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_28["colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_28["colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_28["colour"].B * 255)
+					if val_28["button_progress_time"] ~= nil then
+						bool_70 = bit32.bor(bool_70, 0b0000000000000001)
+						alloc(4)
+						buffer.writef32(outgoing_buff, outgoing_apos, val_28["button_progress_time"])
+					end
+					buffer.writeu8(outgoing_buff, bool_70_pos_1, bool_70)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_69_pos_1, bool_69)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	send_notification = {
+		fire = function(player: Player, value: (string))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 10)
+			local len_130 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_130)
+			alloc(len_130)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_130)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 10)
+			local len_131 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_131)
+			alloc(len_131)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_131)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 10)
+			local len_132 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_132)
+			alloc(len_132)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_132)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 10)
+			local len_133 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_133)
+			alloc(len_133)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_133)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 10)
+			local len_134 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_134)
+			alloc(len_134)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_134)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	send_large_notification = {
+		fire = function(player: Player, large_notification_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["text_colour"]: (Color3),
+			}) })?),
+		}))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 13)
+			local bool_71 = 0
+			local bool_71_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, large_notification_id)
+			local len_135 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_135)
+			alloc(len_135)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_135)
+			local len_136 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_136)
+			alloc(len_136)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_136)
+			if params["buttons"] ~= nil then
+				bool_71 = bit32.bor(bool_71, 0b0000000000000001)
+				local len_137 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_137)
+				for i_28 = 1, len_137 do
+					local val_29 = params["buttons"][i_28]
+					local len_138 = #val_29["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_138)
+					alloc(len_138)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_29["text"], len_138)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_29["text_colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_29["text_colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_29["text_colour"].B * 255)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_71_pos_1, bool_71)
+			player_map[player] = save()
+		end,
+		fire_all = function(large_notification_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["text_colour"]: (Color3),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 13)
+			local bool_72 = 0
+			local bool_72_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, large_notification_id)
+			local len_139 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_139)
+			alloc(len_139)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_139)
+			local len_140 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_140)
+			alloc(len_140)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_140)
+			if params["buttons"] ~= nil then
+				bool_72 = bit32.bor(bool_72, 0b0000000000000001)
+				local len_141 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_141)
+				for i_29 = 1, len_141 do
+					local val_30 = params["buttons"][i_29]
+					local len_142 = #val_30["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_142)
+					alloc(len_142)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_30["text"], len_142)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_30["text_colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_30["text_colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_30["text_colour"].B * 255)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_72_pos_1, bool_72)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, large_notification_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["text_colour"]: (Color3),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 13)
+			local bool_73 = 0
+			local bool_73_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, large_notification_id)
+			local len_143 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_143)
+			alloc(len_143)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_143)
+			local len_144 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_144)
+			alloc(len_144)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_144)
+			if params["buttons"] ~= nil then
+				bool_73 = bit32.bor(bool_73, 0b0000000000000001)
+				local len_145 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_145)
+				for i_30 = 1, len_145 do
+					local val_31 = params["buttons"][i_30]
+					local len_146 = #val_31["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_146)
+					alloc(len_146)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_31["text"], len_146)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_31["text_colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_31["text_colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_31["text_colour"].B * 255)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_73_pos_1, bool_73)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, large_notification_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["text_colour"]: (Color3),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 13)
+			local bool_74 = 0
+			local bool_74_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, large_notification_id)
+			local len_147 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_147)
+			alloc(len_147)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_147)
+			local len_148 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_148)
+			alloc(len_148)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_148)
+			if params["buttons"] ~= nil then
+				bool_74 = bit32.bor(bool_74, 0b0000000000000001)
+				local len_149 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_149)
+				for i_31 = 1, len_149 do
+					local val_32 = params["buttons"][i_31]
+					local len_150 = #val_32["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_150)
+					alloc(len_150)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_32["text"], len_150)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_32["text_colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_32["text_colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_32["text_colour"].B * 255)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_74_pos_1, bool_74)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, large_notification_id: (number), params: ({
+			["icon"]: (string),
+			["text"]: (string),
+			["buttons"]: (({ ({
+				["text"]: (string),
+				["text_colour"]: (Color3),
+			}) })?),
+		}))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 13)
+			local bool_75 = 0
+			local bool_75_pos_1 = alloc(1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, large_notification_id)
+			local len_151 = #params["icon"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_151)
+			alloc(len_151)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["icon"], len_151)
+			local len_152 = #params["text"]
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_152)
+			alloc(len_152)
+			buffer.writestring(outgoing_buff, outgoing_apos, params["text"], len_152)
+			if params["buttons"] ~= nil then
+				bool_75 = bit32.bor(bool_75, 0b0000000000000001)
+				local len_153 = #params["buttons"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_153)
+				for i_32 = 1, len_153 do
+					local val_33 = params["buttons"][i_32]
+					local len_154 = #val_33["text"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_154)
+					alloc(len_154)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_33["text"], len_154)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_33["text_colour"].R * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_33["text_colour"].G * 255)
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, val_33["text_colour"].B * 255)
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_75_pos_1, bool_75)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	select_slot = {
+		set_callback = function(callback: (player: Player, value: (number)) -> ()): () -> ()
+			reliable_events[5] = callback
+			return function()
+				reliable_events[5] = nil
+			end
+		end,
+	},
+	search_guild_invite_candidate = {
+		set_callback = function(callback: (player: Player, value: (string)) -> ((({ ({
+			["user_id"]: (number),
+			["username"]: (string),
+			["display_name"]: (string),
+		}) })?))): () -> ()
+			reliable_events[30] = callback
+			return function()
+				reliable_events[30] = nil
+			end
+		end,
+	},
+	score_team = {
+		fire = function(player: Player, value: (number))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 9)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 9)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 9)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 9)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 9)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	score_self = {
+		fire = function(player: Player)
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 8)
+			player_map[player] = save()
+		end,
+		fire_all = function()
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 8)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player)
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 8)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player })
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 8)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any })
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 8)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	respond_to_popup = {
+		set_callback = function(callback: (player: Player, popup_id: (number), button_index: ((number)?), text_input_values: ({ [(string)]: (string) })) -> ()): () -> ()
+			reliable_events[9] = callback
+			return function()
+				reliable_events[9] = nil
+			end
+		end,
+	},
+	respond_to_large_notification = {
+		set_callback = function(callback: (player: Player, large_notification_id: (number), button_index: ((number)?)) -> ()): () -> ()
+			reliable_events[10] = callback
+			return function()
+				reliable_events[10] = nil
+			end
+		end,
+	},
+	request_player_banner_change = {
+		set_callback = function(callback: (player: Player) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[34] = callback
+			return function()
+				reliable_events[34] = nil
+			end
+		end,
+	},
+	request_invsee_action = {
+		set_callback = function(callback: (player: Player, value: ({
+			["action"]: ("swap_items" | "move_item" | "quick_move"),
+			["target"]: ((Player)?),
+			["from"]: (number),
+			["to"]: (number),
+			["id"]: (number),
+		})) -> ()): () -> ()
+			reliable_events[7] = callback
+			return function()
+				reliable_events[7] = nil
+			end
+		end,
+	},
+	request_inventory_action = {
+		set_callback = function(callback: (player: Player, value: ({
+			["action"]: ("swap_items" | "move_item" | "quick_move"),
+			["from"]: (number),
+			["to"]: (number),
+			["id"]: (number),
+		})) -> ()): () -> ()
+			reliable_events[6] = callback
+			return function()
+				reliable_events[6] = nil
+			end
+		end,
+	},
+	request_guild_image_change = {
+		set_callback = function(callback: (player: Player, value: ("icon" | "banner")) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[21] = callback
+			return function()
+				reliable_events[21] = nil
+			end
+		end,
+	},
+	report_player = {
+		set_callback = function(callback: (player: Player, value: (number)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[35] = callback
+			return function()
+				reliable_events[35] = nil
+			end
+		end,
+	},
+	pong = {
+		fire = function(player: Player)
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 15)
+			player_map[player] = save()
+		end,
+		fire_all = function()
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 15)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player)
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 15)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player })
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 15)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any })
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 15)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	player_profile_changed = {
+		fire = function(player: Player)
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 18)
+			player_map[player] = save()
+		end,
+		fire_all = function()
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 18)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player)
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 18)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player })
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 18)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any })
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 18)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	play_sound = {
+		fire = function(player: Player, name: (string), position: (Vector3))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 14)
+			local len_155 = #name
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_155)
+			alloc(len_155)
+			buffer.writestring(outgoing_buff, outgoing_apos, name, len_155)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Z)
+			player_map[player] = save()
+		end,
+		fire_all = function(name: (string), position: (Vector3))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 14)
+			local len_156 = #name
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_156)
+			alloc(len_156)
+			buffer.writestring(outgoing_buff, outgoing_apos, name, len_156)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Z)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, name: (string), position: (Vector3))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 14)
+			local len_157 = #name
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_157)
+			alloc(len_157)
+			buffer.writestring(outgoing_buff, outgoing_apos, name, len_157)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Z)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, name: (string), position: (Vector3))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 14)
+			local len_158 = #name
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_158)
+			alloc(len_158)
+			buffer.writestring(outgoing_buff, outgoing_apos, name, len_158)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Z)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, name: (string), position: (Vector3))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 14)
+			local len_159 = #name
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_159)
+			alloc(len_159)
+			buffer.writestring(outgoing_buff, outgoing_apos, name, len_159)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, position.Z)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	place_cube = {
+		set_callback = function(callback: (player: Player, origin: (Vector3), direction: (Vector3)) -> ((boolean))): () -> ()
+			reliable_events[14] = callback
+			return function()
+				reliable_events[14] = nil
+			end
+		end,
+	},
+	ping = {
+		set_callback = function(callback: (player: Player) -> ()): () -> ()
+			reliable_events[11] = callback
+			return function()
+				reliable_events[11] = nil
+			end
+		end,
+	},
+	mouse_click = {
+		set_callback = function(callback: (player: Player, value: ("attack" | "use")) -> ()): () -> ()
+			unreliable_events[0] = callback
+			return function()
+				unreliable_events[0] = nil
+			end
+		end,
+	},
+	mine_stop = {
+		set_callback = function(callback: (player: Player, value: (number)) -> ()): () -> ()
+			reliable_events[4] = callback
+			return function()
+				reliable_events[4] = nil
+			end
+		end,
+	},
+	mine_progress = {
+		fire = function(player: Player, cube: ((Part)?), time_fraction: (number))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 2)
+			local bool_76 = 0
+			local bool_76_pos_1 = alloc(1)
+			if cube ~= nil then
+				bool_76 = bit32.bor(bool_76, 0b0000000000000001)
+				assert(cube:IsA("Part"), "received instance is not of the Part class!")
+				table.insert(outgoing_inst, cube)
+			end
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, time_fraction)
+			buffer.writeu8(outgoing_buff, bool_76_pos_1, bool_76)
+			player_map[player] = save()
+		end,
+		fire_all = function(cube: ((Part)?), time_fraction: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 2)
+			local bool_77 = 0
+			local bool_77_pos_1 = alloc(1)
+			if cube ~= nil then
+				bool_77 = bit32.bor(bool_77, 0b0000000000000001)
+				assert(cube:IsA("Part"), "received instance is not of the Part class!")
+				table.insert(outgoing_inst, cube)
+			end
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, time_fraction)
+			buffer.writeu8(outgoing_buff, bool_77_pos_1, bool_77)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, cube: ((Part)?), time_fraction: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 2)
+			local bool_78 = 0
+			local bool_78_pos_1 = alloc(1)
+			if cube ~= nil then
+				bool_78 = bit32.bor(bool_78, 0b0000000000000001)
+				assert(cube:IsA("Part"), "received instance is not of the Part class!")
+				table.insert(outgoing_inst, cube)
+			end
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, time_fraction)
+			buffer.writeu8(outgoing_buff, bool_78_pos_1, bool_78)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, cube: ((Part)?), time_fraction: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 2)
+			local bool_79 = 0
+			local bool_79_pos_1 = alloc(1)
+			if cube ~= nil then
+				bool_79 = bit32.bor(bool_79, 0b0000000000000001)
+				assert(cube:IsA("Part"), "received instance is not of the Part class!")
+				table.insert(outgoing_inst, cube)
+			end
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, time_fraction)
+			buffer.writeu8(outgoing_buff, bool_79_pos_1, bool_79)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, cube: ((Part)?), time_fraction: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 2)
+			local bool_80 = 0
+			local bool_80_pos_1 = alloc(1)
+			if cube ~= nil then
+				bool_80 = bit32.bor(bool_80, 0b0000000000000001)
+				assert(cube:IsA("Part"), "received instance is not of the Part class!")
+				table.insert(outgoing_inst, cube)
+			end
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, time_fraction)
+			buffer.writeu8(outgoing_buff, bool_80_pos_1, bool_80)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	mine_finished = {
+		fire = function(player: Player, value: (number))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 0)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 0)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 0)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 0)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 0)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	mine_failed = {
+		fire = function(player: Player, value: (number))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 1)
+			alloc(4)
+			buffer.writeu32(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	mine_cube = {
+		set_callback = function(callback: (player: Player, mining_id: (number), cube: ((Part)?), origin: (Vector3), direction: (Vector3)) -> ()): () -> ()
+			reliable_events[3] = callback
+			return function()
+				reliable_events[3] = nil
+			end
+		end,
+	},
 	melee_swing = {
 		set_callback = function(callback: (player: Player, value: ({
 			["origin"]: (Vector3),
@@ -242,6 +4196,1974 @@ local returns = {
 			reliable_events[0] = callback
 			return function()
 				reliable_events[0] = nil
+			end
+		end,
+	},
+	map_name = {
+		fire = function(player: Player, value: (string))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 6)
+			local len_160 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_160)
+			alloc(len_160)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_160)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 6)
+			local len_161 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_161)
+			alloc(len_161)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_161)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 6)
+			local len_162 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_162)
+			alloc(len_162)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_162)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 6)
+			local len_163 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_163)
+			alloc(len_163)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_163)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (string))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 6)
+			local len_164 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_164)
+			alloc(len_164)
+			buffer.writestring(outgoing_buff, outgoing_apos, value, len_164)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	leave_queue = {
+		set_callback = function(callback: (player: Player) -> ((boolean))): () -> ()
+			reliable_events[16] = callback
+			return function()
+				reliable_events[16] = nil
+			end
+		end,
+	},
+	leave_guild = {
+		set_callback = function(callback: (player: Player) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[22] = callback
+			return function()
+				reliable_events[22] = nil
+			end
+		end,
+	},
+	knockback = {
+		fire = function(player: Player, knockback_vector: (Vector3), strength_x: (number), strength_y: (number))
+			load_empty()
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_x)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_y)
+			local buff = buffer.create(outgoing_used)
+			buffer.copy(buff, 0, outgoing_buff, 0, outgoing_used)
+			unreliable[1]:FireClient(player, buff, outgoing_inst)
+		end,
+		fire_all = function(knockback_vector: (Vector3), strength_x: (number), strength_y: (number))
+			load_empty()
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_x)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_y)
+			local buff = buffer.create(outgoing_used)
+			buffer.copy(buff, 0, outgoing_buff, 0, outgoing_used)
+			unreliable[1]:FireAllClients(buff, outgoing_inst)
+		end,
+		fire_except = function(except: Player, knockback_vector: (Vector3), strength_x: (number), strength_y: (number))
+			load_empty()
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_x)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_y)
+			local buff = buffer.create(outgoing_used)
+			buffer.copy(buff, 0, outgoing_buff, 0, outgoing_used)
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					unreliable[1]:FireClient(player, buff, outgoing_inst)
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, knockback_vector: (Vector3), strength_x: (number), strength_y: (number))
+			load_empty()
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_x)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_y)
+			local buff = buffer.create(outgoing_used)
+			buffer.copy(buff, 0, outgoing_buff, 0, outgoing_used)
+			for _, player in list do
+				unreliable[1]:FireClient(player, buff, outgoing_inst)
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, knockback_vector: (Vector3), strength_x: (number), strength_y: (number))
+			load_empty()
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.X)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Y)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, knockback_vector.Z)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_x)
+			alloc(4)
+			buffer.writef32(outgoing_buff, outgoing_apos, strength_y)
+			local buff = buffer.create(outgoing_used)
+			buffer.copy(buff, 0, outgoing_buff, 0, outgoing_used)
+			for player in set do
+				unreliable[1]:FireClient(player, buff, outgoing_inst)
+			end
+		end,
+	},
+	kills = {
+		fire = function(player: Player, value: (number))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 7)
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, value)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 7)
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 7)
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 7)
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (number))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 7)
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, value)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	kick_guild_member = {
+		set_callback = function(callback: (player: Player, value: (number)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[25] = callback
+			return function()
+				reliable_events[25] = nil
+			end
+		end,
+	},
+	join_queue = {
+		set_callback = function(callback: (player: Player, value: (string)) -> ((boolean))): () -> ()
+			reliable_events[15] = callback
+			return function()
+				reliable_events[15] = nil
+			end
+		end,
+	},
+	invite_to_guild = {
+		set_callback = function(callback: (player: Player, value: (number)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[23] = callback
+			return function()
+				reliable_events[23] = nil
+			end
+		end,
+	},
+	incoming_guild_invites = {
+		fire = function(player: Player, value: ({ ({
+			["guild_id"]: (string),
+			["guild_name"]: (string),
+			["guild_tag"]: (string),
+			["guild_icon"]: (string),
+			["guild_banner"]: (string),
+			["member_count"]: (number),
+			["inviter_id"]: (number),
+			["invited_at"]: (number),
+		}) }))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 17)
+			local len_165 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_165)
+			for i_33 = 1, len_165 do
+				local val_34 = value[i_33]
+				local len_166 = #val_34["guild_id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_166)
+				alloc(len_166)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_34["guild_id"], len_166)
+				local len_167 = #val_34["guild_name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_167)
+				alloc(len_167)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_34["guild_name"], len_167)
+				local len_168 = #val_34["guild_tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_168)
+				alloc(len_168)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_34["guild_tag"], len_168)
+				local len_169 = #val_34["guild_icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_169)
+				alloc(len_169)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_34["guild_icon"], len_169)
+				local len_170 = #val_34["guild_banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_170)
+				alloc(len_170)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_34["guild_banner"], len_170)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, val_34["member_count"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_34["inviter_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_34["invited_at"])
+			end
+			player_map[player] = save()
+		end,
+		fire_all = function(value: ({ ({
+			["guild_id"]: (string),
+			["guild_name"]: (string),
+			["guild_tag"]: (string),
+			["guild_icon"]: (string),
+			["guild_banner"]: (string),
+			["member_count"]: (number),
+			["inviter_id"]: (number),
+			["invited_at"]: (number),
+		}) }))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 17)
+			local len_171 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_171)
+			for i_34 = 1, len_171 do
+				local val_35 = value[i_34]
+				local len_172 = #val_35["guild_id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_172)
+				alloc(len_172)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_35["guild_id"], len_172)
+				local len_173 = #val_35["guild_name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_173)
+				alloc(len_173)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_35["guild_name"], len_173)
+				local len_174 = #val_35["guild_tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_174)
+				alloc(len_174)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_35["guild_tag"], len_174)
+				local len_175 = #val_35["guild_icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_175)
+				alloc(len_175)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_35["guild_icon"], len_175)
+				local len_176 = #val_35["guild_banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_176)
+				alloc(len_176)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_35["guild_banner"], len_176)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, val_35["member_count"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_35["inviter_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_35["invited_at"])
+			end
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: ({ ({
+			["guild_id"]: (string),
+			["guild_name"]: (string),
+			["guild_tag"]: (string),
+			["guild_icon"]: (string),
+			["guild_banner"]: (string),
+			["member_count"]: (number),
+			["inviter_id"]: (number),
+			["invited_at"]: (number),
+		}) }))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 17)
+			local len_177 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_177)
+			for i_35 = 1, len_177 do
+				local val_36 = value[i_35]
+				local len_178 = #val_36["guild_id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_178)
+				alloc(len_178)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_36["guild_id"], len_178)
+				local len_179 = #val_36["guild_name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_179)
+				alloc(len_179)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_36["guild_name"], len_179)
+				local len_180 = #val_36["guild_tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_180)
+				alloc(len_180)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_36["guild_tag"], len_180)
+				local len_181 = #val_36["guild_icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_181)
+				alloc(len_181)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_36["guild_icon"], len_181)
+				local len_182 = #val_36["guild_banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_182)
+				alloc(len_182)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_36["guild_banner"], len_182)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, val_36["member_count"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_36["inviter_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_36["invited_at"])
+			end
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: ({ ({
+			["guild_id"]: (string),
+			["guild_name"]: (string),
+			["guild_tag"]: (string),
+			["guild_icon"]: (string),
+			["guild_banner"]: (string),
+			["member_count"]: (number),
+			["inviter_id"]: (number),
+			["invited_at"]: (number),
+		}) }))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 17)
+			local len_183 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_183)
+			for i_36 = 1, len_183 do
+				local val_37 = value[i_36]
+				local len_184 = #val_37["guild_id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_184)
+				alloc(len_184)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_37["guild_id"], len_184)
+				local len_185 = #val_37["guild_name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_185)
+				alloc(len_185)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_37["guild_name"], len_185)
+				local len_186 = #val_37["guild_tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_186)
+				alloc(len_186)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_37["guild_tag"], len_186)
+				local len_187 = #val_37["guild_icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_187)
+				alloc(len_187)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_37["guild_icon"], len_187)
+				local len_188 = #val_37["guild_banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_188)
+				alloc(len_188)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_37["guild_banner"], len_188)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, val_37["member_count"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_37["inviter_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_37["invited_at"])
+			end
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: ({ ({
+			["guild_id"]: (string),
+			["guild_name"]: (string),
+			["guild_tag"]: (string),
+			["guild_icon"]: (string),
+			["guild_banner"]: (string),
+			["member_count"]: (number),
+			["inviter_id"]: (number),
+			["invited_at"]: (number),
+		}) }))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 17)
+			local len_189 = #value
+			alloc(2)
+			buffer.writeu16(outgoing_buff, outgoing_apos, len_189)
+			for i_37 = 1, len_189 do
+				local val_38 = value[i_37]
+				local len_190 = #val_38["guild_id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_190)
+				alloc(len_190)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_38["guild_id"], len_190)
+				local len_191 = #val_38["guild_name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_191)
+				alloc(len_191)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_38["guild_name"], len_191)
+				local len_192 = #val_38["guild_tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_192)
+				alloc(len_192)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_38["guild_tag"], len_192)
+				local len_193 = #val_38["guild_icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_193)
+				alloc(len_193)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_38["guild_icon"], len_193)
+				local len_194 = #val_38["guild_banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_194)
+				alloc(len_194)
+				buffer.writestring(outgoing_buff, outgoing_apos, val_38["guild_banner"], len_194)
+				alloc(4)
+				buffer.writeu32(outgoing_buff, outgoing_apos, val_38["member_count"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_38["inviter_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, val_38["invited_at"])
+			end
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	guild_state = {
+		fire = function(player: Player, value: (({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 16)
+			local bool_81 = 0
+			local bool_81_pos_1 = alloc(1)
+			if value ~= nil then
+				bool_81 = bit32.bor(bool_81, 0b0000000000000001)
+				local len_195 = #value["id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_195)
+				alloc(len_195)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["id"], len_195)
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["owner_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["created"])
+				local len_196 = #value["name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_196)
+				alloc(len_196)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["name"], len_196)
+				local len_197 = #value["tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_197)
+				alloc(len_197)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["tag"], len_197)
+				local len_198 = #value["description"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_198)
+				alloc(len_198)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["description"], len_198)
+				local len_199 = #value["icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_199)
+				alloc(len_199)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["icon"], len_199)
+				local len_200 = #value["banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_200)
+				alloc(len_200)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["banner"], len_200)
+				local len_201 = #value["discord_invite"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_201)
+				alloc(len_201)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["discord_invite"], len_201)
+				local len_202 = #value["members"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_202)
+				for i_38 = 1, len_202 do
+					local bool_82 = 0
+					local bool_82_pos_1 = alloc(1)
+					local val_39 = value["members"][i_38]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_39["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_39["joined"])
+					local len_203 = #val_39["banner"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_203)
+					alloc(len_203)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_39["banner"], len_203)
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_39["playtime"])
+					local len_pos_4
+					local len_204 = 0
+					for k_4, v_4 in val_39["stats"] do
+						if len_204 == 0 then
+							len_pos_4 = alloc(2)
+						end
+						len_204 = len_204 + 1
+						local len_205 = #k_4
+						assert(len_205 <= 128, "value is more than 128!")
+						assert(utf8.len(k_4) ~= nil, "value is not valid utf-8")
+						alloc(1)
+						buffer.writeu8(outgoing_buff, outgoing_apos, len_205)
+						alloc(len_205)
+						buffer.writestring(outgoing_buff, outgoing_apos, k_4, len_205)
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_4["wins"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_4["goals"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_4["kills"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_4["losses"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_4["deaths"])
+					end
+					if len_pos_4 then
+						buffer.writeu16(outgoing_buff, len_pos_4, len_204 - 1)
+					else
+						bool_82 = bit32.bor(bool_82, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_82_pos_1, bool_82)
+				end
+				local len_206 = #value["banned"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_206)
+				for i_39 = 1, len_206 do
+					local val_40 = value["banned"][i_39]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_40["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_40["banned_at"])
+				end
+				local len_207 = #value["outgoing_invites"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_207)
+				for i_40 = 1, len_207 do
+					local val_41 = value["outgoing_invites"][i_40]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_41["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_41["invited_at"])
+				end
+				local len_pos_5
+				local len_208 = 0
+				for k_5, v_5 in value["totals"] do
+					if len_208 == 0 then
+						len_pos_5 = alloc(2)
+					end
+					len_208 = len_208 + 1
+					local len_209 = #k_5
+					assert(len_209 <= 128, "value is more than 128!")
+					assert(utf8.len(k_5) ~= nil, "value is not valid utf-8")
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, len_209)
+					alloc(len_209)
+					buffer.writestring(outgoing_buff, outgoing_apos, k_5, len_209)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_5["wins"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_5["goals"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_5["kills"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_5["losses"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_5["deaths"])
+				end
+				if len_pos_5 then
+					buffer.writeu16(outgoing_buff, len_pos_5, len_208 - 1)
+				else
+					bool_81 = bit32.bor(bool_81, 0b0000000000000010)
+				end
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["total_playtime"])
+				if value["rank"] ~= nil then
+					bool_81 = bit32.bor(bool_81, 0b0000000000000100)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, value["rank"])
+				end
+				local len_210 = #value["rank_history"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_210)
+				for i_41 = 1, len_210 do
+					local val_42 = value["rank_history"][i_41]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_42["time"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, val_42["rank"])
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_81_pos_1, bool_81)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 16)
+			local bool_83 = 0
+			local bool_83_pos_1 = alloc(1)
+			if value ~= nil then
+				bool_83 = bit32.bor(bool_83, 0b0000000000000001)
+				local len_211 = #value["id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_211)
+				alloc(len_211)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["id"], len_211)
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["owner_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["created"])
+				local len_212 = #value["name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_212)
+				alloc(len_212)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["name"], len_212)
+				local len_213 = #value["tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_213)
+				alloc(len_213)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["tag"], len_213)
+				local len_214 = #value["description"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_214)
+				alloc(len_214)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["description"], len_214)
+				local len_215 = #value["icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_215)
+				alloc(len_215)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["icon"], len_215)
+				local len_216 = #value["banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_216)
+				alloc(len_216)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["banner"], len_216)
+				local len_217 = #value["discord_invite"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_217)
+				alloc(len_217)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["discord_invite"], len_217)
+				local len_218 = #value["members"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_218)
+				for i_42 = 1, len_218 do
+					local bool_84 = 0
+					local bool_84_pos_1 = alloc(1)
+					local val_43 = value["members"][i_42]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_43["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_43["joined"])
+					local len_219 = #val_43["banner"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_219)
+					alloc(len_219)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_43["banner"], len_219)
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_43["playtime"])
+					local len_pos_6
+					local len_220 = 0
+					for k_6, v_6 in val_43["stats"] do
+						if len_220 == 0 then
+							len_pos_6 = alloc(2)
+						end
+						len_220 = len_220 + 1
+						local len_221 = #k_6
+						assert(len_221 <= 128, "value is more than 128!")
+						assert(utf8.len(k_6) ~= nil, "value is not valid utf-8")
+						alloc(1)
+						buffer.writeu8(outgoing_buff, outgoing_apos, len_221)
+						alloc(len_221)
+						buffer.writestring(outgoing_buff, outgoing_apos, k_6, len_221)
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_6["wins"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_6["goals"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_6["kills"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_6["losses"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_6["deaths"])
+					end
+					if len_pos_6 then
+						buffer.writeu16(outgoing_buff, len_pos_6, len_220 - 1)
+					else
+						bool_84 = bit32.bor(bool_84, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_84_pos_1, bool_84)
+				end
+				local len_222 = #value["banned"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_222)
+				for i_43 = 1, len_222 do
+					local val_44 = value["banned"][i_43]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_44["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_44["banned_at"])
+				end
+				local len_223 = #value["outgoing_invites"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_223)
+				for i_44 = 1, len_223 do
+					local val_45 = value["outgoing_invites"][i_44]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_45["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_45["invited_at"])
+				end
+				local len_pos_7
+				local len_224 = 0
+				for k_7, v_7 in value["totals"] do
+					if len_224 == 0 then
+						len_pos_7 = alloc(2)
+					end
+					len_224 = len_224 + 1
+					local len_225 = #k_7
+					assert(len_225 <= 128, "value is more than 128!")
+					assert(utf8.len(k_7) ~= nil, "value is not valid utf-8")
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, len_225)
+					alloc(len_225)
+					buffer.writestring(outgoing_buff, outgoing_apos, k_7, len_225)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_7["wins"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_7["goals"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_7["kills"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_7["losses"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_7["deaths"])
+				end
+				if len_pos_7 then
+					buffer.writeu16(outgoing_buff, len_pos_7, len_224 - 1)
+				else
+					bool_83 = bit32.bor(bool_83, 0b0000000000000010)
+				end
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["total_playtime"])
+				if value["rank"] ~= nil then
+					bool_83 = bit32.bor(bool_83, 0b0000000000000100)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, value["rank"])
+				end
+				local len_226 = #value["rank_history"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_226)
+				for i_45 = 1, len_226 do
+					local val_46 = value["rank_history"][i_45]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_46["time"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, val_46["rank"])
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_83_pos_1, bool_83)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 16)
+			local bool_85 = 0
+			local bool_85_pos_1 = alloc(1)
+			if value ~= nil then
+				bool_85 = bit32.bor(bool_85, 0b0000000000000001)
+				local len_227 = #value["id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_227)
+				alloc(len_227)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["id"], len_227)
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["owner_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["created"])
+				local len_228 = #value["name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_228)
+				alloc(len_228)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["name"], len_228)
+				local len_229 = #value["tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_229)
+				alloc(len_229)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["tag"], len_229)
+				local len_230 = #value["description"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_230)
+				alloc(len_230)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["description"], len_230)
+				local len_231 = #value["icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_231)
+				alloc(len_231)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["icon"], len_231)
+				local len_232 = #value["banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_232)
+				alloc(len_232)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["banner"], len_232)
+				local len_233 = #value["discord_invite"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_233)
+				alloc(len_233)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["discord_invite"], len_233)
+				local len_234 = #value["members"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_234)
+				for i_46 = 1, len_234 do
+					local bool_86 = 0
+					local bool_86_pos_1 = alloc(1)
+					local val_47 = value["members"][i_46]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_47["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_47["joined"])
+					local len_235 = #val_47["banner"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_235)
+					alloc(len_235)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_47["banner"], len_235)
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_47["playtime"])
+					local len_pos_8
+					local len_236 = 0
+					for k_8, v_8 in val_47["stats"] do
+						if len_236 == 0 then
+							len_pos_8 = alloc(2)
+						end
+						len_236 = len_236 + 1
+						local len_237 = #k_8
+						assert(len_237 <= 128, "value is more than 128!")
+						assert(utf8.len(k_8) ~= nil, "value is not valid utf-8")
+						alloc(1)
+						buffer.writeu8(outgoing_buff, outgoing_apos, len_237)
+						alloc(len_237)
+						buffer.writestring(outgoing_buff, outgoing_apos, k_8, len_237)
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_8["wins"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_8["goals"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_8["kills"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_8["losses"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_8["deaths"])
+					end
+					if len_pos_8 then
+						buffer.writeu16(outgoing_buff, len_pos_8, len_236 - 1)
+					else
+						bool_86 = bit32.bor(bool_86, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_86_pos_1, bool_86)
+				end
+				local len_238 = #value["banned"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_238)
+				for i_47 = 1, len_238 do
+					local val_48 = value["banned"][i_47]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_48["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_48["banned_at"])
+				end
+				local len_239 = #value["outgoing_invites"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_239)
+				for i_48 = 1, len_239 do
+					local val_49 = value["outgoing_invites"][i_48]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_49["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_49["invited_at"])
+				end
+				local len_pos_9
+				local len_240 = 0
+				for k_9, v_9 in value["totals"] do
+					if len_240 == 0 then
+						len_pos_9 = alloc(2)
+					end
+					len_240 = len_240 + 1
+					local len_241 = #k_9
+					assert(len_241 <= 128, "value is more than 128!")
+					assert(utf8.len(k_9) ~= nil, "value is not valid utf-8")
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, len_241)
+					alloc(len_241)
+					buffer.writestring(outgoing_buff, outgoing_apos, k_9, len_241)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_9["wins"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_9["goals"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_9["kills"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_9["losses"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_9["deaths"])
+				end
+				if len_pos_9 then
+					buffer.writeu16(outgoing_buff, len_pos_9, len_240 - 1)
+				else
+					bool_85 = bit32.bor(bool_85, 0b0000000000000010)
+				end
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["total_playtime"])
+				if value["rank"] ~= nil then
+					bool_85 = bit32.bor(bool_85, 0b0000000000000100)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, value["rank"])
+				end
+				local len_242 = #value["rank_history"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_242)
+				for i_49 = 1, len_242 do
+					local val_50 = value["rank_history"][i_49]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_50["time"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, val_50["rank"])
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_85_pos_1, bool_85)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 16)
+			local bool_87 = 0
+			local bool_87_pos_1 = alloc(1)
+			if value ~= nil then
+				bool_87 = bit32.bor(bool_87, 0b0000000000000001)
+				local len_243 = #value["id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_243)
+				alloc(len_243)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["id"], len_243)
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["owner_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["created"])
+				local len_244 = #value["name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_244)
+				alloc(len_244)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["name"], len_244)
+				local len_245 = #value["tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_245)
+				alloc(len_245)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["tag"], len_245)
+				local len_246 = #value["description"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_246)
+				alloc(len_246)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["description"], len_246)
+				local len_247 = #value["icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_247)
+				alloc(len_247)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["icon"], len_247)
+				local len_248 = #value["banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_248)
+				alloc(len_248)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["banner"], len_248)
+				local len_249 = #value["discord_invite"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_249)
+				alloc(len_249)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["discord_invite"], len_249)
+				local len_250 = #value["members"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_250)
+				for i_50 = 1, len_250 do
+					local bool_88 = 0
+					local bool_88_pos_1 = alloc(1)
+					local val_51 = value["members"][i_50]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_51["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_51["joined"])
+					local len_251 = #val_51["banner"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_251)
+					alloc(len_251)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_51["banner"], len_251)
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_51["playtime"])
+					local len_pos_10
+					local len_252 = 0
+					for k_10, v_10 in val_51["stats"] do
+						if len_252 == 0 then
+							len_pos_10 = alloc(2)
+						end
+						len_252 = len_252 + 1
+						local len_253 = #k_10
+						assert(len_253 <= 128, "value is more than 128!")
+						assert(utf8.len(k_10) ~= nil, "value is not valid utf-8")
+						alloc(1)
+						buffer.writeu8(outgoing_buff, outgoing_apos, len_253)
+						alloc(len_253)
+						buffer.writestring(outgoing_buff, outgoing_apos, k_10, len_253)
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_10["wins"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_10["goals"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_10["kills"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_10["losses"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_10["deaths"])
+					end
+					if len_pos_10 then
+						buffer.writeu16(outgoing_buff, len_pos_10, len_252 - 1)
+					else
+						bool_88 = bit32.bor(bool_88, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_88_pos_1, bool_88)
+				end
+				local len_254 = #value["banned"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_254)
+				for i_51 = 1, len_254 do
+					local val_52 = value["banned"][i_51]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_52["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_52["banned_at"])
+				end
+				local len_255 = #value["outgoing_invites"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_255)
+				for i_52 = 1, len_255 do
+					local val_53 = value["outgoing_invites"][i_52]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_53["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_53["invited_at"])
+				end
+				local len_pos_11
+				local len_256 = 0
+				for k_11, v_11 in value["totals"] do
+					if len_256 == 0 then
+						len_pos_11 = alloc(2)
+					end
+					len_256 = len_256 + 1
+					local len_257 = #k_11
+					assert(len_257 <= 128, "value is more than 128!")
+					assert(utf8.len(k_11) ~= nil, "value is not valid utf-8")
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, len_257)
+					alloc(len_257)
+					buffer.writestring(outgoing_buff, outgoing_apos, k_11, len_257)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_11["wins"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_11["goals"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_11["kills"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_11["losses"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_11["deaths"])
+				end
+				if len_pos_11 then
+					buffer.writeu16(outgoing_buff, len_pos_11, len_256 - 1)
+				else
+					bool_87 = bit32.bor(bool_87, 0b0000000000000010)
+				end
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["total_playtime"])
+				if value["rank"] ~= nil then
+					bool_87 = bit32.bor(bool_87, 0b0000000000000100)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, value["rank"])
+				end
+				local len_258 = #value["rank_history"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_258)
+				for i_53 = 1, len_258 do
+					local val_54 = value["rank_history"][i_53]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_54["time"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, val_54["rank"])
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_87_pos_1, bool_87)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 16)
+			local bool_89 = 0
+			local bool_89_pos_1 = alloc(1)
+			if value ~= nil then
+				bool_89 = bit32.bor(bool_89, 0b0000000000000001)
+				local len_259 = #value["id"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_259)
+				alloc(len_259)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["id"], len_259)
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["owner_id"])
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["created"])
+				local len_260 = #value["name"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_260)
+				alloc(len_260)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["name"], len_260)
+				local len_261 = #value["tag"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_261)
+				alloc(len_261)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["tag"], len_261)
+				local len_262 = #value["description"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_262)
+				alloc(len_262)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["description"], len_262)
+				local len_263 = #value["icon"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_263)
+				alloc(len_263)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["icon"], len_263)
+				local len_264 = #value["banner"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_264)
+				alloc(len_264)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["banner"], len_264)
+				local len_265 = #value["discord_invite"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_265)
+				alloc(len_265)
+				buffer.writestring(outgoing_buff, outgoing_apos, value["discord_invite"], len_265)
+				local len_266 = #value["members"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_266)
+				for i_54 = 1, len_266 do
+					local bool_90 = 0
+					local bool_90_pos_1 = alloc(1)
+					local val_55 = value["members"][i_54]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_55["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_55["joined"])
+					local len_267 = #val_55["banner"]
+					alloc(2)
+					buffer.writeu16(outgoing_buff, outgoing_apos, len_267)
+					alloc(len_267)
+					buffer.writestring(outgoing_buff, outgoing_apos, val_55["banner"], len_267)
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_55["playtime"])
+					local len_pos_12
+					local len_268 = 0
+					for k_12, v_12 in val_55["stats"] do
+						if len_268 == 0 then
+							len_pos_12 = alloc(2)
+						end
+						len_268 = len_268 + 1
+						local len_269 = #k_12
+						assert(len_269 <= 128, "value is more than 128!")
+						assert(utf8.len(k_12) ~= nil, "value is not valid utf-8")
+						alloc(1)
+						buffer.writeu8(outgoing_buff, outgoing_apos, len_269)
+						alloc(len_269)
+						buffer.writestring(outgoing_buff, outgoing_apos, k_12, len_269)
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_12["wins"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_12["goals"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_12["kills"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_12["losses"])
+						alloc(4)
+						buffer.writeu32(outgoing_buff, outgoing_apos, v_12["deaths"])
+					end
+					if len_pos_12 then
+						buffer.writeu16(outgoing_buff, len_pos_12, len_268 - 1)
+					else
+						bool_90 = bit32.bor(bool_90, 0b0000000000000001)
+					end
+					buffer.writeu8(outgoing_buff, bool_90_pos_1, bool_90)
+				end
+				local len_270 = #value["banned"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_270)
+				for i_55 = 1, len_270 do
+					local val_56 = value["banned"][i_55]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_56["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_56["banned_at"])
+				end
+				local len_271 = #value["outgoing_invites"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_271)
+				for i_56 = 1, len_271 do
+					local val_57 = value["outgoing_invites"][i_56]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_57["user_id"])
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_57["invited_at"])
+				end
+				local len_pos_13
+				local len_272 = 0
+				for k_13, v_13 in value["totals"] do
+					if len_272 == 0 then
+						len_pos_13 = alloc(2)
+					end
+					len_272 = len_272 + 1
+					local len_273 = #k_13
+					assert(len_273 <= 128, "value is more than 128!")
+					assert(utf8.len(k_13) ~= nil, "value is not valid utf-8")
+					alloc(1)
+					buffer.writeu8(outgoing_buff, outgoing_apos, len_273)
+					alloc(len_273)
+					buffer.writestring(outgoing_buff, outgoing_apos, k_13, len_273)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_13["wins"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_13["goals"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_13["kills"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_13["losses"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, v_13["deaths"])
+				end
+				if len_pos_13 then
+					buffer.writeu16(outgoing_buff, len_pos_13, len_272 - 1)
+				else
+					bool_89 = bit32.bor(bool_89, 0b0000000000000010)
+				end
+				alloc(8)
+				buffer.writef64(outgoing_buff, outgoing_apos, value["total_playtime"])
+				if value["rank"] ~= nil then
+					bool_89 = bit32.bor(bool_89, 0b0000000000000100)
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, value["rank"])
+				end
+				local len_274 = #value["rank_history"]
+				alloc(2)
+				buffer.writeu16(outgoing_buff, outgoing_apos, len_274)
+				for i_57 = 1, len_274 do
+					local val_58 = value["rank_history"][i_57]
+					alloc(8)
+					buffer.writef64(outgoing_buff, outgoing_apos, val_58["time"])
+					alloc(4)
+					buffer.writeu32(outgoing_buff, outgoing_apos, val_58["rank"])
+				end
+			end
+			buffer.writeu8(outgoing_buff, bool_89_pos_1, bool_89)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	game_is_active = {
+		fire = function(player: Player, value: (boolean))
+			load_player(player)
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 5)
+			local bool_91 = 0
+			local bool_91_pos_1 = alloc(1)
+			if value then
+				bool_91 = bit32.bor(bool_91, 0b0000000000000001)
+			end
+			buffer.writeu8(outgoing_buff, bool_91_pos_1, bool_91)
+			player_map[player] = save()
+		end,
+		fire_all = function(value: (boolean))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 5)
+			local bool_92 = 0
+			local bool_92_pos_1 = alloc(1)
+			if value then
+				bool_92 = bit32.bor(bool_92, 0b0000000000000001)
+			end
+			buffer.writeu8(outgoing_buff, bool_92_pos_1, bool_92)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_except = function(except: Player, value: (boolean))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 5)
+			local bool_93 = 0
+			local bool_93_pos_1 = alloc(1)
+			if value then
+				bool_93 = bit32.bor(bool_93, 0b0000000000000001)
+			end
+			buffer.writeu8(outgoing_buff, bool_93_pos_1, bool_93)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in Players:GetPlayers() do
+				if player ~= except then
+					load_player(player)
+					alloc(used)
+					buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+					table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+					player_map[player] = save()
+				end
+			end
+		end,
+		fire_list = function(list: { [unknown]: Player }, value: (boolean))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 5)
+			local bool_94 = 0
+			local bool_94_pos_1 = alloc(1)
+			if value then
+				bool_94 = bit32.bor(bool_94, 0b0000000000000001)
+			end
+			buffer.writeu8(outgoing_buff, bool_94_pos_1, bool_94)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for _, player in list do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+		fire_set = function(set: { [Player]: any }, value: (boolean))
+			load_empty()
+			alloc(1)
+			buffer.writeu8(outgoing_buff, outgoing_apos, 5)
+			local bool_95 = 0
+			local bool_95_pos_1 = alloc(1)
+			if value then
+				bool_95 = bit32.bor(bool_95, 0b0000000000000001)
+			end
+			buffer.writeu8(outgoing_buff, bool_95_pos_1, bool_95)
+			local buff, used, inst = outgoing_buff, outgoing_used, outgoing_inst
+			for player in set do
+				load_player(player)
+				alloc(used)
+				buffer.copy(outgoing_buff, outgoing_apos, buff, 0, used)
+				table.move(inst, 1, #inst, #outgoing_inst + 1, outgoing_inst)
+				player_map[player] = save()
+			end
+		end,
+	},
+	fetch_player_profile = {
+		set_callback = function(callback: (player: Player, value: (number)) -> ((({
+			["user_id"]: (number),
+			["first_joined"]: (number),
+			["last_online"]: (number),
+			["banner"]: (string),
+			["bio"]: (string),
+			["playtime"]: (number),
+			["stats"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+			["guild"]: (({
+				["id"]: (string),
+				["name"]: (string),
+				["tag"]: (string),
+			})?),
+		})?))): () -> ()
+			reliable_events[32] = callback
+			return function()
+				reliable_events[32] = nil
+			end
+		end,
+	},
+	fetch_guild_info = {
+		set_callback = function(callback: (player: Player, value: (string)) -> ((({
+			["id"]: (string),
+			["owner_id"]: (number),
+			["created"]: (number),
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+			["members"]: ({ ({
+				["user_id"]: (number),
+				["joined"]: (number),
+				["banner"]: (string),
+				["playtime"]: (number),
+				["stats"]: ({ [(string)]: ({
+					["wins"]: (number),
+					["goals"]: (number),
+					["kills"]: (number),
+					["losses"]: (number),
+					["deaths"]: (number),
+				}) }),
+			}) }),
+			["banned"]: ({ ({
+				["user_id"]: (number),
+				["banned_at"]: (number),
+			}) }),
+			["outgoing_invites"]: ({ ({
+				["user_id"]: (number),
+				["invited_at"]: (number),
+			}) }),
+			["totals"]: ({ [(string)]: ({
+				["wins"]: (number),
+				["goals"]: (number),
+				["kills"]: (number),
+				["losses"]: (number),
+				["deaths"]: (number),
+			}) }),
+			["total_playtime"]: (number),
+			["rank"]: ((number)?),
+			["rank_history"]: ({ ({
+				["time"]: (number),
+				["rank"]: (number),
+			}) }),
+		})?))): () -> ()
+			reliable_events[31] = callback
+			return function()
+				reliable_events[31] = nil
+			end
+		end,
+	},
+	edit_player_bio = {
+		set_callback = function(callback: (player: Player, value: (string)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[33] = callback
+			return function()
+				reliable_events[33] = nil
+			end
+		end,
+	},
+	edit_guild_info = {
+		set_callback = function(callback: (player: Player, value: ({
+			["name"]: ((string)?),
+			["tag"]: ((string)?),
+			["description"]: ((string)?),
+			["icon"]: ((string)?),
+			["banner"]: ((string)?),
+			["discord_invite"]: ((string)?),
+		})) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[19] = callback
+			return function()
+				reliable_events[19] = nil
+			end
+		end,
+	},
+	delete_guild = {
+		set_callback = function(callback: (player: Player) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[20] = callback
+			return function()
+				reliable_events[20] = nil
+			end
+		end,
+	},
+	decline_guild_invite = {
+		set_callback = function(callback: (player: Player, value: (string)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[29] = callback
+			return function()
+				reliable_events[29] = nil
+			end
+		end,
+	},
+	debug_server = {
+		set_callback = function(callback: (player: Player) -> ()): () -> ()
+			reliable_events[12] = callback
+			return function()
+				reliable_events[12] = nil
+			end
+		end,
+	},
+	create_guild = {
+		set_callback = function(callback: (player: Player, value: ({
+			["name"]: (string),
+			["tag"]: (string),
+			["description"]: (string),
+			["icon"]: (string),
+			["banner"]: (string),
+			["discord_invite"]: (string),
+		})) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[18] = callback
+			return function()
+				reliable_events[18] = nil
+			end
+		end,
+	},
+	cancel_guild_invite = {
+		set_callback = function(callback: (player: Player, value: (number)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[24] = callback
+			return function()
+				reliable_events[24] = nil
+			end
+		end,
+	},
+	ban_guild_member = {
+		set_callback = function(callback: (player: Player, value: (number)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[26] = callback
+			return function()
+				reliable_events[26] = nil
+			end
+		end,
+	},
+	accept_guild_invite = {
+		set_callback = function(callback: (player: Player, value: (string)) -> (({
+			["ok"]: (boolean),
+			["error"]: ((string)?),
+		}))): () -> ()
+			reliable_events[28] = callback
+			return function()
+				reliable_events[28] = nil
 			end
 		end,
 	},
